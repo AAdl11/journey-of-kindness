@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>善的旅程 - 許願樹 | Journey Complete</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌳</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Analytics GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+        
+        // 追蹤遊戲完成
+        gtag('event', 'game_complete', {
+            'event_category': 'Game',
+            'event_label': 'Journey Complete'
+        });
+    </script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #0c1445 0%, #1a237e 30%, #283593 60%, #3949ab 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 8px; height: 8px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.8), transparent);
+            border-radius: 50%;
+            animation: floatUp 8s ease-in-out infinite;
+        }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .lang-toggle {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .lang-btn {
+            padding: 0.4rem 0.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .lang-btn:hover, .lang-btn.active {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+        }
+        
+        header {
+            text-align: center;
+            padding: 1rem 0;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .completion-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #ffeb3b);
+            color: #1a237e;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ffd700, #ffeb3b, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.3rem;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            color: #a5d6a7;
+        }
+        
+        .earth-tree-section {
+            width: 100%;
+            max-width: 700px;
+            margin: 1rem 0;
+            animation: fadeInUp 1s ease-out 0.3s backwards;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .earth-tree-container {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+        }
+        
+        .earth-tree-image {
+            width: 100%;
+            display: block;
+            border-radius: 16px;
+        }
+        
+        .earth-tree-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 1.5rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+            text-align: center;
+        }
+        
+        .earth-tree-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #a5d6a7;
+            margin-bottom: 0.3rem;
+        }
+        
+        .earth-tree-desc {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .message-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease-out 0.5s backwards;
+        }
+        
+        .message-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+        
+        .message-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .message-quote {
+            font-style: italic;
+            color: #ffd700;
+            margin-top: 0.8rem;
+            font-size: 1.1rem;
+        }
+        
+        .survey-cta {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            text-align: center;
+            animation: fadeInUp 1s ease-out 0.6s backwards;
+        }
+        
+        .survey-cta h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .survey-cta p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .qr-section {
+            width: 100%;
+            margin: 1rem 0;
+            animation: fadeInUp 1s ease-out 0.7s backwards;
+        }
+        
+        .qr-title {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #a5d6a7;
+        }
+        
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        
+        .qr-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .qr-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .qr-card img {
+            width: 100%;
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 0.8rem;
+            border-radius: 8px;
+        }
+        
+        .qr-card-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1a237e;
+            margin-bottom: 0.2rem;
+        }
+        
+        .qr-card-subtitle {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .qr-card-icon { font-size: 1.2rem; margin-bottom: 0.3rem; }
+        
+        .qr-facebook { border-top: 4px solid #1877f2; }
+        .qr-instagram { border-top: 4px solid #e4405f; }
+        .qr-survey { border-top: 4px solid #34a853; }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #ffd700, #ffb300);
+            color: #1a237e;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            margin: 1rem 0;
+            animation: fadeInUp 1s ease-out 0.9s backwards;
+        }
+        
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+            .qr-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+            .qr-card { padding: 0.8rem; }
+            .qr-card img { max-width: 80px; }
+            .qr-card-title { font-size: 0.75rem; }
+            .qr-card-subtitle { font-size: 0.65rem; }
+            .lang-toggle { position: static; justify-content: center; margin-bottom: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="lang-toggle">
+            <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+            <button class="lang-btn" onclick="setLang('en')">English</button>
+        </div>
+        
+        <header>
+            <div class="completion-badge" data-zh="🎉 旅程完成！" data-en="🎉 Journey Complete!">🎉 旅程完成！</div>
+            <h1 data-zh="五族共融 許願樹" data-en="Unity Wishing Tree">五族共融 許願樹</h1>
+            <p class="subtitle" data-zh="善的種子，遍灑全球" data-en="Seeds of kindness, spread worldwide">善的種子，遍灑全球</p>
+        </header>
+        
+        <section class="earth-tree-section">
+            <div class="earth-tree-container">
+                <img src="assets/images/earth_tree.jpg" alt="五族共融地球許願樹" class="earth-tree-image">
+                <div class="earth-tree-overlay">
+                    <div class="earth-tree-title" data-zh="🌍 地球村・一家人" data-en="🌍 Global Village・One Family">🌍 地球村・一家人</div>
+                    <div class="earth-tree-desc" data-zh="不同膚色、不同文化，同一顆善良的心" data-en="Different colors, different cultures, same kind heart">不同膚色、不同文化，同一顆善良的心</div>
+                </div>
+            </div>
+        </section>
+        
+        <div class="message-card">
+            <div class="message-icon">🪷</div>
+            <p class="message-text" data-zh="感謝您完成「善的旅程」！透過這五個關卡，您學習了 AI 的基礎知識，更體驗了如何用智慧與善心幫助他人。" data-en="Thank you for completing 'Journey of Kindness'! Through these five levels, you learned AI fundamentals and experienced how to help others with wisdom and kindness.">
+                感謝您完成「善的旅程」！透過這五個關卡，您學習了 AI 的基礎知識，更體驗了如何用智慧與善心幫助他人。
+            </p>
+            <p class="message-quote" data-zh="「心中有愛，人間有情」— 證嚴法師" data-en="'With love in heart, there is warmth in the world' — Master Cheng Yen">「心中有愛，人間有情」— 證嚴法師</p>
+        </div>
+        
+        <div class="survey-cta">
+            <h3 data-zh="📝 請幫我填寫問卷！" data-en="📝 Please fill out the survey!">📝 請幫我填寫問卷！</h3>
+            <p data-zh="您的意見對我的研究非常重要，只需 2 分鐘！" data-en="Your feedback is very important for my research, only 2 minutes!">您的意見對我的研究非常重要，只需 2 分鐘！</p>
+        </div>
+        
+        <section class="qr-section">
+            <h2 class="qr-title" data-zh="📱 掃描 QR Code" data-en="📱 Scan QR Code">📱 掃描 QR Code</h2>
+            <div class="qr-grid">
+                <div class="qr-card qr-facebook">
+                    <div class="qr-card-icon">📘</div>
+                    <img src="assets/images/qr_facebook.jpg" alt="Facebook QR Code">
+                    <div class="qr-card-title">Facebook</div>
+                    <div class="qr-card-subtitle" data-zh="追蹤專頁" data-en="Follow page">追蹤專頁</div>
+                </div>
+                
+                <div class="qr-card qr-instagram">
+                    <div class="qr-card-icon">📸</div>
+                    <img src="assets/images/qr_instagram.png" alt="Instagram QR Code">
+                    <div class="qr-card-title">Instagram</div>
+                    <div class="qr-card-subtitle" data-zh="追蹤動態" data-en="Follow updates">追蹤動態</div>
+                </div>
+                
+                <div class="qr-card qr-survey">
+                    <div class="qr-card-icon">📝</div>
+                    <img src="assets/images/qr_survey.png" alt="Survey QR Code">
+                    <div class="qr-card-title" data-zh="問卷調查" data-en="Survey">問卷調查</div>
+                    <div class="qr-card-subtitle" data-zh="分享意見" data-en="Share feedback">分享意見</div>
+                </div>
+            </div>
+        </section>
+        
+        <a href="gallery.html" class="back-btn" style="background: linear-gradient(135deg, #4ECDC4, #44A08D);">
+            📸 <span data-zh="查看真實場景" data-en="View Real Stories">查看真實場景</span>
+        </a>
+        
+        <a href="index.html" class="back-btn">
+            <span>←</span>
+            <span data-zh="再玩一次" data-en="Play Again">再玩一次</span>
+        </a>
+        
+        <footer>
+            <p data-zh="慈濟基金會 人文學校 | CS4 AI 課程期末專案" data-en="Tzu Chi Foundation | CS4 AI Final Project">慈濟基金會 人文學校 | CS4 AI 課程期末專案</p>
+            <p>© 2024 Mei Hsien - Journey of Kindness</p>
+        </footer>
+    </div>
+    
+    <script>
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+        
+        let currentLang = 'zh';
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.includes(lang === 'zh' ? '中文' : 'English'));
+            });
+            document.querySelectorAll('[data-zh][data-en]').forEach(el => {
+                el.textContent = el.getAttribute(`data-${lang}`);
+            });
+            localStorage.setItem('jok-lang', lang);
+        }
+        
+        const savedLang = localStorage.getItem('jok-lang');
+        if (savedLang) setLang(savedLang);
+    </script>
+</body>
+</html>

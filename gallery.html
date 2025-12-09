@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>真實場景 Real Stories | Journey of Kindness</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📸</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Analytics GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .lang-toggle {
+            position: fixed;
+            top: 1rem; right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+        
+        .lang-btn {
+            padding: 0.4rem 0.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .lang-btn:hover, .lang-btn.active {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+        }
+        
+        header {
+            text-align: center;
+            padding: 2rem 0 3rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #ffd700, #ffeb3b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #a0c4ff;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .gallery-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gallery-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+        
+        .gallery-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .gallery-info {
+            padding: 1.2rem;
+        }
+        
+        .gallery-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: #ffd700;
+        }
+        
+        .gallery-desc {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+        
+        .gallery-tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #ffd700;
+            margin-top: 0.8rem;
+        }
+        
+        .back-section {
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #ffd700, #ffb300);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin: 0.5rem;
+        }
+        
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+        
+        .back-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .back-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
+        
+        .stats-banner {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffd700;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .gallery-card img { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+        <button class="lang-btn" onclick="setLang('en')">English</button>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1 data-zh="📸 真實場景" data-en="📸 Real Stories">📸 真實場景</h1>
+            <p class="subtitle" data-zh="16年的善行足跡 — 這些就是遊戲背後的真實故事" data-en="16 years of compassion — The real stories behind the game">16年的善行足跡 — 這些就是遊戲背後的真實故事</p>
+        </header>
+        
+        <div class="stats-banner">
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-number">16</div>
+                    <div class="stat-label" data-zh="服務年數" data-en="Years of Service">服務年數</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">33</div>
+                    <div class="stat-label" data-zh="合作學校" data-en="Partner Schools">合作學校</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1,600+</div>
+                    <div class="stat-label" data-zh="每年發放制服" data-en="Uniforms/Year">每年發放制服</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label" data-zh="愛與關懷" data-en="Love & Care">愛與關懷</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="gallery-grid">
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/back_to_school.jpg" alt="Back to School Event">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="🎒 返校日活動" data-en="🎒 Back to School Event">🎒 返校日活動</div>
+                    <div class="gallery-desc" data-zh="每年發放約 1,600 套制服、背包和學用品，慈濟旗幟飄揚在 Hunters Point" data-en="Annual distribution of ~1,600 uniforms, backpacks, and supplies at Hunters Point">每年發放約 1,600 套制服、背包和學用品，慈濟旗幟飄揚在 Hunters Point</div>
+                    <span class="gallery-tag">Happy Campus 幸福校園</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/env_vanguard_team.png" alt="Environment Vanguard">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="🌱 環保小尖兵" data-en="🌱 Environment Vanguard">🌱 環保小尖兵</div>
+                    <div class="gallery-desc" data-zh="青少年志工一起進行社區環保清潔，傳遞愛護地球的理念" data-en="Youth volunteers doing community cleanup, spreading environmental awareness">青少年志工一起進行社區環保清潔，傳遞愛護地球的理念</div>
+                    <span class="gallery-tag">Happy Community 幸福社區</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/vegi_cooking_class.png" alt="Vegetarian Cooking Class">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="🍳 蔬食烹飪班" data-en="🍳 Vegetarian Cooking Class">🍳 蔬食烹飪班</div>
+                    <div class="gallery-desc" data-zh="教導社區居民健康蔬食料理，穿著慈濟圍裙一起學習" data-en="Teaching healthy plant-based cooking to community members">教導社區居民健康蔬食料理，穿著慈濟圍裙一起學習</div>
+                    <span class="gallery-tag">Happy Community 幸福社區</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/cooking_class_students.png" alt="Students Learning">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="👩‍🍳 小廚師們" data-en="👩‍🍳 Young Chefs">👩‍🍳 小廚師們</div>
+                    <div class="gallery-desc" data-zh="孩子們認真學習烹飪技巧，將健康飲食帶回家" data-en="Children learning cooking skills to bring healthy eating home">孩子們認真學習烹飪技巧，將健康飲食帶回家</div>
+                    <span class="gallery-tag">Happy Campus 幸福校園</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/volunteer_care.png" alt="Volunteer Care">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="💝 志工關懷" data-en="💝 Volunteer Care">💝 志工關懷</div>
+                    <div class="gallery-desc" data-zh="慈濟志工穿著藍衣白褲，用心陪伴需要幫助的朋友" data-en="Tzu Chi volunteers in blue and white, caring for those in need">慈濟志工穿著藍衣白褲，用心陪伴需要幫助的朋友</div>
+                    <span class="gallery-tag">Happy Family 幸福家庭</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/rv_park_family.jpg" alt="RV Park Family">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="🚐 RV Park 家庭關懷" data-en="🚐 RV Park Family Outreach">🚐 RV Park 家庭關懷</div>
+                    <div class="gallery-desc" data-zh="志工探訪住在露營車的家庭，孩子們的笑容是最好的回報" data-en="Volunteers visiting families living in RVs, children's smiles are the best reward">志工探訪住在露營車的家庭，孩子們的笑容是最好的回報</div>
+                    <span class="gallery-tag">Happy Family 幸福家庭</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/rv_park_outreach.jpg" alt="RV Park Outreach">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="🏕️ 遊民關懷" data-en="🏕️ Homeless Outreach">🏕️ 遊民關懷</div>
+                    <div class="gallery-desc" data-zh="這就是 Level 4 的真實場景 — 在 RV Park 尋找需要幫助的人" data-en="This is the real scene behind Level 4 — finding those who need help at RV Park">這就是 Level 4 的真實場景 — 在 RV Park 尋找需要幫助的人</div>
+                    <span class="gallery-tag">Level 4 原型</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/winter_blankets.jpg" alt="Winter Blankets">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="🧣 冬季毛毯發放" data-en="🧣 Winter Blanket Distribution">🧣 冬季毛毯發放</div>
+                    <div class="gallery-desc" data-zh="寒冬送暖，為社區居民送上溫暖的毛毯和關懷" data-en="Warming hearts in winter with blankets and care">寒冬送暖，為社區居民送上溫暖的毛毯和關懷</div>
+                    <span class="gallery-tag">Happy Family 幸福家庭</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/homeless_meal.jpg" alt="Homeless Meal">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="🍲 熱食服務" data-en="🍲 Hot Meal Service">🍲 熱食服務</div>
+                    <div class="gallery-desc" data-zh="為無家可歸的朋友提供熱騰騰的餐點和飲水" data-en="Providing hot meals and water to homeless friends">為無家可歸的朋友提供熱騰騰的餐點和飲水</div>
+                    <span class="gallery-tag">Happy Community 幸福社區</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/tcm_doctor.jpg" alt="TCM Doctor">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="🏥 中醫義診" data-en="🏥 Free TCM Clinic">🏥 中醫義診</div>
+                    <div class="gallery-desc" data-zh="張醫師為社區居民提供免費中醫診療，針灸治療緩解疼痛" data-en="Dr. Zhang providing free TCM services, acupuncture for pain relief">張醫師為社區居民提供免費中醫診療，針灸治療緩解疼痛</div>
+                    <span class="gallery-tag">Happy Community 幸福社區</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/doctor_wu.png" alt="Dr. Wu">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="👩‍⚕️ 健康檢查" data-en="👩‍⚕️ Health Screening">👩‍⚕️ 健康檢查</div>
+                    <div class="gallery-desc" data-zh="吳醫師為居民測量血壓，關心每一位社區成員的健康" data-en="Dr. Wu checking blood pressure, caring for community health">吳醫師為居民測量血壓，關心每一位社區成員的健康</div>
+                    <span class="gallery-tag">Happy Community 幸福社區</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/ceremony.png" alt="Attendance Ceremony">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="🏆 全勤獎頒獎" data-en="🏆 Attendance Award Ceremony">🏆 全勤獎頒獎</div>
+                    <div class="gallery-desc" data-zh="這就是 Level 2 的真實場景 — Happy Campus 全勤獎頒獎典禮" data-en="This is the real scene behind Level 2 — Happy Campus attendance ceremony">這就是 Level 2 的真實場景 — Happy Campus 全勤獎頒獎典禮</div>
+                    <span class="gallery-tag">Level 2 原型</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/attendance_award.png" alt="Award Presentation">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="🎖️ 頒發獎狀" data-en="🎖️ Award Presentation">🎖️ 頒發獎狀</div>
+                    <div class="gallery-desc" data-zh="慈濟志工親手頒發全勤獎狀，鼓勵孩子們堅持上學" data-en="Tzu Chi volunteers presenting attendance certificates, encouraging school attendance">慈濟志工親手頒發全勤獎狀，鼓勵孩子們堅持上學</div>
+                    <span class="gallery-tag">Happy Campus 幸福校園</span>
+                </div>
+            </div>
+            
+            <div class="gallery-card">
+                <img src="assets/images/real-scenes/env_vanguard_group.png" alt="Vanguard Group">
+                <div class="gallery-info">
+                    <div class="gallery-title" data-zh="🌍 環保小尖兵團隊" data-en="🌍 Vanguard Team">🌍 環保小尖兵團隊</div>
+                    <div class="gallery-desc" data-zh="一群年輕人一起為環境出力，手提橘色袋子象徵行動力" data-en="Young people working together for the environment, orange bags symbolize action">一群年輕人一起為環境出力，手提橘色袋子象徵行動力</div>
+                    <span class="gallery-tag">Happy Community 幸福社區</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="back-section">
+            <a href="outro.html" class="back-btn">
+                ← <span data-zh="返回結尾頁" data-en="Back to Outro">返回結尾頁</span>
+            </a>
+            <a href="index.html" class="back-btn secondary">
+                🏠 <span data-zh="主選單" data-en="Main Menu">主選單</span>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        let currentLang = 'zh';
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.includes(lang === 'zh' ? '中文' : 'English'));
+            });
+            document.querySelectorAll('[data-zh][data-en]').forEach(el => {
+                el.textContent = el.getAttribute(`data-${lang}`);
+            });
+            localStorage.setItem('jok-lang', lang);
+        }
+        
+        const savedLang = localStorage.getItem('jok-lang');
+        if (savedLang) setLang(savedLang);
+    </script>
+</body>
+</html>

@@ -1,114 +1,170 @@
-# Journey of Kindness | 慈悲之旅
+# 🪷 Journey of Kindness 善的旅程
 
-> **"A game is a series of interesting decisions."** — Sid Meier
+> **A 58-year-old student's semester-long adventure: turning AI algorithms into acts of compassion.**
+>
+> 一位 58 歲學生的冒險：把 AI 演算法變成善的行動。
 
-An educational AI game that teaches 7 algorithms through real humanitarian scenarios from Tzu Chi Foundation's 16 years of service in San Francisco's Hunters Point-Bayview community.
-
-## 🎮 Play Now
-
-**GitHub Pages:** [https://aadl11.github.io/journey-of-kindness/](https://aadl11.github.io/journey-of-kindness/)
-
-## 📚 Project Information
-
-| Item | Details |
-|------|---------|
-| **Student** | Mei Hsien Hsu (許美嫻) |
-| **Course** | CS4 Introduction to Artificial Intelligence |
-| **Professor** | An Lam |
-| **Institution** | Las Positas College |
-| **Program** | Honors Transfer Program |
-| **Semester** | Fall 2025 |
-
-## 🧠 7 AI Algorithms Implemented
-
-| Level | Location | Algorithm | Chapter |
-|-------|----------|-----------|---------|
-| 1 | Mrs. Garcia's House | A* Search | Ch. 3 |
-| 2 | Bret Harte Elementary | Propositional Logic | Ch. 7 |
-| 3 | RV Park | Markov Decision Process | Ch. 17 |
-| 4 | Community Center | Knowledge-Based Agent | Ch. 7 |
-| 5 | Volunteer Hub | Bayesian Network | Ch. 12-13 |
-| 6 | Community Garden | First-Order Logic | Ch. 8-9 |
-| 7 | Tzu Chi Hall | Adversarial Search | Ch. 5 |
-| Bonus | Cleanup Zone | Pathfinding | Ch. 3 |
-
-## 🪷 Ataraxy Portico - Jing Si Aphorisms
-
-Each level concludes with a contemplative pause featuring Master Cheng Yen's wisdom:
-
-| Level | 靜思語 (Jing Si Aphorism) | English |
-|-------|--------------------------|---------|
-| 1 | 感恩，是世間最美的語言 | Gratitude is the most beautiful language |
-| 2 | 心能轉境，境隨心轉 | Master your mind, transform your circumstances |
-| 3 | 甘願做，歡喜受 | Willing to do, happy to receive |
-| 4 | 在未知中前行，用智慧照亮道路 | Move forward in the unknown, let wisdom light the way |
-| 5 | 靜思勤行道，慈濟人間路 | Reflect quietly, walk the Tzu Chi path |
-| 6 | 把握時間，珍惜空間 | Seize time, cherish space |
-| 7 | 快樂不在擁有多 | Happiness is not in having more |
-
-## 🎯 Design Philosophy
-
-Inspired by **Sid Meier's** game design principles:
-- **Map-centric exploration** - Hunters Point community map as the hub
-- **Meaningful choices** - Each decision reflects real volunteer scenarios
-- **Progressive disclosure** - Unlock levels by completing challenges
-- **Emotional engagement** - Real photos and stories from the community
-
-## 📊 Research Results
-
-| Metric | Result |
-|--------|--------|
-| Recruitment Conversion | 67% (95% CI: 38%-88%) |
-| ELO Gain | +180 |
-| Sample Size | N=15 |
-
-## 🏛️ Three Happinesses Program (三福)
-
-The game showcases Tzu Chi San Francisco's community programs:
-
-1. **Happy Campus (幸福校園)** - Attendance awards, school supplies, uniforms
-2. **Happy Family (幸福家庭)** - Food distribution, furniture, winter blankets
-3. **Happy Community (幸福社區)** - Dental clinic, health talks, environmental cleanup
-
-## 💻 Technical Implementation
-
-- **Frontend:** React 18 + Tailwind CSS (CDN, no build required)
-- **Audio:** Web Audio API for sound effects and melodies
-- **Animations:** CSS keyframes for Disney-style effects
-- **Responsive:** Works on desktop and mobile devices
-
-## 📁 File Structure
-
-```
-journey-of-kindness/
-├── index.html          # Main game file
-├── README.md           # This file
-├── DEVELOPMENT_TIMELINE.md  # 16-week development journey
-└── media/
-    ├── intro.mp4       # 29-second opening video
-    ├── hunters_point_map.png  # Interactive community map
-    ├── 靜心之門.png     # Ataraxy Portico gate
-    ├── [level photos]  # Real photos from community service
-    └── [QR codes]      # Social media links
-```
-
-## 🙏 Acknowledgments
-
-- **Professor An Lam** - For teaching that "programming is not rocket science, it's a matter of how much time you spend on it."
-- **Sister Roxanne (黃淑雲師姊)** - For 16 years of guidance in community service
-- **Tzu Chi Foundation San Francisco** - For the stories and mission
-- **Hunters Point-Bayview Community** - For trusting us with their stories
-
-## 📖 Ethics Reflection
-
-> **「真正的慈悲，是當演算法說不行，我們說：我願意。」**
-> 
-> "True compassion is when the algorithm says no, and we say: I'm willing."
+[![Play Now](https://img.shields.io/badge/🎮_PLAY_NOW-Click_Here-FF6B6B?style=for-the-badge)](https://YOUR_USERNAME.github.io/journey-of-kindness/)
+[![Paper](https://img.shields.io/badge/📄_Research_Paper-Read-4ECDC4?style=for-the-badge)](docs/Hsu_WhenAlgorithmsRemember_Final_v2.pdf)
 
 ---
 
-**Built with 💙 for the Bayview-Hunters Point community**
+## 🌟 The Story
 
-*「感恩，是世間最美的語言」— Master Cheng Yen 證嚴法師*
+**2006, San Francisco.** A volunteer named Roxanne saw a 7-year-old girl eating *raw, uncooked rice*. The child hadn't eaten in three days.
 
-© 2025 Mei Hsien Hsu | Las Positas College | CS4 Introduction to AI
+That moment changed everything.
+
+**2015.** I received a kidney transplant. My daughter was the donor. Tzu Chi volunteers I'd never met drove us home and cared for us like family.
+
+**2025.** Now I'm a 58-year-old CS student, learning AI to give back. This game is my final project — and my thank you letter to everyone who showed me compassion.
+
+---
+
+## 🎮 What Is This?
+
+An **interactive game** that teaches 5 AI algorithms through real volunteer stories from San Francisco's Hunters Point community.
+
+| Level | You Learn | By Playing |
+|:-----:|-----------|------------|
+| 1 | Decision Tree | Helping Mrs. Garcia make wise choices 🎯 |
+| 2 | Propositional Logic | Running a Happy Campus charity shop 🏪 |
+| 3 | MDP | Making food distribution decisions 🎯 |
+| 4 | Search Algorithm | Exploring RV Park to find families in need 🗺️ |
+| 5 | Bayesian Network | Building a community care map 💗 |
+
+**Special Feature:** After each level, enter the **Ataraxy Portico (靜心之門)** — a moment of stillness with Jing Si Aphorisms.
+
+---
+
+## ✨ Features
+
+- 🌏 **Bilingual** — English / 中文
+- 📊 **ELO Rating** — Adapts to your skill level  
+- 🧘 **Mindfulness Moments** — Pause and reflect between levels
+- 📸 **Real Stories** — Based on 16 years of community service
+- 📱 **Mobile Friendly** — Play anywhere
+
+---
+
+## 📊 Does It Work?
+
+We tested with 15 students:
+
+| What We Measured | Result |
+|------------------|--------|
+| Learning Improvement | **+180 ELO** (median) |
+| Wanted to Volunteer After | **67%** said yes! |
+
+Small sample, but promising! 🌱
+
+---
+
+## 🛠️ Built With
+
+**Frontend:** HTML5 • CSS3 • JavaScript • TailwindCSS • Canvas API
+
+**AI Concepts:** Decision Tree • Propositional Logic • MDP • Search Algorithm • Bayesian Networks
+
+**Tools:** Figma • Canva • Google Analytics
+
+---
+
+## 📸 Real Scenes from 16 Years of Service
+
+<details>
+<summary>Click to see the real stories behind the game</summary>
+
+### 🎒 Back to School
+![Back to School](assets/images/real-scenes/back_to_school.jpg)
+*Annual back-to-school event providing uniforms and supplies*
+
+### 🍳 Vegetarian Cooking Class
+![Cooking Class](assets/images/real-scenes/vegi_cooking_class.png)
+*Teaching healthy plant-based cooking to community members*
+
+### 🏥 Free Medical Services
+![TCM Doctor](assets/images/real-scenes/tcm_doctor.jpg)
+*Traditional Chinese medicine services for underserved community*
+
+### 🚐 RV Park Outreach
+![RV Park](assets/images/real-scenes/rv_park_outreach.jpg)
+*Reaching families living in vehicles*
+
+### 🧣 Winter Blanket Distribution
+![Winter Blankets](assets/images/real-scenes/winter_blankets.jpg)
+*Keeping our neighbors warm during cold months*
+
+### 🏆 Perfect Attendance Ceremony
+![Ceremony](assets/images/real-scenes/ceremony.png)
+*Celebrating students who achieved perfect attendance*
+
+</details>
+
+---
+
+## 📖 Read More
+
+| Document | Description |
+|----------|-------------|
+| [📄 Research Paper](docs/Hsu_WhenAlgorithmsRemember_Final_v2.pdf) | Full academic paper: "When Algorithms Remember What We Forget" |
+| [📝 Dev Timeline](docs/Journey_of_Kindness_Development_Timeline.docx) | My authentic journey building this |
+
+---
+
+## 🎓 Academic Context
+
+- **Course:** CS4 Introduction to Artificial Intelligence
+- **School:** Las Positas College, Honors Program
+- **Professor:** An Lam
+- **Semester:** Fall 2025
+
+---
+
+## 👩‍💻 About Me
+
+**Mei Hsien Hsu (許美嫻)**
+
+I'm a 58-year-old returning student proving it's never too late to learn.
+
+- 🎓 Transferring to UC Berkeley / Stanford (2026)
+- 💼 Seeking: Genentech Summer 2026 Internship
+- 🪷 16 years volunteering with Tzu Chi Foundation
+- 💝 Kidney transplant recipient — my daughter saved my life
+- 🔬 Interested in: AI/ML, Regenerative Medicine, Exosome Research
+
+---
+
+## 🚀 Try It Yourself
+
+```bash
+git clone https://github.com/YOUR_USERNAME/journey-of-kindness.git
+cd journey-of-kindness
+# Open index.html in your browser
+```
+
+Or just [▶️ Play Online](https://YOUR_USERNAME.github.io/journey-of-kindness/)!
+
+---
+
+## 🙏 Thank You
+
+- **Professor An Lam** — For believing a 58-year-old could learn AI
+- **Roxanne (黃淑雲師姊)** — My mentor for 16 years
+- **Tzu Chi Family** — For showing me what coordinated compassion looks like
+- **My Daughter** — Who gave me her kidney and believes I can do anything
+- **CS4 Classmates** — For an amazing semester together
+
+---
+
+## 🪷
+
+> 「被愛的人，學會去愛」
+>
+> *Those who are loved, learn to love.*
+>
+> — Master Cheng Yen
+
+---
+
+*Made with 💗 in California*

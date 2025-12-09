@@ -1,1535 +1,378 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Journey of Kindness | 慈悲之旅</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="google" content="notranslate">
+    <title>善的旅程 Journey of Kindness | AI 教育遊戲</title>
+    <meta name="description" content="慈濟人文學校 AI 教育互動遊戲 - 透過5個關卡學習AI基礎知識，體驗用智慧與善心幫助他人">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Analytics GA4 - 請將 G-XXXXXXXXXX 替換為你的 Measurement ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+        
+        // 追蹤關卡點擊事件
+        function trackLevelClick(levelNum, levelName) {
+            gtag('event', 'level_start', {
+                'event_category': 'Game',
+                'event_label': levelName,
+                'level_number': levelNum
+            });
+        }
+    </script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
-        * { font-family: 'Nunito', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* Disney-style animations */
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.5); } 50% { box-shadow: 0 0 40px rgba(255,215,0,0.8); } }
-        @keyframes sparkle { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
-        @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.2); opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes mapPan { 0% { transform: scale(1.1) translateY(-20px); } 100% { transform: scale(1) translateY(0); } }
-        @keyframes starBurst { 0% { transform: scale(0) rotate(0deg); } 50% { transform: scale(1.2) rotate(180deg); } 100% { transform: scale(1) rotate(360deg); } }
-        @keyframes confetti { 0% { transform: translateY(-100vh) rotate(0deg); } 100% { transform: translateY(100vh) rotate(720deg); } }
-        
-        .float { animation: float 3s ease-in-out infinite; }
-        .pulse { animation: pulse 2s ease-in-out infinite; }
-        .glow { animation: glow 2s ease-in-out infinite; }
-        .breathe { animation: breathe 4s ease-in-out infinite; }
-        .slide-up { animation: slideUp 0.5s ease-out; }
-        .map-pan { animation: mapPan 1.5s ease-out; }
-        .star-burst { animation: starBurst 0.6s ease-out; }
-        
-        /* Map location markers */
-        .map-marker { 
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .map-marker:hover { 
-            transform: scale(1.2);
-            filter: brightness(1.2);
-        }
-        .map-marker.completed {
-            filter: drop-shadow(0 0 10px gold);
-        }
-        .map-marker.locked {
-            filter: grayscale(0.5);
-            opacity: 0.7;
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            overflow-x: hidden;
         }
         
-        /* Confetti */
-        .confetti-piece {
+        .stars {
             position: fixed;
-            width: 10px;
-            height: 10px;
-            animation: confetti 3s ease-in-out forwards;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .star {
+            position: absolute;
+            width: 3px; height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .lang-toggle {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .lang-btn:hover, .lang-btn.active {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+        }
+        
+        header {
+            text-align: center;
+            padding: 1.5rem 0 2rem;
+            animation: fadeInDown 1s ease-out;
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ffd700, #ffeb3b, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.3rem;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #a0c4ff;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        .author-info {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .levels-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 0.5rem 0;
+        }
+        
+        .level-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+            color: white;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+        
+        .level-card:nth-child(1) { animation-delay: 0.1s; }
+        .level-card:nth-child(2) { animation-delay: 0.2s; }
+        .level-card:nth-child(3) { animation-delay: 0.3s; }
+        .level-card:nth-child(4) { animation-delay: 0.4s; }
+        .level-card:nth-child(5) { animation-delay: 0.5s; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .level-card:hover {
+            transform: translateX(8px) scale(1.02);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+            border-color: #ffd700;
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.2);
+        }
+        
+        .level-icon {
+            font-size: 2.5rem;
+            width: 65px; height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .level-info { flex: 1; }
+        
+        .level-number {
+            font-size: 0.8rem;
+            color: #ffd700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.2rem;
+        }
+        
+        .level-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        
+        .level-subtitle {
+            font-size: 0.9rem;
+            color: #a0c4ff;
+        }
+        
+        .level-arrow {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s;
+        }
+        
+        .level-card:hover .level-arrow {
+            color: #ffd700;
+            transform: translateX(5px);
+        }
+        
+        .level-1 .level-icon { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); }
+        .level-2 .level-icon { background: linear-gradient(135deg, #4ecdc4, #3db9b1); }
+        .level-3 .level-icon { background: linear-gradient(135deg, #a855f7, #9333ea); }
+        .level-4 .level-icon { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .level-5 .level-icon { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+        
+        .tzu-chi-logo { font-size: 1.3rem; margin-bottom: 0.3rem; }
+        
+        footer a {
+            color: #ffd700;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ffd700;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        footer a:hover {
+            background: rgba(255, 215, 0, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 1.6rem; }
+            .subtitle { font-size: 0.9rem; }
+            .logo { font-size: 2.5rem; }
+            .level-card { padding: 1rem; gap: 1rem; }
+            .level-icon { width: 55px; height: 55px; font-size: 2rem; }
+            .level-title { font-size: 1rem; }
+            .lang-toggle { position: static; justify-content: center; margin-bottom: 0.5rem; }
         }
     </style>
 </head>
-<body class="bg-gray-900 overflow-hidden">
-    <div id="root"></div>
+<body>
+    <div class="stars" id="stars"></div>
     
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
-
-        // ============================================================
-        // GAME DATA - Sid Meier Style "Interesting Decisions"
-        // ============================================================
-        const LEVELS = [
-            {
-                id: 1,
-                name: "Mrs. Garcia's House",
-                nameZh: "乘愛而來",
-                algorithm: "A* Search",
-                location: { x: 25, y: 60 },
-                icon: "🏠",
-                photo: "media/clean_Mrs__Garcia.png",
-                story: "A little girl eating raw rice sparked 16 years of service...",
-                storyZh: "一個小女孩吃生米的故事，開啟了16年的服務...",
-                aphorism: "感恩，是世間最美的語言",
-                aphorismEn: "Gratitude is the most beautiful language",
-                music: "gentle",
-                color: "from-blue-600 to-blue-800"
-            },
-            {
-                id: 2,
-                name: "Bret Harte Elementary",
-                nameZh: "幸福校園",
-                algorithm: "Propositional Logic",
-                location: { x: 45, y: 35 },
-                icon: "🏫",
-                photo: "media/全勤獎1_馬賽克.png",
-                story: "Sister Roxanne presents attendance awards to dedicated students...",
-                storyZh: "黃淑雲師姊頒發全勤獎給努力的學生...",
-                aphorism: "心能轉境，境隨心轉",
-                aphorismEn: "Master your mind, transform your circumstances",
-                music: "hopeful",
-                color: "from-green-600 to-green-800"
-            },
-            {
-                id: 3,
-                name: "RV Park",
-                nameZh: "露宿者關懷",
-                algorithm: "MDP",
-                location: { x: 70, y: 70 },
-                icon: "🚐",
-                photo: "media/RV_Park_遊民_完成__1_.jpg",
-                story: "Reaching out to those living in vehicles, bringing warmth and hope...",
-                storyZh: "關懷住在車上的露宿者，帶去溫暖與希望...",
-                aphorism: "甘願做，歡喜受",
-                aphorismEn: "Willing to do, happy to receive",
-                music: "compassion",
-                color: "from-orange-600 to-orange-800"
-            },
-            {
-                id: 4,
-                name: "Community Center",
-                nameZh: "冬季毛毯",
-                algorithm: "KB-Agent",
-                location: { x: 55, y: 50 },
-                icon: "🧥",
-                photo: "media/clean_L4叠好的灰色藍色毛毯.png",
-                story: "Knowledge-based decisions: Which families need blankets most?",
-                storyZh: "知識推理：哪些家庭最需要毛毯？",
-                aphorism: "在未知中前行，用智慧照亮道路",
-                aphorismEn: "Move forward in the unknown, let wisdom light the way",
-                music: "mystery",
-                color: "from-purple-600 to-purple-800"
-            },
-            {
-                id: 5,
-                name: "Volunteer Hub",
-                nameZh: "志工關懷",
-                algorithm: "Bayesian Network",
-                location: { x: 35, y: 45 },
-                icon: "👥",
-                photo: "media/志工關懷_完成v2.png",
-                story: "Predicting volunteer burnout with probability and compassion...",
-                storyZh: "用機率預測志工倦怠，用愛心關懷彼此...",
-                aphorism: "靜思勤行道，慈濟人間路",
-                aphorismEn: "Reflect quietly, walk the Tzu Chi path",
-                music: "peaceful",
-                color: "from-teal-600 to-teal-800"
-            },
-            {
-                id: 6,
-                name: "Community Garden",
-                nameZh: "花園傳承",
-                algorithm: "First-Order Logic",
-                location: { x: 80, y: 40 },
-                icon: "🌳",
-                photo: "media/clean_L7___Grandma___Marcus_花園傳承版.png",
-                story: "Marcus learns from Grandma: passing wisdom across generations...",
-                storyZh: "Marcus 向奶奶學習：智慧的代代相傳...",
-                aphorism: "把握時間，珍惜空間",
-                aphorismEn: "Seize time, cherish space",
-                music: "heritage",
-                color: "from-emerald-600 to-emerald-800"
-            },
-            {
-                id: 7,
-                name: "Tzu Chi Hall",
-                nameZh: "菁英志工",
-                algorithm: "Adversarial Search",
-                location: { x: 50, y: 25 },
-                icon: "🌍",
-                photo: "media/clean_L6_菁英志工.png",
-                story: "The final challenge: competing against doubt with compassion...",
-                storyZh: "最終挑戰：用慈悲戰勝懷疑...",
-                aphorism: "快樂不在擁有多",
-                aphorismEn: "Happiness is not in having more",
-                music: "triumph",
-                color: "from-indigo-600 to-indigo-800"
-            },
-            {
-                id: 8,
-                name: "Cleanup Zone",
-                nameZh: "環保小尖兵",
-                algorithm: "Bonus Level",
-                location: { x: 15, y: 35 },
-                icon: "🌱",
-                photo: "media/EnvironmentVangguard_.png",
-                story: "Young environmental guardians cleaning up the community!",
-                storyZh: "環保小尖兵們一起清潔社區！",
-                aphorism: "清淨在源頭，環保在行動",
-                aphorismEn: "Purity at the source, action for the environment",
-                music: "energetic",
-                color: "from-lime-600 to-lime-800",
-                isBonus: true
-            }
-        ];
-
-        const ETHICS_QUOTE = {
-            zh: "「真正的慈悲，是當演算法說不行，我們說：我願意。」",
-            en: '"True compassion is when the algorithm says no, and we say: I\'m willing."'
-        };
-
-        // ============================================================
-        // AUDIO SYSTEM
-        // ============================================================
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let audioCtx = null;
-
-        const playSound = (type) => {
-            if (!audioCtx) audioCtx = new AudioContext();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            
-            const sounds = {
-                click: { freq: 600, duration: 0.1, type: 'sine' },
-                success: { freq: 523, duration: 0.3, type: 'sine' },
-                complete: { freq: 784, duration: 0.5, type: 'sine' },
-                error: { freq: 200, duration: 0.2, type: 'square' },
-                bell: { freq: 528, duration: 2, type: 'sine' },
-                magic: { freq: 880, duration: 0.4, type: 'triangle' }
-            };
-            
-            const s = sounds[type] || sounds.click;
-            osc.type = s.type;
-            osc.frequency.setValueAtTime(s.freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + s.duration);
-            osc.start();
-            osc.stop(audioCtx.currentTime + s.duration);
-        };
-
-        const playMelody = (notes) => {
-            if (!audioCtx) audioCtx = new AudioContext();
-            notes.forEach((note, i) => {
-                setTimeout(() => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(note, audioCtx.currentTime);
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.3);
-                }, i * 200);
-            });
-        };
-
-        // ============================================================
-        // MAIN APP COMPONENT
-        // ============================================================
-        function App() {
-            const [screen, setScreen] = useState('video'); // video, intro, map, level, story, game, portico, complete
-            const [lang, setLang] = useState('zh');
-            const [currentLevel, setCurrentLevel] = useState(null);
-            const [completedLevels, setCompletedLevels] = useState([]);
-            const [scores, setScores] = useState({});
-            const [totalScore, setTotalScore] = useState(0);
-            const [showSkip, setShowSkip] = useState(false);
-            const [canContinue, setCanContinue] = useState(false);
-            const [breathPhase, setBreathPhase] = useState('inhale');
-            const videoRef = useRef(null);
-
-            // Video skip button appears after 3 seconds
-            useEffect(() => {
-                if (screen === 'video') {
-                    const timer = setTimeout(() => setShowSkip(true), 3000);
-                    return () => clearTimeout(timer);
-                }
-            }, [screen]);
-
-            // Breathing animation for portico
-            useEffect(() => {
-                if (screen === 'portico') {
-                    setCanContinue(false);
-                    const breathTimer = setInterval(() => {
-                        setBreathPhase(p => p === 'inhale' ? 'exhale' : 'inhale');
-                    }, 2500);
-                    const continueTimer = setTimeout(() => {
-                        setCanContinue(true);
-                        playSound('bell');
-                    }, 3000);
-                    return () => {
-                        clearInterval(breathTimer);
-                        clearTimeout(continueTimer);
-                    };
-                }
-            }, [screen]);
-
-            const handleVideoEnd = () => setScreen('intro');
-            const skipVideo = () => setScreen('intro');
-            
-            const startGame = () => {
-                playSound('magic');
-                setScreen('map');
-            };
-
-            const selectLevel = (level) => {
-                if (level.isBonus && completedLevels.length < 7) return; // Bonus unlocks after all others
-                playSound('click');
-                setCurrentLevel(level);
-                setScreen('story');
-            };
-
-            const startLevelGame = () => {
-                playSound('click');
-                setScreen('game');
-            };
-
-            const completeLevel = (score) => {
-                playSound('success');
-                setScores(prev => ({ ...prev, [currentLevel.id]: score }));
-                setTotalScore(prev => prev + score);
-                if (!completedLevels.includes(currentLevel.id)) {
-                    setCompletedLevels(prev => [...prev, currentLevel.id]);
-                }
-                setScreen('portico');
-            };
-
-            const afterPortico = () => {
-                if (completedLevels.length >= 7 && !completedLevels.includes(8)) {
-                    // Show ethics quote after level 7
-                    if (currentLevel.id === 7) {
-                        playMelody([523, 659, 784, 1047]);
-                    }
-                }
-                
-                if (completedLevels.length >= 8) {
-                    setScreen('complete');
-                } else {
-                    setScreen('map');
-                }
-            };
-
-            const returnToMap = () => {
-                playSound('click');
-                setScreen('map');
-            };
-
-            // ============================================================
-            // RENDER SCREENS
-            // ============================================================
-            
-            // VIDEO SCREEN
-            if (screen === 'video') {
-                return (
-                    <div className="fixed inset-0 bg-black flex items-center justify-center">
-                        <video 
-                            ref={videoRef}
-                            className="w-full h-full object-cover"
-                            autoPlay 
-                            playsInline
-                            onEnded={handleVideoEnd}
-                            onError={handleVideoEnd}
-                        >
-                            <source src="media/intro.mp4" type="video/mp4" />
-                        </video>
-                        {showSkip && (
-                            <button 
-                                onClick={skipVideo}
-                                className="absolute bottom-8 right-8 px-6 py-3 bg-white/20 hover:bg-white/40 text-white rounded-full backdrop-blur transition"
-                            >
-                                Skip ⏭️
-                            </button>
-                        )}
-                    </div>
-                );
-            }
-
-            // INTRO SCREEN
-            if (screen === 'intro') {
-                return (
-                    <div className="fixed inset-0 bg-gradient-to-b from-indigo-900 via-purple-900 to-black flex flex-col items-center justify-center p-8">
-                        <div className="text-center slide-up">
-                            <div className="text-8xl mb-6 float">🪷</div>
-                            <h1 className="text-5xl font-bold text-white mb-4">
-                                Journey of Kindness
-                            </h1>
-                            <h2 className="text-3xl text-purple-300 mb-8">慈悲之旅</h2>
-                            <p className="text-xl text-gray-300 mb-4 max-w-2xl">
-                                {lang === 'zh' 
-                                    ? '探索獵人角社區，體驗7種AI演算法，感受16年慈濟服務的故事'
-                                    : 'Explore Hunters Point, experience 7 AI algorithms, feel 16 years of Tzu Chi service'}
-                            </p>
-                            <p className="text-lg text-purple-400 italic mb-8">
-                                "A game is a series of interesting decisions." — Sid Meier
-                            </p>
-                            
-                            <button 
-                                onClick={startGame}
-                                className="px-12 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-2xl font-bold rounded-full hover:scale-105 transition transform glow"
-                            >
-                                {lang === 'zh' ? '🗺️ 開始探索' : '🗺️ Start Exploring'}
-                            </button>
-                            
-                            <div className="mt-8 flex gap-4 justify-center">
-                                <button 
-                                    onClick={() => setLang('en')}
-                                    className={`px-4 py-2 rounded-full ${lang === 'en' ? 'bg-white text-purple-900' : 'bg-white/20 text-white'}`}
-                                >
-                                    English
-                                </button>
-                                <button 
-                                    onClick={() => setLang('zh')}
-                                    className={`px-4 py-2 rounded-full ${lang === 'zh' ? 'bg-white text-purple-900' : 'bg-white/20 text-white'}`}
-                                >
-                                    中文
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
-
-            // MAP SCREEN - Sid Meier Style!
-            if (screen === 'map') {
-                return (
-                    <div className="fixed inset-0 bg-gradient-to-b from-sky-400 to-sky-600">
-                        {/* Map Background */}
-                        <div className="absolute inset-0 map-pan">
-                            <img 
-                                src="media/hunters_point_map.png" 
-                                alt="Hunters Point Map"
-                                className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                        </div>
-                        
-                        {/* Header */}
-                        <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center bg-gradient-to-b from-black/60 to-transparent">
-                            <div className="flex items-center gap-4">
-                                <span className="text-3xl">🗺️</span>
-                                <div>
-                                    <h2 className="text-xl font-bold text-white">Hunters Point · Bayview</h2>
-                                    <p className="text-sm text-gray-300">
-                                        {completedLevels.length}/8 {lang === 'zh' ? '任務完成' : 'Missions Complete'}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <div className="bg-black/40 px-4 py-2 rounded-full">
-                                    <span className="text-yellow-400">⭐ {totalScore}</span>
-                                </div>
-                                <button 
-                                    onClick={() => setLang(l => l === 'zh' ? 'en' : 'zh')}
-                                    className="bg-white/20 px-3 py-1 rounded-full text-white text-sm"
-                                >
-                                    {lang === 'zh' ? 'EN' : '中文'}
-                                </button>
-                            </div>
-                        </div>
-                        
-                        {/* Map Markers */}
-                        {LEVELS.map(level => {
-                            const isCompleted = completedLevels.includes(level.id);
-                            const isLocked = level.isBonus && completedLevels.length < 7;
-                            
-                            return (
-                                <div
-                                    key={level.id}
-                                    className={`absolute map-marker ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}`}
-                                    style={{ 
-                                        left: `${level.location.x}%`, 
-                                        top: `${level.location.y}%`,
-                                        transform: 'translate(-50%, -50%)'
-                                    }}
-                                    onClick={() => !isLocked && selectLevel(level)}
-                                >
-                                    <div className={`relative group`}>
-                                        {/* Marker */}
-                                        <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${level.color} flex items-center justify-center text-3xl shadow-lg border-4 border-white ${isCompleted ? 'ring-4 ring-yellow-400' : ''}`}>
-                                            {isCompleted ? '⭐' : level.icon}
-                                        </div>
-                                        
-                                        {/* Tooltip */}
-                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition pointer-events-none">
-                                            <div className="bg-black/90 text-white px-4 py-2 rounded-lg whitespace-nowrap text-center">
-                                                <div className="font-bold">{lang === 'zh' ? level.nameZh : level.name}</div>
-                                                <div className="text-xs text-gray-400">{level.algorithm}</div>
-                                                {isLocked && <div className="text-xs text-yellow-400 mt-1">🔒 Complete all levels first</div>}
-                                            </div>
-                                        </div>
-                                        
-                                        {/* Pulse effect for available levels */}
-                                        {!isCompleted && !isLocked && (
-                                            <div className="absolute inset-0 rounded-full bg-white/30 pulse" />
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        })}
-                        
-                        {/* Legend */}
-                        <div className="absolute bottom-4 left-4 bg-black/60 p-4 rounded-xl backdrop-blur">
-                            <h3 className="text-white font-bold mb-2">🎯 {lang === 'zh' ? '三福計劃' : 'Three Happinesses'}</h3>
-                            <div className="text-sm text-gray-300 space-y-1">
-                                <div>🏫 {lang === 'zh' ? '幸福校園' : 'Happy Campus'}</div>
-                                <div>👨‍👩‍👧 {lang === 'zh' ? '幸福家庭' : 'Happy Family'}</div>
-                                <div>🏘️ {lang === 'zh' ? '幸福社區' : 'Happy Community'}</div>
-                            </div>
-                        </div>
-                        
-                        {/* Progress Bar */}
-                        <div className="absolute bottom-4 right-4 bg-black/60 p-4 rounded-xl backdrop-blur w-64">
-                            <div className="flex justify-between text-white text-sm mb-2">
-                                <span>{lang === 'zh' ? '探索進度' : 'Progress'}</span>
-                                <span>{Math.round(completedLevels.length / 8 * 100)}%</span>
-                            </div>
-                            <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
-                                <div 
-                                    className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-500"
-                                    style={{ width: `${completedLevels.length / 8 * 100}%` }}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
-
-            // STORY SCREEN - Before each level
-            if (screen === 'story' && currentLevel) {
-                return (
-                    <div className={`fixed inset-0 bg-gradient-to-b ${currentLevel.color} flex flex-col`}>
-                        {/* Photo */}
-                        <div className="flex-1 relative">
-                            <img 
-                                src={currentLevel.photo}
-                                alt={currentLevel.name}
-                                className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-                        </div>
-                        
-                        {/* Story */}
-                        <div className="bg-black/80 p-8 slide-up">
-                            <div className="max-w-2xl mx-auto text-center">
-                                <div className="text-5xl mb-4">{currentLevel.icon}</div>
-                                <h2 className="text-3xl font-bold text-white mb-2">
-                                    {lang === 'zh' ? currentLevel.nameZh : currentLevel.name}
-                                </h2>
-                                <p className="text-purple-400 mb-4">{currentLevel.algorithm}</p>
-                                <p className="text-xl text-gray-300 mb-6">
-                                    {lang === 'zh' ? currentLevel.storyZh : currentLevel.story}
-                                </p>
-                                
-                                <button 
-                                    onClick={startLevelGame}
-                                    className="px-8 py-4 bg-white text-gray-900 text-xl font-bold rounded-full hover:scale-105 transition"
-                                >
-                                    🎮 {lang === 'zh' ? '開始挑戰' : 'Start Challenge'}
-                                </button>
-                                
-                                <button 
-                                    onClick={returnToMap}
-                                    className="block mx-auto mt-4 text-gray-400 hover:text-white"
-                                >
-                                    ← {lang === 'zh' ? '返回地圖' : 'Back to Map'}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
-
-            // GAME SCREEN - Level-specific games
-            if (screen === 'game' && currentLevel) {
-                return (
-                    <GameLevel 
-                        level={currentLevel}
-                        lang={lang}
-                        onComplete={completeLevel}
-                        onBack={returnToMap}
-                    />
-                );
-            }
-
-            // PORTICO SCREEN - Breathing pause
-            if (screen === 'portico' && currentLevel) {
-                const showEthics = currentLevel.id === 7;
-                
-                return (
-                    <div className="fixed inset-0 bg-gradient-to-b from-purple-900 via-indigo-900 to-black flex flex-col items-center justify-center p-8">
-                        {/* Gate Image */}
-                        <div className="relative mb-8">
-                            <img 
-                                src="media/靜心之門.png"
-                                alt="Ataraxy Portico"
-                                className="w-64 h-64 object-contain breathe"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <span className="text-6xl float">🪷</span>
-                            </div>
-                        </div>
-                        
-                        {/* Breathing Guide */}
-                        <div className="text-center mb-8">
-                            <p className="text-3xl text-purple-300 mb-4">
-                                {breathPhase === 'inhale' 
-                                    ? (lang === 'zh' ? '吸氣...' : 'Breathe in...') 
-                                    : (lang === 'zh' ? '呼氣...' : 'Breathe out...')}
-                            </p>
-                            <div className={`w-32 h-32 mx-auto rounded-full border-4 border-purple-400 ${breathPhase === 'inhale' ? 'scale-100' : 'scale-75'} transition-transform duration-2500`} />
-                        </div>
-                        
-                        {/* Jing Si Aphorism */}
-                        <div className="text-center max-w-xl">
-                            <p className="text-2xl text-white mb-2">「{currentLevel.aphorism}」</p>
-                            <p className="text-lg text-purple-300 italic">"{currentLevel.aphorismEn}"</p>
-                            <p className="text-sm text-purple-500 mt-2">— Master Cheng Yen 證嚴法師</p>
-                        </div>
-                        
-                        {/* Ethics Quote (after Level 7) */}
-                        {showEthics && (
-                            <div className="mt-8 p-6 bg-yellow-500/20 rounded-xl border border-yellow-500/50 max-w-lg slide-up">
-                                <p className="text-xl text-yellow-300 mb-2">{ETHICS_QUOTE.zh}</p>
-                                <p className="text-lg text-yellow-200 italic">{ETHICS_QUOTE.en}</p>
-                            </div>
-                        )}
-                        
-                        {/* Continue Button */}
-                        <button 
-                            onClick={afterPortico}
-                            disabled={!canContinue}
-                            className={`mt-8 px-8 py-3 rounded-full text-lg font-bold transition ${
-                                canContinue 
-                                    ? 'bg-purple-500 text-white hover:bg-purple-400' 
-                                    : 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                            }`}
-                        >
-                            {canContinue 
-                                ? (lang === 'zh' ? '🗺️ 繼續探索' : '🗺️ Continue') 
-                                : (lang === 'zh' ? '請靜心呼吸...' : 'Please breathe...')}
-                        </button>
-                    </div>
-                );
-            }
-
-            // COMPLETE SCREEN
-            if (screen === 'complete') {
-                return <CompleteScreen lang={lang} totalScore={totalScore} completedLevels={completedLevels} onRestart={() => {
-                    setScreen('intro');
-                    setCompletedLevels([]);
-                    setScores({});
-                    setTotalScore(0);
-                }} />;
-            }
-
-            return null;
-        }
-
-        // ============================================================
-        // GAME LEVEL COMPONENT - Contains all 8 mini-games
-        // ============================================================
-        function GameLevel({ level, lang, onComplete, onBack }) {
-            const [gameState, setGameState] = useState('playing');
-            const [score, setScore] = useState(0);
-
-            const handleWin = (points) => {
-                setScore(points);
-                setGameState('won');
-                playSound('complete');
-                setTimeout(() => onComplete(points), 1500);
-            };
-
-            // Level 1: A* Frogger
-            if (level.id === 1) {
-                return <FroggerGame lang={lang} onWin={handleWin} onBack={onBack} />;
-            }
-
-            // Level 2: Logic Matching
-            if (level.id === 2) {
-                return <MatchingGame lang={lang} onWin={handleWin} onBack={onBack} />;
-            }
-
-            // Level 3: MDP Choice
-            if (level.id === 3) {
-                return <MDPGame lang={lang} onWin={handleWin} onBack={onBack} />;
-            }
-
-            // Level 4: KB Explorer
-            if (level.id === 4) {
-                return <ExplorerGame lang={lang} onWin={handleWin} onBack={onBack} />;
-            }
-
-            // Level 5: Bayesian
-            if (level.id === 5) {
-                return <BayesianGame lang={lang} onWin={handleWin} onBack={onBack} />;
-            }
-
-            // Level 6: Hanoi
-            if (level.id === 6) {
-                return <HanoiGame lang={lang} onWin={handleWin} onBack={onBack} />;
-            }
-
-            // Level 7: Tic-Tac-Toe
-            if (level.id === 7) {
-                return <TicTacToeGame lang={lang} onWin={handleWin} onBack={onBack} />;
-            }
-
-            // Level 8: Bonus Cleanup
-            if (level.id === 8) {
-                return <CleanupGame lang={lang} onWin={handleWin} onBack={onBack} />;
-            }
-
-            return null;
-        }
-
-        // ============================================================
-        // MINI-GAMES
-        // ============================================================
+    <div class="container">
+        <div class="lang-toggle">
+            <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+            <button class="lang-btn" onclick="setLang('en')">English</button>
+        </div>
         
-        // Level 1: A* Frogger
-        function FroggerGame({ lang, onWin, onBack }) {
-            const [playerPos, setPlayerPos] = useState({ x: 2, y: 4 });
-            const [cars, setCars] = useState([
-                { x: 0, y: 1, dx: 1, emoji: '🚗' },
-                { x: 3, y: 2, dx: -1, emoji: '🚙' },
-                { x: 1, y: 3, dx: 1, emoji: '🚕' },
-            ]);
-
-            useEffect(() => {
-                const handleKey = (e) => {
-                    setPlayerPos(prev => {
-                        let { x, y } = prev;
-                        if ((e.key === 'ArrowUp' || e.key === 'w') && y > 0) y--;
-                        if ((e.key === 'ArrowDown' || e.key === 's') && y < 4) y++;
-                        if ((e.key === 'ArrowLeft' || e.key === 'a') && x > 0) x--;
-                        if ((e.key === 'ArrowRight' || e.key === 'd') && x < 4) x++;
-                        return { x, y };
-                    });
-                };
-                window.addEventListener('keydown', handleKey);
-                return () => window.removeEventListener('keydown', handleKey);
-            }, []);
-
-            useEffect(() => {
-                const interval = setInterval(() => {
-                    setCars(prev => prev.map(car => ({
-                        ...car,
-                        x: (car.x + car.dx + 5) % 5
-                    })));
-                }, 800);
-                return () => clearInterval(interval);
-            }, []);
-
-            useEffect(() => {
-                if (playerPos.y === 0) {
-                    onWin(100);
-                }
-                // Check collision
-                const hit = cars.some(car => car.x === playerPos.x && car.y === playerPos.y);
-                if (hit) {
-                    playSound('error');
-                    setPlayerPos({ x: 2, y: 4 });
-                }
-            }, [playerPos, cars]);
-
-            return (
-                <div className="fixed inset-0 bg-gradient-to-b from-blue-900 to-blue-700 flex flex-col items-center justify-center p-4">
-                    <h2 className="text-2xl font-bold text-white mb-4">
-                        🏠 {lang === 'zh' ? '送餐到 Mrs. Garcia 家' : 'Deliver to Mrs. Garcia'}
-                    </h2>
-                    <p className="text-gray-300 mb-4">{lang === 'zh' ? '用方向鍵或WASD移動，避開車輛！' : 'Use arrows or WASD to move, avoid cars!'}</p>
-                    
-                    <div className="grid grid-cols-5 gap-1 bg-gray-800 p-2 rounded-lg">
-                        {Array(5).fill(0).map((_, y) => (
-                            Array(5).fill(0).map((_, x) => {
-                                const isPlayer = playerPos.x === x && playerPos.y === y;
-                                const car = cars.find(c => c.x === x && c.y === y);
-                                const isGoal = y === 0 && x === 2;
-                                
-                                return (
-                                    <div 
-                                        key={`${x}-${y}`}
-                                        className={`w-16 h-16 flex items-center justify-center text-3xl rounded ${
-                                            y === 0 ? 'bg-green-600' : 
-                                            y === 4 ? 'bg-blue-600' : 'bg-gray-600'
-                                        }`}
-                                    >
-                                        {isPlayer ? '💙' : car ? car.emoji : isGoal ? '🏠' : ''}
-                                    </div>
-                                );
-                            })
-                        ))}
-                    </div>
-                    
-                    {/* Mobile controls */}
-                    <div className="mt-6 grid grid-cols-3 gap-2">
-                        <div />
-                        <button onClick={() => setPlayerPos(p => ({ ...p, y: Math.max(0, p.y - 1) }))} className="p-4 bg-white/20 rounded-lg text-2xl">⬆️</button>
-                        <div />
-                        <button onClick={() => setPlayerPos(p => ({ ...p, x: Math.max(0, p.x - 1) }))} className="p-4 bg-white/20 rounded-lg text-2xl">⬅️</button>
-                        <button onClick={() => setPlayerPos(p => ({ ...p, y: Math.min(4, p.y + 1) }))} className="p-4 bg-white/20 rounded-lg text-2xl">⬇️</button>
-                        <button onClick={() => setPlayerPos(p => ({ ...p, x: Math.min(4, p.x + 1) }))} className="p-4 bg-white/20 rounded-lg text-2xl">➡️</button>
-                    </div>
-                    
-                    <button onClick={onBack} className="mt-4 text-gray-400 hover:text-white">
-                        ← {lang === 'zh' ? '返回' : 'Back'}
-                    </button>
+        <header>
+            <div class="logo">🌱</div>
+            <h1 data-zh="善的旅程" data-en="Journey of Kindness">善的旅程</h1>
+            <p class="subtitle" data-zh="AI 教育互動遊戲" data-en="AI Educational Interactive Game">AI 教育互動遊戲</p>
+            <p class="author-info" data-zh="CS4 期末專案 | Mei Hsien" data-en="CS4 Final Project | Mei Hsien">CS4 期末專案 | Mei Hsien</p>
+        </header>
+        
+        <div class="levels-container">
+            <a href="level1/journey_of_kindness_v9.html" class="level-card level-1" onclick="trackLevelClick(1, 'Decision Tree')">
+                <div class="level-icon">🎯</div>
+                <div class="level-info">
+                    <div class="level-number" data-zh="第一關" data-en="Level 1">第一關</div>
+                    <div class="level-title" data-zh="決策樹 Decision Tree" data-en="Decision Tree">決策樹 Decision Tree</div>
+                    <div class="level-subtitle" data-zh="小明的選擇 · 學習明智決策" data-en="Xiao Ming's Choice · Learn wise decisions">小明的選擇 · 學習明智決策</div>
                 </div>
-            );
-        }
-
-        // Level 2: Logic Matching Game
-        function MatchingGame({ lang, onWin, onBack }) {
-            const items = ['🍚', '🥫', '🧥', '📚', '🍚', '🥫', '🧥', '📚'];
-            const [cards, setCards] = useState(() => 
-                items.sort(() => Math.random() - 0.5).map((emoji, i) => ({ id: i, emoji, flipped: false, matched: false }))
-            );
-            const [selected, setSelected] = useState([]);
-            const [moves, setMoves] = useState(0);
-
-            const flipCard = (id) => {
-                if (selected.length === 2) return;
-                const card = cards.find(c => c.id === id);
-                if (card.flipped || card.matched) return;
-                
-                playSound('click');
-                setCards(prev => prev.map(c => c.id === id ? { ...c, flipped: true } : c));
-                setSelected(prev => [...prev, id]);
-            };
-
-            useEffect(() => {
-                if (selected.length === 2) {
-                    setMoves(m => m + 1);
-                    const [a, b] = selected.map(id => cards.find(c => c.id === id));
-                    
-                    if (a.emoji === b.emoji) {
-                        playSound('success');
-                        setCards(prev => prev.map(c => 
-                            c.id === a.id || c.id === b.id ? { ...c, matched: true } : c
-                        ));
-                        setSelected([]);
-                    } else {
-                        setTimeout(() => {
-                            setCards(prev => prev.map(c => 
-                                c.id === a.id || c.id === b.id ? { ...c, flipped: false } : c
-                            ));
-                            setSelected([]);
-                        }, 800);
-                    }
-                }
-            }, [selected]);
-
-            useEffect(() => {
-                if (cards.every(c => c.matched)) {
-                    onWin(Math.max(50, 100 - moves * 5));
-                }
-            }, [cards]);
-
-            return (
-                <div className="fixed inset-0 bg-gradient-to-b from-green-900 to-green-700 flex flex-col items-center justify-center p-4">
-                    <h2 className="text-2xl font-bold text-white mb-4">
-                        🏫 {lang === 'zh' ? '配對物資' : 'Match Supplies'}
-                    </h2>
-                    <p className="text-gray-300 mb-4">{lang === 'zh' ? `步數: ${moves}` : `Moves: ${moves}`}</p>
-                    
-                    <div className="grid grid-cols-4 gap-3">
-                        {cards.map(card => (
-                            <div
-                                key={card.id}
-                                onClick={() => flipCard(card.id)}
-                                className={`w-20 h-20 flex items-center justify-center text-4xl rounded-xl cursor-pointer transition-all transform ${
-                                    card.flipped || card.matched 
-                                        ? 'bg-white rotate-0' 
-                                        : 'bg-green-600 hover:bg-green-500'
-                                } ${card.matched ? 'ring-4 ring-yellow-400' : ''}`}
-                            >
-                                {(card.flipped || card.matched) ? card.emoji : '❓'}
-                            </div>
-                        ))}
-                    </div>
-                    
-                    <button onClick={onBack} className="mt-6 text-gray-400 hover:text-white">
-                        ← {lang === 'zh' ? '返回' : 'Back'}
-                    </button>
-                </div>
-            );
-        }
-
-        // Level 3: MDP Choice Adventure
-        function MDPGame({ lang, onWin, onBack }) {
-            const [step, setStep] = useState(0);
-            const [totalPoints, setTotalPoints] = useState(0);
+                <div class="level-arrow">→</div>
+            </a>
             
-            const scenarios = [
-                {
-                    text: lang === 'zh' ? '你在RV Park遇到一位露宿者，他看起來很餓。你會...' : 'You meet a homeless person at RV Park who looks hungry...',
-                    choices: [
-                        { text: lang === 'zh' ? '立即分享你的食物' : 'Share your food immediately', points: 40 },
-                        { text: lang === 'zh' ? '告訴他食物發放的時間' : 'Tell them about food distribution time', points: 25 }
-                    ]
-                },
-                {
-                    text: lang === 'zh' ? '一位老人需要毛毯，但你只剩一條了...' : 'An elder needs a blanket, but you only have one left...',
-                    choices: [
-                        { text: lang === 'zh' ? '把毛毯給他，再去拿更多' : 'Give the blanket, get more later', points: 35 },
-                        { text: lang === 'zh' ? '記下他的地址，明天送去' : 'Note address, deliver tomorrow', points: 30 }
-                    ]
-                },
-                {
-                    text: lang === 'zh' ? '活動結束了，還有剩餘物資...' : 'Event ended, supplies remain...',
-                    choices: [
-                        { text: lang === 'zh' ? '挨家挨戶送給需要的人' : 'Go door-to-door to distribute', points: 40 },
-                        { text: lang === 'zh' ? '保存起來下次使用' : 'Save for next time', points: 20 }
-                    ]
-                }
-            ];
-
-            const choose = (points) => {
-                playSound('click');
-                setTotalPoints(prev => prev + points);
-                if (step < scenarios.length - 1) {
-                    setStep(s => s + 1);
-                } else {
-                    onWin(totalPoints + points);
-                }
-            };
-
-            return (
-                <div className="fixed inset-0 bg-gradient-to-b from-orange-900 to-orange-700 flex flex-col items-center justify-center p-8">
-                    <h2 className="text-2xl font-bold text-white mb-2">
-                        🚐 {lang === 'zh' ? 'RV Park 抉擇' : 'RV Park Decisions'}
-                    </h2>
-                    <p className="text-orange-300 mb-6">{lang === 'zh' ? `累積善心: ${totalPoints}` : `Kindness: ${totalPoints}`}</p>
-                    
-                    <div className="bg-black/40 p-8 rounded-2xl max-w-lg">
-                        <p className="text-xl text-white mb-6">{scenarios[step].text}</p>
-                        
-                        <div className="space-y-4">
-                            {scenarios[step].choices.map((choice, i) => (
-                                <button
-                                    key={i}
-                                    onClick={() => choose(choice.points)}
-                                    className="w-full p-4 bg-orange-600 hover:bg-orange-500 text-white rounded-xl text-left transition"
-                                >
-                                    {choice.text}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                    
-                    <div className="mt-6 flex gap-2">
-                        {scenarios.map((_, i) => (
-                            <div key={i} className={`w-3 h-3 rounded-full ${i <= step ? 'bg-white' : 'bg-white/30'}`} />
-                        ))}
-                    </div>
-                    
-                    <button onClick={onBack} className="mt-4 text-gray-400 hover:text-white">
-                        ← {lang === 'zh' ? '返回' : 'Back'}
-                    </button>
+            <a href="level2/level2_propositional_logic.html" class="level-card level-2" onclick="trackLevelClick(2, 'Propositional Logic')">
+                <div class="level-icon">🏫</div>
+                <div class="level-info">
+                    <div class="level-number" data-zh="第二關" data-en="Level 2">第二關</div>
+                    <div class="level-title" data-zh="命題邏輯 Propositional Logic" data-en="Propositional Logic">命題邏輯 Propositional Logic</div>
+                    <div class="level-subtitle" data-zh="Happy Campus · 邏輯思考解題" data-en="Happy Campus · Logical thinking">Happy Campus · 邏輯思考解題</div>
                 </div>
-            );
+                <div class="level-arrow">→</div>
+            </a>
+            
+            <a href="level3/level3_mdp.html" class="level-card level-3" onclick="trackLevelClick(3, 'MDP')">
+                <div class="level-icon">🧘</div>
+                <div class="level-info">
+                    <div class="level-number" data-zh="第三關" data-en="Level 3">第三關</div>
+                    <div class="level-title" data-zh="馬可夫決策 MDP" data-en="Markov Decision Process">馬可夫決策 MDP</div>
+                    <div class="level-subtitle" data-zh="心靈旅程 · 探索連續決策智慧" data-en="Mind Journey · Sequential decisions">心靈旅程 · 探索連續決策智慧</div>
+                </div>
+                <div class="level-arrow">→</div>
+            </a>
+            
+            <a href="level4/level4_final.html" class="level-card level-4" onclick="trackLevelClick(4, 'Search Algorithm')">
+                <div class="level-icon">🚐</div>
+                <div class="level-info">
+                    <div class="level-number" data-zh="第四關" data-en="Level 4">第四關</div>
+                    <div class="level-title" data-zh="搜尋演算法 Search Algorithm" data-en="Search Algorithm">搜尋演算法 Search Algorithm</div>
+                    <div class="level-subtitle" data-zh="RV Park 探索 · 找到最佳路徑" data-en="RV Park · Find optimal path">RV Park 探索 · 找到最佳路徑</div>
+                </div>
+                <div class="level-arrow">→</div>
+            </a>
+            
+            <a href="level5/level5_bayesian_network.html" class="level-card level-5" onclick="trackLevelClick(5, 'Bayesian Network')">
+                <div class="level-icon">🌐</div>
+                <div class="level-info">
+                    <div class="level-number" data-zh="第五關" data-en="Level 5">第五關</div>
+                    <div class="level-title" data-zh="貝氏網路 Bayesian Network" data-en="Bayesian Network">貝氏網路 Bayesian Network</div>
+                    <div class="level-subtitle" data-zh="社區關懷地圖 · 建立愛的網路" data-en="Community Care Map · Build caring network">社區關懷地圖 · 建立愛的網路</div>
+                </div>
+                <div class="level-arrow">→</div>
+            </a>
+        </div>
+        
+        <footer>
+            <div class="tzu-chi-logo">🪷</div>
+            <p data-zh="慈濟基金會 人文學校" data-en="Tzu Chi Foundation Humanity School">慈濟基金會 人文學校</p>
+            <a href="outro.html" data-zh="🌍 完成遊戲後請填寫問卷" data-en="🌍 Please fill survey after completing">🌍 完成遊戲後請填寫問卷</a>
+        </footer>
+    </div>
+    
+    <script>
+        // Create stars
+        function createStars() {
+            const container = document.getElementById('stars');
+            for (let i = 0; i < 80; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(star);
+            }
         }
-
-        // Level 4: KB Explorer (Wumpus-style)
-        function ExplorerGame({ lang, onWin, onBack }) {
-            const targets = ['👨‍👩‍👧', '👴', '👵', '🧒'];
-            const distractors = ['🎁', '💕', '🌟', '✨', '💖'];
-            const [grid, setGrid] = useState(() => {
-                const all = [...targets, ...distractors.slice(0, 5)];
-                return all.sort(() => Math.random() - 0.5).map((emoji, i) => ({
-                    id: i,
-                    emoji,
-                    revealed: false,
-                    isTarget: targets.includes(emoji)
-                }));
+        createStars();
+        
+        // Language toggle
+        let currentLang = 'zh';
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.includes(lang === 'zh' ? '中文' : 'English'));
             });
-            const [found, setFound] = useState(0);
-
-            const reveal = (id) => {
-                const cell = grid.find(c => c.id === id);
-                if (cell.revealed) return;
-                
-                playSound(cell.isTarget ? 'success' : 'click');
-                setGrid(prev => prev.map(c => c.id === id ? { ...c, revealed: true } : c));
-                
-                if (cell.isTarget) {
-                    setFound(f => f + 1);
-                }
-            };
-
-            useEffect(() => {
-                if (found === 4) {
-                    onWin(100);
-                }
-            }, [found]);
-
-            return (
-                <div className="fixed inset-0 bg-gradient-to-b from-purple-900 to-purple-700 flex flex-col items-center justify-center p-4">
-                    <h2 className="text-2xl font-bold text-white mb-4">
-                        🧥 {lang === 'zh' ? '找到需要幫助的家庭' : 'Find Families in Need'}
-                    </h2>
-                    <p className="text-purple-300 mb-4">{lang === 'zh' ? `已找到: ${found}/4` : `Found: ${found}/4`}</p>
-                    
-                    <div className="grid grid-cols-3 gap-3">
-                        {grid.map(cell => (
-                            <div
-                                key={cell.id}
-                                onClick={() => reveal(cell.id)}
-                                className={`w-20 h-20 flex items-center justify-center text-4xl rounded-xl cursor-pointer transition ${
-                                    cell.revealed 
-                                        ? (cell.isTarget ? 'bg-green-500' : 'bg-gray-600') 
-                                        : 'bg-purple-600 hover:bg-purple-500'
-                                }`}
-                            >
-                                {cell.revealed ? cell.emoji : '❓'}
-                            </div>
-                        ))}
-                    </div>
-                    
-                    <button onClick={onBack} className="mt-6 text-gray-400 hover:text-white">
-                        ← {lang === 'zh' ? '返回' : 'Back'}
-                    </button>
-                </div>
-            );
-        }
-
-        // Level 5: Bayesian Prediction
-        function BayesianGame({ lang, onWin, onBack }) {
-            const [answers, setAnswers] = useState({});
-            const questions = [
-                { id: 'attendance', text: lang === 'zh' ? '這位志工最近出席率高嗎？' : 'High attendance recently?', weight: 0.35 },
-                { id: 'tired', text: lang === 'zh' ? '他看起來疲憊嗎？' : 'Looks tired?', weight: 0.25 },
-                { id: 'connected', text: lang === 'zh' ? '他與社區連結緊密嗎？' : 'Well connected to community?', weight: 0.30 }
-            ];
-
-            const answer = (qId, value) => {
-                playSound('click');
-                setAnswers(prev => ({ ...prev, [qId]: value }));
-            };
-
-            const calculate = () => {
-                let risk = 0.1; // base
-                if (answers.attendance === 'no') risk += 0.35;
-                if (answers.tired === 'yes') risk += 0.25;
-                if (answers.connected === 'no') risk += 0.30;
-                return Math.min(1, risk);
-            };
-
-            const allAnswered = Object.keys(answers).length === 3;
-
-            return (
-                <div className="fixed inset-0 bg-gradient-to-b from-teal-900 to-teal-700 flex flex-col items-center justify-center p-8">
-                    <h2 className="text-2xl font-bold text-white mb-4">
-                        👥 {lang === 'zh' ? '志工倦怠風險評估' : 'Volunteer Burnout Assessment'}
-                    </h2>
-                    
-                    <div className="bg-black/40 p-6 rounded-2xl max-w-lg w-full space-y-6">
-                        {questions.map(q => (
-                            <div key={q.id}>
-                                <p className="text-white mb-2">{q.text}</p>
-                                <div className="flex gap-4">
-                                    <button
-                                        onClick={() => answer(q.id, 'yes')}
-                                        className={`flex-1 p-3 rounded-lg transition ${
-                                            answers[q.id] === 'yes' ? 'bg-green-500 text-white' : 'bg-white/20 text-white hover:bg-white/30'
-                                        }`}
-                                    >
-                                        {lang === 'zh' ? '是' : 'Yes'}
-                                    </button>
-                                    <button
-                                        onClick={() => answer(q.id, 'no')}
-                                        className={`flex-1 p-3 rounded-lg transition ${
-                                            answers[q.id] === 'no' ? 'bg-red-500 text-white' : 'bg-white/20 text-white hover:bg-white/30'
-                                        }`}
-                                    >
-                                        {lang === 'zh' ? '否' : 'No'}
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                        
-                        {allAnswered && (
-                            <div className="text-center pt-4 border-t border-white/20">
-                                <p className="text-xl text-white mb-2">
-                                    {lang === 'zh' ? '倦怠風險' : 'Burnout Risk'}: 
-                                    <span className="text-yellow-400 font-bold ml-2">
-                                        {Math.round(calculate() * 100)}%
-                                    </span>
-                                </p>
-                                <button
-                                    onClick={() => onWin(Math.round((1 - calculate()) * 100))}
-                                    className="mt-4 px-6 py-3 bg-teal-500 hover:bg-teal-400 text-white rounded-full font-bold"
-                                >
-                                    {lang === 'zh' ? '完成評估' : 'Complete Assessment'}
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                    
-                    <button onClick={onBack} className="mt-6 text-gray-400 hover:text-white">
-                        ← {lang === 'zh' ? '返回' : 'Back'}
-                    </button>
-                </div>
-            );
-        }
-
-        // Level 6: Towers of Hanoi
-        function HanoiGame({ lang, onWin, onBack }) {
-            const [towers, setTowers] = useState([[3, 2, 1], [], []]);
-            const [selected, setSelected] = useState(null);
-            const [moves, setMoves] = useState(0);
-
-            const selectTower = (index) => {
-                if (selected === null) {
-                    if (towers[index].length > 0) {
-                        setSelected(index);
-                        playSound('click');
-                    }
-                } else {
-                    if (index === selected) {
-                        setSelected(null);
-                    } else {
-                        const fromTop = towers[selected][towers[selected].length - 1];
-                        const toTop = towers[index][towers[index].length - 1];
-                        
-                        if (toTop === undefined || fromTop < toTop) {
-                            setTowers(prev => {
-                                const newTowers = prev.map(t => [...t]);
-                                newTowers[index].push(newTowers[selected].pop());
-                                return newTowers;
-                            });
-                            setMoves(m => m + 1);
-                            playSound('success');
-                        } else {
-                            playSound('error');
-                        }
-                        setSelected(null);
-                    }
-                }
-            };
-
-            useEffect(() => {
-                if (towers[2].length === 3) {
-                    onWin(Math.max(50, 100 - (moves - 7) * 5));
-                }
-            }, [towers]);
-
-            const towerNames = lang === 'zh' ? ['訓練', '練習', '正式'] : ['Training', 'Practice', 'Official'];
-
-            return (
-                <div className="fixed inset-0 bg-gradient-to-b from-emerald-900 to-emerald-700 flex flex-col items-center justify-center p-4">
-                    <h2 className="text-2xl font-bold text-white mb-4">
-                        🌳 {lang === 'zh' ? '傳承智慧 (河內塔)' : 'Passing Wisdom (Hanoi)'}
-                    </h2>
-                    <p className="text-emerald-300 mb-4">{lang === 'zh' ? `步數: ${moves} (最佳: 7)` : `Moves: ${moves} (Optimal: 7)`}</p>
-                    
-                    <div className="flex gap-8">
-                        {towers.map((tower, i) => (
-                            <div key={i} className="flex flex-col items-center">
-                                <div
-                                    onClick={() => selectTower(i)}
-                                    className={`w-32 h-40 flex flex-col-reverse items-center justify-start p-2 rounded-lg cursor-pointer transition ${
-                                        selected === i ? 'bg-yellow-500/30 ring-2 ring-yellow-400' : 'bg-black/30 hover:bg-black/40'
-                                    }`}
-                                >
-                                    {tower.map((disc, j) => (
-                                        <div
-                                            key={j}
-                                            className="h-8 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600 mb-1"
-                                            style={{ width: `${disc * 30 + 20}px` }}
-                                        />
-                                    ))}
-                                </div>
-                                <p className="text-white mt-2">{towerNames[i]}</p>
-                            </div>
-                        ))}
-                    </div>
-                    
-                    <button onClick={onBack} className="mt-6 text-gray-400 hover:text-white">
-                        ← {lang === 'zh' ? '返回' : 'Back'}
-                    </button>
-                </div>
-            );
-        }
-
-        // Level 7: Tic-Tac-Toe
-        function TicTacToeGame({ lang, onWin, onBack }) {
-            const [board, setBoard] = useState(Array(9).fill(null));
-            const [isPlayerTurn, setIsPlayerTurn] = useState(true);
-            const [gameOver, setGameOver] = useState(false);
-
-            const checkWin = (b, player) => {
-                const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-                return lines.some(([a,b,c]) => board[a] === player && board[b] === player && board[c] === player);
-            };
-
-            const minimax = (b, isMax) => {
-                if (checkWin(b, '🤖')) return 10;
-                if (checkWin(b, '💙')) return -10;
-                if (!b.includes(null)) return 0;
-
-                if (isMax) {
-                    let best = -Infinity;
-                    for (let i = 0; i < 9; i++) {
-                        if (b[i] === null) {
-                            b[i] = '🤖';
-                            best = Math.max(best, minimax(b, false));
-                            b[i] = null;
-                        }
-                    }
-                    return best;
-                } else {
-                    let best = Infinity;
-                    for (let i = 0; i < 9; i++) {
-                        if (b[i] === null) {
-                            b[i] = '💙';
-                            best = Math.min(best, minimax(b, true));
-                            b[i] = null;
-                        }
-                    }
-                    return best;
-                }
-            };
-
-            const aiMove = () => {
-                let bestScore = -Infinity;
-                let bestMove = null;
-                const newBoard = [...board];
-                
-                // Prefer center
-                if (newBoard[4] === null) {
-                    bestMove = 4;
-                } else {
-                    for (let i = 0; i < 9; i++) {
-                        if (newBoard[i] === null) {
-                            newBoard[i] = '🤖';
-                            const score = minimax(newBoard, false);
-                            newBoard[i] = null;
-                            if (score > bestScore) {
-                                bestScore = score;
-                                bestMove = i;
-                            }
-                        }
-                    }
-                }
-                
-                if (bestMove !== null) {
-                    setBoard(prev => {
-                        const newB = [...prev];
-                        newB[bestMove] = '🤖';
-                        return newB;
-                    });
-                }
-                setIsPlayerTurn(true);
-            };
-
-            const playerMove = (i) => {
-                if (board[i] || gameOver || !isPlayerTurn) return;
-                playSound('click');
-                
-                setBoard(prev => {
-                    const newB = [...prev];
-                    newB[i] = '💙';
-                    return newB;
-                });
-                setIsPlayerTurn(false);
-            };
-
-            useEffect(() => {
-                if (!isPlayerTurn && !gameOver) {
-                    setTimeout(aiMove, 500);
-                }
-            }, [isPlayerTurn, gameOver]);
-
-            useEffect(() => {
-                if (checkWin(board, '💙')) {
-                    setGameOver(true);
-                    onWin(100);
-                } else if (checkWin(board, '🤖')) {
-                    setGameOver(true);
-                    onWin(50);
-                } else if (!board.includes(null)) {
-                    setGameOver(true);
-                    onWin(70);
-                }
-            }, [board]);
-
-            return (
-                <div className="fixed inset-0 bg-gradient-to-b from-indigo-900 to-indigo-700 flex flex-col items-center justify-center p-4">
-                    <h2 className="text-2xl font-bold text-white mb-4">
-                        🌍 {lang === 'zh' ? '慈悲 vs 懷疑' : 'Compassion vs Doubt'}
-                    </h2>
-                    <p className="text-indigo-300 mb-4">
-                        {gameOver 
-                            ? (lang === 'zh' ? '遊戲結束！' : 'Game Over!') 
-                            : (isPlayerTurn 
-                                ? (lang === 'zh' ? '你的回合 💙' : 'Your turn 💙') 
-                                : (lang === 'zh' ? 'AI 思考中...' : 'AI thinking...'))}
-                    </p>
-                    
-                    <div className="grid grid-cols-3 gap-2 bg-black/30 p-4 rounded-xl">
-                        {board.map((cell, i) => (
-                            <div
-                                key={i}
-                                onClick={() => playerMove(i)}
-                                className={`w-20 h-20 flex items-center justify-center text-4xl rounded-lg cursor-pointer transition ${
-                                    cell ? 'bg-indigo-600' : 'bg-indigo-800 hover:bg-indigo-700'
-                                }`}
-                            >
-                                {cell}
-                            </div>
-                        ))}
-                    </div>
-                    
-                    <button onClick={onBack} className="mt-6 text-gray-400 hover:text-white">
-                        ← {lang === 'zh' ? '返回' : 'Back'}
-                    </button>
-                </div>
-            );
-        }
-
-        // Level 8: Bonus Cleanup Game
-        function CleanupGame({ lang, onWin, onBack }) {
-            const [trash, setTrash] = useState(() => 
-                Array(12).fill(0).map((_, i) => ({
-                    id: i,
-                    x: Math.random() * 80 + 10,
-                    y: Math.random() * 60 + 20,
-                    collected: false,
-                    emoji: ['🗑️', '📦', '🥤', '🍂'][Math.floor(Math.random() * 4)]
-                }))
-            );
-            const [collected, setCollected] = useState(0);
-
-            const collect = (id) => {
-                playSound('success');
-                setTrash(prev => prev.map(t => t.id === id ? { ...t, collected: true } : t));
-                setCollected(c => c + 1);
-            };
-
-            useEffect(() => {
-                if (collected === 12) {
-                    onWin(100);
-                }
-            }, [collected]);
-
-            return (
-                <div className="fixed inset-0 bg-gradient-to-b from-lime-800 to-lime-600 flex flex-col items-center justify-center p-4">
-                    <h2 className="text-2xl font-bold text-white mb-4">
-                        🌱 {lang === 'zh' ? '環保小尖兵' : 'Environment Guardians'}
-                    </h2>
-                    <p className="text-lime-200 mb-4">{lang === 'zh' ? `已收集: ${collected}/12` : `Collected: ${collected}/12`}</p>
-                    
-                    <div className="relative w-full max-w-lg h-80 bg-green-700/50 rounded-2xl overflow-hidden">
-                        {/* Background image */}
-                        <div 
-                            className="absolute inset-0 opacity-30"
-                            style={{ 
-                                backgroundImage: 'url(media/EnvironmentVangguard_.png)',
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center'
-                            }}
-                        />
-                        
-                        {/* Trash items */}
-                        {trash.map(t => !t.collected && (
-                            <div
-                                key={t.id}
-                                onClick={() => collect(t.id)}
-                                className="absolute text-3xl cursor-pointer hover:scale-125 transition transform"
-                                style={{ left: `${t.x}%`, top: `${t.y}%` }}
-                            >
-                                {t.emoji}
-                            </div>
-                        ))}
-                    </div>
-                    
-                    <p className="text-lime-200 mt-4 text-sm">
-                        {lang === 'zh' ? '點擊收集所有垃圾！' : 'Click to collect all trash!'}
-                    </p>
-                    
-                    <button onClick={onBack} className="mt-4 text-gray-300 hover:text-white">
-                        ← {lang === 'zh' ? '返回' : 'Back'}
-                    </button>
-                </div>
-            );
-        }
-
-        // ============================================================
-        // COMPLETE SCREEN
-        // ============================================================
-        function CompleteScreen({ lang, totalScore, completedLevels, onRestart }) {
-            const [confetti, setConfetti] = useState([]);
-            const [slideIndex, setSlideIndex] = useState(0);
+            document.querySelectorAll('[data-zh][data-en]').forEach(el => {
+                el.textContent = el.getAttribute(`data-${lang}`);
+            });
+            localStorage.setItem('jok-lang', lang);
             
-            // 三福服務照片輪播
-            const servicePhotos = [
-                { src: 'media/張醫師中醫_馬賽克v2__1_.jpg', zh: '🏥 中醫針灸義診', en: '🏥 TCM Acupuncture' },
-                { src: 'media/吳醫師__女_.png', zh: '💊 健康檢查服務', en: '💊 Health Checkup' },
-                { src: 'media/VegiCooking_完成v2__1_.png', zh: '🥗 蔬食烹飪教學', en: '🥗 Veggie Cooking Class' }
-            ];
-            
-            useEffect(() => {
-                // Generate confetti
-                const pieces = Array(60).fill(0).map((_, i) => ({
-                    id: i,
-                    x: Math.random() * 100,
-                    color: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'][Math.floor(Math.random() * 6)],
-                    delay: Math.random() * 2
-                }));
-                setConfetti(pieces);
-                playMelody([523, 587, 659, 698, 784, 880, 988, 1047]);
-                
-                // Auto-rotate slideshow
-                const timer = setInterval(() => {
-                    setSlideIndex(i => (i + 1) % 3);
-                }, 3000);
-                return () => clearInterval(timer);
-            }, []);
-
-            return (
-                <div className="fixed inset-0 bg-gradient-to-b from-indigo-900 via-purple-900 to-black flex flex-col items-center justify-center p-8 overflow-hidden">
-                    {/* Confetti */}
-                    {confetti.map(c => (
-                        <div
-                            key={c.id}
-                            className="confetti-piece rounded-sm"
-                            style={{
-                                left: `${c.x}%`,
-                                backgroundColor: c.color,
-                                animationDelay: `${c.delay}s`
-                            }}
-                        />
-                    ))}
-                    
-                    {/* Earth Tree Image */}
-                    <div className="relative mb-6">
-                        <img 
-                            src="media/Outro___Earth___Tree_of_Unit.jpg"
-                            alt="Global Unity"
-                            className="w-80 h-48 object-cover rounded-2xl shadow-2xl"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-6xl star-burst">🌍</span>
-                        </div>
-                    </div>
-                    
-                    <h1 className="text-4xl font-bold text-white mb-2 text-center">
-                        {lang === 'zh' ? '🎉 慈悲之旅完成！' : '🎉 Journey Complete!'}
-                    </h1>
-                    
-                    {/* Score Card */}
-                    <div className="bg-white/10 backdrop-blur rounded-2xl p-6 my-6 text-center">
-                        <div className="text-5xl text-yellow-400 font-bold mb-2">⭐ {totalScore}</div>
-                        <p className="text-gray-300">{lang === 'zh' ? '總分' : 'Total Score'}</p>
-                        <div className="text-2xl text-green-400 mt-2">+{Math.round(totalScore / 5)} ELO</div>
-                    </div>
-                    
-                    {/* Research Stats */}
-                    <div className="bg-blue-500/20 rounded-xl p-4 mb-4 text-center">
-                        <p className="text-blue-300 text-sm mb-2">{lang === 'zh' ? '研究統計' : 'Research Stats'}</p>
-                        <p className="text-white">
-                            {lang === 'zh' ? '招募轉換率' : 'Recruitment'}: <span className="text-green-400 font-bold">67%</span>
-                        </p>
-                        <p className="text-gray-400 text-xs">(95% CI: 38%-88%, N=15)</p>
-                    </div>
-                    
-                    {/* 三福服務照片輪播 */}
-                    <div className="bg-white/10 backdrop-blur rounded-2xl p-4 mb-4">
-                        <p className="text-center text-yellow-400 text-sm mb-3">
-                            ✨ {lang === 'zh' ? '更多三福服務' : 'More Community Services'} ✨
-                        </p>
-                        <div className="relative w-64 h-40 mx-auto overflow-hidden rounded-xl">
-                            {servicePhotos.map((photo, i) => (
-                                <div
-                                    key={i}
-                                    className="absolute inset-0 transition-all duration-700"
-                                    style={{
-                                        opacity: slideIndex === i ? 1 : 0,
-                                        transform: slideIndex === i ? 'scale(1)' : 'scale(0.9)'
-                                    }}
-                                >
-                                    <img 
-                                        src={photo.src} 
-                                        alt={photo.en}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                        <p className="text-center text-white mt-2 text-sm">
-                            {lang === 'zh' ? servicePhotos[slideIndex].zh : servicePhotos[slideIndex].en}
-                        </p>
-                        <div className="flex justify-center gap-2 mt-2">
-                            {servicePhotos.map((_, i) => (
-                                <button
-                                    key={i}
-                                    onClick={() => setSlideIndex(i)}
-                                    className={`w-2 h-2 rounded-full transition ${slideIndex === i ? 'bg-yellow-400' : 'bg-gray-500'}`}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                    
-                    {/* Survey */}
-                    <a 
-                        href="https://forms.gle/jU6y5j4W3LB97GMj9"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-8 py-4 bg-green-500 hover:bg-green-400 text-white font-bold rounded-full transition mb-4"
-                    >
-                        📝 {lang === 'zh' ? '填寫問卷加入志工' : 'Fill Survey to Join'}
-                    </a>
-                    
-                    {/* QR Codes */}
-                    <div className="flex gap-4 mb-6">
-                        <img src="media/TCSF_FB.jpeg" alt="Facebook" className="w-20 h-20 rounded-lg" />
-                        <img src="media/TCSF_IG_jpg.png" alt="Instagram" className="w-20 h-20 rounded-lg" />
-                    </div>
-                    
-                    {/* Credits */}
-                    <div className="text-center text-gray-400 text-sm">
-                        <p>許美嫻 Mei Hsien Hsu | LPC CS4 | Professor An Lam | Fall 2025</p>
-                        <p className="mt-2 text-purple-400 italic">
-                            「感恩，是世間最美的語言」— Master Cheng Yen
-                        </p>
-                    </div>
-                    
-                    <button 
-                        onClick={onRestart}
-                        className="mt-6 text-gray-400 hover:text-white"
-                    >
-                        🔄 {lang === 'zh' ? '重新開始' : 'Play Again'}
-                    </button>
-                </div>
-            );
+            // Track language change
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'language_change', { 'language': lang });
+            }
         }
-
-        // ============================================================
-        // RENDER
-        // ============================================================
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        
+        const savedLang = localStorage.getItem('jok-lang');
+        if (savedLang) setLang(savedLang);
     </script>
 </body>
 </html>
