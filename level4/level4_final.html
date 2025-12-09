@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>善的旅程 Level 4: KB-Agent | Hunters Point RV Park</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Noto Sans TC', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .screen { display: none; min-height: 100vh; position: relative; }
+        .screen.active { display: flex; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.5); } 50% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.8); } }
+        @keyframes playerMove { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+        @keyframes breatheRing { 0%, 100% { transform: scale(0.8); opacity: 0.6; } 50% { transform: scale(1.3); opacity: 1; } }
+        @keyframes breatheCard { 0%, 100% { transform: scale(0.97); box-shadow: 0 8px 32px rgba(251, 191, 36, 0.2); } 50% { transform: scale(1.03); box-shadow: 0 12px 48px rgba(251, 191, 36, 0.5); } }
+        
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        .pulse-glow { animation: pulseGlow 2s infinite; }
+        
+        /* Background with RV Park */
+        .bg-rv-park {
+            background: url('rv_park_map.png') center center/cover no-repeat;
+            background-color: #1e3a5f;
+        }
+        
+        /* Breathing animations for meditation */
+        .breath-ring-large {
+            width: 180px; height: 180px; border-radius: 50%;
+            border: 6px solid rgba(251, 191, 36, 0.9);
+            animation: breatheRing 4s ease-in-out infinite;
+            box-shadow: 0 0 60px rgba(251, 191, 36, 0.6), inset 0 0 50px rgba(251, 191, 36, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .jingsi-card {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.35), rgba(168, 85, 247, 0.3)); 
+            backdrop-filter: blur(6px);
+            border-radius: 20px; padding: 1.5rem 2.5rem; max-width: 480px;
+            text-align: center; border: 2px solid rgba(251, 191, 36, 0.5);
+        }
+        .breathing-card { animation: breatheCard 4s ease-in-out infinite; }
+        
+        /* Game Grid - Semi-transparent */
+        .game-grid {
+            display: grid;
+            gap: 3px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
+        }
+        
+        .grid-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+            min-height: 55px;
+        }
+        
+        .grid-cell:hover { transform: scale(1.03); border-color: rgba(255, 255, 255, 0.6); }
+        .grid-cell.player { background: linear-gradient(135deg, #3b82f6, #2563eb); border-color: #60a5fa; box-shadow: 0 0 15px rgba(59, 130, 246, 0.6); }
+        .grid-cell.visited { background: rgba(34, 197, 94, 0.55); border-color: rgba(34, 197, 94, 0.8); }
+        .grid-cell.safe { background: rgba(59, 130, 246, 0.4); border-color: rgba(59, 130, 246, 0.7); }
+        .grid-cell.bc-proved { background: rgba(168, 85, 247, 0.5); border-color: rgba(168, 85, 247, 0.8); }
+        .grid-cell.danger-cell { background: rgba(239, 68, 68, 0.7); border-color: #ef4444; }
+        .grid-cell.barrier-cell { background: rgba(251, 146, 60, 0.7); border-color: #f97316; }
+        .grid-cell.family-found { background: rgba(236, 72, 153, 0.6); border-color: #ec4899; }
+        
+        .cell-content { font-size: 1.6rem; z-index: 2; }
+        .cell-percepts { position: absolute; top: 2px; left: 50%; transform: translateX(-50%); font-size: 0.85rem; display: flex; gap: 1px; }
+        
+        /* Side Panel */
+        .side-panel {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px;
+            color: white;
+            overflow-y: auto;
+            max-height: 92vh;
+        }
+        
+        .info-box {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .info-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        
+        .scroll-box {
+            background: rgba(0,0,0,0.35);
+            border-radius: 8px;
+            padding: 8px;
+            max-height: 90px;
+            overflow-y: auto;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+        
+        /* Control Buttons */
+        .controls-bar {
+            background: rgba(15, 23, 42, 0.92);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .ctrl-btn {
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: 2px solid;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            color: white;
+        }
+        
+        .ctrl-btn:hover:not(:disabled) { transform: translateY(-2px); }
+        .ctrl-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .ctrl-btn.ai-demo { background: linear-gradient(135deg, #fbbf24, #f59e0b); border-color: #fcd34d; color: #1f2937; }
+        .ctrl-btn.new-world { background: linear-gradient(135deg, #8b5cf6, #a855f7); border-color: #c084fc; }
+        .ctrl-btn.reset { background: rgba(239, 68, 68, 0.5); border-color: #ef4444; }
+        
+        /* Direction Pad - LARGE */
+        .dpad-container {
+            display: grid;
+            grid-template-columns: repeat(3, 55px);
+            grid-template-rows: repeat(3, 55px);
+            gap: 5px;
+            justify-content: center;
+            margin: 12px 0;
+        }
+        
+        .dpad-btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            font-size: 24px;
+            cursor: pointer;
+            border: 3px solid rgba(59, 130, 246, 0.8);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(99, 102, 241, 0.5));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .dpad-btn:hover { background: linear-gradient(135deg, rgba(59, 130, 246, 0.7), rgba(99, 102, 241, 0.7)); transform: scale(1.08); }
+        .dpad-btn:active { transform: scale(0.95); }
+        .dpad-btn.center { background: linear-gradient(135deg, rgba(34, 197, 94, 0.6), rgba(16, 185, 129, 0.6)); border-color: rgba(34, 197, 94, 0.9); font-size: 11px; font-weight: bold; }
+        .dpad-placeholder { visibility: hidden; }
+        
+        /* Stats Row - WHITE TEXT */
+        .stats-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            padding: 8px 14px;
+            text-align: center;
+            min-width: 70px;
+        }
+        
+        .stat-label { font-size: 11px; color: white; font-weight: 500; }
+        .stat-value { font-size: 20px; font-weight: bold; }
+        
+        /* Difficulty buttons */
+        .diff-row { display: flex; gap: 8px; justify-content: center; align-items: center; }
+        .diff-btn {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            transition: all 0.2s;
+        }
+        .diff-btn:hover { background: rgba(255,255,255,0.25); }
+        .diff-btn.active { border-color: #22c55e; background: rgba(34, 197, 94, 0.4); }
+        
+        /* Story Box - WHITE TEXT */
+        .story-box {
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid rgba(251, 191, 36, 0.6);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            display: none;
+            color: white;
+            font-size: 16px;
+        }
+        .story-box.show { display: block; }
+        
+        /* Family Image - RESPONSIVE */
+        .family-img {
+            width: 180px;
+            max-width: 40%;
+            height: auto;
+            border-radius: 16px;
+            border: 4px solid rgba(251, 191, 36, 0.7);
+            margin-bottom: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+        
+        @media (min-width: 1200px) {
+            .family-img { width: 220px; }
+        }
+        
+        /* Language Toggle */
+        .lang-toggle {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            display: flex;
+            background: rgba(0,0,0,0.85);
+            border-radius: 20px;
+            padding: 3px;
+        }
+        
+        .lang-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.5);
+            transition: all 0.2s;
+        }
+        
+        .lang-btn.active {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: white;
+        }
+        
+        /* Header */
+        .header-bar {
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        
+        .elo-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1f2937;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        
+        .music-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn { padding: 0.6rem 1.2rem; border-radius: 9999px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+        .btn:hover { transform: scale(1.03); }
+        .btn-primary { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; }
+        .btn-secondary { background: rgba(100, 116, 139, 0.8); color: white; }
+        
+        /* Formula box */
+        .formula-box {
+            background: rgba(251, 191, 36, 0.15);
+            border-left: 4px solid #fbbf24;
+            padding: 8px 12px;
+            border-radius: 0 8px 8px 0;
+            font-size: 11px;
+            color: #fbbf24;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body translate="no">
+
+<!-- Audio Elements -->
+<audio id="game-music" src="exploration_music.mp3" loop></audio>
+<audio id="meditation-music" src="meditation.mp3" loop></audio>
+
+<!-- Language Toggle -->
+<div class="lang-toggle">
+    <button class="lang-btn" id="lang-en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn active" id="lang-zh" onclick="setLang('zh')">中</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     SCREEN 1: GAME SCREEN
+══════════════════════════════════════════════════════════════════════════ -->
+<div id="game-screen" class="screen active flex-col bg-rv-park" style="padding: 10px;">
+    <div style="display: grid; grid-template-columns: 1fr 280px; gap: 12px; max-width: 1350px; margin: 0 auto; width: 100%;">
+        <!-- Main Game Area -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Header with Story -->
+            <div class="header-bar">
+                <button onclick="goBack()" style="background:none;border:none;color:white;cursor:pointer;font-size:14px;">
+                    ← <span data-en="Menu" data-zh="選單">選單</span>
+                </button>
+                <div style="text-align:center;">
+                    <div style="font-size:18px;font-weight:bold;">🏕️ Level 4: KB-Agent</div>
+                    <div style="font-size:12px;color:#fbbf24;margin-top:2px;" data-en="Navigate safely to find displaced families in RV Park" data-zh="安全地探索 RV Park，尋找需要幫助的家庭">安全地探索 RV Park，尋找需要幫助的家庭</div>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center;">
+                    <div class="elo-badge">⭐ <span id="elo-display">1200</span></div>
+                    <button class="music-btn" id="music-btn" onclick="toggleMusic()">🔇</button>
+                </div>
+            </div>
+            
+            <!-- Stats Row - WHITE LABELS -->
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-label">步數</div>
+                    <div class="stat-value" style="color:#60a5fa;" id="steps-display">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">家庭</div>
+                    <div class="stat-value" style="color:#4ade80;" id="families-display">0/1</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">知識庫</div>
+                    <div class="stat-value" style="color:#c084fc;" id="kb-display">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">安全格</div>
+                    <div class="stat-value" style="color:#fbbf24;" id="safe-display">1</div>
+                </div>
+            </div>
+            
+            <!-- Difficulty Row -->
+            <div class="diff-row">
+                <span style="color:white;font-size:13px;font-weight:500;">難度:</span>
+                <button class="diff-btn active" id="diff-4" onclick="setDifficulty(4)">4×4</button>
+                <button class="diff-btn" id="diff-5" onclick="setDifficulty(5)">5×5</button>
+                <button class="diff-btn" id="diff-6" onclick="setDifficulty(6)">6×6</button>
+            </div>
+            
+            <!-- Game Grid Container -->
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+                <div id="game-grid" class="game-grid"></div>
+            </div>
+            
+            <!-- Story Box - WHITE TEXT -->
+            <div class="story-box" id="story-box"></div>
+            
+            <!-- Controls -->
+            <div class="controls-bar">
+                <button class="ctrl-btn ai-demo" onclick="runAIDemo()" id="demo-btn">
+                    🤖 <span data-en="AI Demo" data-zh="AI 演示">AI 演示</span>
+                </button>
+                <button class="ctrl-btn new-world" onclick="newRandomWorld()">
+                    🎲 <span data-en="New World" data-zh="新世界">新世界</span>
+                </button>
+                <button class="ctrl-btn reset" onclick="resetGame()">
+                    🔄 <span data-en="Reset" data-zh="重置">重置</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Side Panel -->
+        <div class="side-panel">
+            <!-- Legend with VISIBLE EMOJIS -->
+            <div class="info-box">
+                <div class="info-title">📋 <span data-en="Legend" data-zh="圖例">圖例</span></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;">
+                    <div>🧑‍🤝‍🧑 <span data-en="You" data-zh="志工">志工</span></div>
+                    <div>🏠 <span data-en="Family" data-zh="家庭">家庭</span></div>
+                    <div>🚧 <span data-en="Barrier" data-zh="障礙">障礙</span></div>
+                    <div>⚠️ <span data-en="Danger" data-zh="危險">危險</span></div>
+                    <div>💨 <span data-en="Breeze" data-zh="不安">不安</span></div>
+                    <div>😰 <span data-en="Stench" data-zh="緊張">緊張</span></div>
+                    <div>👣 <span data-en="Visited" data-zh="已訪">已訪</span></div>
+                    <div>✅ <span data-en="Inferred" data-zh="推理">推理</span></div>
+                    <div>👻 <span data-en="Rumor" data-zh="謠言">謠言</span></div>
+                    <div>🎯 <span data-en="Dispelled" data-zh="澄清">澄清</span></div>
+                </div>
+            </div>
+            
+            <!-- Player Controls D-Pad -->
+            <div class="info-box">
+                <div class="info-title" style="color:#3b82f6;">🎮 <span data-en="Your Control" data-zh="你的控制">你的控制</span></div>
+                <div style="font-size:11px;text-align:center;margin-bottom:6px;opacity:0.8;"><span data-en="WASD or Arrow Keys" data-zh="WASD 或 方向鍵">WASD 或 方向鍵</span></div>
+                <div class="dpad-container">
+                    <div class="dpad-placeholder"></div>
+                    <button class="dpad-btn" onclick="movePlayer(0,1)" id="btn-up">↑</button>
+                    <div class="dpad-placeholder"></div>
+                    <button class="dpad-btn" onclick="movePlayer(-1,0)" id="btn-left">←</button>
+                    <button class="dpad-btn center" onclick="shootArrow()" id="btn-shoot">DISPEL</button>
+                    <button class="dpad-btn" onclick="movePlayer(1,0)" id="btn-right">→</button>
+                    <div class="dpad-placeholder"></div>
+                    <button class="dpad-btn" onclick="movePlayer(0,-1)" id="btn-down">↓</button>
+                    <div class="dpad-placeholder"></div>
+                </div>
+                <div style="font-size:10px;text-align:center;color:#fbbf24;"><span data-en="Press DISPEL (Space) to clear rumors!" data-zh="按 DISPEL (空格鍵) 澄清謠言!">按 DISPEL (空格鍵) 澄清謠言!</span></div>
+            </div>
+            
+            <!-- Percepts -->
+            <div class="info-box">
+                <div class="info-title" style="color:#f59e0b;">👃 <span data-en="Percepts" data-zh="感知">感知</span></div>
+                <div class="scroll-box" id="percepts-display" style="color:#fbbf24;font-size:13px;">[None, None, None]</div>
+            </div>
+            
+            <!-- Knowledge Base -->
+            <div class="info-box">
+                <div class="info-title" style="color:#3b82f6;">🧠 <span data-en="Knowledge Base" data-zh="知識庫">知識庫</span></div>
+                <div class="scroll-box" id="kb-facts-display" style="color:#60a5fa;">Initializing...</div>
+            </div>
+            
+            <!-- Backward Chaining -->
+            <div class="info-box">
+                <div class="info-title" style="color:#a855f7;">🔍 <span data-en="Backward Chaining" data-zh="反向推理">反向推理</span></div>
+                <div class="scroll-box" id="bc-display" style="color:#c084fc;"><span data-en="Move to trigger inference" data-zh="移動以觸發推理">移動以觸發推理</span></div>
+                <!-- Formula Box -->
+                <div class="formula-box mono">
+                    Safe(x,y) ← ∀n∈Adj(x,y): ¬Breeze(n) ∧ ¬Stench(n)
+                </div>
+            </div>
+            
+            <!-- Status -->
+            <div class="info-box">
+                <div class="info-title">📍 <span data-en="Status" data-zh="狀態">狀態</span></div>
+                <div style="font-size:12px;line-height:1.8;">
+                    <div><span data-en="Position" data-zh="位置">位置</span>: <span id="pos-display" style="color:#60a5fa;">(1,1)</span></div>
+                    <div><span data-en="Found" data-zh="找到">找到</span>: <span id="found-display">❌</span></div>
+                    <div><span data-en="Clarity" data-zh="澄清力">澄清力</span>: <span id="arrows-display" style="color:#fbbf24;">1</span></div>
+                    <div><span data-en="Status" data-zh="狀態">狀態</span>: <span id="status-display" style="color:#4ade80;">🟢 Active</span></div>
+                </div>
+            </div>
+            
+            <!-- Algorithm Reference -->
+            <div class="info-box" style="background:rgba(236, 72, 153, 0.1);border-color:rgba(236, 72, 153, 0.3);">
+                <div class="info-title" style="color:#ec4899;">📐 Russell & Norvig Ch. 7</div>
+                <div style="font-size:11px;line-height:1.6;">
+                    • Forward Chaining 前向推理<br>
+                    • Backward Chaining 反向推理<br>
+                    • Propositional Logic 命題邏輯
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     SCREEN 2: 靜心之門 / Gate of Serenity
+══════════════════════════════════════════════════════════════════════════ -->
+<div id="ataraxy-screen" class="screen flex-col items-center py-2 px-4" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);">
+    <div class="absolute inset-0" style="background: url('靜心之門.png') center top/auto 100% no-repeat;"></div>
+    <div class="absolute inset-0 bg-purple-900/5"></div>
+    
+    <div class="relative z-10 text-center">
+        <h2 class="text-3xl font-bold text-white" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 4px 20px rgba(0,0,0,0.7);" data-en="Gate of Serenity" data-zh="靜心之門">靜心之門</h2>
+    </div>
+    
+    <div class="relative z-10 flex flex-col items-center" style="margin-top: 10px;">
+        <div class="breath-ring-large">
+            <p id="breath-counter" class="text-6xl font-bold text-yellow-400 mono" style="text-shadow: 0 0 50px rgba(251, 191, 36, 0.9);">3</p>
+        </div>
+        <p class="text-lg text-yellow-300 font-bold mt-3" style="text-shadow: 0 2px 15px rgba(0,0,0,0.8);" data-en="Take 3 deep breaths..." data-zh="深呼吸三次...">深呼吸三次...</p>
+    </div>
+    
+    <div style="flex: 1;"></div>
+    
+    <div class="relative z-10 flex flex-col items-center" style="margin-bottom: 18%;">
+        <div class="jingsi-card fade-in breathing-card">
+            <p class="text-lg font-bold text-yellow-300 mb-1" data-en="「Navigate the unknown with wisdom's light」" data-zh="「在未知中前行，用智慧照亮道路」">「在未知中前行，用智慧照亮道路」</p>
+            <p class="text-sm text-white/90 italic" data-en="Through careful reasoning, we find the safe path." data-zh="用謹慎的推理，找到安全的道路。">用謹慎的推理，找到安全的道路。</p>
+            <p class="text-xs text-purple-200 mt-2" data-en="— Master Cheng Yen" data-zh="— 證嚴上人">— 證嚴上人</p>
+        </div>
+    </div>
+    
+    <div class="relative z-10 flex gap-4" style="margin-bottom: 8%;">
+        <button onclick="backToGame()" class="btn btn-secondary" data-en="← Back to Level 4" data-zh="← 返回第四關">← 返回第四關</button>
+        <button onclick="goToNextLevel()" class="btn btn-primary" style="box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);" data-en="Level 5 →" data-zh="前往第五關 →">前往第五關 →</button>
+    </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+let GRID_SIZE = 4;
+let currentLang = 'zh';
+let gameMusicPlaying = false;
+let meditationMusicPlaying = false;
+let aiDemoRunning = false;
+let aiDemoInterval = null;
+let audioCtx = null;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WORLD STATE
+// ═══════════════════════════════════════════════════════════════════════════
+let world = {
+    agentPos: { x: 1, y: 1 },
+    familyPos: { x: 4, y: 4 },
+    barrierPos: { x: 2, y: 3 },
+    dangerZones: [{ x: 3, y: 1 }],
+    wumpusPos: null, // Only for 5x5 and 6x6
+    wumpusAlive: true,
+    alive: true,
+    hasFamily: false,
+    escaped: false,
+    arrows: 1
+};
+
+let agent = {
+    visited: new Set(),
+    safe: new Set(),
+    bcProved: new Set(),
+    kb: new Set(),
+    steps: 0,
+    elo: 1200
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SOUND EFFECTS
+// ═══════════════════════════════════════════════════════════════════════════
+function initAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return audioCtx;
+}
+
+function playFootstep() {
+    try {
+        const ctx = initAudio();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.setValueAtTime(150, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.1);
+    } catch(e) { console.log('Audio error:', e); }
+}
+
+function playSuccessSound() {
+    try {
+        const ctx = initAudio();
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+            gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.12);
+            gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + i * 0.12 + 0.05);
+            gain.gain.linearRampToValueAtTime(0, ctx.currentTime + i * 0.12 + 0.3);
+            osc.start(ctx.currentTime + i * 0.12);
+            osc.stop(ctx.currentTime + i * 0.12 + 0.3);
+        });
+    } catch(e) { console.log('Audio error:', e); }
+}
+
+function playDangerSound() {
+    try {
+        const ctx = initAudio();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(200, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.5);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.5);
+    } catch(e) { console.log('Audio error:', e); }
+}
+
+function playArrowSound() {
+    try {
+        const ctx = initAudio();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.2);
+    } catch(e) { console.log('Audio error:', e); }
+}
+
+function playWumpusDeathSound() {
+    try {
+        const ctx = initAudio();
+        [400, 300, 200, 100].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.15);
+            gain.gain.setValueAtTime(0.25, ctx.currentTime + i * 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.15 + 0.15);
+            osc.start(ctx.currentTime + i * 0.15);
+            osc.stop(ctx.currentTime + i * 0.15 + 0.15);
+        });
+    } catch(e) { console.log('Audio error:', e); }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// LANGUAGE
+// ═══════════════════════════════════════════════════════════════════════════
+function setLang(lang) {
+    currentLang = lang;
+    document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+    document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+    document.querySelectorAll('[data-en][data-zh]').forEach(el => {
+        el.textContent = el.getAttribute('data-' + lang);
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SCREEN MANAGEMENT
+// ═══════════════════════════════════════════════════════════════════════════
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MUSIC
+// ═══════════════════════════════════════════════════════════════════════════
+function toggleMusic() {
+    const music = document.getElementById('game-music');
+    const btn = document.getElementById('music-btn');
+    if (gameMusicPlaying) {
+        music.pause();
+        btn.textContent = '🔇';
+        gameMusicPlaying = false;
+    } else {
+        music.volume = 0.3;
+        music.play().then(() => { btn.textContent = '🔊'; gameMusicPlaying = true; }).catch(e => console.log('Music error:', e));
+    }
+}
+
+function stopGameMusic() {
+    const music = document.getElementById('game-music');
+    music.pause();
+    document.getElementById('music-btn').textContent = '🔇';
+    gameMusicPlaying = false;
+}
+
+function startMeditationMusic() {
+    const music = document.getElementById('meditation-music');
+    music.volume = 0.5;
+    music.play().catch(e => console.log('Meditation music error:', e));
+    meditationMusicPlaying = true;
+}
+
+function stopMeditationMusic() {
+    const music = document.getElementById('meditation-music');
+    music.pause();
+    music.currentTime = 0;
+    meditationMusicPlaying = false;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════════════════
+function posKey(x, y) { return `${x},${y}`; }
+
+function getNeighbors(x, y) {
+    const neighbors = [];
+    if (x > 1) neighbors.push({ x: x - 1, y });
+    if (x < GRID_SIZE) neighbors.push({ x: x + 1, y });
+    if (y > 1) neighbors.push({ x, y: y - 1 });
+    if (y < GRID_SIZE) neighbors.push({ x, y: y + 1 });
+    return neighbors;
+}
+
+function getPercepts(x, y) {
+    let breeze = false, stench = false, glitter = false, scream = false;
+    
+    for (const dz of world.dangerZones) {
+        if (Math.abs(dz.x - x) + Math.abs(dz.y - y) === 1) breeze = true;
+    }
+    
+    if (Math.abs(world.barrierPos.x - x) + Math.abs(world.barrierPos.y - y) === 1) stench = true;
+    
+    // Wumpus stench (for 5x5, 6x6)
+    if (world.wumpusPos && world.wumpusAlive) {
+        if (Math.abs(world.wumpusPos.x - x) + Math.abs(world.wumpusPos.y - y) === 1) stench = true;
+    }
+    
+    if (x === world.familyPos.x && y === world.familyPos.y && !world.hasFamily) glitter = true;
+    
+    return { breeze, stench, glitter };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// KNOWLEDGE BASE
+// ═══════════════════════════════════════════════════════════════════════════
+function addFact(fact) { agent.kb.add(fact); }
+function hasFact(fact) { return agent.kb.has(fact); }
+
+function updateKB(x, y) {
+    const percepts = getPercepts(x, y);
+    const neighbors = getNeighbors(x, y);
+    
+    addFact(`Visited(${x},${y})`);
+    addFact(`Safe(${x},${y})`);
+    agent.visited.add(posKey(x, y));
+    agent.safe.add(posKey(x, y));
+    
+    if (!percepts.breeze) {
+        addFact(`NoBreeze(${x},${y})`);
+        for (const n of neighbors) addFact(`NotDanger(${n.x},${n.y})`);
+    } else {
+        addFact(`Breeze(${x},${y})`);
+    }
+    
+    if (!percepts.stench) {
+        addFact(`NoStench(${x},${y})`);
+        for (const n of neighbors) addFact(`NotBarrier(${n.x},${n.y})`);
+    } else {
+        addFact(`Stench(${x},${y})`);
+    }
+    
+    // Forward chaining
+    for (const n of neighbors) {
+        if (hasFact(`NotDanger(${n.x},${n.y})`) && hasFact(`NotBarrier(${n.x},${n.y})`)) {
+            if (!hasFact(`Safe(${n.x},${n.y})`)) {
+                addFact(`Safe(${n.x},${n.y})`);
+                agent.safe.add(posKey(n.x, n.y));
+            }
+        }
+    }
+    
+    // Update percepts display
+    const perceptStr = `[${percepts.stench ? 'Stench' : 'None'}, ${percepts.breeze ? 'Breeze' : 'None'}, ${percepts.glitter ? 'Glitter' : 'None'}]`;
+    document.getElementById('percepts-display').textContent = perceptStr;
+    
+    return percepts;
+}
+
+function backwardChain(x, y) {
+    if (hasFact(`Safe(${x},${y})`)) return true;
+    
+    const neighbors = getNeighbors(x, y);
+    let notDanger = false, notBarrier = false;
+    
+    for (const n of neighbors) {
+        if (hasFact(`NoBreeze(${n.x},${n.y})`)) { addFact(`NotDanger(${x},${y})`); notDanger = true; break; }
+    }
+    for (const n of neighbors) {
+        if (hasFact(`NoStench(${n.x},${n.y})`)) { addFact(`NotBarrier(${x},${y})`); notBarrier = true; break; }
+    }
+    
+    if (notDanger && notBarrier) {
+        addFact(`Safe(${x},${y})`);
+        addFact(`BC_Proved(${x},${y})`);
+        agent.safe.add(posKey(x, y));
+        agent.bcProved.add(posKey(x, y));
+        return true;
+    }
+    return false;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DISPEL RUMORS (replaces shooting Wumpus - story-friendly)
+// ═══════════════════════════════════════════════════════════════════════════
+function shootArrow() {
+    if (world.arrows <= 0 || !world.wumpusPos || !world.wumpusAlive) {
+        showStory('💭 ' + (currentLang === 'en' ? 'No clarity power left or no rumors here!' : '沒有澄清力了或這裡沒有謠言！'));
+        return;
+    }
+    
+    playArrowSound();
+    world.arrows--;
+    
+    // Check if Rumor (Wumpus) is adjacent
+    const { x, y } = world.agentPos;
+    const neighbors = getNeighbors(x, y);
+    
+    for (const n of neighbors) {
+        if (world.wumpusPos && n.x === world.wumpusPos.x && n.y === world.wumpusPos.y) {
+            world.wumpusAlive = false;
+            playWumpusDeathSound();
+            addFact(`RumorDispelled(${world.wumpusPos.x},${world.wumpusPos.y})`);
+            addFact(`Safe(${world.wumpusPos.x},${world.wumpusPos.y})`);
+            agent.safe.add(posKey(world.wumpusPos.x, world.wumpusPos.y));
+            showStory('👻🎯 ' + (currentLang === 'en' ? 'TRUTH REVEALED! The rumor is dispelled! The path is now safe!' : '真相大白！謠言被澄清了！道路現在安全了！'));
+            agent.elo += 50;
+            updateDisplays();
+            return;
+        }
+    }
+    
+    showStory('💭 ' + (currentLang === 'en' ? 'No rumors nearby to dispel.' : '附近沒有謠言可以澄清。'));
+    updateDisplays();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PLAYER MOVEMENT
+// ═══════════════════════════════════════════════════════════════════════════
+function movePlayer(dx, dy) {
+    console.log('movePlayer called:', dx, dy, 'alive:', world.alive, 'escaped:', world.escaped);
+    
+    if (!world.alive || world.escaped) {
+        console.log('Cannot move - dead or escaped');
+        return;
+    }
+    
+    const newX = world.agentPos.x + dx;
+    const newY = world.agentPos.y + dy;
+    
+    console.log('Target:', newX, newY, 'Grid:', GRID_SIZE);
+    
+    if (newX < 1 || newX > GRID_SIZE || newY < 1 || newY > GRID_SIZE) {
+        console.log('Out of bounds');
+        return;
+    }
+    
+    // Move
+    world.agentPos = { x: newX, y: newY };
+    agent.steps++;
+    playFootstep();
+    console.log('Moved to:', world.agentPos);
+    
+    // Update KB
+    const percepts = updateKB(newX, newY);
+    
+    // Check hazards
+    for (const dz of world.dangerZones) {
+        if (dz.x === newX && dz.y === newY) {
+            world.alive = false;
+            playDangerSound();
+            showStory('💥 ' + (currentLang === 'en' ? 'Fell into danger zone! Press "New World" to try again.' : '掉入危險區域！按「新世界」重新開始。'));
+            document.getElementById('status-display').innerHTML = '<span style="color:#ef4444;">🔴 Game Over</span>';
+            updateDisplays();
+            return;
+        }
+    }
+    
+    if (world.barrierPos.x === newX && world.barrierPos.y === newY) {
+        world.alive = false;
+        playDangerSound();
+        showStory('🚧 ' + (currentLang === 'en' ? 'Hit language barrier! Press "New World" to try again.' : '遇到語言障礙！按「新世界」重新開始。'));
+        document.getElementById('status-display').innerHTML = '<span style="color:#ef4444;">🔴 Game Over</span>';
+        updateDisplays();
+        return;
+    }
+    
+    // Rumor (Wumpus) check - story-friendly
+    if (world.wumpusPos && world.wumpusAlive && world.wumpusPos.x === newX && world.wumpusPos.y === newY) {
+        world.alive = false;
+        playDangerSound();
+        showStory('👻 ' + (currentLang === 'en' ? 'Overwhelmed by false rumors! Press "New World" to try again.' : '被謠言淹沒了！按「新世界」重新開始。'));
+        document.getElementById('status-display').innerHTML = '<span style="color:#ef4444;">🔴 Game Over</span>';
+        updateDisplays();
+        return;
+    }
+    
+    // Auto-grab family
+    if (percepts.glitter && !world.hasFamily) {
+        world.hasFamily = true;
+        agent.elo += 30;
+        playSuccessSound();
+        showStory('🏠 ' + (currentLang === 'en' ? 'Found the family! Now return to (1,1).' : '找到家庭！現在返回起點 (1,1)。'), true);
+    }
+    
+    // Backward chaining
+    const neighbors = getNeighbors(newX, newY);
+    const bcResults = [];
+    for (const n of neighbors) {
+        if (!agent.visited.has(posKey(n.x, n.y)) && !agent.safe.has(posKey(n.x, n.y))) {
+            if (backwardChain(n.x, n.y)) bcResults.push(`(${n.x},${n.y})`);
+        }
+    }
+    
+    if (bcResults.length > 0) {
+        document.getElementById('bc-display').innerHTML = `<span style="color:#22c55e;">✅ Proved safe: ${bcResults.join(', ')}</span>`;
+    }
+    
+    // Win condition
+    if (world.hasFamily && newX === 1 && newY === 1) {
+        world.escaped = true;
+        const bonus = Math.max(20, 100 - agent.steps * 2);
+        agent.elo += bonus;
+        playSuccessSound();
+        
+        // Calculate completion stats
+        const safeCount = agent.safe.size;
+        const bcCount = agent.bcProved.size;
+        const kbCount = agent.kb.size;
+        const efficiency = Math.round((1 / agent.steps) * 100 * 10) / 10;
+        
+        const statsMsg = currentLang === 'en' 
+            ? `🎉 Mission Complete!\n\n📊 Stats:\n• Steps: ${agent.steps}\n• Safe cells: ${safeCount}\n• BC proved: ${bcCount}\n• KB facts: ${kbCount}\n• ELO bonus: +${bonus}`
+            : `🎉 任務完成！\n\n📊 統計:\n• 步數: ${agent.steps}\n• 安全格: ${safeCount}\n• BC證明: ${bcCount}\n• 知識庫: ${kbCount}\n• ELO 加分: +${bonus}`;
+        
+        showStory(statsMsg);
+        if (typeof confetti === 'function') confetti({ particleCount: 200, spread: 100 });
+        setTimeout(() => openMeditationGate(), 3500);
+    }
+    
+    updateDisplays();
+}
+
+// Keyboard controls
+document.addEventListener('keydown', function(e) {
+    if (!document.getElementById('game-screen').classList.contains('active')) return;
+    
+    const key = e.key.toLowerCase();
+    console.log('Key pressed:', key);
+    
+    if (key === 'w' || key === 'arrowup') { e.preventDefault(); movePlayer(0, 1); }
+    else if (key === 's' || key === 'arrowdown') { e.preventDefault(); movePlayer(0, -1); }
+    else if (key === 'a' || key === 'arrowleft') { e.preventDefault(); movePlayer(-1, 0); }
+    else if (key === 'd' || key === 'arrowright') { e.preventDefault(); movePlayer(1, 0); }
+    else if (key === ' ') { e.preventDefault(); shootArrow(); }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AI DEMO
+// ═══════════════════════════════════════════════════════════════════════════
+function runAIDemo() {
+    if (aiDemoRunning) {
+        stopAIDemo();
+        return;
+    }
+    
+    aiDemoRunning = true;
+    document.getElementById('demo-btn').innerHTML = '⏹️ <span>停止</span>';
+    
+    aiDemoInterval = setInterval(() => {
+        if (!world.alive || world.escaped) {
+            stopAIDemo();
+            return;
+        }
+        aiStep();
+    }, 700);
+}
+
+function stopAIDemo() {
+    aiDemoRunning = false;
+    if (aiDemoInterval) clearInterval(aiDemoInterval);
+    document.getElementById('demo-btn').innerHTML = '🤖 <span>AI 演示</span>';
+}
+
+function aiStep() {
+    const { x, y } = world.agentPos;
+    const neighbors = getNeighbors(x, y);
+    
+    // If has family, go home
+    if (world.hasFamily) {
+        const path = findPathTo(1, 1);
+        if (path) { movePlayer(path.x - x, path.y - y); return; }
+    }
+    
+    // Find safe unvisited neighbor
+    for (const n of neighbors) {
+        if (agent.safe.has(posKey(n.x, n.y)) && !agent.visited.has(posKey(n.x, n.y))) {
+            movePlayer(n.x - x, n.y - y);
+            return;
+        }
+    }
+    
+    // Find any safe unvisited cell
+    for (let sx = 1; sx <= GRID_SIZE; sx++) {
+        for (let sy = 1; sy <= GRID_SIZE; sy++) {
+            if (agent.safe.has(posKey(sx, sy)) && !agent.visited.has(posKey(sx, sy))) {
+                const path = findPathTo(sx, sy);
+                if (path) { movePlayer(path.x - x, path.y - y); return; }
+            }
+        }
+    }
+    
+    // No safe moves - try shooting if we have arrows and sense stench
+    if (world.arrows > 0 && world.wumpusPos && world.wumpusAlive) {
+        const percepts = getPercepts(x, y);
+        if (percepts.stench) { shootArrow(); return; }
+    }
+    
+    stopAIDemo();
+}
+
+function findPathTo(goalX, goalY) {
+    const start = world.agentPos;
+    if (start.x === goalX && start.y === goalY) return null;
+    
+    const queue = [{ x: start.x, y: start.y, path: [] }];
+    const visited = new Set([posKey(start.x, start.y)]);
+    
+    while (queue.length > 0) {
+        const current = queue.shift();
+        for (const n of getNeighbors(current.x, current.y)) {
+            const key = posKey(n.x, n.y);
+            if (!visited.has(key) && agent.safe.has(key)) {
+                visited.add(key);
+                const newPath = [...current.path, n];
+                if (n.x === goalX && n.y === goalY) return newPath[0] || n;
+                queue.push({ x: n.x, y: n.y, path: newPath });
+            }
+        }
+    }
+    return null;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WORLD GENERATION
+// ═══════════════════════════════════════════════════════════════════════════
+function generateWorld() {
+    const cells = [];
+    for (let x = 1; x <= GRID_SIZE; x++) {
+        for (let y = 1; y <= GRID_SIZE; y++) {
+            if (!(x === 1 && y === 1)) cells.push({ x, y });
+        }
+    }
+    
+    // Shuffle
+    for (let i = cells.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cells[i], cells[j]] = [cells[j], cells[i]];
+    }
+    
+    // Place family (not adjacent to start for challenge)
+    let familyIdx = cells.findIndex(c => Math.abs(c.x - 1) + Math.abs(c.y - 1) > 2);
+    if (familyIdx === -1) familyIdx = cells.length - 1;
+    const familyPos = cells.splice(familyIdx, 1)[0];
+    
+    // Place barrier
+    const barrierPos = cells.splice(0, 1)[0];
+    
+    // Place dangers
+    const numDangers = Math.max(1, Math.floor(GRID_SIZE * GRID_SIZE * 0.1));
+    const dangerZones = [];
+    for (let i = 0; i < numDangers && cells.length > 0; i++) {
+        dangerZones.push(cells.splice(0, 1)[0]);
+    }
+    
+    // Wumpus for 5x5 and 6x6
+    let wumpusPos = null;
+    if (GRID_SIZE >= 5 && cells.length > 0) {
+        wumpusPos = cells.splice(0, 1)[0];
+    }
+    
+    return { familyPos, barrierPos, dangerZones, wumpusPos };
+}
+
+function newRandomWorld() {
+    stopAIDemo();
+    const config = generateWorld();
+    
+    world = {
+        agentPos: { x: 1, y: 1 },
+        familyPos: config.familyPos,
+        barrierPos: config.barrierPos,
+        dangerZones: config.dangerZones,
+        wumpusPos: config.wumpusPos,
+        wumpusAlive: config.wumpusPos !== null,
+        alive: true,
+        hasFamily: false,
+        escaped: false,
+        arrows: GRID_SIZE >= 5 ? 1 : 0
+    };
+    
+    agent = {
+        visited: new Set(),
+        safe: new Set(),
+        bcProved: new Set(),
+        kb: new Set(),
+        steps: 0,
+        elo: agent.elo
+    };
+    
+    hideStory();
+    document.getElementById('percepts-display').textContent = '[None, None, None]';
+    document.getElementById('bc-display').textContent = '移動以觸發推理';
+    updateDisplays();
+}
+
+function setDifficulty(size) {
+    GRID_SIZE = size;
+    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('diff-' + size).classList.add('active');
+    newRandomWorld();
+}
+
+function resetGame() {
+    stopAIDemo();
+    world.agentPos = { x: 1, y: 1 };
+    world.alive = true;
+    world.hasFamily = false;
+    world.escaped = false;
+    world.wumpusAlive = world.wumpusPos !== null;
+    world.arrows = GRID_SIZE >= 5 ? 1 : 0;
+    
+    agent.visited = new Set();
+    agent.safe = new Set();
+    agent.bcProved = new Set();
+    agent.kb = new Set();
+    agent.steps = 0;
+    
+    hideStory();
+    document.getElementById('percepts-display').textContent = '[None, None, None]';
+    document.getElementById('bc-display').textContent = '移動以觸發推理';
+    updateDisplays();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// UI RENDERING
+// ═══════════════════════════════════════════════════════════════════════════
+function updateDisplays() {
+    renderGrid();
+    document.getElementById('steps-display').textContent = agent.steps;
+    document.getElementById('families-display').textContent = world.hasFamily ? '1/1 ✅' : '0/1';
+    document.getElementById('kb-display').textContent = agent.kb.size;
+    document.getElementById('safe-display').textContent = agent.safe.size;
+    document.getElementById('elo-display').textContent = agent.elo;
+    document.getElementById('pos-display').textContent = `(${world.agentPos.x},${world.agentPos.y})`;
+    document.getElementById('found-display').textContent = world.hasFamily ? '✅' : '❌';
+    document.getElementById('arrows-display').textContent = world.arrows;
+    document.getElementById('status-display').textContent = world.alive ? '🟢 Active' : '🔴 Dead';
+    document.getElementById('status-display').style.color = world.alive ? '#4ade80' : '#ef4444';
+    
+    // KB Facts
+    const facts = Array.from(agent.kb).slice(-10);
+    document.getElementById('kb-facts-display').innerHTML = facts.map(f => 
+        `<div style="color:${f.includes('Safe') || f.includes('Dispelled') ? '#4ade80' : f.includes('Not') ? '#60a5fa' : '#fbbf24'};">${f}</div>`
+    ).join('');
+}
+
+function renderGrid() {
+    const grid = document.getElementById('game-grid');
+    const cellSize = Math.min(65, Math.floor(450 / GRID_SIZE));
+    grid.style.gridTemplateColumns = `repeat(${GRID_SIZE}, ${cellSize}px)`;
+    
+    let html = '';
+    
+    for (let y = GRID_SIZE; y >= 1; y--) {
+        for (let x = 1; x <= GRID_SIZE; x++) {
+            const key = posKey(x, y);
+            const isAgent = world.agentPos.x === x && world.agentPos.y === y;
+            const isFamily = world.familyPos.x === x && world.familyPos.y === y;
+            const isBarrier = world.barrierPos.x === x && world.barrierPos.y === y;
+            const isDanger = world.dangerZones.some(d => d.x === x && d.y === y);
+            const isWumpus = world.wumpusPos && world.wumpusPos.x === x && world.wumpusPos.y === y;
+            const isVisited = agent.visited.has(key);
+            const isSafe = agent.safe.has(key);
+            const isBCProved = agent.bcProved.has(key);
+            
+            let cls = 'grid-cell';
+            if (isAgent) cls += ' player';
+            else if (isVisited) cls += ' visited';
+            else if (isBCProved) cls += ' bc-proved';
+            else if (isSafe) cls += ' safe';
+            
+            // Reveal hazards when adjacent visited
+            const adjacentVisited = getNeighbors(x, y).some(n => agent.visited.has(posKey(n.x, n.y)));
+            if (isDanger && adjacentVisited) cls += ' danger-cell';
+            if (isBarrier && adjacentVisited) cls += ' barrier-cell';
+            if (isWumpus && !world.wumpusAlive) cls += ' family-found'; // Show killed wumpus
+            
+            // Percepts
+            const percepts = getPercepts(x, y);
+            let perceptHTML = '';
+            if (isVisited || isAgent) {
+                if (percepts.breeze) perceptHTML += '💨';
+                if (percepts.stench) perceptHTML += '😰';
+                if (percepts.glitter && !world.hasFamily) perceptHTML += '✨';
+            }
+            
+            // Content
+            let content = '';
+            if (isAgent) content = '🧑‍🤝‍🧑';
+            else if (isFamily && !world.hasFamily) content = '🏠';
+            else if (isFamily && world.hasFamily && isVisited) content = '✅';
+            else if (isWumpus && world.wumpusAlive && adjacentVisited) content = '👻';
+            else if (isWumpus && !world.wumpusAlive) content = '🎯';
+            else if (isDanger && adjacentVisited) content = '⚠️';
+            else if (isBarrier && adjacentVisited) content = '🚧';
+            else if (isVisited) content = '👣';
+            else if (isBCProved) content = '✅';
+            
+            html += `<div class="${cls}" style="min-height:${cellSize}px;">
+                ${perceptHTML ? `<div class="cell-percepts">${perceptHTML}</div>` : ''}
+                <div class="cell-content">${content}</div>
+            </div>`;
+        }
+    }
+    
+    grid.innerHTML = html;
+}
+
+function showStory(msg, showImg = false) {
+    const box = document.getElementById('story-box');
+    box.innerHTML = showImg ? 
+        `<img src="family_found.png" class="family-img"><div style="color:white;font-size:16px;">${msg}</div>` :
+        `<div style="color:white;font-size:16px;">${msg}</div>`;
+    box.classList.add('show');
+}
+
+function hideStory() {
+    document.getElementById('story-box').classList.remove('show');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MEDITATION GATE
+// ═══════════════════════════════════════════════════════════════════════════
+function openMeditationGate() {
+    stopGameMusic();
+    startMeditationMusic();
+    showScreen('ataraxy-screen');
+    
+    let count = 3;
+    const counter = document.getElementById('breath-counter');
+    const interval = setInterval(() => {
+        count--;
+        if (count > 0) counter.textContent = count;
+        else { clearInterval(interval); counter.textContent = '🙏'; }
+    }, 4000);
+}
+
+function backToGame() {
+    stopMeditationMusic();
+    showScreen('game-screen');
+    // Restart game music if user wants to continue playing
+    if (world.escaped) {
+        // Reset game state for new round
+        newRandomWorld();
+    }
+}
+
+function goToNextLevel() {
+    stopMeditationMusic();
+    window.location.href = '../level5/level5_bayesian_network.html';
+}
+
+function goBack() { 
+    window.location.href = '../index.html';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+    newRandomWorld();
+    console.log('Level 4 KB-Agent Final Version loaded!');
+    console.log('Use WASD/Arrows to move, SPACE to shoot');
+});
+</script>
+
+</body>
+</html>
