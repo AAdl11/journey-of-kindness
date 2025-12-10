@@ -1,170 +1,224 @@
-# 🪷 Journey of Kindness 善的旅程
+<div align="center">
 
-> **A 58-year-old student's semester-long adventure: turning AI algorithms into acts of compassion.**
->
-> 一位 58 歲學生的冒險：把 AI 演算法變成善的行動。
+# 🎮 Journey of Kindness | 善的旅程
 
-[![Play Now](https://img.shields.io/badge/🎮_PLAY_NOW-Click_Here-FF6B6B?style=for-the-badge)](https://YOUR_USERNAME.github.io/journey-of-kindness/)
-[![Paper](https://img.shields.io/badge/📄_Research_Paper-Read-4ECDC4?style=for-the-badge)](docs/Hsu_WhenAlgorithmsRemember_Final_v2.pdf)
+### An Educational AI Game Teaching 7 Algorithms Through Real Community Stories
 
----
+[![Play Now](https://img.shields.io/badge/🎮_Play_Now-GitHub_Pages-orange?style=for-the-badge)](https://aadl11.github.io/journey-of-kindness/)
+[![Paper](https://img.shields.io/badge/📄_Research_Paper-PDF-blue?style=for-the-badge)](docs/Journey_of_Kindness_Research_Paper.pdf)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-## 🌟 The Story
+<br>
 
-**2006, San Francisco.** A volunteer named Roxanne saw a 7-year-old girl eating *raw, uncooked rice*. The child hadn't eaten in three days.
+[🇺🇸 English](#-english) • [🇹🇼 繁體中文](#-繁體中文) • [🇨🇳 简体中文](#-简体中文)
 
-That moment changed everything.
+<br>
 
-**2015.** I received a kidney transplant. My daughter was the donor. Tzu Chi volunteers I'd never met drove us home and cared for us like family.
+<img src="assets/banner.png" alt="Journey of Kindness Banner" width="800">
 
-**2025.** Now I'm a 58-year-old CS student, learning AI to give back. This game is my final project — and my thank you letter to everyone who showed me compassion.
-
----
-
-## 🎮 What Is This?
-
-An **interactive game** that teaches 5 AI algorithms through real volunteer stories from San Francisco's Hunters Point community.
-
-| Level | You Learn | By Playing |
-|:-----:|-----------|------------|
-| 1 | Decision Tree | Helping Mrs. Garcia make wise choices 🎯 |
-| 2 | Propositional Logic | Running a Happy Campus charity shop 🏪 |
-| 3 | MDP | Making food distribution decisions 🎯 |
-| 4 | Search Algorithm | Exploring RV Park to find families in need 🗺️ |
-| 5 | Bayesian Network | Building a community care map 💗 |
-
-**Special Feature:** After each level, enter the **Ataraxy Portico (靜心之門)** — a moment of stillness with Jing Si Aphorisms.
+</div>
 
 ---
 
-## ✨ Features
+## 🛠️ Tech Stack | 技術棧
 
-- 🌏 **Bilingual** — English / 中文
-- 📊 **ELO Rating** — Adapts to your skill level  
-- 🧘 **Mindfulness Moments** — Pause and reflect between levels
-- 📸 **Real Stories** — Based on 16 years of community service
-- 📱 **Mobile Friendly** — Play anywhere
+<div align="center">
 
----
+### Frontend 前端
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-## 📊 Does It Work?
+### Backend 後端
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
 
-We tested with 15 students:
+### AI/ML 人工智慧
+![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
 
-| What We Measured | Result |
-|------------------|--------|
-| Learning Improvement | **+180 ELO** (median) |
-| Wanted to Volunteer After | **67%** said yes! |
+### Tools 工具
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white)
 
-Small sample, but promising! 🌱
+### Design 設計
+![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
+![Canva](https://img.shields.io/badge/Canva-00C4CC?style=for-the-badge&logo=canva&logoColor=white)
 
----
-
-## 🛠️ Built With
-
-**Frontend:** HTML5 • CSS3 • JavaScript • TailwindCSS • Canvas API
-
-**AI Concepts:** Decision Tree • Propositional Logic • MDP • Search Algorithm • Bayesian Networks
-
-**Tools:** Figma • Canva • Google Analytics
+</div>
 
 ---
 
-## 📸 Real Scenes from 16 Years of Service
+## 📊 Game Levels | 關卡總覽
 
-<details>
-<summary>Click to see the real stories behind the game</summary>
+<div align="center">
 
-### 🎒 Back to School
-![Back to School](assets/images/real-scenes/back_to_school.jpg)
-*Annual back-to-school event providing uniforms and supplies*
+| Level | Algorithm | Story | Status |
+|:-----:|:---------:|:-----:|:------:|
+| 1️⃣ | **A\* Search** | Food Distribution Path | ✅ |
+| 2️⃣ | **Propositional Logic** | Volunteer Decisions | ✅ |
+| 3️⃣ | **MDP** | Resource Allocation | ✅ |
+| 4️⃣ | **Wumpus World** | Community Navigation | ✅ |
+| 5️⃣ | **Alpha-Beta Pruning** | Strategic Outreach | ✅ |
+| 6️⃣ | **First-Order Logic** | Marcus's Journey | ✅ |
+| 7️⃣ | **Adversarial Search** | Building Resilience | 🔜 |
 
-### 🍳 Vegetarian Cooking Class
-![Cooking Class](assets/images/real-scenes/vegi_cooking_class.png)
-*Teaching healthy plant-based cooking to community members*
-
-### 🏥 Free Medical Services
-![TCM Doctor](assets/images/real-scenes/tcm_doctor.jpg)
-*Traditional Chinese medicine services for underserved community*
-
-### 🚐 RV Park Outreach
-![RV Park](assets/images/real-scenes/rv_park_outreach.jpg)
-*Reaching families living in vehicles*
-
-### 🧣 Winter Blanket Distribution
-![Winter Blankets](assets/images/real-scenes/winter_blankets.jpg)
-*Keeping our neighbors warm during cold months*
-
-### 🏆 Perfect Attendance Ceremony
-![Ceremony](assets/images/real-scenes/ceremony.png)
-*Celebrating students who achieved perfect attendance*
-
-</details>
+</div>
 
 ---
 
-## 📖 Read More
+# 🇺🇸 English
 
-| Document | Description |
-|----------|-------------|
-| [📄 Research Paper](docs/Hsu_WhenAlgorithmsRemember_Final_v2.pdf) | Full academic paper: "When Algorithms Remember What We Forget" |
-| [📝 Dev Timeline](docs/Journey_of_Kindness_Development_Timeline.docx) | My authentic journey building this |
+## Overview
 
----
+**Journey of Kindness** is an innovative educational game that teaches 7 fundamental AI algorithms from Russell & Norvig's *Artificial Intelligence: A Modern Approach* through the inspiring true story of Tzu Chi Foundation's 25-year community service in San Francisco's Bayview-Hunters Point neighborhood.
 
-## 🎓 Academic Context
+### 🎯 Key Features
 
-- **Course:** CS4 Introduction to Artificial Intelligence
-- **School:** Las Positas College, Honors Program
-- **Professor:** An Lam
-- **Semester:** Fall 2025
+- 🎮 **7 Playable Levels** - Each teaching a core AI algorithm
+- 🌐 **Bilingual Support** - English & Traditional Chinese
+- 📱 **Responsive Design** - Play on any device
+- 🎵 **Immersive Audio** - Original meditation soundtrack
+- 🏆 **ELO Rating System** - Track your progress
+- 🧘 **Mindfulness Integration** - Jingsi Aphorisms between levels
 
----
-
-## 👩‍💻 About Me
-
-**Mei Hsien Hsu (許美嫻)**
-
-I'm a 58-year-old returning student proving it's never too late to learn.
-
-- 🎓 Transferring to UC Berkeley / Stanford (2026)
-- 💼 Seeking: Genentech Summer 2026 Internship
-- 🪷 16 years volunteering with Tzu Chi Foundation
-- 💝 Kidney transplant recipient — my daughter saved my life
-- 🔬 Interested in: AI/ML, Regenerative Medicine, Exosome Research
-
----
-
-## 🚀 Try It Yourself
+### 🚀 Quick Start
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/journey-of-kindness.git
-cd journey-of-kindness
-# Open index.html in your browser
+# Clone the repository
+git clone https://github.com/aadl11/journey-of-kindness.git
+
+# Open in browser
+open index.html
 ```
 
-Or just [▶️ Play Online](https://YOUR_USERNAME.github.io/journey-of-kindness/)!
+Or simply visit: **[Play Now →](https://aadl11.github.io/journey-of-kindness/)**
 
 ---
 
-## 🙏 Thank You
+# 🇹🇼 繁體中文
 
-- **Professor An Lam** — For believing a 58-year-old could learn AI
-- **Roxanne (黃淑雲師姊)** — My mentor for 16 years
-- **Tzu Chi Family** — For showing me what coordinated compassion looks like
-- **My Daughter** — Who gave me her kidney and believes I can do anything
-- **CS4 Classmates** — For an amazing semester together
+## 概述
+
+**善的旅程** 是一款創新的教育遊戲，透過慈濟基金會在舊金山灣景區 25 年社區服務的真實故事，教授 Russell & Norvig《人工智慧：現代方法》教科書中的 7 個核心 AI 演算法。
+
+### 🎯 主要特色
+
+- 🎮 **7 個可玩關卡** - 每關教授一個核心 AI 演算法
+- 🌐 **雙語支援** - 英文與繁體中文
+- 📱 **響應式設計** - 任何裝置都能玩
+- 🎵 **沉浸式音效** - 原創冥想配樂
+- 🏆 **ELO 評分系統** - 追蹤你的進度
+- 🧘 **正念整合** - 關卡間的靜思語
+
+### 🌟 生米事件 (2000年)
+
+在 John Muir 小學的走廊角落，一個 7 歲的小女孩蹲在角落，把生米往嘴裡塞。她不是不知道生米不能吃——她只是太餓了。
+
+這一刻啟發了慈濟志工開始在灣景區 25 年持續不斷的服務，透過慈悲和社區行動，改變了舊金山最危險的社區之一。
 
 ---
 
-## 🪷
+# 🇨🇳 简体中文
 
-> 「被愛的人，學會去愛」
->
-> *Those who are loved, learn to love.*
->
-> — Master Cheng Yen
+## 概述
+
+**善的旅程** 是一款创新的教育游戏，通过慈济基金会在旧金山湾景区 25 年社区服务的真实故事，教授 Russell & Norvig《人工智能：现代方法》教科书中的 7 个核心 AI 算法。
+
+### 🎯 主要特色
+
+- 🎮 **7 个可玩关卡** - 每关教授一个核心 AI 算法
+- 🌐 **双语支持** - 英文与繁体中文
+- 📱 **响应式设计** - 任何设备都能玩
+- 🎵 **沉浸式音效** - 原创冥想配乐
+- 🏆 **ELO 评分系统** - 追踪你的进度
+- 🧘 **正念整合** - 关卡间的静思语
 
 ---
 
-*Made with 💗 in California*
+## 📁 Project Structure | 專案結構
+
+```
+journey-of-kindness/
+├── 📄 index.html          # Main menu 主選單
+├── 📄 README.md           # This file
+├── 📄 .nojekyll           # GitHub Pages config
+│
+├── 📁 level1/             # A* Search
+├── 📁 level2/             # Propositional Logic
+├── 📁 level3/             # MDP
+├── 📁 level4/             # Wumpus World
+├── 📁 level5/             # Alpha-Beta Pruning
+├── 📁 level6/             # First-Order Logic
+├── 📁 level7/             # Adversarial Search (Coming Soon)
+│
+├── 📁 assets/             # Images, audio, fonts
+│   ├── 🖼️ banner.png
+│   ├── 🖼️ qrcode.png
+│   └── 🎵 meditation.mp3
+│
+└── 📁 docs/               # Research paper & documentation
+    └── 📄 Journey_of_Kindness_Research_Paper.pdf
+```
+
+---
+
+## 🎓 Educational Philosophy | 教育理念
+
+<div align="center">
+
+### Algorithm as Protagonist | 演算法為主角
+
+| Traditional 傳統 | Our Approach 我們的方法 |
+|:---------------:|:----------------------:|
+| `∀x: P(x) → Q(x)` | Marcus's tears teach FOL |
+| Abstract formulas | Emotional storytelling |
+| Memorize rules | Understand through empathy |
+
+</div>
+
+---
+
+## 👩‍💻 Author | 作者
+
+<div align="center">
+
+**Mei Hsien Hsu 許美嫻**
+
+Las Positas College | AI Certificate Program | Honors Transfer Program
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/aadl11)
+
+</div>
+
+### 🙏 Acknowledgments | 致謝
+
+- **Professor An Lam** - CS4 Introduction to Artificial Intelligence
+- **Tzu Chi Foundation San Francisco** - 25 years of community service
+- **Bayview-Hunters Point Community** - The inspiration for this project
+
+---
+
+## 📄 License | 授權
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+### 「把握時間，珍惜空間」
+### *Seize the moment, cherish the opportunity.*
+
+— 證嚴法師 Master Cheng Yen
+
+<br>
+
+Made with ❤️ for the Bayview-Hunters Point Community
+
+**[⬆ Back to Top](#-journey-of-kindness--善的旅程)**
+
+</div>
