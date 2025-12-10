@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google" content="notranslate">
-    <title>善的旅程 Journey of Kindness | AI 教育遊戲</title>
-    <meta name="description" content="慈濟人文學校 AI 教育互動遊戲 - 透過5個關卡學習AI基礎知識，體驗用智慧與善心幫助他人">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>善的旅程 Journey of Kindness | AI Education Game</title>
     
-    <!-- Google Analytics GA4 - 請將 G-XXXXXXXXXX 替換為你的 Measurement ID -->
+    <!-- Google Analytics GA4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -17,70 +13,94 @@
         gtag('js', new Date());
         gtag('config', 'G-XXXXXXXXXX');
         
-        // 追蹤關卡點擊事件
+        // 追蹤關卡點擊
         function trackLevelClick(levelNum, levelName) {
             gtag('event', 'level_start', {
-                'event_category': 'Game',
-                'event_label': levelName,
-                'level_number': levelNum
+                'level_number': levelNum,
+                'level_name': levelName
             });
         }
     </script>
     
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Noto Sans TC', sans-serif;
-            min-height: 100vh;
+            font-family: 'Noto Sans TC', 'Poppins', sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
             color: white;
             overflow-x: hidden;
         }
         
+        /* Starfield Background */
         .stars {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 0;
         }
         
         .star {
             position: absolute;
-            width: 3px; height: 3px;
             background: white;
             border-radius: 50%;
-            animation: twinkle 2s ease-in-out infinite;
+            animation: twinkle 3s infinite;
         }
         
         @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
         }
         
-        .container {
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 20px 20px;
             position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1.5rem;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            z-index: 10;
         }
         
+        .title {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f8b500, #ff6b6b, #ee82ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 30px rgba(248, 181, 0, 0.3);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 5px;
+        }
+        
+        .subtitle-en {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            font-style: italic;
+        }
+        
+        /* Language Toggle */
         .lang-toggle {
             position: absolute;
-            top: 1rem; right: 1rem;
+            top: 20px;
+            right: 20px;
             display: flex;
-            gap: 0.5rem;
+            gap: 10px;
         }
         
         .lang-btn {
-            padding: 0.5rem 1rem;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
             color: white;
             border-radius: 20px;
             cursor: pointer;
@@ -89,290 +109,427 @@
         }
         
         .lang-btn:hover, .lang-btn.active {
-            background: rgba(255, 215, 0, 0.3);
-            border-color: #ffd700;
+            background: rgba(255,255,255,0.3);
+            border-color: #f8b500;
         }
         
-        header {
-            text-align: center;
-            padding: 1.5rem 0 2rem;
-            animation: fadeInDown 1s ease-out;
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
         }
         
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Level Grid */
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
         }
         
-        .logo {
-            font-size: 3.5rem;
-            margin-bottom: 0.5rem;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, #ffd700, #ffeb3b, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.3rem;
-        }
-        
-        .subtitle {
-            font-size: 1.1rem;
-            color: #a0c4ff;
-            font-weight: 300;
-            letter-spacing: 2px;
-        }
-        
-        .author-info {
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.7);
-        }
-        
-        .levels-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            padding: 0.5rem 0;
-        }
-        
+        /* Level Card */
         .level-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 1.2rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1.2rem;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(10px);
-            text-decoration: none;
-            color: white;
-            animation: fadeInUp 0.6s ease-out backwards;
-        }
-        
-        .level-card:nth-child(1) { animation-delay: 0.1s; }
-        .level-card:nth-child(2) { animation-delay: 0.2s; }
-        .level-card:nth-child(3) { animation-delay: 0.3s; }
-        .level-card:nth-child(4) { animation-delay: 0.4s; }
-        .level-card:nth-child(5) { animation-delay: 0.5s; }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
         }
         
         .level-card:hover {
-            transform: translateX(8px) scale(1.02);
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
-            border-color: #ffd700;
-            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border-color: rgba(248, 181, 0, 0.5);
+        }
+        
+        .level-card.complete {
+            border-left: 4px solid #10b981;
+        }
+        
+        .level-card.coming-soon {
+            opacity: 0.6;
+        }
+        
+        .level-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
         }
         
         .level-icon {
-            font-size: 2.5rem;
-            width: 65px; height: 65px;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            flex-shrink: 0;
+            font-size: 1.8rem;
         }
         
-        .level-info { flex: 1; }
+        .level-1 .level-icon { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .level-2 .level-icon { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .level-3 .level-icon { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .level-4 .level-icon { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        .level-5 .level-icon { background: linear-gradient(135deg, #fa709a, #fee140); }
+        .level-6 .level-icon { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+        .level-7 .level-icon { background: linear-gradient(135deg, #ff9a9e, #fecfef); }
         
-        .level-number {
-            font-size: 0.8rem;
-            color: #ffd700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 0.2rem;
-        }
-        
-        .level-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-        }
-        
-        .level-subtitle {
-            font-size: 0.9rem;
-            color: #a0c4ff;
-        }
-        
-        .level-arrow {
+        .level-info h3 {
             font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.5);
-            transition: all 0.3s;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
         
-        .level-card:hover .level-arrow {
-            color: #ffd700;
-            transform: translateX(5px);
-        }
-        
-        .level-1 .level-icon { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); }
-        .level-2 .level-icon { background: linear-gradient(135deg, #4ecdc4, #3db9b1); }
-        .level-3 .level-icon { background: linear-gradient(135deg, #a855f7, #9333ea); }
-        .level-4 .level-icon { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .level-5 .level-icon { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-        
-        footer {
-            text-align: center;
-            padding: 1.5rem 0;
-            color: rgba(255, 255, 255, 0.6);
+        .level-info .algorithm {
             font-size: 0.85rem;
+            color: #f8b500;
+            font-weight: 600;
         }
         
-        .tzu-chi-logo { font-size: 1.3rem; margin-bottom: 0.3rem; }
+        .level-description {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
         
-        footer a {
-            color: #ffd700;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 0.5rem;
-            padding: 0.5rem 1rem;
-            border: 1px solid #ffd700;
+        .level-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .tag {
+            background: rgba(255,255,255,0.1);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
             border-radius: 20px;
-            transition: all 0.3s;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
         
-        footer a:hover {
-            background: rgba(255, 215, 0, 0.2);
+        .status-complete {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .status-coming {
+            background: rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .play-btn {
+            width: 100%;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .play-btn.active {
+            background: linear-gradient(135deg, #f8b500, #ff6b6b);
+            color: white;
+        }
+        
+        .play-btn.active:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(248, 181, 0, 0.4);
+        }
+        
+        .play-btn.disabled {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+            cursor: not-allowed;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+        
+        .footer a {
+            color: #f8b500;
+            text-decoration: none;
+        }
+        
+        .aphorism {
+            font-style: italic;
+            margin-top: 15px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        /* Project Info */
+        .project-info {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .project-info h4 {
+            color: #f8b500;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .project-info p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
         
         @media (max-width: 768px) {
-            h1 { font-size: 1.6rem; }
-            .subtitle { font-size: 0.9rem; }
-            .logo { font-size: 2.5rem; }
-            .level-card { padding: 1rem; gap: 1rem; }
-            .level-icon { width: 55px; height: 55px; font-size: 2rem; }
-            .level-title { font-size: 1rem; }
-            .lang-toggle { position: static; justify-content: center; margin-bottom: 0.5rem; }
+            .title { font-size: 2rem; }
+            .level-grid { grid-template-columns: 1fr; }
+            .lang-toggle { position: static; justify-content: center; margin-bottom: 20px; }
         }
     </style>
 </head>
 <body>
+    <!-- Starfield -->
     <div class="stars" id="stars"></div>
     
-    <div class="container">
+    <!-- Header -->
+    <header class="header">
         <div class="lang-toggle">
             <button class="lang-btn active" onclick="setLang('zh')">中文</button>
             <button class="lang-btn" onclick="setLang('en')">English</button>
         </div>
-        
-        <header>
-            <div class="logo">🌱</div>
-            <h1 data-zh="善的旅程" data-en="Journey of Kindness">善的旅程</h1>
-            <p class="subtitle" data-zh="AI 教育互動遊戲" data-en="AI Educational Interactive Game">AI 教育互動遊戲</p>
-            <p class="author-info" data-zh="CS4 期末專案 | Mei Hsien" data-en="CS4 Final Project | Mei Hsien">CS4 期末專案 | Mei Hsien</p>
-        </header>
-        
-        <div class="levels-container">
-            <a href="level1/journey_of_kindness_v9.html" class="level-card level-1" onclick="trackLevelClick(1, 'Decision Tree')">
-                <div class="level-icon">🎯</div>
-                <div class="level-info">
-                    <div class="level-number" data-zh="第一關" data-en="Level 1">第一關</div>
-                    <div class="level-title" data-zh="決策樹 Decision Tree" data-en="Decision Tree">決策樹 Decision Tree</div>
-                    <div class="level-subtitle" data-zh="小明的選擇 · 學習明智決策" data-en="Xiao Ming's Choice · Learn wise decisions">小明的選擇 · 學習明智決策</div>
-                </div>
-                <div class="level-arrow">→</div>
-            </a>
-            
-            <a href="level2/level2_propositional_logic.html" class="level-card level-2" onclick="trackLevelClick(2, 'Propositional Logic')">
-                <div class="level-icon">🏫</div>
-                <div class="level-info">
-                    <div class="level-number" data-zh="第二關" data-en="Level 2">第二關</div>
-                    <div class="level-title" data-zh="命題邏輯 Propositional Logic" data-en="Propositional Logic">命題邏輯 Propositional Logic</div>
-                    <div class="level-subtitle" data-zh="Happy Campus · 邏輯思考解題" data-en="Happy Campus · Logical thinking">Happy Campus · 邏輯思考解題</div>
-                </div>
-                <div class="level-arrow">→</div>
-            </a>
-            
-            <a href="level3/level3_mdp.html" class="level-card level-3" onclick="trackLevelClick(3, 'MDP')">
-                <div class="level-icon">🧘</div>
-                <div class="level-info">
-                    <div class="level-number" data-zh="第三關" data-en="Level 3">第三關</div>
-                    <div class="level-title" data-zh="馬可夫決策 MDP" data-en="Markov Decision Process">馬可夫決策 MDP</div>
-                    <div class="level-subtitle" data-zh="心靈旅程 · 探索連續決策智慧" data-en="Mind Journey · Sequential decisions">心靈旅程 · 探索連續決策智慧</div>
-                </div>
-                <div class="level-arrow">→</div>
-            </a>
-            
-            <a href="level4/level4_final.html" class="level-card level-4" onclick="trackLevelClick(4, 'Search Algorithm')">
-                <div class="level-icon">🚐</div>
-                <div class="level-info">
-                    <div class="level-number" data-zh="第四關" data-en="Level 4">第四關</div>
-                    <div class="level-title" data-zh="搜尋演算法 Search Algorithm" data-en="Search Algorithm">搜尋演算法 Search Algorithm</div>
-                    <div class="level-subtitle" data-zh="RV Park 探索 · 找到最佳路徑" data-en="RV Park · Find optimal path">RV Park 探索 · 找到最佳路徑</div>
-                </div>
-                <div class="level-arrow">→</div>
-            </a>
-            
-            <a href="level5/level5_bayesian_network.html" class="level-card level-5" onclick="trackLevelClick(5, 'Bayesian Network')">
-                <div class="level-icon">🌐</div>
-                <div class="level-info">
-                    <div class="level-number" data-zh="第五關" data-en="Level 5">第五關</div>
-                    <div class="level-title" data-zh="貝氏網路 Bayesian Network" data-en="Bayesian Network">貝氏網路 Bayesian Network</div>
-                    <div class="level-subtitle" data-zh="社區關懷地圖 · 建立愛的網路" data-en="Community Care Map · Build caring network">社區關懷地圖 · 建立愛的網路</div>
-                </div>
-                <div class="level-arrow">→</div>
-            </a>
+        <h1 class="title">🌸 善的旅程 Journey of Kindness</h1>
+        <p class="subtitle" data-zh="AI 教育遊戲 | CS4 Honors Project" data-en="AI Education Game | CS4 Honors Project">AI 教育遊戲 | CS4 Honors Project</p>
+        <p class="subtitle-en" data-zh="透過真實社區故事學習 7 種 AI 演算法" data-en="Learn 7 AI Algorithms Through Real Community Stories">透過真實社區故事學習 7 種 AI 演算法</p>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Project Info -->
+        <div class="project-info">
+            <h4>📚 <span data-zh="專案資訊" data-en="Project Information">專案資訊</span></h4>
+            <p><strong data-zh="學生：" data-en="Student: ">學生：</strong>許美嫻 Mei Hsien Hsu | <strong data-zh="課程：" data-en="Course: ">課程：</strong>CS4 Introduction to Artificial Intelligence | <strong data-zh="教授：" data-en="Professor: ">教授：</strong>An Lam</p>
+            <p><strong data-zh="學校：" data-en="Institution: ">學校：</strong>Las Positas College - Honors Transfer Program | <strong data-zh="學期：" data-en="Semester: ">學期：</strong>Fall 2025</p>
         </div>
         
-        <footer>
-            <div class="tzu-chi-logo">🪷</div>
-            <p data-zh="慈濟基金會 人文學校" data-en="Tzu Chi Foundation Humanity School">慈濟基金會 人文學校</p>
-            <a href="outro.html" data-zh="🌍 完成遊戲後請填寫問卷" data-en="🌍 Please fill survey after completing">🌍 完成遊戲後請填寫問卷</a>
-        </footer>
-    </div>
+        <!-- Level Grid -->
+        <div class="level-grid">
+            <!-- Level 1 -->
+            <div class="level-card level-1 complete">
+                <span class="status-badge status-complete">✓ <span data-zh="完成" data-en="Complete">完成</span></span>
+                <div class="level-header">
+                    <div class="level-icon">🗺️</div>
+                    <div class="level-info">
+                        <h3>Level 1</h3>
+                        <span class="algorithm">A* Search</span>
+                    </div>
+                </div>
+                <p class="level-description" data-zh="Mrs. Garcia 的送餐路線 — 學習啟發式搜尋演算法，為獨居老人規劃最佳送餐路線。" data-en="Mrs. Garcia's Food Delivery — Learn heuristic search algorithm by planning optimal delivery routes for elderly residents.">Mrs. Garcia 的送餐路線 — 學習啟發式搜尋演算法，為獨居老人規劃最佳送餐路線。</p>
+                <div class="level-tags">
+                    <span class="tag" data-zh="啟發式搜尋" data-en="Heuristic Search">啟發式搜尋</span>
+                    <span class="tag" data-zh="路徑規劃" data-en="Pathfinding">路徑規劃</span>
+                    <span class="tag">Ch. 3</span>
+                </div>
+                <button class="play-btn active" onclick="trackLevelClick(1, 'A* Search'); window.location.href='level1/journey_of_kindness_v9.html'">
+                    ▶️ <span data-zh="開始遊戲" data-en="Play Now">開始遊戲</span>
+                </button>
+            </div>
+            
+            <!-- Level 2 -->
+            <div class="level-card level-2 complete">
+                <span class="status-badge status-complete">✓ <span data-zh="完成" data-en="Complete">完成</span></span>
+                <div class="level-header">
+                    <div class="level-icon">🎓</div>
+                    <div class="level-info">
+                        <h3>Level 2</h3>
+                        <span class="algorithm">Propositional Logic</span>
+                    </div>
+                </div>
+                <p class="level-description" data-zh="Happy Campus 全勤獎典禮 — 使用命題邏輯做決策，幫助學生獲得完美出席獎。" data-en="Happy Campus Attendance Ceremony — Use propositional logic to help students achieve perfect attendance awards.">Happy Campus 全勤獎典禮 — 使用命題邏輯做決策，幫助學生獲得完美出席獎。</p>
+                <div class="level-tags">
+                    <span class="tag" data-zh="命題邏輯" data-en="Propositional Logic">命題邏輯</span>
+                    <span class="tag" data-zh="推理引擎" data-en="Inference">推理引擎</span>
+                    <span class="tag">Ch. 7</span>
+                </div>
+                <button class="play-btn active" onclick="trackLevelClick(2, 'Propositional Logic'); window.location.href='level2/level2_propositional_logic.html'">
+                    ▶️ <span data-zh="開始遊戲" data-en="Play Now">開始遊戲</span>
+                </button>
+            </div>
+            
+            <!-- Level 3 -->
+            <div class="level-card level-3 complete">
+                <span class="status-badge status-complete">✓ <span data-zh="完成" data-en="Complete">完成</span></span>
+                <div class="level-header">
+                    <div class="level-icon">🎲</div>
+                    <div class="level-info">
+                        <h3>Level 3</h3>
+                        <span class="algorithm">Markov Decision Process</span>
+                    </div>
+                </div>
+                <p class="level-description" data-zh="遊民外展策略 — 學習 MDP 在不確定性下做最佳決策，幫助無家可歸者。" data-en="Homeless Outreach Strategy — Learn MDP for optimal decision-making under uncertainty.">遊民外展策略 — 學習 MDP 在不確定性下做最佳決策，幫助無家可歸者。</p>
+                <div class="level-tags">
+                    <span class="tag" data-zh="決策過程" data-en="Decision Process">決策過程</span>
+                    <span class="tag" data-zh="不確定性" data-en="Uncertainty">不確定性</span>
+                    <span class="tag">Ch. 17</span>
+                </div>
+                <button class="play-btn active" onclick="trackLevelClick(3, 'MDP'); window.location.href='level3/level3_mdp.html'">
+                    ▶️ <span data-zh="開始遊戲" data-en="Play Now">開始遊戲</span>
+                </button>
+            </div>
+            
+            <!-- Level 4 -->
+            <div class="level-card level-4 complete">
+                <span class="status-badge status-complete">✓ <span data-zh="完成" data-en="Complete">完成</span></span>
+                <div class="level-header">
+                    <div class="level-icon">🏕️</div>
+                    <div class="level-info">
+                        <h3>Level 4</h3>
+                        <span class="algorithm">Knowledge-Based Agent</span>
+                    </div>
+                </div>
+                <p class="level-description" data-zh="RV Park 社區探索 — 使用知識庫代理在未知環境中導航，尋找需要幫助的家庭。" data-en="RV Park Community Exploration — Navigate unknown environments using knowledge-based reasoning.">RV Park 社區探索 — 使用知識庫代理在未知環境中導航，尋找需要幫助的家庭。</p>
+                <div class="level-tags">
+                    <span class="tag" data-zh="知識庫" data-en="Knowledge Base">知識庫</span>
+                    <span class="tag" data-zh="邏輯推理" data-en="Logical Inference">邏輯推理</span>
+                    <span class="tag">Ch. 7</span>
+                </div>
+                <button class="play-btn active" onclick="trackLevelClick(4, 'KB-Agent'); window.location.href='level4/level4_final.html'">
+                    ▶️ <span data-zh="開始遊戲" data-en="Play Now">開始遊戲</span>
+                </button>
+            </div>
+            
+            <!-- Level 5 -->
+            <div class="level-card level-5 complete">
+                <span class="status-badge status-complete">✓ <span data-zh="完成" data-en="Complete">完成</span></span>
+                <div class="level-header">
+                    <div class="level-icon">📊</div>
+                    <div class="level-info">
+                        <h3>Level 5</h3>
+                        <span class="algorithm">Bayesian Network</span>
+                    </div>
+                </div>
+                <p class="level-description" data-zh="志工留任預測 — 使用貝氏網路分析志工流失風險，建立社區關懷地圖。" data-en="Volunteer Retention Prediction — Use Bayesian networks to predict volunteer retention risks.">志工留任預測 — 使用貝氏網路分析志工流失風險，建立社區關懷地圖。</p>
+                <div class="level-tags">
+                    <span class="tag" data-zh="機率推理" data-en="Probabilistic Reasoning">機率推理</span>
+                    <span class="tag" data-zh="預測模型" data-en="Prediction">預測模型</span>
+                    <span class="tag">Ch. 12-13</span>
+                </div>
+                <button class="play-btn active" onclick="trackLevelClick(5, 'Bayesian Network'); window.location.href='level5/level5_bayesian_network.html'">
+                    ▶️ <span data-zh="開始遊戲" data-en="Play Now">開始遊戲</span>
+                </button>
+            </div>
+            
+            <!-- Level 6 -->
+            <div class="level-card level-6 complete">
+                <span class="status-badge status-complete">✓ <span data-zh="完成" data-en="Complete">完成</span></span>
+                <div class="level-header">
+                    <div class="level-icon">⚖️</div>
+                    <div class="level-info">
+                        <h3>Level 6</h3>
+                        <span class="algorithm">First-Order Logic</span>
+                    </div>
+                </div>
+                <p class="level-description" data-zh="Marcus 的資格證明 — 14歲少年想加入回收隊，系統說「不符資格」。用 FOL 推理找出真正原因！" data-en="Marcus's Eligibility Proof — A 14-year-old wants to join the recycling team. Use FOL to find the real reason for system rejection!">Marcus 的資格證明 — 14歲少年想加入回收隊，系統說「不符資格」。用 FOL 推理找出真正原因！</p>
+                <div class="level-tags">
+                    <span class="tag" data-zh="一階邏輯" data-en="First-Order Logic">一階邏輯</span>
+                    <span class="tag" data-zh="CWA 假設" data-en="Closed World">CWA 假設</span>
+                    <span class="tag">Ch. 8-9</span>
+                </div>
+                <button class="play-btn active" onclick="trackLevelClick(6, 'First-Order Logic'); window.location.href='level6/index.html'">
+                    ▶️ <span data-zh="開始遊戲" data-en="Play Now">開始遊戲</span>
+                </button>
+            </div>
+            
+            <!-- Level 7 -->
+            <div class="level-card level-7 coming-soon">
+                <span class="status-badge status-coming">🔜 <span data-zh="即將推出" data-en="Coming Soon">即將推出</span></span>
+                <div class="level-header">
+                    <div class="level-icon">🎮</div>
+                    <div class="level-info">
+                        <h3>Level 7</h3>
+                        <span class="algorithm">Adversarial Search</span>
+                    </div>
+                </div>
+                <p class="level-description" data-zh="資源分配對弈 — Minimax + Alpha-Beta Pruning，在資源有限的情況下做出最佳決策。" data-en="Resource Allocation Game — Minimax + Alpha-Beta Pruning for optimal decisions under resource constraints.">資源分配對弈 — Minimax + Alpha-Beta Pruning，在資源有限的情況下做出最佳決策。</p>
+                <div class="level-tags">
+                    <span class="tag" data-zh="對抗搜尋" data-en="Adversarial Search">對抗搜尋</span>
+                    <span class="tag" data-zh="博弈論" data-en="Game Theory">博弈論</span>
+                    <span class="tag">Ch. 5</span>
+                </div>
+                <button class="play-btn disabled">
+                    🔜 <span data-zh="即將推出" data-en="Coming Soon">即將推出</span>
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 Mei Hsien Hsu | Las Positas College | <a href="gallery.html" data-zh="真實場景照片" data-en="Real Scene Photos">真實場景照片</a> | <a href="outro.html" data-zh="結尾" data-en="Outro">結尾</a></p>
+        <p class="aphorism">「感恩，是世間最美的語言」— 證嚴法師 靜思語</p>
+    </footer>
     
     <script>
-        // Create stars
-        function createStars() {
-            const container = document.getElementById('stars');
-            for (let i = 0; i < 80; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 2 + 's';
-                container.appendChild(star);
-            }
+        // Generate stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.width = Math.random() * 3 + 1 + 'px';
+            star.style.height = star.style.width;
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
         }
-        createStars();
         
         // Language toggle
-        let currentLang = 'zh';
+        let currentLang = localStorage.getItem('lang') || 'zh';
+        
         function setLang(lang) {
             currentLang = lang;
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.includes(lang === 'zh' ? '中文' : 'English'));
-            });
-            document.querySelectorAll('[data-zh][data-en]').forEach(el => {
-                el.textContent = el.getAttribute(`data-${lang}`);
-            });
-            localStorage.setItem('jok-lang', lang);
+            localStorage.setItem('lang', lang);
             
-            // Track language change
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'language_change', { 'language': lang });
-            }
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes(lang === 'zh' ? '中文' : 'English')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            document.querySelectorAll('[data-zh][data-en]').forEach(el => {
+                el.textContent = el.getAttribute('data-' + lang);
+            });
         }
         
-        const savedLang = localStorage.getItem('jok-lang');
-        if (savedLang) setLang(savedLang);
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setLang(currentLang);
+        });
     </script>
 </body>
 </html>
