@@ -21,6 +21,29 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
+        /* 音效控制按鈕 */
+        .audio-control {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #4CAF50;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.3em;
+            transition: all 0.3s;
+        }
+        .audio-control:hover {
+            background: rgba(76,175,80,0.3);
+            transform: scale(1.1);
+        }
+        
         body {
             font-family: 'Noto Sans TC', sans-serif;
             min-height: 100vh;
@@ -358,8 +381,43 @@
         </div>
     </section>
     
+    <!-- 🎵 希望樹大團圓音樂 -->
+    <audio id="hopeTreeAudio" loop preload="auto">
+        <source src="cinematic-epic-inspiring-362462.mp3" type="audio/mpeg">
+    </audio>
+    <div class="audio-control" id="audioControl" onclick="toggleAudio()">🔊</div>
+    
     <script>
         let currentLang = 'en';
+        let audioEnabled = true;
+        
+        // 自動播放音樂
+        function playHopeTreeMusic() {
+            const audio = document.getElementById('hopeTreeAudio');
+            if (audio) {
+                audio.volume = 0.6;
+                audio.play().catch(e => console.log('Auto-play blocked, click to enable'));
+            }
+        }
+        
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const audio = document.getElementById('hopeTreeAudio');
+            document.getElementById('audioControl').textContent = audioEnabled ? '🔊' : '🔇';
+            if (audioEnabled) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+        
+        // 頁面載入時播放
+        document.addEventListener('DOMContentLoaded', playHopeTreeMusic);
+        document.addEventListener('click', () => {
+            const audio = document.getElementById('hopeTreeAudio');
+            if (audio.paused && audioEnabled) audio.play();
+        }, { once: true });
+        
         function setLang(lang) {
             currentLang = lang;
             document.querySelectorAll('.lang-btn').forEach(btn => {

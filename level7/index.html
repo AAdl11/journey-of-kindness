@@ -88,14 +88,14 @@
         .game-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.15); z-index: 2; pointer-events: none; }
         
         .train-container { position: absolute; top: 1%; left: 50%; transform: translateX(-50%); z-index: 10; text-align: center; }
-        .train-video { width: 160px; border-radius: 10px; box-shadow: 0 0 25px rgba(255,100,100,0.6); }
-        .train-label { color: #ff6b6b; margin-top: 4px; font-weight: bold; font-size: 0.8em; }
+        .train-video { width: 280px; border-radius: 12px; box-shadow: 0 0 40px rgba(255,100,100,0.8); border: 3px solid #ff4444; }
+        .train-label { color: #ff6b6b; margin-top: 6px; font-weight: bold; font-size: 1em; text-shadow: 0 0 10px #ff0000; }
         
-        .countdown-container { position: absolute; top: 18%; left: 50%; transform: translateX(-50%); z-index: 20; text-align: center; }
-        .iteration-count { font-size: 0.7em; color: #10a37f; font-family: 'Courier New', monospace; letter-spacing: 1px; opacity: 0.9; }
-        .countdown-number { font-size: 3.5em; font-weight: bold; color: #fff; text-shadow: 0 0 30px #ff0000; font-family: 'Courier New', monospace; }
-        .countdown-urgent { color: #ff0000 !important; animation: shake 0.3s infinite; }
-        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+        .countdown-container { position: absolute; top: 22%; left: 50%; transform: translateX(-50%); z-index: 20; text-align: center; }
+        .iteration-count { font-size: 0.85em; color: #10a37f; font-family: 'Courier New', monospace; letter-spacing: 1px; opacity: 0.9; }
+        .countdown-number { font-size: 5em; font-weight: bold; color: #fff; text-shadow: 0 0 50px #ff0000, 0 0 100px #ff0000; font-family: 'Courier New', monospace; }
+        .countdown-urgent { color: #ff0000 !important; animation: shake 0.2s infinite; text-shadow: 0 0 60px #ff0000, 0 0 120px #ff0000; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
         
         /* ===== 放大對話框 ===== */
         .ai-debate { position: absolute; top: 30%; width: 100%; display: flex; justify-content: space-between; padding: 0 15px; z-index: 25; pointer-events: none; }
@@ -226,28 +226,28 @@
             50% { box-shadow: 0 0 40px rgba(255,215,0,0.9); }
         }
         
-        /* ===== 放大 AI 顧問頭像到 110px ===== */
-        .ai-advisor { position: absolute; right: 12px; bottom: 20%; z-index: 60; display: flex; flex-direction: column; align-items: center; max-width: 200px; }
+        /* ===== 放大 AI 顧問頭像到 150px ===== */
+        .ai-advisor { position: absolute; right: 15px; bottom: 18%; z-index: 60; display: flex; flex-direction: column; align-items: center; max-width: 260px; }
         .ai-avatar { 
-            width: 110px; 
-            height: 110px; 
+            width: 150px; 
+            height: 150px; 
             border-radius: 50%; 
             object-fit: cover; 
-            border: 5px solid #4a90a4; 
-            box-shadow: 0 0 25px rgba(74,144,164,0.6); 
+            border: 6px solid #4a90a4; 
+            box-shadow: 0 0 35px rgba(74,144,164,0.8); 
         }
-        .ai-learning { background: #ffd700; color: #1a1a2e; font-size: 0.75em; padding: 5px 14px; border-radius: 12px; margin-top: -12px; font-weight: bold; animation: blink 1.5s infinite; }
+        .ai-learning { background: #ffd700; color: #1a1a2e; font-size: 0.9em; padding: 8px 18px; border-radius: 15px; margin-top: -15px; font-weight: bold; animation: blink 1.5s infinite; }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.5} }
         .ai-speech { 
             background: rgba(0,0,0,0.95); 
-            border: 2px solid #4a90a4; 
-            border-radius: 14px; 
-            padding: 12px 14px; 
-            margin-top: 10px; 
-            font-size: 0.9em; 
-            line-height: 1.5; 
+            border: 3px solid #4a90a4; 
+            border-radius: 16px; 
+            padding: 16px 18px; 
+            margin-top: 12px; 
+            font-size: 1.1em; 
+            line-height: 1.6; 
             text-align: center; 
-            max-width: 190px; 
+            max-width: 240px; 
         }
         
         /* ANALYSIS */
@@ -333,7 +333,7 @@
         /* ✨ ATARAXY PORTICO - 金色主題 ✨ */
         /* ======================================= */
         #mindfulness-screen { 
-            background: url('靜心之門.png') center center / cover no-repeat;
+            background: url('靜心之門.png') center bottom / cover no-repeat;
             position: relative;
         }
         .mindfulness-overlay {
@@ -526,6 +526,7 @@
     
     <audio id="suspenseAudio" loop preload="auto"><source src="L7_suspense_mp3.mp3" type="audio/mpeg"></audio>
     <audio id="switchAudio" preload="auto"><source src="L7_switch_mp3_mp3.mp3" type="audio/mpeg"></audio>
+    <audio id="ataraxyAudio" loop preload="auto"><source src="ataraxy-music.mp3" type="audio/mpeg"></audio>
 
     <!-- QUIZ MODAL -->
     <div class="quiz-modal" id="quizModal">
@@ -804,6 +805,10 @@
             </p>
             
             <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 25px;">
+                <button class="mindfulness-btn" onclick="goToHome()" style="animation-delay: 1.5s;">
+                    <span class="text-en-inline">🏠 Home</span>
+                    <span class="text-zh-inline">🏠 回主頁</span>
+                </button>
                 <button class="mindfulness-btn" onclick="restartGame()" style="animation-delay: 2s;">
                     <span class="text-en-inline">↻ Play Again</span>
                     <span class="text-zh-inline">↻ 再玩一次</span>
@@ -916,70 +921,7 @@
             }
         }
         
-        function playTypeSound() {
-            if (!audioEnabled || !audioContext) return;
-            try {
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                oscillator.frequency.value = 800 + Math.random() * 400;
-                oscillator.type = 'square';
-                gainNode.gain.setValueAtTime(0.03, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05);
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.05);
-            } catch (e) {}
-        }
-        
-        function playAlertSound() {
-            if (!audioEnabled || !audioContext) return;
-            try {
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                oscillator.frequency.value = 440;
-                oscillator.type = 'sine';
-                gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.3);
-            } catch (e) {}
-        }
-        
-        function playBellSound() {
-            if (!audioEnabled || !audioContext) return;
-            try {
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                oscillator.frequency.value = 528;
-                oscillator.type = 'sine';
-                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1.5);
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 1.5);
-            } catch (e) {}
-        }
-        
-        function playWaterDrop() {
-            if (!audioEnabled || !audioContext) return;
-            try {
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.15);
-                oscillator.type = 'sine';
-                gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.2);
-            } catch (e) {}
-        }
+        // 音效已簡化 - 只保留背景音樂
         
         function toggleAudio() {
             audioEnabled = !audioEnabled;
@@ -1106,7 +1048,6 @@
                 
                 if (countdown <= 5) {  // 最後 5 秒才變緊急
                     document.getElementById('countdown').classList.add('countdown-urgent');
-                    playAlertSound();
                 }
                 
                 if (countdown <= 0) {
@@ -1221,7 +1162,6 @@
             const typeInterval = setInterval(() => {
                 if (i < txt.length) {
                     output.innerHTML += txt.charAt(i);
-                    playTypeSound();
                     i++;
                 } else {
                     clearInterval(typeInterval);
@@ -1288,19 +1228,39 @@
         // ✨ ATARAXY PORTICO
         function goToMindfulness() {
             showScreen('mindfulness-screen');
-            playBellSound();
-            // Random water drops
-            setInterval(() => {
-                if (document.getElementById('mindfulness-screen').classList.contains('active')) {
-                    if (Math.random() > 0.7) playWaterDrop();
-                }
-            }, 2000);
+            // 停止緊張的背景音樂，播放平靜的靜心音樂
+            stopBackgroundMusic();
+            playAtaraxyMusic();
+        }
+        
+        function playAtaraxyMusic() {
+            if (!audioEnabled) return;
+            const ataraxyAudio = document.getElementById('ataraxyAudio');
+            if (ataraxyAudio) {
+                ataraxyAudio.volume = 0.6;
+                ataraxyAudio.currentTime = 0;
+                ataraxyAudio.play().catch(e => console.log('Ataraxy music error:', e));
+            }
+        }
+        
+        function stopAtaraxyMusic() {
+            const ataraxyAudio = document.getElementById('ataraxyAudio');
+            if (ataraxyAudio) {
+                ataraxyAudio.pause();
+                ataraxyAudio.currentTime = 0;
+            }
         }
         
         function goToHopeTree() {
-            // Link to outro/hope tree page
-            alert(currentLang === 'en' ? '🌳 Proceeding to Hope Tree & QR Code...' : '🌳 前往希望樹與 QR Code...');
-            // window.location.href = 'outro.html';
+            // 停止靜心音樂，連接到 outro 頁面
+            stopAtaraxyMusic();
+            window.location.href = '../outro.html';
+        }
+        
+        function goToHome() {
+            // 停止靜心音樂，回到主頁
+            stopAtaraxyMusic();
+            window.location.href = '../index.html';
         }
         
         function restartGame() { 
@@ -1308,6 +1268,7 @@
             gameActive = false;
             thirdOptionRevealed = false;
             stopBackgroundMusic();
+            stopAtaraxyMusic();
             
             // 清除所有選項卡狀態
             document.querySelectorAll('.choice-card').forEach(card => {
