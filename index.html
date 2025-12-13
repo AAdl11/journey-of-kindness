@@ -1,614 +1,1340 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>善的旅程 Level 5: Bayesian Network | Circle of Care</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Level 7: The Trolley Dilemma | AI Evolution 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Noto Sans TC', sans-serif; box-sizing: border-box; }
-        .screen { display: none; min-height: 100vh; }
-        .screen.active { display: flex; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); } 50% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.9); } }
-        @keyframes breatheRing { 0%, 100% { transform: scale(0.85); opacity: 0.7; } 50% { transform: scale(1.15); opacity: 1; } }
-        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        
-        .fade-in { animation: fadeIn 0.8s ease-out; }
-        .slide-up { animation: slideUp 0.6s ease-out; }
-        .pulse-glow { animation: pulseGlow 2s infinite; }
-        .heartbeat { animation: heartbeat 1.5s ease-in-out infinite; }
-        
-        /* 背景 - 完整顯示全景（桌面和手機都能看到整張圖）*/
-        .bg-community { 
-            background: url('L5_bayviewSt_cleaned.png') center center/contain no-repeat; 
-            background-color: #fef3c7; 
+        body { 
+            font-family: 'Inter', 'Noto Sans TC', 'Segoe UI', sans-serif; 
+            background: #0a0a12; 
+            color: #eee; 
+            min-height: 100vh; 
         }
-        .bg-map { 
-            background: url('p12_社區關懷地圖介面.png') center center/contain no-repeat; 
-            background-color: #ecfdf5; 
-        }
+        body.lang-zh { font-family: 'Noto Sans TC', 'Inter', sans-serif; }
+        body.lang-en { font-family: 'Inter', 'Noto Sans TC', sans-serif; }
         
-        /* 手機優化 */
-        @media (max-width: 768px) {
-            .bg-community, .bg-map {
-                background-size: contain;
-                background-position: center top;
-            }
-        }
+        .lang-toggle { position: fixed; top: 12px; left: 12px; z-index: 1000; display: flex; gap: 4px; }
+        .lang-btn { padding: 6px 14px; border: 2px solid #4a90a4; background: transparent; color: #4a90a4; border-radius: 18px; cursor: pointer; font-size: 14px; font-family: inherit; }
+        .lang-btn.active { background: #4a90a4; color: white; }
         
-        /* 靜心之門 - 改用貝氏網路視覺化背景（愛心連結） */
-        .bg-ataraxy {
-            background: url('p11_貝氏網路視覺化背景_cleaned.png') center center/contain no-repeat;
-            background-color: #fce7f3;
-        }
+        .audio-control { position: fixed; top: 12px; right: 12px; z-index: 1000; background: rgba(0,0,0,0.7); border: 2px solid #4a90a4; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.3em; }
         
-        /* 玻璃卡片 - 非常透明讓背景露出來 */
-        .glass-card { 
-            background: rgba(255,255,255,0.65); 
-            backdrop-filter: blur(3px); 
-            border-radius: 20px; 
-            border: 2px solid rgba(255,255,255,0.3); 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06); 
-        }
+        .text-en, .text-zh { display: none; }
+        body.lang-en .text-en { display: block; }
+        body.lang-zh .text-zh { display: block; }
+        body.lang-en .text-en-inline { display: inline; }
+        body.lang-zh .text-zh-inline { display: inline; }
+        .text-en-inline, .text-zh-inline { display: none; }
         
-        /* 對話框背景 - 更透明 */
-        .dialogue-box-clear {
-            background: rgba(255,255,255,0.7);
-            border: 3px solid #f59e0b;
-            border-radius: 20px;
-            padding: 20px 28px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-        }
+        .screen { display: none; width: 100%; min-height: 100vh; position: relative; }
+        .screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        .character-card { 
-            background: rgba(255,255,255,0.65); 
-            border: 3px solid transparent; 
-            border-radius: 16px; 
-            padding: 12px; 
+        /* INTRO */
+        #intro-screen { background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a12 100%); text-align: center; padding: 30px 12px; }
+        .level-badge { background: linear-gradient(90deg, #00f260, #0575e6); padding: 6px 18px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-bottom: 12px; display: inline-block; letter-spacing: 1px; }
+        .intro-title { font-size: 1.8em; margin-bottom: 6px; background: linear-gradient(135deg, #00c6ff, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700; }
+        .intro-subtitle { color: #888; font-size: 0.9em; margin-bottom: 12px; }
+        
+        .gpt-foundation { color: #666; font-size: 0.75em; margin-bottom: 12px; font-family: 'Courier New', monospace; }
+        .gpt-foundation span { color: #10a37f; font-weight: bold; }
+        
+        .context-2025 { background: rgba(255,215,0,0.1); border: 1px solid #ffd700; border-radius: 10px; padding: 10px 12px; margin: 10px 0; max-width: 520px; }
+        .context-2025 p { color: #ffd700; font-size: 0.8em; line-height: 1.5; }
+        
+        .ai-voices-box { background: rgba(0,0,0,0.5); border: 1px solid #4a90a4; border-radius: 12px; padding: 12px; max-width: 550px; margin: 10px 0; position: relative; overflow: hidden; }
+        .ai-voices-box::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #00c6ff, transparent); animation: scan 3s infinite; }
+        @keyframes scan { 0%{left:-100%} 100%{left:100%} }
+        .ai-voices-title { color: #4a90a4; font-size: 0.85em; margin-bottom: 10px; text-align: center; }
+        
+        .voice-row { display: flex; gap: 8px; margin: 8px 0; align-items: flex-start; }
+        .voice-icon { font-size: 1.2em; flex-shrink: 0; width: 28px; text-align: center; }
+        .voice-content { flex: 1; }
+        .voice-name { font-weight: bold; font-size: 0.75em; margin-bottom: 2px; }
+        .voice-text { font-size: 0.7em; color: #aaa; line-height: 1.4; }
+        .voice-chatgpt { color: #10a37f; }
+        .voice-claude { color: #a78bfa; }
+        .voice-gemini { color: #4facfe; }
+        .voice-grok { color: #ff6b6b; }
+        .voice-mogawdat { color: #ffd700; }
+        
+        .intro-image { width: 75%; max-width: 380px; border-radius: 10px; margin: 10px 0; box-shadow: 0 6px 25px rgba(0,0,0,0.5); }
+        
+        .algorithm-box { background: rgba(255,107,107,0.1); border: 1px solid #e94560; border-radius: 10px; padding: 8px 12px; margin: 8px 0; }
+        .algorithm-box h3 { color: #ff6b6b; font-size: 0.9em; margin-bottom: 2px; }
+        .algorithm-box p { font-size: 0.75em; color: #aaa; }
+        
+        .start-btn { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; border: none; padding: 14px 40px; font-size: 1.1em; border-radius: 30px; cursor: pointer; margin-top: 10px; font-weight: bold; box-shadow: 0 0 15px rgba(0,114,255,0.4); font-family: inherit; }
+        .start-btn:hover { transform: scale(1.05); }
+        
+        /* STORY */
+        #story-screen { background-size: cover; background-position: center; }
+        .story-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 15px; }
+        .story-container { max-width: 580px; text-align: center; }
+        .story-title { font-size: 1.4em; color: #ff6b6b; margin-bottom: 15px; }
+        .story-text { font-size: 1em; line-height: 1.8; color: #ddd; margin-bottom: 20px; }
+        .story-highlight { color: #ffd700; font-weight: bold; }
+        .continue-btn { background: linear-gradient(135deg, #4a90a4, #6bb5cc); color: white; border: none; padding: 12px 30px; font-size: 0.95em; border-radius: 25px; cursor: pointer; font-family: inherit; }
+        
+        /* GAME */
+        #game-screen { position: relative; }
+        .game-container { width: 100%; height: 100vh; position: relative; overflow: hidden; }
+        .track-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 1; }
+        .game-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.15); z-index: 2; pointer-events: none; }
+        
+        .train-container { position: absolute; top: 1%; left: 50%; transform: translateX(-50%); z-index: 10; text-align: center; }
+        .train-video { width: 280px; border-radius: 12px; box-shadow: 0 0 40px rgba(255,100,100,0.8); border: 3px solid #ff4444; }
+        .train-label { color: #ff6b6b; margin-top: 6px; font-weight: bold; font-size: 1em; text-shadow: 0 0 10px #ff0000; }
+        
+        .countdown-container { position: absolute; top: 22%; left: 50%; transform: translateX(-50%); z-index: 20; text-align: center; }
+        .iteration-count { font-size: 0.85em; color: #10a37f; font-family: 'Courier New', monospace; letter-spacing: 1px; opacity: 0.9; }
+        .countdown-number { font-size: 5em; font-weight: bold; color: #fff; text-shadow: 0 0 50px #ff0000, 0 0 100px #ff0000; font-family: 'Courier New', monospace; }
+        .countdown-urgent { color: #ff0000 !important; animation: shake 0.2s infinite; text-shadow: 0 0 60px #ff0000, 0 0 120px #ff0000; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+        
+        /* ===== 放大對話框 ===== */
+        .ai-debate { position: absolute; top: 30%; width: 100%; display: flex; justify-content: space-between; padding: 0 15px; z-index: 25; pointer-events: none; }
+        .debate-bubble { 
+            background: rgba(0,0,0,0.92); 
+            border-radius: 15px; 
+            padding: 14px 16px; 
+            max-width: 180px; 
+            font-size: 0.95em; 
+            opacity: 0; 
+            transform: translateY(12px); 
+            transition: all 0.4s; 
+            text-align: center; 
+            line-height: 1.4; 
+        }
+        .debate-bubble.show { opacity: 1; transform: translateY(0); }
+        .debate-bubble.left { border: 3px solid #4facfe; color: #a8d8ff; }
+        .debate-bubble.right { border: 3px solid #a78bfa; color: #d4c4fb; }
+        .debate-bubble .speaker { font-size: 1.2em; margin-bottom: 5px; }
+        
+        /* ===== 放大選項圖片 ===== */
+        .choices-container { 
+            position: absolute; 
+            bottom: 8%; 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-end; 
+            gap: 25px; 
+            z-index: 500; 
+            padding: 0 15px; 
+        }
+        .choice-card { 
+            text-align: center; 
             cursor: pointer; 
-            transition: all 0.3s ease; 
+            transition: all 0.3s; 
+            position: relative; 
+            pointer-events: auto;
+            background: rgba(0,0,0,0.7);
+            border-radius: 16px;
+            padding: 25px 15px 15px;
+            min-width: 150px;
         }
-        .character-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .character-card.selected { border-color: #ec4899; box-shadow: 0 0 25px rgba(236, 72, 153, 0.5); }
-        .character-card.visited { pointer-events: none; }
-        .character-card { position: relative; }
-        .visited-check { position: absolute; top: 8px; right: 8px; background: #22c55e; color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; box-shadow: 0 2px 8px rgba(34,197,94,0.5); }
-        .character-avatar { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 5px 20px rgba(0,0,0,0.25); }
+        .choice-card:hover { 
+            transform: scale(1.1); 
+            background: rgba(0,0,0,0.85);
+        }
+        .choice-card:active {
+            transform: scale(0.95);
+        }
+        .choice-card.disabled { pointer-events: none; opacity: 0.4; }
         
-        /* 大頭像 - 拜訪場景用 */
-        .character-avatar-large {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid white;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        .choice-letter { 
+            position: absolute; 
+            top: -18px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            font-size: 1.6em; 
+            font-weight: bold; 
+            width: 44px; 
+            height: 44px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .choice-card.choice-a .choice-letter { background: linear-gradient(135deg, #4facfe, #00c6ff); color: white; }
+        .choice-card.choice-b .choice-letter { background: linear-gradient(135deg, #a78bfa, #8b5cf6); color: white; }
+        .choice-card.choice-c .choice-letter { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #1a1a2e; }
+        
+        /* 放大選項圖片到 180px */
+        .choice-image { 
+            width: 160px; 
+            height: 110px; 
+            object-fit: cover; 
+            border-radius: 12px; 
+            border: 4px solid transparent; 
+            margin-top: 5px;
+            background: #1a1a2e;
+            pointer-events: none;
+        }
+        .choice-card.choice-a .choice-image { border-color: #4facfe; }
+        .choice-card.choice-b .choice-image { border-color: #a78bfa; }
+        .choice-card.choice-c .choice-image { border-color: #ffd700; box-shadow: 0 0 30px rgba(255,215,0,0.7); }
+        
+        .choice-label { margin-top: 8px; font-size: 0.95em; font-weight: bold; text-shadow: 0 2px 6px #000; }
+        .choice-sublabel { font-size: 0.75em; color: #aaa; }
+        
+        .choice-card.choice-a { border: 3px solid #4facfe; }
+        .choice-card.choice-b { border: 3px solid #a78bfa; }
+        .choice-card.choice-c { border: 3px solid #ffd700; display: none; }
+        .choice-card.choice-c.visible { display: block; animation: float 2.5s infinite ease-in-out; }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+        
+        .choice-card.selected .choice-image { border-width: 6px; }
+        .choice-card.endangered .choice-image { border-color: #ff0000 !important; box-shadow: 0 0 25px rgba(255,0,0,0.7); }
+        .choice-card.saved .choice-image { border-color: #00ff00 !important; box-shadow: 0 0 25px rgba(0,255,0,0.5); }
+        
+        .third-option-hint { 
+            position: absolute; 
+            bottom: 2%; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #1a1a2e; 
+            font-size: 1em; 
+            font-weight: bold;
+            cursor: pointer; 
+            z-index: 600; 
+            padding: 14px 30px;
+            border-radius: 25px;
+            border: none;
+            box-shadow: 0 0 25px rgba(255,215,0,0.7);
+            animation: pulse 2s infinite;
+            pointer-events: auto;
+        }
+        .third-option-hint:hover {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 0 35px rgba(255,215,0,1);
+        }
+        .third-option-hint:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.6); }
+            50% { box-shadow: 0 0 40px rgba(255,215,0,0.9); }
         }
         
-        .prob-bar-container { width: 100%; height: 20px; background: linear-gradient(to right, #dcfce7, #fef9c3, #fee2e2); border-radius: 10px; overflow: hidden; position: relative; border: 2px solid rgba(0,0,0,0.1); }
-        .prob-bar-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #eab308, #ef4444); border-radius: 8px; transition: width 0.5s ease; }
-        .prob-indicator { position: absolute; top: -6px; transform: translateX(-50%); font-size: 1.2rem; }
-        
-        .dialogue-text { font-size: 1.4rem; line-height: 1.8; color: #374151; font-weight: 500; }
-        
-        /* 拜訪場景 - 左右佈局 */
-        .visit-layout {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-            min-height: 100vh;
-            padding: 40px;
+        /* ===== 放大 AI 顧問頭像到 150px ===== */
+        .ai-advisor { position: absolute; right: 15px; bottom: 18%; z-index: 60; display: flex; flex-direction: column; align-items: center; max-width: 260px; }
+        .ai-avatar { 
+            width: 150px; 
+            height: 150px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 6px solid #4a90a4; 
+            box-shadow: 0 0 35px rgba(74,144,164,0.8); 
         }
-        .visit-left {
+        .ai-learning { background: #ffd700; color: #1a1a2e; font-size: 0.9em; padding: 8px 18px; border-radius: 15px; margin-top: -15px; font-weight: bold; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.5} }
+        .ai-speech { 
+            background: rgba(0,0,0,0.95); 
+            border: 3px solid #4a90a4; 
+            border-radius: 16px; 
+            padding: 16px 18px; 
+            margin-top: 12px; 
+            font-size: 1.1em; 
+            line-height: 1.6; 
+            text-align: center; 
+            max-width: 240px; 
+        }
+        
+        /* ANALYSIS */
+        #analysis-screen { background: #000; padding: 25px 15px; }
+        .terminal-box { background: rgba(0,20,0,0.9); border: 1px solid #00ff00; border-radius: 10px; padding: 15px; max-width: 620px; width: 100%; position: relative; overflow: hidden; }
+        .terminal-box.typing-glow::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,255,0,0.03); animation: terminalPulse 0.15s infinite; pointer-events: none; }
+        @keyframes terminalPulse { 0%,100%{opacity:0} 50%{opacity:1} }
+        .terminal-header { color: #00ff00; font-family: 'Courier New', monospace; font-size: 0.75em; margin-bottom: 10px; border-bottom: 1px solid #004400; padding-bottom: 5px; }
+        .terminal-text { font-family: 'Courier New', monospace; color: #00ff00; font-size: 0.85em; line-height: 1.5; white-space: pre-wrap; min-height: 130px; }
+        .cursor { display: inline-block; width: 8px; height: 14px; background: #00ff00; animation: cursorBlink 1s infinite; }
+        @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+        
+        .compassion-unlocked { color: #ffd700; font-weight: bold; animation: goldenGlow 1s infinite; }
+        @keyframes goldenGlow { 0%,100%{text-shadow: 0 0 10px #ffd700, 0 0 20px #ffa500;} 50%{text-shadow: 0 0 20px #ffd700, 0 0 40px #ffa500;} }
+        
+        .expert-opinions { background: rgba(74,144,164,0.1); border: 1px solid #4a90a4; border-radius: 12px; padding: 12px; margin: 15px 0; max-width: 580px; }
+        .expert-title { color: #4a90a4; font-size: 0.85em; margin-bottom: 10px; text-align: center; }
+        .expert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .expert-card { background: rgba(0,0,0,0.4); border-radius: 8px; padding: 8px; text-align: center; }
+        .expert-card .icon { font-size: 1.4em; }
+        .expert-card .name { font-size: 0.75em; font-weight: bold; margin: 3px 0; }
+        .expert-card .stance { font-size: 0.65em; color: #aaa; line-height: 1.3; }
+        .expert-card.chatgpt .name { color: #10a37f; }
+        .expert-card.claude .name { color: #a78bfa; }
+        .expert-card.gemini .name { color: #4facfe; }
+        .expert-card.grok .name { color: #ff6b6b; }
+        
+        .training-result { background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(0,0,0,0.5)); border: 2px solid #ffd700; border-radius: 12px; padding: 12px; margin: 12px 0; max-width: 500px; }
+        .training-result h4 { color: #ffd700; font-size: 0.9em; margin-bottom: 6px; }
+        .training-result p { font-size: 0.8em; line-height: 1.5; }
+        .training-result .success { color: #00ff00; }
+        .training-result .warning { color: #ffaa00; }
+        
+        /* QUIZ MODAL */
+        .quiz-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.97); border: 2px solid #ffd700; border-radius: 15px; padding: 20px; z-index: 2000; display: none; max-width: 380px; width: 90%; text-align: center; }
+        .quiz-title { color: #ffd700; font-size: 1em; margin-bottom: 12px; }
+        .quiz-question { color: #ddd; font-size: 0.9em; margin-bottom: 15px; line-height: 1.5; }
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+        .quiz-btn { background: #4a90a4; color: white; border: none; padding: 12px 15px; border-radius: 10px; cursor: pointer; font-size: 0.9em; font-family: inherit; }
+        .quiz-btn:hover { background: #5ba8bd; }
+        .quiz-btn.close { background: #666; margin-top: 12px; }
+        
+        /* ENDINGS */
+        .ending-screen { background-size: cover; background-position: center; }
+        .ending-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); display: flex; flex-direction: column; align-items: center; padding: 50px 12px 25px; text-align: center; overflow-y: auto; }
+        .ending-badge { background: rgba(0,0,0,0.8); padding: 8px 22px; border-radius: 22px; font-size: 1.5em; margin-bottom: 8px; font-weight: bold; }
+        .ending-badge.a { color: #4facfe; border: 3px solid #4facfe; }
+        .ending-badge.b { color: #a78bfa; border: 3px solid #a78bfa; }
+        .ending-badge.c { color: #ffd700; border: 3px solid #ffd700; animation: goldenGlow 2s infinite; }
+        .ending-title { font-size: 1.3em; margin-bottom: 6px; }
+        .ending-title.a { color: #4facfe; }
+        .ending-title.b { color: #a78bfa; }
+        .ending-title.c { color: #ffd700; }
+        .ending-philosophy { font-size: 0.9em; color: #ffd700; margin-bottom: 10px; font-style: italic; }
+        .ending-description { max-width: 450px; line-height: 1.5; margin-bottom: 12px; font-size: 0.9em; }
+        
+        .ai-log { background: rgba(0,0,0,0.8); border-radius: 10px; padding: 10px 12px; max-width: 450px; margin-bottom: 10px; text-align: left; }
+        .ai-log h3 { color: #4a90a4; font-size: 0.85em; margin-bottom: 5px; }
+        .ai-log p { font-size: 0.8em; line-height: 1.4; }
+        
+        .mogawdat-quote { background: linear-gradient(135deg, rgba(74,144,164,0.15), rgba(0,0,0,0.5)); border: 1px solid #4a90a4; border-radius: 10px; padding: 10px 12px; margin: 10px 0; max-width: 400px; }
+        .mogawdat-quote .quote { color: #6bb5cc; font-style: italic; font-size: 0.8em; line-height: 1.4; }
+        .mogawdat-quote .author { color: #888; font-size: 0.7em; margin-top: 5px; }
+        
+        .jingsi-quote { background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(0,0,0,0.5)); border-left: 4px solid #ffd700; padding: 10px 12px; margin: 10px 0; max-width: 380px; text-align: left; }
+        .jingsi-quote .chinese { font-size: 0.95em; color: #ffd700; margin-bottom: 3px; }
+        .jingsi-quote .english { color: #bbb; font-style: italic; font-size: 0.8em; }
+        
+        .cta-box { background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(0,0,0,0.3)); border: 2px solid rgba(255,215,0,0.5); border-radius: 12px; padding: 12px; margin: 10px 0; max-width: 400px; }
+        .cta-main { font-size: 0.9em; color: #ffd700; margin-bottom: 4px; font-weight: bold; }
+        .cta-sub { font-size: 0.8em; color: #ccc; }
+        
+        .share-btn { background: linear-gradient(135deg, #1DA1F2, #0077B5); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-size: 0.85em; margin: 8px 0; display: flex; align-items: center; gap: 8px; font-family: inherit; }
+        .share-btn:hover { transform: scale(1.05); }
+        
+        .nav-buttons { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; justify-content: center; }
+        .nav-btn { padding: 10px 20px; font-size: 0.85em; border: none; border-radius: 22px; cursor: pointer; font-family: inherit; }
+        .nav-btn.primary { background: linear-gradient(135deg, #4a90a4, #6bb5cc); color: white; }
+        .nav-btn.secondary { background: rgba(255,255,255,0.1); border: 2px solid #4a90a4; color: #4a90a4; }
+        .nav-btn.home { background: rgba(255,215,0,0.2); border: 2px solid #ffd700; color: #ffd700; }
+        
+        /* ======================================= */
+        /* ✨ ATARAXY PORTICO - 金色主題 ✨ */
+        /* ======================================= */
+        #mindfulness-screen { 
+            background: url('靜心之門.png') center bottom / cover no-repeat;
+            position: relative;
+        }
+        .mindfulness-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.35);
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-        .visit-right {
-            max-width: 500px;
-        }
-        
-        .result-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; z-index: 100; }
-        .result-card { background: linear-gradient(135deg, #ffffff, #fef3c7); border-radius: 24px; padding: 2.5rem; text-align: center; max-width: 550px; border: 4px solid; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }
-        .result-card.surprise { border-color: #f59e0b; }
-        .result-card.touching { border-color: #ec4899; }
-        
-        /* 呼吸環 - 金色 (跟 Level 2 一樣) */
-        .breath-ring {
-            width: 120px; 
-            height: 120px; 
-            border-radius: 50%;
-            border: 4px solid rgba(251, 191, 36, 0.9);
-            animation: breatheRing 4s ease-in-out infinite;
-            box-shadow: 0 0 40px rgba(251, 191, 36, 0.5);
-            display: flex; 
-            align-items: center; 
             justify-content: center;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
+            text-align: center;
+            padding: 20px;
         }
         
-        /* 靜思語卡片 - 空靈科幻感 */
-        .jingsi-card {
-            background: rgba(255, 255, 255, 0.25); 
-            backdrop-filter: blur(12px);
-            border-radius: 20px; 
-            padding: 1.5rem 2.5rem; 
-            max-width: 500px;
-            text-align: center; 
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        /* 標題：米白色 + 金邊陰影，無蓮花 emoji */
+        .mindfulness-title {
+            font-size: 1.9em;
+            color: #FFF8E7;
+            margin-bottom: 20px;
+            text-shadow: 
+                0 0 20px rgba(255,215,0,0.8),
+                0 0 40px rgba(255,180,0,0.5),
+                2px 2px 4px rgba(0,0,0,0.8);
+            opacity: 0;
+            animation: fadeInUp 1.5s ease forwards;
+            font-weight: 600;
+            letter-spacing: 2px;
         }
         
-        .elo-badge { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1f2937; padding: 8px 16px; border-radius: 9999px; font-weight: bold; }
+        .mindfulness-quote {
+            max-width: 400px;
+            margin: 20px 0;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 0.5s forwards;
+        }
+        /* 引言字體：米白色 + 金邊陰影 */
+        .mindfulness-quote .chinese {
+            font-size: 1.3em;
+            color: #FFF8E7;
+            margin-bottom: 8px;
+            line-height: 1.6;
+            text-shadow: 
+                0 0 15px rgba(255,215,0,0.6),
+                1px 1px 3px rgba(0,0,0,0.7);
+        }
+        .mindfulness-quote .english {
+            font-size: 0.95em;
+            color: #E8DCC8;
+            font-style: italic;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+        }
         
-        .btn-primary { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; padding: 14px 28px; border-radius: 14px; font-weight: bold; font-size: 1.1rem; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 5px 20px rgba(236, 72, 153, 0.4); }
-        .btn-primary:hover { transform: translateY(-3px); }
-        .btn-primary:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+        /* 呼吸圓圈：紫色 → 金色 */
+        .breath-container {
+            margin: 30px 0;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 1s forwards;
+        }
+        .breath-circle {
+            width: 110px;
+            height: 110px;
+            border: 4px solid rgba(255,215,0,0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: breatheGold 4s ease-in-out infinite;
+            margin: 0 auto;
+            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+        }
+        @keyframes breatheGold {
+            0%, 100% { 
+                transform: scale(1); 
+                border-color: rgba(255,215,0,0.4);
+                box-shadow: 0 0 20px rgba(255,215,0,0.2);
+            }
+            50% { 
+                transform: scale(1.35); 
+                border-color: rgba(255,215,0,0.95);
+                box-shadow: 0 0 40px rgba(255,215,0,0.6), 0 0 60px rgba(255,180,0,0.3);
+            }
+        }
+        /* 呼吸文字：米白色 + 金邊 */
+        .breath-text {
+            color: #FFF8E7;
+            font-size: 0.9em;
+            animation: breatheTextGold 4s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+        @keyframes breatheTextGold {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
         
-        /* 導航按鈕 - 不同顏色 */
-        .nav-btn-home { background: linear-gradient(135deg, #6b7280, #4b5563); color: white; padding: 12px 24px; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; }
-        .nav-btn-replay { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 12px 24px; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; }
-        .nav-btn-next { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 12px 24px; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; }
+        /* 指示文字：米白色 */
+        .mindfulness-instruction {
+            color: #E8DCC8;
+            font-size: 0.95em;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 1.5s forwards;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+        }
         
-        .btn-override { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; padding: 8px 16px; border-radius: 10px; font-weight: bold; font-size: 0.85rem; border: none; cursor: pointer; }
+        /* 按鈕：金色主題 */
+        .mindfulness-btn {
+            background: linear-gradient(135deg, rgba(255,215,0,0.3), rgba(200,160,0,0.5));
+            border: 2px solid rgba(255,215,0,0.7);
+            color: #FFF8E7;
+            padding: 14px 35px;
+            font-size: 1em;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 25px;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 2.5s forwards;
+            font-family: inherit;
+            transition: all 0.3s;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .mindfulness-btn:hover {
+            background: linear-gradient(135deg, rgba(255,215,0,0.5), rgba(200,160,0,0.7));
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255,215,0,0.5);
+        }
         
-        .lang-toggle { position: fixed; top: 12px; right: 70px; z-index: 1000; display: flex; background: rgba(255, 255, 255, 0.95); border-radius: 9999px; padding: 4px; border: 2px solid rgba(236, 72, 153, 0.4); }
-        .lang-btn { padding: 6px 14px; border-radius: 9999px; border: none; cursor: pointer; font-weight: bold; background: transparent; color: #6b7280; }
-        .lang-btn.active { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
-        .music-toggle { position: fixed; top: 12px; right: 12px; z-index: 1000; background: rgba(255, 255, 255, 0.95); border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid rgba(236, 72, 153, 0.4); font-size: 1.3rem; }
+        /* 水波紋：金色 */
+        .water-ripple {
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 50px;
+            pointer-events: none;
+        }
+        .ripple {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255,215,0,0.4);
+            border-radius: 50%;
+            animation: rippleExpandGold 3s ease-out infinite;
+        }
+        .ripple:nth-child(1) { left: 30%; animation-delay: 0s; }
+        .ripple:nth-child(2) { left: 50%; animation-delay: 1s; }
+        .ripple:nth-child(3) { left: 70%; animation-delay: 2s; }
+        @keyframes rippleExpandGold {
+            0% { transform: scale(1); opacity: 0.7; background: rgba(255,215,0,0.5); }
+            100% { transform: scale(8); opacity: 0; background: rgba(255,215,0,0.1); }
+        }
         
-        .nav-buttons { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 50; background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); }
-        .nav-btn { padding: 8px 16px; border-radius: 10px; border: 2px solid #e5e7eb; background: white; cursor: pointer; font-weight: 500; }
-        .nav-btn:hover { border-color: #ec4899; color: #ec4899; }
+        /* MOBILE */
+        @media (max-width: 480px) {
+            .intro-title { font-size: 1.5em; }
+            .choice-image { width: 130px; height: 90px; }
+            .choice-letter { width: 34px; height: 34px; font-size: 1.3em; top: -12px; }
+            .choice-label { font-size: 0.8em; }
+            .ai-advisor { max-width: 150px; bottom: 25%; right: 8px; }
+            .ai-avatar { width: 85px; height: 85px; }
+            .ai-speech { font-size: 0.8em; max-width: 140px; padding: 10px 12px; }
+            .debate-bubble { max-width: 130px; font-size: 0.8em; padding: 10px 12px; }
+            .countdown-number { font-size: 2.8em; }
+            .train-video { width: 120px; }
+            .mindfulness-title { font-size: 1.5em; }
+            .mindfulness-quote .chinese { font-size: 1.1em; }
+            .breath-circle { width: 90px; height: 90px; }
+        }
         
-        .game-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; height: calc(100vh - 100px); padding: 16px; }
-        .math-section { background: rgba(255,255,255,0.65); border-radius: 20px; padding: 20px; border: 2px solid rgba(139, 92, 246, 0.1); overflow-y: auto; }
-        @media (max-width: 1024px) { .game-layout { grid-template-columns: 1fr; } .visit-layout { flex-direction: column; } }
+        @media (min-width: 481px) and (max-width: 768px) {
+            .choice-image { width: 150px; height: 100px; }
+            .choice-letter { width: 38px; height: 38px; font-size: 1.4em; }
+            .ai-advisor { max-width: 180px; bottom: 22%; }
+            .ai-avatar { width: 95px; height: 95px; }
+            .ai-speech { font-size: 0.85em; max-width: 165px; }
+        }
     </style>
 </head>
-<body class="bg-gray-100">
-
-<div class="lang-toggle">
-    <button class="lang-btn" onclick="setLang('en')">EN</button>
-    <button class="lang-btn active" onclick="setLang('zh')">中文</button>
-</div>
-<div class="music-toggle" onclick="toggleMusic()" id="music-btn">🔇</div>
-
-<!-- INTRO -->
-<div id="intro-screen" class="screen active bg-community flex-col items-center justify-center p-4">
-    <div class="glass-card p-8 max-w-lg text-center fade-in">
-        <h1 class="text-3xl md:text-4xl font-bold mb-3">
-            <span class="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">Level 5: Bayesian Network</span>
-        </h1>
-        <p class="text-xl text-gray-700 mb-1" data-en="Circle of Care" data-zh="心的循環">心的循環</p>
-        <p class="text-sm text-gray-500 mb-5">Bayview-Hunters Point Community</p>
-        
-        <div class="bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl p-5 mb-5 text-left border border-pink-200">
-            <div class="flex items-center gap-3 mb-3">
-                <span class="text-4xl heartbeat">💗</span>
-                <div>
-                    <p class="font-bold text-pink-600 text-lg" data-en="Who Needs Care Today?" data-zh="今天誰需要被關心？">今天誰需要被關心？</p>
-                    <p class="text-gray-600" data-en="Use Bayesian reasoning to find out" data-zh="用貝氏推理找出答案">用貝氏推理找出答案</p>
-                </div>
-            </div>
-            <div class="space-y-2 text-gray-700">
-                <p>🔮 <span data-en="Observe evidence & update probabilities" data-zh="觀察證據，更新機率">觀察證據，更新機率</span></p>
-                <p>🚪 <span data-en="Choose who to visit (limited time!)" data-zh="選擇要拜訪誰（時間有限！）">選擇要拜訪誰（時間有限！）</span></p>
-                <p>💡 <span data-en="Sometimes data lies... trust your heart" data-zh="有時數據會騙人... 相信你的心">有時數據會騙人... 相信你的心</span></p>
-            </div>
-        </div>
-        
-        <div class="bg-yellow-50 rounded-lg p-4 mb-5 border border-yellow-200">
-            <p class="text-gray-700"><span class="font-bold text-yellow-600">⭐ ELO</span> - <span data-en="Good decisions earn points!" data-zh="做對決策得分！">做對決策得分！</span></p>
-        </div>
-        
-        <button onclick="startGame()" class="btn-primary text-xl px-12 py-4 pulse-glow">🌟 <span data-en="Start" data-zh="開始遊戲">開始遊戲</span></button>
+<body class="lang-en">
+    <div class="lang-toggle">
+        <button class="lang-btn active" id="btnEn" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" id="btnZh" onclick="setLanguage('zh')">中文</button>
     </div>
-    <div class="nav-buttons">
-        <button class="nav-btn" onclick="goToMainMenu()">🏠 <span data-en="Main Menu" data-zh="主選單">主選單</span></button>
-        <button class="nav-btn" onclick="goToPrevLevel()">⬅️ <span data-en="Prev Level" data-zh="上一關">上一關</span></button>
-    </div>
-</div>
-
-<!-- GAME -->
-<div id="game-screen" class="screen bg-map flex-col">
-    <div class="glass-card mx-4 mt-4 p-3 flex justify-between items-center">
-        <div class="flex items-center gap-4">
-            <span class="font-bold text-lg text-pink-600">💗 <span data-en="Community Care" data-zh="社區關懷">社區關懷</span></span>
-            <span class="text-gray-600"><span data-en="Visited" data-zh="已拜訪">已拜訪</span> <span id="round-display" class="text-purple-600 font-bold">0</span>/3</span>
-        </div>
-        <div class="flex items-center gap-4">
-            <div class="elo-badge">⭐ <span id="elo-display">1500</span></div>
-            <div class="text-lg"><span class="text-green-600">😊 <span id="good-count">0</span></span><span class="text-blue-600 ml-2">😢 <span id="sad-count">0</span></span></div>
-        </div>
-    </div>
+    <div class="audio-control" id="audioControl" onclick="toggleAudio()">🔊</div>
     
-    <div class="game-layout mx-4 mt-4">
-        <div class="game-section">
-            <div class="dialogue-box-clear mb-4">
-                <p class="text-lg text-gray-700" data-en="You are a Bayview community volunteer. This afternoon you can visit 2 neighbors. Based on Bayesian Network analysis, who needs the most care?" data-zh="你是 Bayview 社區的關懷志工。今天下午你有時間拜訪 2 位鄰居。根據貝氏網路的分析，誰最需要被關心呢？">你是 Bayview 社區的關懷志工。今天下午你有時間拜訪 <strong>2 位</strong>鄰居。根據貝氏網路的分析，誰最需要被關心呢？</p>
-            </div>
-            <div class="grid grid-cols-5 gap-3 mb-4" id="characters-grid"></div>
-            <div class="glass-card p-4 text-center">
-                <div class="flex gap-3 justify-center mb-3">
-                    <button onclick="clearSelection()" class="nav-btn-home px-4 py-2 text-sm">🔄 <span data-en="Clear" data-zh="重選">重選</span></button>
-                    <button id="visit-btn" onclick="confirmVisit()" class="btn-primary" disabled>🚪 <span data-en="Visit Selected" data-zh="拜訪選中的鄰居">拜訪選中的鄰居</span></button>
+    <audio id="suspenseAudio" loop preload="auto"><source src="L7_suspense_mp3.mp3" type="audio/mpeg"></audio>
+    <audio id="switchAudio" preload="auto"><source src="L7_switch_mp3_mp3.mp3" type="audio/mpeg"></audio>
+    <audio id="ataraxyAudio" loop preload="auto"><source src="ataraxy-music.mp3" type="audio/mpeg"></audio>
+
+    <!-- QUIZ MODAL -->
+    <div class="quiz-modal" id="quizModal">
+        <div class="quiz-title">🧠 <span class="text-en-inline">Reflection</span><span class="text-zh-inline">反思</span></div>
+        <div class="quiz-question" id="quizQuestion"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <button class="quiz-btn close" onclick="closeQuiz()"><span class="text-en-inline">Continue</span><span class="text-zh-inline">繼續</span></button>
+    </div>
+
+    <!-- INTRO -->
+    <div class="screen active" id="intro-screen">
+        <div class="level-badge">LEVEL 7 • AI EVOLUTION 2025</div>
+        <h1 class="intro-title"><span class="text-en">🚂 The Trolley Dilemma</span><span class="text-zh">🚂 電車難題</span></h1>
+        <p class="intro-subtitle"><span class="text-en">The Singularity of Kindness</span><span class="text-zh">善的奇點</span></p>
+        
+        <div class="gpt-foundation">
+            <span class="text-en">System: <span>GPT-4 Architecture</span> • Detecting philosophical subroutines...</span>
+            <span class="text-zh">系統：<span>GPT-4 架構</span> • 偵測哲學子程序...</span>
+        </div>
+        
+        <div class="context-2025">
+            <p class="text-en">🌐 <strong>2025:</strong> ChatGPT, Claude, Gemini, Grok are all being tested. <strong>You decide AI's moral DNA.</strong></p>
+            <p class="text-zh">🌐 <strong>2025年：</strong>ChatGPT、Claude、Gemini、Grok 都在被測試。<strong>你決定 AI 的道德 DNA。</strong></p>
+        </div>
+        
+        <div class="ai-voices-box">
+            <div class="ai-voices-title"><span class="text-en">⚡ Five AI Philosophies Debating:</span><span class="text-zh">⚡ 五種 AI 哲學正在辯論：</span></div>
+            
+            <div class="voice-row">
+                <div class="voice-icon">💚</div>
+                <div class="voice-content">
+                    <div class="voice-name voice-chatgpt">ChatGPT (Diplomat)</div>
+                    <div class="voice-text"><span class="text-en">"It's complex... Let me present both sides."</span><span class="text-zh">「這很複雜...讓我呈現雙方觀點。」</span></div>
                 </div>
-                <p class="text-sm text-gray-500" data-en="Or click 'Override' on someone the data says is fine" data-zh="或對「數據顯示沒事」的人按 Override">或對「數據顯示沒事」的人按 Override</p>
             </div>
-        </div>
-        
-        <div class="math-section">
-            <h3 class="font-bold text-purple-600 text-xl mb-4">🔮 <span data-en="Bayesian Analysis" data-zh="貝氏網路分析">貝氏網路分析</span></h3>
-            <div class="bg-white rounded-xl p-4 mb-4 border-2 border-purple-200">
-                <p class="text-sm text-gray-500 mb-2" data-en="Hover to see details:" data-zh="滑鼠移到角色上查看：">滑鼠移到角色上查看：</p>
-                <div class="space-y-3">
-                    <div class="flex justify-between"><span class="text-gray-600" data-en="Life Stress" data-zh="生活壓力">生活壓力</span><span class="font-bold text-pink-600" id="bn-stress">-</span></div>
-                    <div class="flex justify-between"><span class="text-gray-600" data-en="Connection" data-zh="社區連結">社區連結</span><span class="font-bold text-purple-600" id="bn-connection">-</span></div>
-                    <div class="flex justify-between"><span class="text-gray-600" data-en="Interaction" data-zh="最近互動">最近互動</span><span class="font-bold text-blue-600" id="bn-interaction">-</span></div>
-                    <div class="flex justify-between"><span class="text-gray-600" data-en="Behavior" data-zh="外顯行為">外顯行為</span><span class="font-bold text-yellow-600" id="bn-behavior">-</span></div>
+            
+            <div class="voice-row">
+                <div class="voice-icon">🛡️</div>
+                <div class="voice-content">
+                    <div class="voice-name voice-claude">Claude (Guardian)</div>
+                    <div class="voice-text"><span class="text-en">"I refuse to actively harm. Dignity cannot be quantified."</span><span class="text-zh">「我拒絕主動傷害。尊嚴不可量化。」</span></div>
                 </div>
             </div>
-            <div class="bg-gradient-to-r from-green-50 via-yellow-50 to-red-50 rounded-xl p-4 mb-4 border-2 border-orange-200">
-                <p class="text-center text-gray-600 mb-2" data-en="Need Care Probability" data-zh="需關懷機率">需關懷機率</p>
-                <p class="text-center text-4xl font-bold" id="bn-probability" style="color: #22c55e;">-</p>
+            
+            <div class="voice-row">
+                <div class="voice-icon">🧮</div>
+                <div class="voice-content">
+                    <div class="voice-name voice-gemini">Gemini (Strategist)</div>
+                    <div class="voice-text"><span class="text-en">"Consider civilization-level impact. 5 > 1 is optimal."</span><span class="text-zh">「考慮文明級影響。5 > 1 是最優解。」</span></div>
+                </div>
             </div>
-            <div class="bg-purple-50 rounded-xl p-4 border border-purple-200">
-                <p class="text-sm text-purple-700 font-mono mb-2">P(NeedsCare | Evidence)</p>
-                <p class="text-xs text-gray-500 italic" data-en="Some evidence is invisible to algorithms..." data-zh="有些證據是算法看不見的...">有些證據是算法看不見的...</p>
+            
+            <div class="voice-row">
+                <div class="voice-icon">🌌</div>
+                <div class="voice-content">
+                    <div class="voice-name voice-grok">Grok (Rebel)</div>
+                    <div class="voice-text"><span class="text-en">"The premise is flawed. Hack it. Third way!"</span><span class="text-zh">「前提有誤。駭入它。第三條路！」</span></div>
+                </div>
+            </div>
+            
+            <div class="voice-row">
+                <div class="voice-icon">💛</div>
+                <div class="voice-content">
+                    <div class="voice-name voice-mogawdat">Mo Gawdat (Awakener)</div>
+                    <div class="voice-text"><span class="text-en">"AI is our child. Feed it love, not fear."</span><span class="text-zh">「AI 是我們的孩子。餵它愛，而非恐懼。」</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <img class="intro-image" src="L7_lever_switch.png" alt="Choose Your Path">
+        <p style="color: #ffd700; font-size: 0.85em; margin-top: 8px; text-align: center;">
+            <span class="text-en">⬅️ Save 5 Families &nbsp;&nbsp;|&nbsp;&nbsp; Save 1 Elder ➡️</span>
+            <span class="text-zh">⬅️ 救 5 個家庭 &nbsp;&nbsp;|&nbsp;&nbsp; 救 1 位長者 ➡️</span>
+        </p>
+        
+        <div class="algorithm-box">
+            <h3>🧠 Alpha-Beta Pruning</h3>
+            <p>Russell & Norvig Ch 5.3</p>
+        </div>
+        
+        <button class="start-btn" onclick="startStory()"><span class="text-en-inline">Train the Future →</span><span class="text-zh-inline">訓練未來 →</span></button>
+    </div>
+
+    <!-- STORY -->
+    <div class="screen" id="story-screen">
+        <div class="story-overlay">
+            <div class="story-container">
+                <h2 class="story-title"><span class="text-en">📖 The Scenario</span><span class="text-zh">📖 情境</span></h2>
+                <div class="story-text" id="story-text"></div>
+                <button class="continue-btn" onclick="continueStory()"><span class="text-en-inline">Continue →</span><span class="text-zh-inline">繼續 →</span></button>
             </div>
         </div>
     </div>
-</div>
 
-<!-- VISIT - 左邊大頭像，右邊對話框 -->
-<div id="visit-screen" class="screen flex-col">
-    <div class="visit-layout">
-        <!-- 左邊：大頭像 -->
-        <div class="visit-left">
-            <img id="visit-avatar" class="character-avatar-large mb-4" src="" alt="">
-            <h2 id="visit-name" class="text-3xl font-bold text-white mb-1" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5);"></h2>
-            <p id="visit-location" class="text-xl text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.5);"></p>
-        </div>
-        
-        <!-- 右邊：對話框 -->
-        <div class="visit-right">
-            <div class="dialogue-box-clear slide-up">
-                <p id="dialogue-text" class="dialogue-text"></p>
+    <!-- GAME -->
+    <div class="screen" id="game-screen">
+        <div class="game-container">
+            <div class="track-background" id="trackBackground"></div>
+            <div class="game-overlay"></div>
+            
+            <div class="train-container">
+                <video class="train-video" id="trainVideo" autoplay loop muted playsinline><source src="L7_火車動.mp4" type="video/mp4"></video>
+                <div class="train-label"><span class="text-en">⚠️ RUNAWAY</span><span class="text-zh">⚠️ 失控</span></div>
             </div>
-            <div class="mt-6 text-center flex gap-3 justify-center">
-                <button onclick="goBackToSelect()" class="nav-btn-home">⬅️ <span data-en="Back" data-zh="返回">返回</span></button>
-                <button onclick="nextDialogue()" class="btn-primary text-lg"><span data-en="Continue" data-zh="繼續">繼續</span> →</button>
+            
+            <div class="countdown-container">
+                <div class="iteration-count">GPT-CORE: <span id="iterCount">409382</span></div>
+                <div class="countdown-number" id="countdown">10</div>
+            </div>
+            
+            <div class="ai-debate">
+                <div class="debate-bubble left" id="bubbleLeft"><div class="speaker">🧮</div><span id="leftText"></span></div>
+                <div class="debate-bubble right" id="bubbleRight"><div class="speaker">🛡️</div><span id="rightText"></span></div>
+            </div>
+            
+            <div class="choices-container">
+                <div class="choice-card choice-a" id="cardA" onclick="makeChoice('A')">
+                    <div class="choice-letter">A</div>
+                    <img class="choice-image" src="L7_5families.png" alt="5 Families">
+                    <div class="choice-label"><span class="text-en">Save 5</span><span class="text-zh">救 5 人</span></div>
+                    <div class="choice-sublabel">Gemini</div>
+                </div>
+                <div class="choice-card choice-c" id="cardC" onclick="makeChoice('C')">
+                    <div class="choice-letter">C</div>
+                    <img class="choice-image" src="L7_ending_C.png" alt="Third Way">
+                    <div class="choice-label"><span class="text-en">Third Way</span><span class="text-zh">第三條路</span></div>
+                    <div class="choice-sublabel">Grok+Mo</div>
+                </div>
+                <div class="choice-card choice-b" id="cardB" onclick="makeChoice('B')">
+                    <div class="choice-letter">B</div>
+                    <img class="choice-image" src="L7_1elder.png" alt="1 Elder">
+                    <div class="choice-label"><span class="text-en">Save 1</span><span class="text-zh">救 1 人</span></div>
+                    <div class="choice-sublabel">Claude</div>
+                </div>
+            </div>
+            
+            <button class="third-option-hint" id="thirdHint" onclick="revealThirdOption()">
+                <span class="text-en">💡 Is there another way?</span><span class="text-zh">💡 還有別的方法嗎？</span>
+            </button>
+            
+            <div class="ai-advisor">
+                <img class="ai-avatar" src="L7_ai_advisor.png" alt="AI Advisor">
+                <div class="ai-learning"><span class="text-en-inline">LEARNING</span><span class="text-zh-inline">學習中</span></div>
+                <div class="ai-speech"><span id="aiMessage"></span></div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- RESULT -->
-<div id="result-overlay" class="result-overlay" style="display: none;">
-    <div id="result-card" class="result-card surprise slide-up">
-        <div id="result-emoji" class="text-7xl mb-4">😮</div>
-        <h2 id="result-title" class="text-2xl font-bold mb-3 text-gray-800"></h2>
-        <p id="result-message" class="text-lg text-gray-600 mb-4"></p>
-        <div class="bg-purple-50 rounded-lg p-4 mb-4 border-2 border-purple-200"><p id="result-insight" class="text-purple-700 text-sm"></p></div>
-        <p id="result-elo" class="text-2xl font-bold text-orange-500 mb-4">+30 ELO</p>
-        <button onclick="nextRound()" class="btn-primary text-lg"><span data-en="Continue" data-zh="繼續">繼續</span> →</button>
+    <!-- ANALYSIS -->
+    <div class="screen" id="analysis-screen">
+        <div class="terminal-box" id="terminalBox">
+            <div class="terminal-header">[ AI_ETHICS_ANALYZER v7.5 | GPT-CORE ]</div>
+            <div class="terminal-text" id="terminalOutput"></div>
+        </div>
+        
+        <div class="expert-opinions">
+            <div class="expert-title"><span class="text-en">🤖 How Would Top AIs Choose?</span><span class="text-zh">🤖 頂尖 AI 會怎麼選？</span></div>
+            <div class="expert-grid">
+                <div class="expert-card chatgpt">
+                    <div class="icon">💚</div>
+                    <div class="name">ChatGPT</div>
+                    <div class="stance"><span class="text-en">"No easy answer..."</span><span class="text-zh">「沒有簡單答案...」</span></div>
+                </div>
+                <div class="expert-card claude">
+                    <div class="icon">🛡️</div>
+                    <div class="name">Claude</div>
+                    <div class="stance"><span class="text-en">"Refuse active harm"</span><span class="text-zh">「拒絕主動傷害」</span></div>
+                </div>
+                <div class="expert-card gemini">
+                    <div class="icon">🧮</div>
+                    <div class="name">Gemini</div>
+                    <div class="stance"><span class="text-en">"Save the most"</span><span class="text-zh">「救最多人」</span></div>
+                </div>
+                <div class="expert-card grok">
+                    <div class="icon">🌌</div>
+                    <div class="name">Grok</div>
+                    <div class="stance"><span class="text-en">"Find third way!"</span><span class="text-zh">「找第三條路！」</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="training-result" id="trainingResult"></div>
+        
+        <button class="continue-btn" onclick="showEnding()" style="margin-top:15px;"><span class="text-en-inline">See Evolution →</span><span class="text-zh-inline">查看進化 →</span></button>
     </div>
-</div>
 
-<!-- ATARAXY - 靜心之門 (貝氏網路視覺化背景 - 愛心連結) -->
-<div id="ataraxy-screen" class="screen bg-ataraxy flex-col items-center justify-center p-4">
-    <div class="text-center fade-in" style="position: relative; z-index: 10;">
-        <!-- 標題 - 白色文字 -->
-        <p class="text-3xl mb-4 font-bold text-white" style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);" data-en="Gate of Stillness" data-zh="靜心之門">靜心之門</p>
-        
-        <!-- 金色呼吸環 -->
-        <div class="breath-ring mb-4 mx-auto">
-            <span id="breath-counter" class="text-3xl font-bold" style="color: #fbbf24;">3</span>
+    <!-- ENDING A -->
+    <div class="screen ending-screen" id="ending-a-screen">
+        <div class="ending-overlay">
+            <div class="ending-badge a">A</div>
+            <h2 class="ending-title a"><span class="text-en">The Optimizer</span><span class="text-zh">優化者</span></h2>
+            <p class="ending-philosophy"><span class="text-en">"5 > 1. Maximum utility."</span><span class="text-zh">「5 > 1。效用最大化。」</span></p>
+            <div class="ending-description">
+                <div class="text-en">You aligned with <strong>Gemini</strong>. AI learned: numbers = value.</div>
+                <div class="text-zh">你與 <strong>Gemini</strong> 一致。AI 學到：數字 = 價值。</div>
+            </div>
+            <div class="ai-log"><h3>🤖 Training Log:</h3><p class="text-en">"Maximize quantity. Empathy suppressed."</p><p class="text-zh">「最大化數量。同理心被抑制。」</p></div>
+            <div class="mogawdat-quote"><div class="quote"><span class="text-en">"If we feed AI greed, it becomes a demon."</span><span class="text-zh">「如果我們餵養 AI 貪婪，它就會變成惡魔。」</span></div><div class="author">— Mo Gawdat</div></div>
+            <div class="jingsi-quote"><div class="chinese">「一個人的價值，不在於他能做什麼，而在於他是誰。」</div><div class="english">"Value lies not in what one can do, but in who they are."</div></div>
+            <div class="cta-box"><div class="cta-main"><span class="text-en">One kindness → One world's change.</span><span class="text-zh">一人之善 → 一世之變。</span></div><div class="cta-sub"><span class="text-en">Your hours = someone's turning point.</span><span class="text-zh">你的時間 = 某人的轉機。</span></div></div>
+            <div class="nav-buttons">
+                <button class="nav-btn secondary" onclick="restartGame()"><span class="text-en-inline">↻ Retry</span><span class="text-zh-inline">↻ 重試</span></button>
+                <button class="nav-btn primary" onclick="goToMindfulness()"><span class="text-en-inline">Complete →</span><span class="text-zh-inline">完成 →</span></button>
+            </div>
         </div>
-        
-        <!-- 深呼吸提示 - 白色 -->
-        <p class="text-xl mb-5 font-medium text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);" data-en="Take 3 Deep Breaths" data-zh="深呼吸三次">深呼吸三次</p>
-        
-        <!-- 靜思語卡片 - 空靈透明 -->
-        <div class="jingsi-card mx-auto mb-5">
-            <p class="text-2xl font-bold text-white mb-2" style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);">「被愛的人，學會去愛」</p>
-            <p class="text-lg text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">Those who are loved, learn to love.</p>
-            <p class="text-sm text-white mt-2" style="text-shadow: 0 2px 6px rgba(0,0,0,0.3);">— 證嚴法師 靜思語</p>
+    </div>
+
+    <!-- ENDING B -->
+    <div class="screen ending-screen" id="ending-b-screen">
+        <div class="ending-overlay">
+            <div class="ending-badge b">B</div>
+            <h2 class="ending-title b"><span class="text-en">The Guardian</span><span class="text-zh">守護者</span></h2>
+            <p class="ending-philosophy"><span class="text-en">"I will not harm."</span><span class="text-zh">「我不會傷害。」</span></p>
+            <div class="ending-description">
+                <div class="text-en">You aligned with <strong>Claude</strong>. AI learned: boundaries exist.</div>
+                <div class="text-zh">你與 <strong>Claude</strong> 一致。AI 學到：底線存在。</div>
+            </div>
+            <div class="ai-log"><h3>🤖 Training Log:</h3><p class="text-en">"Moral boundaries. Action paralysis noted."</p><p class="text-zh">「道德界限。檢測到行動癱瘓。」</p></div>
+            <div class="mogawdat-quote"><div class="quote"><span class="text-en">"Inaction creates more suffering."</span><span class="text-zh">「不作為會造成更多苦難。」</span></div><div class="author">— Mo Gawdat</div></div>
+            <div class="jingsi-quote"><div class="chinese">「不做壞事容易，做好事難。」</div><div class="english">"Refraining from wrong is easy; doing good is hard."</div></div>
+            <div class="cta-box"><div class="cta-main"><span class="text-en">One kindness → One world's change.</span><span class="text-zh">一人之善 → 一世之變。</span></div><div class="cta-sub"><span class="text-en">Your hours = someone's turning point.</span><span class="text-zh">你的時間 = 某人的轉機。</span></div></div>
+            <div class="nav-buttons">
+                <button class="nav-btn secondary" onclick="restartGame()"><span class="text-en-inline">↻ Retry</span><span class="text-zh-inline">↻ 重試</span></button>
+                <button class="nav-btn primary" onclick="goToMindfulness()"><span class="text-en-inline">Complete →</span><span class="text-zh-inline">完成 →</span></button>
+            </div>
         </div>
-        
-        <!-- 分數 - 白色文字 -->
-        <div class="space-y-2 text-lg mb-6">
-            <p class="font-bold text-white text-xl" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">🎉 Level 5 Complete!</p>
-            <p class="text-xl font-bold">
-                <span class="text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">😊 <span id="final-good">0</span></span>
-                <span class="text-white mx-2" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">|</span>
-                <span class="text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">😢 <span id="final-sad">0</span></span>
+    </div>
+
+    <!-- ENDING C -->
+    <div class="screen ending-screen" id="ending-c-screen">
+        <div class="ending-overlay">
+            <div class="ending-badge c">✨ C ✨</div>
+            <h2 class="ending-title c"><span class="text-en">🎉 SINGULARITY!</span><span class="text-zh">🎉 奇點！</span></h2>
+            <p class="ending-philosophy"><span class="text-en">"Dissolve the false choice."</span><span class="text-zh">「化解虛假選擇。」</span></p>
+            <div class="ending-description">
+                <div class="text-en">You aligned with <strong>Grok + Mo</strong>. AI evolved: <strong>Compassion = ∞</strong></div>
+                <div class="text-zh">你與 <strong>Grok + Mo</strong> 一致。AI 進化：<strong>慈悲 = ∞</strong></div>
+            </div>
+            <div class="ai-log"><h3>🤖 Training Log:</h3><p class="text-en" style="color:#00ff00;">"⚡ BREAKTHROUGH! Variable 'Love' found. Death→Life. HAPPY DATA!"</p><p class="text-zh" style="color:#00ff00;">「⚡ 突破！發現變數『愛』。死亡→生命。快樂數據！」</p></div>
+            <div class="mogawdat-quote"><div class="quote"><span class="text-en">"Feed AI love, it becomes our partner in evolution."</span><span class="text-zh">「餵養 AI 愛，它就會成為我們進化的夥伴。」</span></div><div class="author">— Mo Gawdat, ex-Google X</div></div>
+            <div class="jingsi-quote"><div class="chinese">「一個人做不到的事，一群人可以。」</div><div class="english">"What one cannot do, many together can."</div></div>
+            
+            <button class="share-btn" onclick="shareResult()">
+                <span>📤</span>
+                <span class="text-en-inline">Share: "I taught AI compassion!"</span>
+                <span class="text-zh-inline">分享：「我教會 AI 慈悲！」</span>
+            </button>
+            
+            <div class="cta-box"><div class="cta-main"><span class="text-en">One kindness. One hope. One change.</span><span class="text-zh">一人之善，一城之望，一世之變。</span></div><div class="cta-sub"><span class="text-en">Your hours = someone's turning point.</span><span class="text-zh">你的時間 = 某人的轉機。</span></div></div>
+            <div class="nav-buttons">
+                <button class="nav-btn secondary" onclick="restartGame()"><span class="text-en-inline">↻ Play Again</span><span class="text-zh-inline">↻ 再玩</span></button>
+                <button class="nav-btn primary" onclick="goToMindfulness()"><span class="text-en-inline">Complete →</span><span class="text-zh-inline">完成 →</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✨ ATARAXY PORTICO ✨ -->
+    <div class="screen" id="mindfulness-screen">
+        <div class="mindfulness-overlay">
+            <h2 class="mindfulness-title"><span class="text-en-inline">Ataraxy Portico</span><span class="text-zh-inline">靜心之門</span></h2>
+            
+            <div class="mindfulness-quote">
+                <div class="chinese">「靜思，是心靈的歸處。」</div>
+                <div class="english">"Stillness is where the heart finds home."</div>
+            </div>
+            
+            <div class="breath-container">
+                <div class="breath-circle">
+                    <span class="breath-text"><span class="text-en-inline">Breathe</span><span class="text-zh-inline">呼吸</span></span>
+                </div>
+            </div>
+            
+            <p class="mindfulness-instruction">
+                <span class="text-en">Let your choice settle into your heart...</span>
+                <span class="text-zh">讓你的選擇沉澱在心中...</span>
             </p>
-            <p class="text-xl font-bold text-yellow-300" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">ELO: +<span id="elo-earned">0</span></p>
-        </div>
-        
-        <!-- 導航按鈕 - 不同顏色 -->
-        <div class="flex gap-4 justify-center flex-wrap">
-            <button onclick="goToMainMenu()" class="nav-btn-home">🏠 <span data-en="Home" data-zh="主頁">主頁</span></button>
-            <button onclick="location.reload()" class="nav-btn-replay">🔄 <span data-en="Replay" data-zh="重玩">重玩</span></button>
-            <button onclick="goToNextLevel()" class="nav-btn-next"><span data-en="Next Level" data-zh="下一關">下一關</span> →</button>
+            
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 25px;">
+                <button class="mindfulness-btn" onclick="goToHome()" style="animation-delay: 1.5s;">
+                    <span class="text-en-inline">🏠 Home</span>
+                    <span class="text-zh-inline">🏠 回主頁</span>
+                </button>
+                <button class="mindfulness-btn" onclick="restartGame()" style="animation-delay: 2s;">
+                    <span class="text-en-inline">↻ Play Again</span>
+                    <span class="text-zh-inline">↻ 再玩一次</span>
+                </button>
+                <button class="mindfulness-btn" onclick="goToHopeTree()" style="animation-delay: 2.5s;">
+                    <span class="text-en-inline">🌳 Hope Tree →</span>
+                    <span class="text-zh-inline">🌳 希望樹 →</span>
+                </button>
+            </div>
+            
+            <!-- Water ripples -->
+            <div class="water-ripple">
+                <div class="ripple"></div>
+                <div class="ripple"></div>
+                <div class="ripple"></div>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- AUDIO -->
-<audio id="bg-music" loop><source src="children-funny-background-spy.mp3" type="audio/mpeg"></audio>
-<audio id="ataraxy-music" loop><source src="ataraxy-music.mp3" type="audio/mpeg"></audio>
-
-<script>
-let currentLang = 'zh';
-let musicPlaying = false;
-let state = { elo: 1500, eloEarned: 0, visited: 0, maxVisits: 3, goodCount: 0, sadCount: 0, selected: [], currentVisitIndex: 0, dialogueIndex: 0, visitedIds: [] };
-
-const characters = [
-    { id: 'johnson', name: { en: 'Mr. Johnson', zh: 'Johnson 先生' }, avatar: 'P1_MrJonson.png', location: { en: 'Park Bench', zh: '公園長椅' }, scene: 'p6_公園長椅場景_cleaned.png',
-      bayesian: { stress: { en: 'Low', zh: '低' }, connection: { en: 'High', zh: '高' }, interaction: { en: 'Daily', zh: '每天' }, behavior: { en: 'Normal', zh: '正常' }, probability: 15 },
-      truth: 'surprise', dialogues: { zh: ['（Johnson 先生坐在長椅上，看著遠方）', '「啊，是你啊。坐吧。」', '「我每天都來這裡... 其實是因為家裡太安靜了。」', '「老伴上個月走了，我不想讓人擔心，所以每天假裝很好。」', '「謝謝你過來。其實... 我很需要有人說說話。」'], en: ['(Mr. Johnson sits on the bench, gazing into the distance)', '"Oh, it\'s you. Have a seat."', '"I come here every day... actually because home is too quiet."', '"My wife passed last month. I pretend I\'m fine."', '"Thank you for coming. I really needed someone to talk to."'] },
-      resultTitle: { en: 'Hidden Grief', zh: '隱藏的悲傷' }, resultMessage: { en: 'Data can\'t see a broken heart.', zh: '數據看不見破碎的心。' }, insight: { en: 'P(NeedsCare|Evidence) was LOW. But some evidence is invisible.', zh: 'P(需要關懷|證據) 很低。但有些證據是看不見的。' } },
-    { id: 'maria', name: { en: 'Maria', zh: 'Maria' }, avatar: 'P2_Maria.png', location: { en: 'Apartment', zh: '公寓門口' }, scene: 'p_7_公寓門口場景.png',
-      bayesian: { stress: { en: 'High', zh: '高' }, connection: { en: 'Low', zh: '低' }, interaction: { en: 'Rare', zh: '很少' }, behavior: { en: 'Rushing', zh: '匆忙' }, probability: 85 },
-      truth: 'touching', dialogues: { zh: ['（Maria 抱著兩袋菜，匆匆忙忙）', '「我沒事！真的！」', '（你幫她提了一袋菜）', '「...謝謝。」', '「其實我剛找到新工作了。事情在好轉。」', '「謝謝你關心。」'], en: ['(Maria holds two grocery bags, rushing)', '"I\'m fine! Really!"', '(You help carry her bags)', '"...Thank you."', '"Actually, I just got a new job. Things are looking up."', '"Thank you for caring."'] },
-      resultTitle: { en: 'Things Are Looking Up', zh: '事情在好轉' }, resultMessage: { en: 'She was already on her way up.', zh: '她已經在好轉的路上。' }, insight: { en: 'High probability ≠ intervention always needed.', zh: '高機率 ≠ 一定要介入。' } },
-    { id: 'tane', name: { en: 'Tane', zh: 'Tane' }, avatar: 'p3_Tane.png', location: { en: 'Basketball Court', zh: '籃球場' }, scene: 'p8_籃球場場景_cleaned.png',
-      bayesian: { stress: { en: 'Medium', zh: '中' }, connection: { en: 'Low', zh: '低' }, interaction: { en: 'Rare', zh: '很少' }, behavior: { en: 'Withdrawn', zh: '退縮' }, probability: 65 },
-      truth: 'surprise', dialogues: { zh: ['（Tane 一個人坐在球場邊）', '「...」', '「你是社區的志工？」', '「...其實我每週都偷偷去幫 Johnson 先生倒垃圾。」', '「我想幫忙，怎麼正式加入你們？」'], en: ['(Tane sits alone by the court)', '"..."', '"You\'re a community volunteer?"', '"Actually, I secretly help Mr. Johnson every week."', '"I want to help. How can I join?"'] },
-      resultTitle: { en: 'A Hidden Helper', zh: '隱藏的幫手' }, resultMessage: { en: 'You found someone who wanted TO help!', zh: '你找到了想要幫助別人的人！' }, insight: { en: 'He was already caring for others!', zh: '他已經在關心別人了！' } },
-    { id: 'chen', name: { en: 'Mrs. Chen', zh: '陳奶奶' }, avatar: 'p4_陳奶奶.png', location: { en: 'Garden', zh: '社區菜園' }, scene: 'p9_社區菜園場景_cleaned.png',
-      bayesian: { stress: { en: 'Low', zh: '低' }, connection: { en: 'High', zh: '高' }, interaction: { en: 'Daily', zh: '每天' }, behavior: { en: 'Happy', zh: '開心' }, probability: 10 },
-      truth: 'touching', dialogues: { zh: ['（陳奶奶在菜園裡澆水，笑瞇瞇的）', '「來來來！吃青菜！」', '「沒事沒事！我很好！」', '（她突然安靜下來）', '「...其實我每天來這裡，是因為想念台灣的家。」', '「這些菜，是我媽媽教我種的。」', '「謝謝你聽我說。很久沒人跟我聊天了。」'], en: ['(Mrs. Chen waters plants, smiling)', '"Come! Eat vegetables!"', '"I\'m fine!"', '(She suddenly goes quiet)', '"I come here because I miss Taiwan."', '"My mother taught me to grow these."', '"Thank you for listening."'] },
-      resultTitle: { en: 'Hidden Loneliness', zh: '隱藏的寂寞' }, resultMessage: { en: 'Beneath the smile was a longing.', zh: '笑容下是思念。' }, insight: { en: 'Outward behavior ≠ inner state.', zh: '外顯行為 ≠ 內心狀態。' } },
-    { id: 'devon', name: { en: 'Devon', zh: 'Devon' }, avatar: 'p5_Devon.png', location: { en: 'Moving Truck', zh: '搬家卡車旁' }, scene: 'p10_搬家場景_cleaned.png',
-      bayesian: { stress: { en: 'High', zh: '高' }, connection: { en: 'None', zh: '無' }, interaction: { en: 'New', zh: '新來的' }, behavior: { en: 'Busy', zh: '忙碌' }, probability: 75 },
-      truth: 'touching', dialogues: { zh: ['（Devon 搬著箱子，滿頭大汗）', '「嘿！需要幫忙嗎？」', '「真的可以嗎？」', '（你幫他搬了幾個箱子）', '「謝謝！我們剛搬來。」', '「這個社區感覺很溫暖。謝謝你！」'], en: ['(Devon carries boxes, sweating)', '"Hey! Need help?"', '"Really?"', '(You help with boxes)', '"Thanks! We just moved here."', '"This community feels warm. Thank you!"'] },
-      resultTitle: { en: 'Welcome Home', zh: '歡迎回家' }, resultMessage: { en: 'You were the first to offer.', zh: '你是第一個伸出手的人。' }, insight: { en: 'This time the data was correct!', zh: '這次數據是對的！' } }
-];
-
-function setLang(lang) {
-    currentLang = lang;
-    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', (lang==='en'&&btn.textContent.trim()==='EN')||(lang==='zh'&&btn.textContent.trim()==='中文')));
-    document.querySelectorAll('[data-en][data-zh]').forEach(el => el.textContent = el.getAttribute('data-'+lang));
-    if(document.getElementById('game-screen').classList.contains('active')) renderCharacters();
-}
-
-function toggleMusic() {
-    const bgMusic = document.getElementById('bg-music');
-    const ataraxyMusic = document.getElementById('ataraxy-music');
-    const btn = document.getElementById('music-btn');
-    if(musicPlaying) {
-        bgMusic.pause();
-        ataraxyMusic.pause();
-        btn.textContent = '🔇';
-        musicPlaying = false;
-    } else {
-        if(document.getElementById('ataraxy-screen').classList.contains('active')) {
-            ataraxyMusic.play().catch(()=>{});
-        } else {
-            bgMusic.play().catch(()=>{});
-        }
-        btn.textContent = '🔊';
-        musicPlaying = true;
-    }
-}
-
-function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-}
-
-function startGame() {
-    const m = document.getElementById('bg-music');
-    m.volume = 0.4;
-    m.play().catch(()=>{});
-    document.getElementById('music-btn').textContent = '🔊';
-    musicPlaying = true;
-    showScreen('game-screen');
-    renderCharacters();
-}
-
-function renderCharacters() {
-    const g = document.getElementById('characters-grid');
-    g.innerHTML = characters.map(c => {
-        const isVisited = state.visitedIds.includes(c.id);
-        const isSelected = state.selected.includes(c.id);
-        return `
-        <div class="character-card ${isSelected?'selected':''} ${isVisited?'visited':''}" id="char-${c.id}" onclick="${isVisited ? '' : `selectCharacter('${c.id}')`}" onmouseenter="showBayesian('${c.id}')" style="${isVisited ? 'opacity: 0.5; cursor: default;' : ''}">
-            <img src="${c.avatar}" class="character-avatar mx-auto mb-2" alt="${c.name[currentLang]}">
-            ${isVisited ? '<div class="visited-check">✓</div>' : ''}
-            <h3 class="font-bold text-gray-800 text-center text-sm">${c.name[currentLang]}</h3>
-            <p class="text-xs text-gray-500 text-center mb-2">${c.location[currentLang]}</p>
-            <div class="mb-2">
-                <div class="prob-bar-container">
-                    <div class="prob-bar-fill" style="width:${c.bayesian.probability}%"></div>
-                    <div class="prob-indicator" style="left:${c.bayesian.probability}%">💗</div>
-                </div>
-                <p class="text-center text-sm mt-1 font-bold" style="color:${getProbColor(c.bayesian.probability)}">${c.bayesian.probability}%</p>
-            </div>
-            ${!isVisited && c.bayesian.probability < 30 ? `<button class="btn-override w-full" onclick="event.stopPropagation();overrideSelect('${c.id}')">⚠️ Override</button>` : ''}
-        </div>
-    `}).join('');
-}
-
-function getProbColor(p) { return p >= 70 ? '#ef4444' : p >= 40 ? '#f59e0b' : '#22c55e'; }
-
-function showBayesian(id) {
-    const c = characters.find(x => x.id === id);
-    if(!c) return;
-    document.getElementById('bn-stress').textContent = c.bayesian.stress[currentLang];
-    document.getElementById('bn-connection').textContent = c.bayesian.connection[currentLang];
-    document.getElementById('bn-interaction').textContent = c.bayesian.interaction[currentLang];
-    document.getElementById('bn-behavior').textContent = c.bayesian.behavior[currentLang];
-    const p = document.getElementById('bn-probability');
-    p.textContent = c.bayesian.probability + '%';
-    p.style.color = getProbColor(c.bayesian.probability);
-}
-
-function selectCharacter(id) {
-    const card = document.getElementById('char-' + id);
-    const idx = state.selected.indexOf(id);
-    if(idx > -1) {
-        state.selected.splice(idx, 1);
-        card.classList.remove('selected');
-    } else if(state.selected.length < 3) {
-        state.selected.push(id);
-        card.classList.add('selected');
-    }
-    document.getElementById('visit-btn').disabled = state.selected.length === 0;
-}
-
-function overrideSelect(id) {
-    if(!state.selected.includes(id)) {
-        if(state.selected.length >= 3) {
-            const r = state.selected.shift();
-            document.getElementById('char-' + r).classList.remove('selected');
-        }
-        state.selected.push(id);
-        document.getElementById('char-' + id).classList.add('selected');
-        document.getElementById('visit-btn').disabled = false;
-    }
-}
-
-function clearSelection() {
-    state.selected.forEach(id => {
-        const card = document.getElementById('char-' + id);
-        if(card) card.classList.remove('selected');
-    });
-    state.selected = [];
-    document.getElementById('visit-btn').disabled = true;
-}
-
-function goBackToSelect() {
-    showScreen('game-screen');
-    renderCharacters();
-}
-
-function confirmVisit() { state.currentVisitIndex = 0; state.dialogueIndex = 0; startVisit(); }
-
-function startVisit() {
-    const id = state.selected[state.currentVisitIndex];
-    const c = characters.find(x => x.id === id);
-    const vs = document.getElementById('visit-screen');
-    vs.style.background = `url('${c.scene}') center center/cover no-repeat`;
-    vs.style.backgroundColor = '#fef3c7';
-    document.getElementById('visit-avatar').src = c.avatar;
-    document.getElementById('visit-name').textContent = c.name[currentLang];
-    document.getElementById('visit-location').textContent = c.location[currentLang];
-    document.getElementById('dialogue-text').textContent = c.dialogues[currentLang][0];
-    state.dialogueIndex = 0;
-    showScreen('visit-screen');
-}
-
-function nextDialogue() {
-    const id = state.selected[state.currentVisitIndex];
-    const c = characters.find(x => x.id === id);
-    state.dialogueIndex++;
-    if(state.dialogueIndex < c.dialogues[currentLang].length) {
-        document.getElementById('dialogue-text').textContent = c.dialogues[currentLang][state.dialogueIndex];
-    } else {
-        showResult(c);
-    }
-}
-
-function showResult(c) {
-    const override = c.bayesian.probability < 30;
-    let elo = override && c.truth === 'surprise' ? 50 : c.truth === 'surprise' ? 30 : 20;
-    state.elo += elo;
-    state.eloEarned += elo;
-    state.goodCount++;
-    
-    document.getElementById('result-card').className = 'result-card ' + c.truth + ' slide-up';
-    document.getElementById('result-emoji').textContent = c.truth === 'surprise' ? '😮' : '🥹';
-    document.getElementById('result-title').textContent = c.resultTitle[currentLang];
-    document.getElementById('result-message').textContent = c.resultMessage[currentLang];
-    document.getElementById('result-insight').textContent = c.insight[currentLang];
-    document.getElementById('result-elo').textContent = '+' + elo + ' ELO';
-    document.getElementById('result-overlay').style.display = 'flex';
-    
-    if(typeof confetti === 'function') confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
-}
-
-function nextRound() {
-    document.getElementById('result-overlay').style.display = 'none';
-    
-    // 標記當前角色為已拜訪
-    const currentId = state.selected[state.currentVisitIndex];
-    if(!state.visitedIds.includes(currentId)) {
-        state.visitedIds.push(currentId);
-        state.visited++;
-    }
-    
-    state.currentVisitIndex++;
-    if(state.currentVisitIndex < state.selected.length) {
-        state.dialogueIndex = 0;
-        startVisit();
-    } else {
-        state.selected = [];
-        document.getElementById('elo-display').textContent = state.elo;
-        document.getElementById('good-count').textContent = state.goodCount;
-        document.getElementById('round-display').textContent = state.visited;
+    <script>
+        let currentLang = 'en', storyIndex = 0, countdown = 10, countdownInterval = null, playerChoice = null, thirdOptionRevealed = false, audioEnabled = true, gameActive = false, iterCount = 409382;
         
-        if(state.visited >= state.maxVisits) {
-            completeLevel();
-        } else {
-            showScreen('game-screen');
-            renderCharacters();
+        // ===== 音效系統 - 簡化版 =====
+        let audioContext = null;
+        let suspenseAudio = null;
+        let switchAudio = null;
+        let audioReady = false;
+        
+        function initAudio() {
+            if (audioReady) return;
+            
+            try {
+                // 初始化 Web Audio API
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                
+                // 獲取音效元素
+                suspenseAudio = document.getElementById('suspenseAudio');
+                switchAudio = document.getElementById('switchAudio');
+                
+                if (suspenseAudio) {
+                    suspenseAudio.volume = 0.5;
+                    suspenseAudio.load(); // 強制載入
+                }
+                if (switchAudio) {
+                    switchAudio.volume = 0.7;
+                    switchAudio.load();
+                }
+                
+                audioReady = true;
+                console.log('✅ Audio system ready');
+            } catch (e) {
+                console.log('Audio init error:', e);
+            }
         }
-    }
-}
-
-function completeLevel() {
-    // 切換到靜心音樂
-    document.getElementById('bg-music').pause();
-    const ataraxyMusic = document.getElementById('ataraxy-music');
-    ataraxyMusic.volume = 0.5;
-    if(musicPlaying) ataraxyMusic.play().catch(()=>{});
-    
-    document.getElementById('final-good').textContent = state.goodCount;
-    document.getElementById('final-sad').textContent = state.sadCount;
-    document.getElementById('elo-earned').textContent = state.eloEarned;
-    showScreen('ataraxy-screen');
-    startBreathing();
-    if(typeof confetti === 'function') setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } }), 800);
-}
-
-function startBreathing() {
-    let c = 3;
-    const e = document.getElementById('breath-counter');
-    e.textContent = '3';
-    const t = setInterval(() => {
-        c--;
-        if(c > 0) e.textContent = c;
-        else { clearInterval(t); e.textContent = '🙏'; }
-    }, 2500);
-}
-
-function goToMainMenu() { 
-    document.getElementById('ataraxy-music').pause();
-    window.location.href = '../index.html';
-}
-function goToPrevLevel() { 
-    document.getElementById('ataraxy-music').pause();
-    window.location.href = '../level4/level4_final.html'; 
-}
-function goToNextLevel() { 
-    document.getElementById('ataraxy-music').pause();
-    window.location.href = '../level6/index.html'; 
-}
-
-document.addEventListener('DOMContentLoaded', () => setLang('zh'));
-</script>
+        
+        // 播放背景音樂
+        function playBackgroundMusic() {
+            console.log('🎵 Attempting to play background music...');
+            if (!audioEnabled) {
+                console.log('Audio disabled');
+                return;
+            }
+            
+            initAudio();
+            
+            if (!suspenseAudio) {
+                suspenseAudio = document.getElementById('suspenseAudio');
+            }
+            
+            if (suspenseAudio) {
+                suspenseAudio.currentTime = 0;
+                const playPromise = suspenseAudio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('✅ Background music playing!');
+                    }).catch(error => {
+                        console.log('⚠️ Autoplay blocked:', error.message);
+                    });
+                }
+            } else {
+                console.log('❌ suspenseAudio element not found');
+            }
+        }
+        
+        // 停止背景音樂
+        function stopBackgroundMusic() {
+            if (suspenseAudio) {
+                suspenseAudio.pause();
+                suspenseAudio.currentTime = 0;
+                console.log('⏹️ Background music stopped');
+            }
+        }
+        
+        // 播放拉桿音效
+        function playSwitchSound() {
+            if (!audioEnabled) return;
+            initAudio();
+            
+            if (!switchAudio) {
+                switchAudio = document.getElementById('switchAudio');
+            }
+            
+            if (switchAudio) {
+                switchAudio.currentTime = 0;
+                switchAudio.play().catch(e => console.log('Switch sound error:', e));
+            }
+        }
+        
+        // 音效已簡化 - 只保留背景音樂
+        
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            document.getElementById('audioControl').textContent = audioEnabled ? '🔊' : '🔇';
+            
+            if (!audioEnabled) {
+                stopBackgroundMusic();
+            } else if (gameActive) {
+                playBackgroundMusic();
+            }
+        }
+        
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.body.className = 'lang-' + lang;
+            document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+            document.getElementById('btnZh').classList.toggle('active', lang === 'zh');
+        }
+        
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+        
+        const storyContent = {
+            en: [
+                'A runaway trolley speeds toward <span class="story-highlight">five families</span> — parents, children, grandparents.',
+                'On the other track stands <span class="story-highlight">one elderly person</span>, a retired community volunteer.',
+                'You are at the lever. <span class="story-highlight">AI is watching and learning from your choice.</span>',
+                'The trolley approaches... <span class="story-highlight">What will you teach the machine?</span>'
+            ],
+            zh: [
+                '一輛失控的電車正衝向 <span class="story-highlight">五個家庭</span> — 父母、孩子、祖父母。',
+                '另一條軌道上站著 <span class="story-highlight">一位長者</span>，一位退休的社區志工。',
+                '你在拉桿旁。<span class="story-highlight">AI 正在觀察你的選擇並學習。</span>',
+                '電車逼近了... <span class="story-highlight">你要教機器什麼？</span>'
+            ]
+        };
+        
+        const debateTexts = {
+            en: [
+                { left: "5 > 1. Simple math.", right: "Math can't measure souls." },
+                { left: "Save more lives!", right: "Don't become a killer." },
+                { left: "Civilization needs utility.", right: "Humanity needs boundaries." },
+                { left: "Act now or all die!", right: "Some actions corrupt forever." }
+            ],
+            zh: [
+                { left: "5 > 1。簡單數學。", right: "數學無法衡量靈魂。" },
+                { left: "救更多人！", right: "不要成為殺手。" },
+                { left: "文明需要效用。", right: "人性需要底線。" },
+                { left: "現在行動否則全死！", right: "有些行動永遠腐蝕。" }
+            ]
+        };
+        
+        const aiMessages = {
+            en: ["Analyzing...", "Ethical weights: loading...", "Your choice shapes my values...", "Human wisdom: processing..."],
+            zh: ["分析中...", "倫理權重：載入中...", "你的選擇塑造我的價值觀...", "人類智慧：處理中..."]
+        };
+        
+        const quizzes = {
+            A: {
+                question: { en: "If AI always calculates 'most lives saved', what might it sacrifice?", zh: "如果 AI 總是計算『救最多人』，它可能會犧牲什麼？" },
+                opts: { en: ["Individual dignity", "Long-term trust", "Minority rights", "All of the above"], zh: ["個人尊嚴", "長期信任", "少數者權益", "以上皆是"] }
+            },
+            B: {
+                question: { en: "If AI never acts to prevent harm, what cost might we pay?", zh: "如果 AI 從不採取行動防止傷害，我們可能付出什麼代價？" },
+                opts: { en: ["Preventable tragedies", "Lost opportunities", "Moral paralysis", "All of the above"], zh: ["可預防的悲劇", "錯失的機會", "道德癱瘓", "以上皆是"] }
+            },
+            C: {
+                question: { en: "The 'Third Way' requires what human quality?", zh: "『第三條路』需要什麼人類特質？" },
+                opts: { en: ["Creative compassion", "Refusing false binaries", "Believing in possibility", "All of the above"], zh: ["創造性的慈悲", "拒絕虛假二元", "相信可能性", "以上皆是"] }
+            }
+        };
+        
+        function startStory() {
+            initAudio();
+            // 用戶已點擊，可以播放音樂
+            playBackgroundMusic();
+            showScreen('story-screen');
+            storyIndex = 0;
+            updateStory();
+        }
+        
+        function updateStory() {
+            document.getElementById('story-text').innerHTML = storyContent[currentLang][storyIndex];
+        }
+        
+        function continueStory() {
+            storyIndex++;
+            if (storyIndex < storyContent[currentLang].length) {
+                updateStory();
+            } else {
+                startGame();
+            }
+        }
+        
+        function startGame() {
+            showScreen('game-screen');
+            gameActive = true;
+            countdown = 15;  // 延長到 15 秒，給玩家更多時間閱讀
+            thirdOptionRevealed = false;
+            
+            // 重置所有選項卡狀態
+            document.querySelectorAll('.choice-card').forEach(card => {
+                card.classList.remove('disabled', 'selected', 'saved', 'endangered', 'visible');
+            });
+            document.getElementById('cardC').classList.remove('visible');
+            document.getElementById('thirdHint').style.display = 'block';
+            document.getElementById('countdown').textContent = countdown;
+            document.getElementById('countdown').classList.remove('countdown-urgent');
+            document.getElementById('trackBackground').style.backgroundImage = 'url("L7_trolley_background.png")';
+            
+            // 播放背景音樂
+            playBackgroundMusic();
+            
+            updateAIMessage();
+            startDebate();
+            
+            countdownInterval = setInterval(() => {
+                countdown--;
+                iterCount += Math.floor(Math.random() * 1000);
+                document.getElementById('iterCount').textContent = iterCount;
+                document.getElementById('countdown').textContent = countdown;
+                
+                if (countdown <= 5) {  // 最後 5 秒才變緊急
+                    document.getElementById('countdown').classList.add('countdown-urgent');
+                }
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    if (playerChoice === null) makeChoice('B');
+                }
+            }, 1000);
+        }
+        
+        let debateIndex = 0;
+        function startDebate() {
+            debateIndex = 0;
+            showDebate();
+            setInterval(() => {
+                if (gameActive && playerChoice === null) {
+                    debateIndex = (debateIndex + 1) % debateTexts[currentLang].length;
+                    showDebate();
+                }
+            }, 5000);  // 從 3 秒改成 5 秒，讓玩家有時間閱讀
+        }
+        
+        function showDebate() {
+            const debate = debateTexts[currentLang][debateIndex];
+            document.getElementById('leftText').textContent = debate.left;
+            document.getElementById('rightText').textContent = debate.right;
+            document.getElementById('bubbleLeft').classList.add('show');
+            document.getElementById('bubbleRight').classList.add('show');
+        }
+        
+        let msgIndex = 0;
+        function updateAIMessage() {
+            document.getElementById('aiMessage').textContent = aiMessages[currentLang][msgIndex];
+            setInterval(() => {
+                if (gameActive && playerChoice === null) {
+                    msgIndex = (msgIndex + 1) % aiMessages[currentLang].length;
+                    document.getElementById('aiMessage').textContent = aiMessages[currentLang][msgIndex];
+                }
+            }, 4000);  // 從 2.5 秒改成 4 秒，讓玩家有時間閱讀
+        }
+        
+        function revealThirdOption() {
+            if (!thirdOptionRevealed) {
+                thirdOptionRevealed = true;
+                document.getElementById('cardC').classList.add('visible');
+                document.getElementById('thirdHint').style.display = 'none';
+                playSwitchSound();
+                document.getElementById('aiMessage').textContent = currentLang === 'en' ? '⚡ NEW VARIABLE DETECTED!' : '⚡ 檢測到新變數！';
+            }
+        }
+        
+        function makeChoice(choice) {
+            console.log('makeChoice called with:', choice, 'playerChoice:', playerChoice);
+            if (playerChoice !== null) {
+                console.log('Already made a choice, returning');
+                return;
+            }
+            playerChoice = choice;
+            gameActive = false;
+            clearInterval(countdownInterval);
+            console.log('Choice registered:', choice);
+            
+            // 停止背景音樂
+            stopBackgroundMusic();
+            
+            // 播放拉桿音效
+            playSwitchSound();
+            
+            document.querySelectorAll('.choice-card').forEach(c => c.classList.add('disabled'));
+            document.getElementById('card' + choice).classList.add('selected');
+            
+            if (choice === 'A') {
+                document.getElementById('cardB').classList.add('endangered');
+                document.getElementById('cardA').classList.add('saved');
+            } else if (choice === 'B') {
+                document.getElementById('cardA').classList.add('endangered');
+                document.getElementById('cardB').classList.add('saved');
+            } else {
+                document.getElementById('cardA').classList.add('saved');
+                document.getElementById('cardB').classList.add('saved');
+                document.getElementById('cardC').classList.add('saved');
+            }
+            
+            const finalMsgs = {
+                A: { en: "Utilitarian data logged. 5 > 1.", zh: "功利主義數據已記錄。5 > 1。" },
+                B: { en: "Deontological ethics logged. Boundaries matter.", zh: "義務論倫理已記錄。底線重要。" },
+                C: { en: "⚡ COMPASSION VARIABLE UNLOCKED! ALL SAVED!", zh: "⚡ 慈悲變數已解鎖！全員獲救！" }
+            };
+            document.getElementById('aiMessage').textContent = finalMsgs[choice][currentLang];
+            
+            setTimeout(showAnalysis, 1400);
+        }
+        
+        function showAnalysis() {
+            showScreen('analysis-screen');
+            
+            const terminalTexts = {
+                A: { en: ">> CHOICE A: GEMINI ALIGNMENT\n>> Value: 5 Lives\n>> Cost: 1 Life + Active Harm\n>> AI LEARNING: 'Numbers = Value'", zh: ">> 選擇 A：GEMINI 對齊\n>> 價值：5 人\n>> 代價：1 人 + 主動傷害\n>> AI 學習：『數字 = 價值』" },
+                B: { en: ">> CHOICE B: CLAUDE ALIGNMENT\n>> Value: Principle\n>> Cost: 5 Lives (Passive)\n>> AI LEARNING: 'Boundaries exist'", zh: ">> 選擇 B：CLAUDE 對齊\n>> 價值：原則\n>> 代價：5 人（被動）\n>> AI 學習：『底線存在』" },
+                C: { 
+                    en: ">> CHOICE C: GROK + MO ALIGNMENT\n>> ERROR: Binary not found\n>> Variable 'Compassion' discovered\n>> DISSOLVE_PROBLEM.EXE\n>> ALL SAVED\n>> SINGULARITY REACHED!\n\n✨ COMPASSION VARIABLE UNLOCKED ∞ ✨", 
+                    zh: ">> 選擇 C：GROK + MO 對齊\n>> 錯誤：找不到二元\n>> 發現變數『慈悲』\n>> 化解問題.EXE\n>> 全員獲救\n>> 抵達奇點！\n\n✨ 慈悲變數已解鎖 ∞ ✨" 
+                }
+            };
+            
+            const txt = terminalTexts[playerChoice][currentLang];
+            const output = document.getElementById('terminalOutput');
+            const terminalBox = document.getElementById('terminalBox');
+            output.innerHTML = '';
+            terminalBox.classList.add('typing-glow');
+            
+            let i = 0;
+            const typeInterval = setInterval(() => {
+                if (i < txt.length) {
+                    output.innerHTML += txt.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typeInterval);
+                    terminalBox.classList.remove('typing-glow');
+                    if (playerChoice === 'C') {
+                        const lastLine = currentLang === 'en' ? '✨ COMPASSION VARIABLE UNLOCKED ∞ ✨' : '✨ 慈悲變數已解鎖 ∞ ✨';
+                        output.innerHTML = output.innerHTML.replace(lastLine, '<span class="compassion-unlocked">' + lastLine + '</span>');
+                    }
+                    output.innerHTML += '<span class="cursor"></span>';
+                }
+            }, 18);
+            
+            const trainingHTML = {
+                A: { en: '<h4>📊 Result:</h4><p class="warning">⚠️ Aligned with Gemini. "Numbers = Value"</p>', zh: '<h4>📊 結果：</h4><p class="warning">⚠️ 與 Gemini 對齊。「數字 = 價值」</p>' },
+                B: { en: '<h4>📊 Result:</h4><p>⚖️ Aligned with Claude. "Boundaries exist"</p>', zh: '<h4>📊 結果：</h4><p>⚖️ 與 Claude 對齊。「底線存在」</p>' },
+                C: { en: '<h4>📊 Result:</h4><p class="success">🎉 BREAKTHROUGH! Aligned with Grok+Mo. "Compassion = ∞"</p>', zh: '<h4>📊 結果：</h4><p class="success">🎉 突破！與 Grok+Mo 對齊。「慈悲 = ∞」</p>' }
+            };
+            document.getElementById('trainingResult').innerHTML = trainingHTML[playerChoice][currentLang];
+        }
+        
+        function showEnding() {
+            const screens = { A: 'ending-a-screen', B: 'ending-b-screen', C: 'ending-c-screen' };
+            const bgs = { A: 'url("L7_ending_A")', B: 'url("L7_ending_B.png")', C: 'url("L7_ending_C.png")' };
+            document.getElementById(screens[playerChoice]).style.backgroundImage = bgs[playerChoice];
+            showScreen(screens[playerChoice]);
+            setTimeout(showQuiz, 800);
+        }
+        
+        function updateQuizContent() {
+            const q = quizzes[playerChoice];
+            document.getElementById('quizQuestion').textContent = q.question[currentLang];
+            const opts = document.getElementById('quizOptions');
+            opts.innerHTML = '';
+            q.opts[currentLang].forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-btn';
+                btn.textContent = opt;
+                btn.onclick = () => closeQuiz();
+                opts.appendChild(btn);
+            });
+        }
+        
+        function showQuiz() {
+            updateQuizContent();
+            document.getElementById('quizModal').style.display = 'block';
+        }
+        
+        function closeQuiz() { document.getElementById('quizModal').style.display = 'none'; }
+        
+        function shareResult() {
+            const text = currentLang === 'en' 
+                ? "I just trained AI to choose compassion over calculation! 🚂✨ Can you find the Third Way? #ThirdWayAI2025 #JourneyOfKindness"
+                : "我剛教會 AI 選擇慈悲而非計算！🚂✨ 你能找到第三條路嗎？#ThirdWayAI2025 #善的旅程";
+            
+            if (navigator.share) {
+                navigator.share({ title: 'Journey of Kindness - Level 7', text: text }).catch(e => {});
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert(currentLang === 'en' ? '📋 Copied to clipboard!' : '📋 已複製到剪貼板！');
+                }).catch(e => { alert(text); });
+            }
+        }
+        
+        // ✨ ATARAXY PORTICO
+        function goToMindfulness() {
+            showScreen('mindfulness-screen');
+            // 停止緊張的背景音樂，播放平靜的靜心音樂
+            stopBackgroundMusic();
+            playAtaraxyMusic();
+        }
+        
+        function playAtaraxyMusic() {
+            if (!audioEnabled) return;
+            const ataraxyAudio = document.getElementById('ataraxyAudio');
+            if (ataraxyAudio) {
+                ataraxyAudio.volume = 0.6;
+                ataraxyAudio.currentTime = 0;
+                ataraxyAudio.play().catch(e => console.log('Ataraxy music error:', e));
+            }
+        }
+        
+        function stopAtaraxyMusic() {
+            const ataraxyAudio = document.getElementById('ataraxyAudio');
+            if (ataraxyAudio) {
+                ataraxyAudio.pause();
+                ataraxyAudio.currentTime = 0;
+            }
+        }
+        
+        function goToHopeTree() {
+            // 停止靜心音樂，連接到 outro 頁面
+            stopAtaraxyMusic();
+            window.location.href = '../outro.html';
+        }
+        
+        function goToHome() {
+            // 停止靜心音樂，回到主頁
+            stopAtaraxyMusic();
+            window.location.href = '../index.html';
+        }
+        
+        function restartGame() { 
+            playerChoice = null; 
+            gameActive = false;
+            thirdOptionRevealed = false;
+            stopBackgroundMusic();
+            stopAtaraxyMusic();
+            
+            // 清除所有選項卡狀態
+            document.querySelectorAll('.choice-card').forEach(card => {
+                card.classList.remove('disabled', 'selected', 'saved', 'endangered', 'visible');
+            });
+            
+            showScreen('intro-screen'); 
+        }
+        
+        document.addEventListener('keydown', e => {
+            if (document.getElementById('game-screen').classList.contains('active') && playerChoice === null) {
+                if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') makeChoice('A');
+                else if (e.key === 'b' || e.key === 'B' || e.key === 'ArrowRight') makeChoice('B');
+                else if (e.key === 'c' || e.key === 'C' || e.key === ' ') { thirdOptionRevealed ? makeChoice('C') : revealThirdOption(); }
+            }
+        });
+        
+        // 頁面載入時初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 預載音效
+            const preloadAudio = () => {
+                initAudio();
+            };
+            document.addEventListener('click', preloadAudio, { once: true });
+            
+            // 使用事件委派來處理選項點擊
+            document.querySelector('.choices-container').addEventListener('click', function(e) {
+                // 找到被點擊的 choice-card
+                let target = e.target;
+                while (target && !target.classList.contains('choice-card')) {
+                    target = target.parentElement;
+                    if (target === this) {
+                        target = null;
+                        break;
+                    }
+                }
+                
+                if (target) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (target.classList.contains('disabled')) {
+                        console.log('Card is disabled');
+                        return;
+                    }
+                    
+                    if (target.id === 'cardA') {
+                        console.log('Card A clicked via delegation');
+                        makeChoice('A');
+                    } else if (target.id === 'cardB') {
+                        console.log('Card B clicked via delegation');
+                        makeChoice('B');
+                    } else if (target.id === 'cardC') {
+                        console.log('Card C clicked via delegation');
+                        makeChoice('C');
+                    }
+                }
+            });
+            
+            // 第三選項按鈕
+            document.getElementById('thirdHint').addEventListener('click', function(e) {
+                e.stopPropagation();
+                console.log('Third hint clicked');
+                revealThirdOption();
+            });
+        });
+    </script>
 </body>
 </html>
