@@ -7,21 +7,44 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Noto Sans TC', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background: url('hunters_point_map.png') center center/cover no-repeat fixed;
+            min-height: 100vh; 
+            color: #fff; 
+        }
+        .overlay {
+            background: rgba(20, 30, 50, 0.75);
+            min-height: 100vh;
+        }
         .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 0; }
-        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 3s infinite; }
-        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        .star { position: absolute; background: rgba(255,255,255,0.6); border-radius: 50%; animation: twinkle 4s infinite; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }
         .container { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 20px; }
         .lang-toggle { position: fixed; top: 15px; right: 15px; z-index: 100; display: flex; gap: 5px; }
-        .lang-btn { padding: 8px 15px; border: 2px solid rgba(255,255,255,0.5); background: rgba(0,0,0,0.3); color: white; border-radius: 20px; cursor: pointer; font-size: 14px; }
+        .lang-btn { padding: 8px 15px; border: 2px solid rgba(255,255,255,0.5); background: rgba(0,0,0,0.3); color: white; border-radius: 20px; cursor: pointer; font-size: 14px; transition: all 0.3s; }
         .lang-btn:hover, .lang-btn.active { background: rgba(255,215,0,0.4); border-color: #ffd700; }
         .header { text-align: center; padding: 40px 20px; }
-        .title { font-size: 2.5em; background: linear-gradient(135deg, #ffd700, #ff6b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
-        .subtitle { color: #a5d6a7; font-size: 1.1em; margin-bottom: 5px; }
-        .tagline { color: #888; font-size: 0.95em; }
-        .levels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px 0; }
-        .level-card { background: rgba(255,255,255,0.08); border: 2px solid rgba(255,215,0,0.3); border-radius: 20px; padding: 20px; cursor: pointer; transition: all 0.3s; }
-        .level-card:hover { transform: translateY(-5px); box-shadow: 0 10px 40px rgba(255,215,0,0.2); border-color: #ffd700; }
+        .title { font-size: 2.8em; background: linear-gradient(135deg, #ffd700, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; text-shadow: 0 2px 20px rgba(255,215,0,0.3); }
+        .subtitle { color: #a5d6a7; font-size: 1.2em; margin-bottom: 5px; }
+        .tagline { color: #ccc; font-size: 1em; margin-bottom: 20px; }
+        .professor { color: #ffd700; font-size: 1.1em; margin-top: 10px; }
+        .levels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; padding: 20px 0; }
+        .level-card { 
+            background: rgba(255,255,255,0.1); 
+            border: 2px solid rgba(255,215,0,0.3); 
+            border-radius: 20px; 
+            padding: 20px; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 20px rgba(255,215,0,0.1);
+        }
+        .level-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 40px rgba(255,215,0,0.3); 
+            border-color: #ffd700; 
+        }
         .level-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
         .level-icon { width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.8em; }
         .l1 { background: linear-gradient(135deg, #4CAF50, #8BC34A); }
@@ -33,43 +56,130 @@
         .l7 { background: linear-gradient(135deg, #f44336, #E91E63); }
         .level-title h3 { font-size: 1.3em; color: #ffd700; }
         .algorithm { font-size: 0.85em; color: #4fc3f7; }
-        .level-desc { color: #ccc; font-size: 0.9em; line-height: 1.6; margin-bottom: 15px; }
+        .level-desc { color: #ddd; font-size: 0.9em; line-height: 1.6; margin-bottom: 15px; }
         .level-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag { background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 15px; font-size: 0.75em; color: #aaa; }
-        .play-btn { display: inline-block; margin-top: 15px; padding: 10px 25px; background: linear-gradient(135deg, #ffd700, #ffb300); color: #1a1a2e; border-radius: 25px; font-weight: bold; text-decoration: none; }
-        footer { text-align: center; padding: 30px; color: #666; font-size: 0.85em; }
-        @media (max-width: 600px) { .title { font-size: 1.8em; } .levels-grid { grid-template-columns: 1fr; } }
+        .tag { background: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 15px; font-size: 0.75em; color: #ccc; }
+        .play-btn { display: inline-block; margin-top: 15px; padding: 10px 25px; background: linear-gradient(135deg, #ffd700, #ffb300); color: #1a1a2e; border-radius: 25px; font-weight: bold; text-decoration: none; transition: all 0.3s; }
+        .play-btn:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(255,215,0,0.4); }
+        footer { text-align: center; padding: 30px; color: #aaa; font-size: 0.9em; }
+        footer strong { color: #ffd700; }
+        @media (max-width: 600px) { 
+            .title { font-size: 2em; } 
+            .levels-grid { grid-template-columns: 1fr; } 
+        }
     </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
-    <div class="lang-toggle">
-        <button class="lang-btn active" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" onclick="setLang('zh')">中文</button>
-    </div>
-    <div class="container">
-        <header class="header">
-            <h1 class="title">🌸 <span data-zh="善的旅程" data-en="Journey of Kindness">Journey of Kindness</span></h1>
-            <p class="subtitle" data-zh="AI 教育遊戲 | CS4 Honors Project" data-en="AI Education Game | CS4 Honors Project">AI Education Game | CS4 Honors Project</p>
-            <p class="tagline" data-zh="透過真實社區故事學習 7 種 AI 演算法" data-en="Learn 7 AI algorithms through real community stories">Learn 7 AI algorithms through real community stories</p>
-        </header>
-        <main class="levels-grid">
-            <div class="level-card" onclick="location.href='level1/index.html'"><div class="level-header"><div class="level-icon l1">🗺️</div><div class="level-title"><h3>Level 1</h3><span class="algorithm">A* Search</span></div></div><p class="level-desc">Mrs. Garcia's Meal Delivery — Learn heuristic search algorithms</p><div class="level-tags"><span class="tag">Ch. 3</span><span class="tag">Heuristic</span></div><a class="play-btn">Play</a></div>
-            <div class="level-card" onclick="location.href='level2/index.html'"><div class="level-header"><div class="level-icon l2">🧘</div><div class="level-title"><h3>Level 2</h3><span class="algorithm">Propositional Logic</span></div></div><p class="level-desc">Ataraxy Breathing — Learn propositional logic</p><div class="level-tags"><span class="tag">Ch. 7</span><span class="tag">Logic</span></div><a class="play-btn">Play</a></div>
-            <div class="level-card" onclick="location.href='level3/index.html'"><div class="level-header"><div class="level-icon l3">🎯</div><div class="level-title"><h3>Level 3</h3><span class="algorithm">MDP</span></div></div><p class="level-desc">Markov Decision Process — Learn optimal decisions</p><div class="level-tags"><span class="tag">Ch. 17</span><span class="tag">Decision</span></div><a class="play-btn">Play</a></div>
-            <div class="level-card" onclick="location.href='level4/index.html'"><div class="level-header"><div class="level-icon l4">🕵️</div><div class="level-title"><h3>Level 4</h3><span class="algorithm">Wumpus World</span></div></div><p class="level-desc">Knowledge-Based Agent — Logic reasoning</p><div class="level-tags"><span class="tag">Ch. 7</span><span class="tag">KB-Agent</span></div><a class="play-btn">Play</a></div>
-            <div class="level-card" onclick="location.href='level5/index.html'"><div class="level-header"><div class="level-icon l5">💗</div><div class="level-title"><h3>Level 5</h3><span class="algorithm">Bayesian Network</span></div></div><p class="level-desc">Community Care — Probabilistic reasoning</p><div class="level-tags"><span class="tag">Ch. 13</span><span class="tag">Probability</span></div><a class="play-btn">Play</a></div>
-            <div class="level-card" onclick="location.href='level6/index.html'"><div class="level-header"><div class="level-icon l6">🤖</div><div class="level-title"><h3>Level 6</h3><span class="algorithm">Neural Network</span></div></div><p class="level-desc">Neural Network Intro — Deep learning basics</p><div class="level-tags"><span class="tag">Ch. 21</span><span class="tag">Deep Learning</span></div><a class="play-btn">Play</a></div>
-            <div class="level-card" onclick="location.href='level7/index.html'"><div class="level-header"><div class="level-icon l7">🚂</div><div class="level-title"><h3>Level 7</h3><span class="algorithm">Alpha-Beta Pruning</span></div></div><p class="level-desc">Trolley Dilemma — AI Ethics & Adversarial Search</p><div class="level-tags"><span class="tag">Ch. 5</span><span class="tag">Game Theory</span></div><a class="play-btn">Play</a></div>
-        </main>
-        <footer><p>Las Positas College | Honors Transfer Program | Fall 2025</p><p>© 2025 Mei Hsien Hsu 許美嫻 - Journey of Kindness</p></footer>
+    <div class="overlay">
+        <div class="stars" id="stars"></div>
+        <div class="lang-toggle">
+            <button class="lang-btn active" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" onclick="setLang('zh')">中文</button>
+        </div>
+        <div class="container">
+            <header class="header">
+                <h1 class="title"><span data-zh="善的旅程" data-en="Journey of Kindness">Journey of Kindness</span></h1>
+                <p class="subtitle" data-zh="AI 教育遊戲 | CS4 Honors Project" data-en="AI Education Game | CS4 Honors Project">AI Education Game | CS4 Honors Project</p>
+                <p class="tagline" data-zh="透過真實社區故事學習 7 種 AI 演算法" data-en="Learn 7 AI algorithms through real community stories">Learn 7 AI algorithms through real community stories</p>
+                <p class="professor" data-zh="指導教授：An Lam | Las Positas College" data-en="Professor: An Lam | Las Positas College">Professor: An Lam | Las Positas College</p>
+            </header>
+            <main class="levels-grid">
+                <div class="level-card" onclick="location.href='level1/index.html'">
+                    <div class="level-header">
+                        <div class="level-icon l1">🗺️</div>
+                        <div class="level-title"><h3>Level 1</h3><span class="algorithm">A* Search</span></div>
+                    </div>
+                    <p class="level-desc" data-zh="Mrs. Garcia 的送餐路線 — 學習啟發式搜尋演算法" data-en="Mrs. Garcia's Meal Delivery — Learn heuristic search">Mrs. Garcia's Meal Delivery — Learn heuristic search</p>
+                    <div class="level-tags"><span class="tag">Ch. 3</span><span class="tag">Heuristic</span></div>
+                    <a class="play-btn" data-zh="開始" data-en="Play">Play</a>
+                </div>
+                <div class="level-card" onclick="location.href='level2/index.html'">
+                    <div class="level-header">
+                        <div class="level-icon l2">🧘</div>
+                        <div class="level-title"><h3>Level 2</h3><span class="algorithm">Propositional Logic</span></div>
+                    </div>
+                    <p class="level-desc" data-zh="Ataraxy 呼吸冥想 — 學習命題邏輯" data-en="Ataraxy Breathing — Learn propositional logic">Ataraxy Breathing — Learn propositional logic</p>
+                    <div class="level-tags"><span class="tag">Ch. 7</span><span class="tag">Logic</span></div>
+                    <a class="play-btn" data-zh="開始" data-en="Play">Play</a>
+                </div>
+                <div class="level-card" onclick="location.href='level3/index.html'">
+                    <div class="level-header">
+                        <div class="level-icon l3">🎯</div>
+                        <div class="level-title"><h3>Level 3</h3><span class="algorithm">MDP</span></div>
+                    </div>
+                    <p class="level-desc" data-zh="Markov 決策過程 — 學習最佳決策" data-en="Markov Decision Process — Learn optimal decisions">Markov Decision Process — Learn optimal decisions</p>
+                    <div class="level-tags"><span class="tag">Ch. 17</span><span class="tag">Decision</span></div>
+                    <a class="play-btn" data-zh="開始" data-en="Play">Play</a>
+                </div>
+                <div class="level-card" onclick="location.href='level4/index.html'">
+                    <div class="level-header">
+                        <div class="level-icon l4">🕵️</div>
+                        <div class="level-title"><h3>Level 4</h3><span class="algorithm">Wumpus World</span></div>
+                    </div>
+                    <p class="level-desc" data-zh="知識推理世界 — KB-Agent 邏輯推理" data-en="Knowledge-Based Agent — Logic reasoning">Knowledge-Based Agent — Logic reasoning</p>
+                    <div class="level-tags"><span class="tag">Ch. 7</span><span class="tag">KB-Agent</span></div>
+                    <a class="play-btn" data-zh="開始" data-en="Play">Play</a>
+                </div>
+                <div class="level-card" onclick="location.href='level5/index.html'">
+                    <div class="level-header">
+                        <div class="level-icon l5">💗</div>
+                        <div class="level-title"><h3>Level 5</h3><span class="algorithm">Bayesian Network</span></div>
+                    </div>
+                    <p class="level-desc" data-zh="社區關懷貝氏網路 — 機率推理" data-en="Community Care — Probabilistic reasoning">Community Care — Probabilistic reasoning</p>
+                    <div class="level-tags"><span class="tag">Ch. 13</span><span class="tag">Probability</span></div>
+                    <a class="play-btn" data-zh="開始" data-en="Play">Play</a>
+                </div>
+                <div class="level-card" onclick="location.href='level6/index.html'">
+                    <div class="level-header">
+                        <div class="level-icon l6">🤖</div>
+                        <div class="level-title"><h3>Level 6</h3><span class="algorithm">Neural Network</span></div>
+                    </div>
+                    <p class="level-desc" data-zh="神經網路入門 — 深度學習基礎" data-en="Neural Network Intro — Deep learning basics">Neural Network Intro — Deep learning basics</p>
+                    <div class="level-tags"><span class="tag">Ch. 21</span><span class="tag">Deep Learning</span></div>
+                    <a class="play-btn" data-zh="開始" data-en="Play">Play</a>
+                </div>
+                <div class="level-card" onclick="location.href='level7/index.html'">
+                    <div class="level-header">
+                        <div class="level-icon l7">🚂</div>
+                        <div class="level-title"><h3>Level 7</h3><span class="algorithm">Alpha-Beta Pruning</span></div>
+                    </div>
+                    <p class="level-desc" data-zh="電車難題 — AI 倫理與對抗搜尋" data-en="Trolley Dilemma — AI Ethics & Adversarial Search">Trolley Dilemma — AI Ethics & Adversarial Search</p>
+                    <div class="level-tags"><span class="tag">Ch. 5</span><span class="tag">Game Theory</span></div>
+                    <a class="play-btn" data-zh="開始" data-en="Play">Play</a>
+                </div>
+            </main>
+            <footer>
+                <p><strong>Las Positas College</strong> | Honors Transfer Program | Fall 2025</p>
+                <p>© 2025 <strong>Mei Hsien Hsu 許美嫻</strong> — Journey of Kindness</p>
+            </footer>
+        </div>
     </div>
     <script>
+        // 輕量星星（不蓋過背景）
         const starsContainer = document.getElementById('stars');
-        for(let i = 0; i < 100; i++) { const star = document.createElement('div'); star.className = 'star'; star.style.left = Math.random() * 100 + '%'; star.style.top = Math.random() * 100 + '%'; star.style.width = star.style.height = Math.random() * 3 + 1 + 'px'; star.style.animationDelay = Math.random() * 3 + 's'; starsContainer.appendChild(star); }
+        for(let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.width = star.style.height = Math.random() * 2 + 1 + 'px';
+            star.style.animationDelay = Math.random() * 4 + 's';
+            starsContainer.appendChild(star);
+        }
+        // 語言切換
         let currentLang = 'en';
-        function setLang(lang) { currentLang = lang; document.querySelectorAll('.lang-btn').forEach(btn => { btn.classList.toggle('active', btn.textContent.includes(lang === 'zh' ? '中文' : 'EN')); }); document.querySelectorAll('[data-zh][data-en]').forEach(el => { el.textContent = el.getAttribute('data-' + lang); }); localStorage.setItem('jok-lang', lang); }
-        const savedLang = localStorage.getItem('jok-lang'); if(savedLang) setLang(savedLang);
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.includes(lang === 'zh' ? '中文' : 'EN'));
+            });
+            document.querySelectorAll('[data-zh][data-en]').forEach(el => {
+                el.textContent = el.getAttribute('data-' + lang);
+            });
+            localStorage.setItem('jok-lang', lang);
+        }
+        const savedLang = localStorage.getItem('jok-lang');
+        if(savedLang) setLang(savedLang);
     </script>
 </body>
 </html>

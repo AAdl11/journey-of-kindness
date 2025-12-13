@@ -23,27 +23,13 @@
         .pulse-glow { animation: pulseGlow 2s infinite; }
         .heartbeat { animation: heartbeat 1.5s ease-in-out infinite; }
         
-        /* 背景 - 完整顯示全景（桌面和手機都能看到整張圖）*/
-        .bg-community { 
-            background: url('L5_bayviewSt_cleaned.png') center center/contain no-repeat; 
-            background-color: #fef3c7; 
-        }
-        .bg-map { 
-            background: url('p12_社區關懷地圖介面.png') center center/contain no-repeat; 
-            background-color: #ecfdf5; 
-        }
-        
-        /* 手機優化 */
-        @media (max-width: 768px) {
-            .bg-community, .bg-map {
-                background-size: contain;
-                background-position: center top;
-            }
-        }
+        /* 背景 - 更清晰透明 */
+        .bg-community { background: url('L5_bayviewSt_cleaned.png') center center/cover no-repeat; background-color: #fef3c7; }
+        .bg-map { background: url('p12_社區關懷地圖介面.png') center center/cover no-repeat; background-color: #ecfdf5; }
         
         /* 靜心之門 - 改用貝氏網路視覺化背景（愛心連結） */
         .bg-ataraxy {
-            background: url('p11_貝氏網路視覺化背景_cleaned.png') center center/contain no-repeat;
+            background: url('p11_貝氏網路視覺化背景_cleaned.png') center center/cover no-repeat;
             background-color: #fce7f3;
         }
         
@@ -75,10 +61,7 @@
         }
         .character-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .character-card.selected { border-color: #ec4899; box-shadow: 0 0 25px rgba(236, 72, 153, 0.5); }
-        .character-card.visited { pointer-events: none; }
-        .character-card { position: relative; }
-        .visited-check { position: absolute; top: 8px; right: 8px; background: #22c55e; color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; box-shadow: 0 2px 8px rgba(34,197,94,0.5); }
-        .character-avatar { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 5px 20px rgba(0,0,0,0.25); }
+        .character-avatar { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 3px 15px rgba(0,0,0,0.15); }
         
         /* 大頭像 - 拜訪場景用 */
         .character-avatar-large {
@@ -223,7 +206,7 @@
     <div class="glass-card mx-4 mt-4 p-3 flex justify-between items-center">
         <div class="flex items-center gap-4">
             <span class="font-bold text-lg text-pink-600">💗 <span data-en="Community Care" data-zh="社區關懷">社區關懷</span></span>
-            <span class="text-gray-600"><span data-en="Visited" data-zh="已拜訪">已拜訪</span> <span id="round-display" class="text-purple-600 font-bold">0</span>/3</span>
+            <span class="text-gray-500"><span data-en="Round" data-zh="回合">回合</span> <span id="round-display" class="text-purple-600 font-bold">1</span>/3</span>
         </div>
         <div class="flex items-center gap-4">
             <div class="elo-badge">⭐ <span id="elo-display">1500</span></div>
@@ -238,6 +221,7 @@
             </div>
             <div class="grid grid-cols-5 gap-3 mb-4" id="characters-grid"></div>
             <div class="glass-card p-4 text-center">
+                <p class="text-gray-600 mb-3 text-lg"><span data-en="Selected:" data-zh="已選擇：">已選擇：</span><span id="selected-count" class="font-bold text-pink-600 text-xl">0</span>/3</p>
                 <div class="flex gap-3 justify-center mb-3">
                     <button onclick="clearSelection()" class="nav-btn-home px-4 py-2 text-sm">🔄 <span data-en="Clear" data-zh="重選">重選</span></button>
                     <button id="visit-btn" onclick="confirmVisit()" class="btn-primary" disabled>🚪 <span data-en="Visit Selected" data-zh="拜訪選中的鄰居">拜訪選中的鄰居</span></button>
@@ -352,7 +336,7 @@
 <script>
 let currentLang = 'zh';
 let musicPlaying = false;
-let state = { elo: 1500, eloEarned: 0, visited: 0, maxVisits: 3, goodCount: 0, sadCount: 0, selected: [], currentVisitIndex: 0, dialogueIndex: 0, visitedIds: [] };
+let state = { elo: 1500, eloEarned: 0, round: 1, maxRounds: 3, goodCount: 0, sadCount: 0, selected: [], currentVisitIndex: 0, dialogueIndex: 0 };
 
 const characters = [
     { id: 'johnson', name: { en: 'Mr. Johnson', zh: 'Johnson 先生' }, avatar: 'P1_MrJonson.png', location: { en: 'Park Bench', zh: '公園長椅' }, scene: 'p6_公園長椅場景_cleaned.png',
@@ -421,13 +405,9 @@ function startGame() {
 
 function renderCharacters() {
     const g = document.getElementById('characters-grid');
-    g.innerHTML = characters.map(c => {
-        const isVisited = state.visitedIds.includes(c.id);
-        const isSelected = state.selected.includes(c.id);
-        return `
-        <div class="character-card ${isSelected?'selected':''} ${isVisited?'visited':''}" id="char-${c.id}" onclick="${isVisited ? '' : `selectCharacter('${c.id}')`}" onmouseenter="showBayesian('${c.id}')" style="${isVisited ? 'opacity: 0.5; cursor: default;' : ''}">
+    g.innerHTML = characters.map(c => `
+        <div class="character-card ${state.selected.includes(c.id)?'selected':''}" id="char-${c.id}" onclick="selectCharacter('${c.id}')" onmouseenter="showBayesian('${c.id}')">
             <img src="${c.avatar}" class="character-avatar mx-auto mb-2" alt="${c.name[currentLang]}">
-            ${isVisited ? '<div class="visited-check">✓</div>' : ''}
             <h3 class="font-bold text-gray-800 text-center text-sm">${c.name[currentLang]}</h3>
             <p class="text-xs text-gray-500 text-center mb-2">${c.location[currentLang]}</p>
             <div class="mb-2">
@@ -437,9 +417,9 @@ function renderCharacters() {
                 </div>
                 <p class="text-center text-sm mt-1 font-bold" style="color:${getProbColor(c.bayesian.probability)}">${c.bayesian.probability}%</p>
             </div>
-            ${!isVisited && c.bayesian.probability < 30 ? `<button class="btn-override w-full" onclick="event.stopPropagation();overrideSelect('${c.id}')">⚠️ Override</button>` : ''}
+            ${c.bayesian.probability < 30 ? `<button class="btn-override w-full" onclick="event.stopPropagation();overrideSelect('${c.id}')">⚠️ Override</button>` : ''}
         </div>
-    `}).join('');
+    `).join('');
 }
 
 function getProbColor(p) { return p >= 70 ? '#ef4444' : p >= 40 ? '#f59e0b' : '#22c55e'; }
@@ -466,6 +446,7 @@ function selectCharacter(id) {
         state.selected.push(id);
         card.classList.add('selected');
     }
+    document.getElementById('selected-count').textContent = state.selected.length;
     document.getElementById('visit-btn').disabled = state.selected.length === 0;
 }
 
@@ -477,6 +458,7 @@ function overrideSelect(id) {
         }
         state.selected.push(id);
         document.getElementById('char-' + id).classList.add('selected');
+        document.getElementById('selected-count').textContent = state.selected.length;
         document.getElementById('visit-btn').disabled = false;
     }
 }
@@ -487,6 +469,7 @@ function clearSelection() {
         if(card) card.classList.remove('selected');
     });
     state.selected = [];
+    document.getElementById('selected-count').textContent = 0;
     document.getElementById('visit-btn').disabled = true;
 }
 
@@ -542,27 +525,19 @@ function showResult(c) {
 
 function nextRound() {
     document.getElementById('result-overlay').style.display = 'none';
-    
-    // 標記當前角色為已拜訪
-    const currentId = state.selected[state.currentVisitIndex];
-    if(!state.visitedIds.includes(currentId)) {
-        state.visitedIds.push(currentId);
-        state.visited++;
-    }
-    
     state.currentVisitIndex++;
     if(state.currentVisitIndex < state.selected.length) {
         state.dialogueIndex = 0;
         startVisit();
     } else {
+        state.round++;
         state.selected = [];
         document.getElementById('elo-display').textContent = state.elo;
         document.getElementById('good-count').textContent = state.goodCount;
-        document.getElementById('round-display').textContent = state.visited;
-        
-        if(state.visited >= state.maxVisits) {
+        if(state.round > state.maxRounds) {
             completeLevel();
         } else {
+            document.getElementById('round-display').textContent = state.round;
             showScreen('game-screen');
             renderCharacters();
         }
