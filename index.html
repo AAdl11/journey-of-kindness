@@ -9,9 +9,16 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: 'Noto Sans TC', sans-serif; 
-            background: url('hunters_point_map.png') center center/cover no-repeat fixed;
+            background: url('hunters_point_map.png') center center/contain no-repeat fixed;
+            background-color: #87CEEB;
             min-height: 100vh; 
             color: #fff; 
+        }
+        @media (max-width: 600px) {
+            body {
+                background-size: cover;
+                background-attachment: scroll;
+            }
         }
         .overlay {
             background: rgba(20, 30, 50, 0.75);
