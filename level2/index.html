@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>善的旅程 Level 2: Propositional Logic | Happy Campus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Noto Sans TC', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .screen { display: none; min-height: 100vh; position: relative; }
+        .screen.active { display: flex; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); } 50% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.9); } }
+        @keyframes breatheRing { 0%, 100% { transform: scale(0.85); opacity: 0.7; } 50% { transform: scale(1.15); opacity: 1; } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        @keyframes sparkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.1); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        .slide-up { animation: slideUp 0.6s ease-out; }
+        .pulse-glow { animation: pulseGlow 2s infinite; }
+        .float { animation: float 2.5s ease-in-out infinite; }
+        .sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+        .bounce { animation: bounce 1s ease-in-out infinite; }
+        
+        /* ========================================
+           🌈 BACKGROUNDS - SHOW THE BEAUTIFUL ART!
+        ======================================== */
+        
+        /* Intro - Let the ceremony image SHINE! */
+        .bg-ceremony {
+            background: url('L2_ceremony.png') center center/cover no-repeat;
+            background-color: #fce7f3;
+        }
+        
+        /* Shop - Bright playground */
+        .bg-playground {
+            background: url('L2_p2_Scool.png') center center/cover no-repeat;
+            background-color: #ecfdf5;
+        }
+        
+        /* Ataraxy - Show the beautiful gate with its built-in water */
+        .bg-ataraxy {
+            background: url('ataraxy_gate.png') center center/contain no-repeat;
+            background-color: #c4b5fd;
+        }
+        
+        /* Breathing ring - smaller */
+        .breath-ring {
+            width: 120px; height: 120px; border-radius: 50%;
+            border: 4px solid rgba(251, 191, 36, 0.9);
+            animation: breatheRing 4s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(251, 191, 36, 0.5);
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        /* 增強版呼吸光暈 - 更大更亮！ */
+        .breath-ring-enhanced {
+            width: 140px; height: 140px; border-radius: 50%;
+            border: 5px solid rgba(251, 191, 36, 1);
+            animation: breatheRingEnhanced 4s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 0 60px rgba(251, 191, 36, 0.5), 0 0 90px rgba(251, 191, 36, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(251,191,36,0.2) 100%);
+            backdrop-filter: blur(8px);
+        }
+        
+        @keyframes breatheRingEnhanced {
+            0%, 100% { 
+                transform: scale(0.9); 
+                box-shadow: 0 0 30px rgba(251, 191, 36, 0.6), 0 0 60px rgba(251, 191, 36, 0.3);
+            }
+            50% { 
+                transform: scale(1.15); 
+                box-shadow: 0 0 50px rgba(251, 191, 36, 1), 0 0 100px rgba(251, 191, 36, 0.6), 0 0 150px rgba(251, 191, 36, 0.3);
+            }
+        }
+        
+        .jingsi-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(243, 232, 255, 0.95)); 
+            backdrop-filter: blur(10px);
+            border-radius: 20px; padding: 1.5rem 2.5rem; max-width: 500px;
+            text-align: center; 
+            border: 3px solid rgba(251, 191, 36, 0.7);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Layout */
+        .game-layout {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .main-area { flex: 2; display: flex; flex-direction: column; gap: 10px; }
+        .side-panel { flex: 1; max-width: 320px; display: flex; flex-direction: column; gap: 10px; }
+        
+        /* Game Header - 更透明！ */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(254, 243, 199, 0.75));
+            border-radius: 12px;
+            border: 2px solid rgba(251, 191, 36, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+        }
+        
+        .elo-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1f2937;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 10px rgba(251, 191, 36, 0.4);
+        }
+        
+        /* Music button - VISIBLE! */
+        .music-btn {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 9999px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+        
+        .music-btn:hover { transform: scale(1.05); }
+        .music-btn.muted { background: linear-gradient(135deg, #9ca3af, #6b7280); }
+        
+        /* Info Boxes - 更透明！ */
+        .info-box {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.75), rgba(249, 250, 251, 0.7));
+            border: 2px solid rgba(209, 213, 219, 0.6);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            color: #1f2937;
+            backdrop-filter: blur(6px);
+        }
+        
+        .info-title { font-weight: bold; font-size: 14px; margin-bottom: 8px; color: #7c3aed; }
+        
+        /* Intro card - 更透明！讓校長和 Roxanne 露出來 */
+        .intro-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(254,243,199,0.55));
+            backdrop-filter: blur(6px);
+            padding: 1.2rem 1.5rem;
+            border-radius: 20px;
+            border: 3px solid rgba(251,191,36,0.5);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 480px;
+        }
+        
+        /* Ceremony Stage - 更透明！看到校長和講台上的人 */
+        .ceremony-stage {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(254, 243, 199, 0.65));
+            border: 3px solid rgba(251, 191, 36, 0.6);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(6px);
+        }
+        
+        .award-student {
+            display: inline-block;
+            background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+            border: 3px solid #ec4899;
+            border-radius: 16px;
+            padding: 20px 50px;
+            margin: 16px 0;
+            box-shadow: 0 5px 20px rgba(236, 72, 153, 0.2);
+        }
+        
+        .certificate {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #78350f;
+            border: 4px solid #d97706;
+            border-radius: 10px;
+            padding: 18px 28px;
+            display: inline-block;
+            margin: 16px 0;
+            box-shadow: 0 8px 30px rgba(217, 119, 6, 0.3);
+        }
+        
+        .award-btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: none;
+            color: white;
+            padding: 16px 36px;
+            border-radius: 14px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 5px 20px rgba(34, 197, 94, 0.4);
+        }
+        
+        .award-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(34, 197, 94, 0.6); }
+        .award-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* Student Card - 更透明！ */
+        .student-card {
+            background: linear-gradient(135deg, rgba(252, 231, 243, 0.75), rgba(245, 208, 254, 0.7));
+            border: 3px solid #d946ef;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 5px 20px rgba(217, 70, 239, 0.2);
+            backdrop-filter: blur(8px);
+        }
+        
+        .student-avatar { font-size: 3.8rem; }
+        
+        .tiger-paw-badge {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 14px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+        }
+        
+        /* Shop Area - 更透明！ */
+        .shop-area {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(240, 253, 244, 0.65));
+            border: 2px solid rgba(34, 197, 94, 0.5);
+            border-radius: 16px;
+            padding: 16px;
+            flex: 1;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(6px);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        /* 響應式設計 - 大螢幕更大的卡片 */
+        @media (min-width: 1200px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 14px;
+            }
+        }
+        
+        @media (min-width: 1600px) {
+            .products-grid {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 16px;
+            }
+        }
+        
+        .product-item {
+            background: linear-gradient(135deg, #ffffff, #f0fdf4);
+            border: 3px solid #86efac;
+            border-radius: 16px;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1f2937;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .product-item:hover:not(.disabled) {
+            transform: scale(1.08);
+            border-color: #22c55e;
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+        }
+        
+        .product-item.in-cart {
+            border-color: #22c55e;
+            background: linear-gradient(135deg, #bbf7d0, #86efac);
+            box-shadow: 0 0 25px rgba(34, 197, 94, 0.5);
+        }
+        
+        .product-item.disabled { opacity: 0.35; cursor: not-allowed; }
+        
+        .product-emoji { font-size: 2.5rem; }
+        .product-name { font-size: 0.85rem; color: #374151; margin-top: 6px; font-weight: 500; }
+        .product-price { font-size: 0.95rem; color: #ea580c; font-weight: bold; margin-top: 4px; }
+        
+        /* Cart Area - 更透明！ */
+        .cart-area {
+            background: linear-gradient(135deg, rgba(220, 252, 231, 0.75), rgba(187, 247, 208, 0.7));
+            border: 2px solid #22c55e;
+            border-radius: 14px;
+            padding: 14px;
+            color: #1f2937;
+            backdrop-filter: blur(6px);
+        }
+        
+        .cart-items { display: flex; flex-wrap: wrap; gap: 8px; min-height: 45px; }
+        
+        .cart-item {
+            background: white;
+            border: 2px solid #86efac;
+            border-radius: 10px;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1f2937;
+        }
+        
+        .cart-item:hover { background: #fee2e2; border-color: #ef4444; }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 2px dashed #22c55e;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .checkout-btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+        }
+        
+        .checkout-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5); }
+        .checkout-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* Logic Display */
+        .logic-rule {
+            background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+            border-radius: 10px;
+            padding: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #1f2937;
+        }
+        
+        .logic-true { color: #16a34a; font-weight: bold; }
+        .logic-false { color: #dc2626; font-weight: bold; }
+        
+        /* Result Overlay */
+        .result-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, #ffffff, #fef3c7);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            max-width: 420px;
+            border: 4px solid;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            color: #1f2937;
+        }
+        
+        .result-card.correct { border-color: #22c55e; }
+        .result-card.incorrect { border-color: #ef4444; }
+        .result-card.sad { border-color: #3b82f6; background: linear-gradient(135deg, #ffffff, #dbeafe); }
+        .result-card.ok { border-color: #eab308; background: linear-gradient(135deg, #ffffff, #fef9c3); }
+        
+        /* Progress Bar */
+        .progress-container {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ec4899, #8b5cf6, #3b82f6);
+            border-radius: 10px;
+            transition: width 0.5s ease-out;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover { transform: scale(1.04); }
+        .btn-primary { 
+            background: linear-gradient(135deg, #ec4899, #8b5cf6); 
+            color: white; 
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+        }
+        
+        /* Navigation buttons for Ataraxy */
+        .nav-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        
+        .nav-btn {
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+        }
+        
+        .nav-btn:hover { transform: translateY(-3px); }
+        
+        .nav-btn-home { background: linear-gradient(135deg, #6b7280, #4b5563); color: white; }
+        .nav-btn-prev { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
+        .nav-btn-back { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+        .nav-btn-next { 
+            background: linear-gradient(135deg, #ec4899, #8b5cf6); 
+            color: white; 
+            box-shadow: 0 5px 20px rgba(236, 72, 153, 0.4);
+        }
+        
+        /* Language Toggle */
+        .lang-toggle {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 1000;
+            display: flex;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 9999px;
+            padding: 4px;
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        }
+        
+        .lang-btn {
+            padding: 5px 12px;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #6b7280;
+        }
+        
+        .lang-btn.active {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: white;
+        }
+        
+        /* ELO Tooltip */
+        .elo-info {
+            position: relative;
+            cursor: help;
+        }
+        
+        .elo-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(30, 41, 59, 0.98);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            width: 280px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: left;
+        }
+        
+        .elo-info:hover .elo-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Responsive */
+        @media (max-width: 900px) {
+            .game-layout { flex-direction: column; }
+            .side-panel { max-width: 100%; }
+        }
+    </style>
+</head>
+<body class="min-h-screen" translate="no">
+
+<!-- Language Toggle -->
+<div class="lang-toggle">
+    <button id="lang-en" class="lang-btn" onclick="setLang('en')">EN</button>
+    <button id="lang-zh" class="lang-btn active" onclick="setLang('zh')">中</button>
+</div>
+
+<!-- Audio - HAPPY MUSIC! Will autoplay on interaction -->
+<audio id="bg-music" src="happy_campus.mp3" loop preload="auto"></audio>
+<audio id="meditation-music" src="AnaCaptainslogue_-_Noir_Et_Blanc_Vie.mp3" loop preload="auto"></audio>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCREEN 1: INTRO - TRANSPARENT TO SHOW BEAUTIFUL BACKGROUND!
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="intro-screen" class="screen active bg-ceremony flex-col items-center justify-end p-4 pb-16">
+    <div class="intro-card text-center fade-in">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2">
+            <span class="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+                Level 2: Propositional Logic
+            </span>
+        </h1>
+        <p class="text-lg text-gray-700 mb-1">命題邏輯 • Happy Campus 幸福校園</p>
+        <p class="text-sm text-gray-500 mb-4">Bret Harte Elementary School, Bayview-Hunters Point</p>
+        
+        <div class="info-box text-left mb-4">
+            <div class="flex items-center gap-4 mb-3">
+                <div class="text-4xl bounce">🎉</div>
+                <div>
+                    <p class="text-lg font-bold text-pink-600" data-en="Award Ceremony + Tiger Paw Store" data-zh="頒獎典禮 + Tiger Paw 商店">頒獎典禮 + Tiger Paw 商店</p>
+                    <p class="text-sm text-gray-500" data-en="Help Roxanne celebrate the students!" data-zh="幫助 Roxanne 為學生慶祝！">幫助 Roxanne 為學生慶祝！</p>
+                </div>
+            </div>
+            
+            <div class="space-y-2 text-sm text-gray-700">
+                <p>🏆 <span data-en="Part 1: Principal awards Perfect Attendance certificates" data-zh="Part 1：校長頒發全勤獎狀">Part 1：校長頒發全勤獎狀</span></p>
+                <p>🐯 <span data-en="Part 2: Students shop at Tiger Paw Store" data-zh="Part 2：學生用 Tiger Paw 點數購物">Part 2：學生用 Tiger Paw 點數購物</span></p>
+                <p>🧠 <span data-en="Learn IF-THEN logic through fun shopping!" data-zh="透過購物遊戲學習 IF-THEN 邏輯！">透過購物遊戲學習 IF-THEN 邏輯！</span></p>
+            </div>
+            
+            <!-- ELO Explanation -->
+            <div class="mt-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <p class="text-sm text-gray-700">
+                    <span class="font-bold text-yellow-600">⭐ ELO 積分系統</span>
+                    <span data-en=" - Like AlphaGo's chess rating!" data-zh=" - 就像 AlphaGo 圍棋的計分方式！"> - 就像 AlphaGo 圍棋的計分方式！</span>
+                </p>
+                <p class="text-xs text-gray-500 mt-1" data-en="Good decisions = higher score. Human vs AI intelligence measure!" data-zh="做對決策得分越高。人機智慧的衡量標準！">做對決策得分越高。人機智慧的衡量標準！</p>
+            </div>
+        </div>
+        
+        <button onclick="startGame()" class="btn btn-primary text-lg px-10 py-4 pulse-glow">
+            🎮 <span data-en="Start Ceremony!" data-zh="開始典禮！">開始典禮！</span>
+        </button>
+        
+        <p class="text-xs text-gray-400 mt-3" data-en="🎵 Music will play when you start" data-zh="🎵 點擊開始後會播放音樂">🎵 點擊開始後會播放音樂</p>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCREEN 2: AWARD CEREMONY
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="ceremony-screen" class="screen bg-ceremony flex-col items-center justify-start p-4 pt-32">
+    <div class="max-w-3xl w-full">
+        <div class="game-header mb-5">
+            <div class="text-center flex-1">
+                <span class="font-bold text-lg text-purple-700">🏆 <span data-en="Perfect Attendance Award" data-zh="全勤獎頒獎典禮">全勤獎頒獎典禮</span></span>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="elo-info">
+                    <div class="elo-badge">⭐ <span id="elo-ceremony">1200</span></div>
+                    <div class="elo-tooltip">
+                        <p class="font-bold text-yellow-400 mb-1">ELO Rating System</p>
+                        <p class="text-xs">源自國際象棋，被 AlphaGo 採用。代表 AI 與人類智慧決策能力的評分標準。</p>
+                    </div>
+                </div>
+                <button onclick="toggleMusic()" class="music-btn" id="music-btn-ceremony">🎵</button>
+            </div>
+        </div>
+        
+        <div class="ceremony-stage fade-in">
+            <p class="text-sm text-gray-500 mb-3" data-en="Principal announces..." data-zh="校長宣布...">校長宣布...</p>
+            <p id="principal-speech" class="text-xl text-purple-600 mb-5 font-medium">「下一位得獎者是...」</p>
+            
+            <div class="award-student">
+                <div id="ceremony-avatar" class="text-6xl mb-3 float">👧🏿</div>
+                <p id="ceremony-name" class="text-2xl font-bold text-gray-800">Aaliyah</p>
+                <p id="ceremony-grade" class="text-sm text-gray-500">Grade 3</p>
+                <p id="ceremony-achievement" class="text-base text-green-600 mt-2 font-medium">✓ 全勤出席 180 天！</p>
+            </div>
+            
+            <div class="certificate sparkle">
+                <h3 class="text-lg font-bold">🏆 Perfect Attendance Award</h3>
+                <p>Certificate of Excellence</p>
+                <p class="text-sm mt-2 font-medium" id="cert-name">Aaliyah</p>
+            </div>
+            
+            <p class="text-base text-gray-600 mt-5 mb-5" data-en="Click to present the award!" data-zh="點擊頒發獎狀！">點擊頒發獎狀！</p>
+            <button id="award-btn" onclick="presentAward()" class="award-btn">🎖️ <span data-en="Present Award" data-zh="頒發獎狀">頒發獎狀</span></button>
+        </div>
+        
+        <div class="flex items-center justify-center gap-4 mt-5 text-base">
+            <span class="text-white font-medium drop-shadow-lg" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5);" data-en="Progress:" data-zh="進度：">進度：</span>
+            <span id="ceremony-progress" class="text-yellow-300 font-bold text-xl drop-shadow-lg" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5);">1 / 6</span>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCREEN 3: TIGER PAW STORE
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="game-screen" class="screen bg-playground flex-col p-3 pt-4">
+    <div class="flex-1 flex flex-col gap-3 max-w-7xl mx-auto w-full">
+        
+        <div class="game-header">
+            <div class="text-center flex-1">
+                <span class="font-bold text-lg text-orange-600">🐯 Tiger Paw Store</span>
+                <span class="text-sm text-purple-600 ml-3">
+                    <span data-en="Student" data-zh="學生">學生</span> <span id="current-student">1</span>/6
+                </span>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="elo-info">
+                    <div class="elo-badge">⭐ <span id="elo-display">1200</span></div>
+                    <div class="elo-tooltip">
+                        <p class="font-bold text-yellow-400 mb-1">ELO = 智慧決策分數</p>
+                        <p class="text-xs">做對決定 +30，普通 +15。就像 AlphaGo 下棋，每一步都在累積智慧！</p>
+                    </div>
+                </div>
+                <button onclick="toggleMusic()" class="music-btn" id="music-btn">🎵</button>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+        </div>
+        
+        <div class="game-layout flex-1">
+            <div class="main-area">
+                <div class="student-card">
+                    <div class="flex items-center justify-center gap-5 flex-wrap">
+                        <div id="student-avatar" class="student-avatar">👧🏿</div>
+                        <div class="text-left">
+                            <p id="student-name" class="text-2xl font-bold text-gray-800">Aaliyah</p>
+                            <p id="student-grade" class="text-sm text-gray-500">Grade 3</p>
+                            <p id="student-wish" class="text-base text-pink-600 mt-2">「我想要文具！」</p>
+                        </div>
+                        <div class="tiger-paw-badge">🐯 <span id="student-points">50</span> <span data-en="pts" data-zh="點">點</span></div>
+                    </div>
+                </div>
+                
+                <div class="shop-area flex-1">
+                    <div class="flex justify-between items-center">
+                        <p class="font-bold text-green-600 text-lg">🏪 <span data-en="Products" data-zh="商品">商品</span></p>
+                        <p class="text-sm text-gray-500" data-en="Click to add/remove" data-zh="點擊添加/移除">點擊添加/移除</p>
+                    </div>
+                    <div id="products-grid" class="products-grid"></div>
+                </div>
+                
+                <div class="cart-area">
+                    <div class="flex justify-between items-center mb-2">
+                        <p class="font-bold text-green-700 text-base">🛒 <span data-en="Cart" data-zh="購物車">購物車</span></p>
+                        <p class="text-xs text-gray-600" data-en="Click to remove" data-zh="點擊移除">點擊移除</p>
+                    </div>
+                    <div id="cart-items" class="cart-items">
+                        <span class="text-gray-500 text-sm">空的 - 點擊上方商品！</span>
+                    </div>
+                    <div class="cart-total">
+                        <div class="text-base">
+                            <span class="text-gray-600" data-en="Total:" data-zh="總計：">總計：</span>
+                            <span id="cart-total" class="text-xl font-bold text-orange-600">0</span>
+                            <span class="text-gray-600" data-en="pts" data-zh="點">點</span>
+                        </div>
+                        <div class="text-base">
+                            <span class="text-gray-600" data-en="Left:" data-zh="剩餘：">剩餘：</span>
+                            <span id="remaining-points" class="text-xl font-bold text-green-600">50</span>
+                            <span class="text-gray-600" data-en="pts" data-zh="點">點</span>
+                        </div>
+                        <button id="checkout-btn" class="checkout-btn" onclick="checkout()" disabled>
+                            ✓ <span data-en="Checkout" data-zh="結帳">結帳</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="side-panel">
+                <div class="info-box">
+                    <div class="info-title">📋 <span data-en="Price List" data-zh="價目表">價目表</span></div>
+                    <div id="price-list" class="text-xs grid grid-cols-2 gap-x-3 gap-y-1"></div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-title">🧠 <span data-en="Logic Check" data-zh="邏輯檢查">邏輯檢查</span></div>
+                    <div class="logic-rule">
+                        <p><span class="text-gray-600" data-en="Budget:" data-zh="預算：">預算：</span> <span id="logic-budget" class="logic-true">50</span></p>
+                        <p><span class="text-gray-600" data-en="Cart:" data-zh="購物車：">購物車：</span> <span id="logic-cart">0</span></p>
+                        <p><span class="text-gray-600" data-en="OK?" data-zh="可結帳？">可結帳？</span> <span id="logic-result" class="logic-false">❌</span></p>
+                    </div>
+                    <div class="mt-3 p-3 bg-purple-100 rounded-lg text-sm">
+                        <p class="text-purple-700 font-bold">IF-THEN Rule:</p>
+                        <p class="text-gray-700 mt-1 mono text-xs">IF cart > 0 AND cart ≤ budget<br>THEN checkout = ✓</p>
+                        <p class="text-xs text-purple-500 mt-2 border-t border-purple-200 pt-2">
+                            <span data-en="Original formula:" data-zh="原始公式：">原始公式：</span><br>
+                            <span class="mono">(cart > 0) ∧ (cart ≤ budget) → valid</span>
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 🤖 AI 決策可視化 - 核心教育功能！ -->
+                <div class="info-box" style="background: linear-gradient(135deg, rgba(255,250,235,0.95), rgba(254,243,199,0.92)); border: 3px solid #f59e0b; box-shadow: 0 4px 20px rgba(245,158,11,0.3);">
+                    <div class="info-title" style="color: #d97706; font-size: 15px;">🤖 <span data-en="AI Decision" data-zh="AI 決策">AI 決策</span> <span class="text-xs text-amber-600 font-normal">(AlphaGo Style)</span></div>
+                    <div id="ai-decision-panel" class="text-sm">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-2xl">🎯</span>
+                            <div>
+                                <p class="font-bold text-gray-700" data-en="AI Recommendation:" data-zh="AI 建議：">AI 建議：</p>
+                                <p id="ai-suggestion" class="text-orange-600 font-semibold">等待選擇...</p>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg p-2 mt-2 border border-amber-200">
+                            <p class="text-xs text-gray-600 mb-1 font-medium" data-en="ELO Prediction:" data-zh="ELO 預測：">ELO 預測：</p>
+                            <div class="flex gap-2">
+                                <div id="elo-good" class="flex-1 text-center p-2 rounded-lg bg-green-100 border-2 border-green-400">
+                                    <p class="text-xs text-green-700 font-medium">😊 滿意</p>
+                                    <p class="font-bold text-green-600 text-lg">+30</p>
+                                </div>
+                                <div id="elo-ok" class="flex-1 text-center p-2 rounded-lg bg-yellow-100 border-2 border-yellow-400">
+                                    <p class="text-xs text-yellow-700 font-medium">🙂 普通</p>
+                                    <p class="font-bold text-yellow-600 text-lg">+15</p>
+                                </div>
+                                <div id="elo-bad" class="flex-1 text-center p-2 rounded-lg bg-red-100 border-2 border-red-400">
+                                    <p class="text-xs text-red-700 font-medium">😢 超支</p>
+                                    <p class="font-bold text-red-600 text-lg">-10</p>
+                                </div>
+                            </div>
+                            <div id="ai-current-status" class="mt-2 p-2 rounded-lg text-center text-sm font-bold" style="background: #fef3c7; border: 1px solid #fcd34d;">
+                                <span data-en="Waiting for selection..." data-zh="等待選擇中...">等待選擇中...</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-amber-600 mt-2 italic font-medium" data-en="Like AlphaGo evaluating moves!" data-zh="就像 AlphaGo 評估棋步！">就像 AlphaGo 評估棋步！</p>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-title">📊 <span data-en="Score" data-zh="分數">分數</span></div>
+                    <div class="grid grid-cols-2 gap-3 text-center">
+                        <div class="bg-green-100 rounded-xl p-4 border-2 border-green-400">
+                            <div class="text-3xl font-bold text-green-600" id="happy-count">0</div>
+                            <div class="text-base text-gray-700 mt-1"><span class="text-2xl">😊</span> <span data-en="Happy" data-zh="開心">開心</span></div>
+                        </div>
+                        <div class="bg-red-100 rounded-xl p-4 border-2 border-red-400">
+                            <div class="text-3xl font-bold text-red-600" id="sad-count">0</div>
+                            <div class="text-base text-gray-700 mt-1"><span class="text-2xl">😢</span> <span data-en="Sad" data-zh="失望">失望</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-title">💡 <span data-en="Tip" data-zh="提示">提示</span></div>
+                    <p id="hint-text" class="text-sm text-gray-600">聽聽每位學生想要什麼！</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCREEN 4: RESULT OVERLAY
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="result-overlay" class="result-overlay" style="display: none;">
+    <div id="result-card" class="result-card correct slide-up">
+        <div id="result-emoji" class="text-7xl mb-4">😊</div>
+        <p id="result-title" class="text-2xl font-bold mb-3 text-green-600">Student Happy!</p>
+        <p id="result-message" class="text-base text-gray-600 mb-4"></p>
+        <p id="result-logic" class="text-sm text-purple-700 mb-5 p-3 bg-purple-100 rounded-lg mono"></p>
+        <div id="result-elo" class="text-xl font-bold text-orange-500 mb-5">+30 ELO</div>
+        <button onclick="nextStudent()" class="btn btn-primary text-lg px-8 py-3">
+            <span data-en="Next" data-zh="下一位">下一位</span> →
+        </button>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCREEN 5: ATARAXY PORTICO - 優化版：加大字體、增強光暈
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="ataraxy-screen" class="screen bg-ataraxy flex-col items-center justify-between p-4" style="padding-top: 1vh; padding-bottom: 2vh;">
+    <!-- 上方區域：標題 + 呼吸環 (在蓮花上方) -->
+    <div class="text-center fade-in" style="position: relative; z-index: 10;">
+        <p class="text-4xl mb-3 font-bold" style="color: #fbbf24; text-shadow: 0 0 20px rgba(251,191,36,0.8), 0 3px 15px rgba(0,0,0,0.3);" data-en="Ataraxy Portico" data-zh="靜心之門">靜心之門</p>
+        
+        <!-- 加大加亮的呼吸環 -->
+        <div class="breath-ring-enhanced mb-3 mx-auto">
+            <span id="breath-counter" class="text-5xl font-bold" style="color: #fbbf24; text-shadow: 0 0 15px rgba(251,191,36,1);">3</span>
+        </div>
+        
+        <p class="text-2xl font-bold" style="color: #fef3c7; text-shadow: 0 0 15px rgba(251,191,36,0.9), 0 2px 10px rgba(0,0,0,0.5);" data-en="Take 3 Deep Breaths" data-zh="深呼吸三次">深呼吸三次</p>
+    </div>
+    
+    <!-- 中間區域：靜思語卡片 (在蓮花花托與枝幹之間) -->
+    <div class="text-center" style="position: relative; z-index: 10; margin-top: 25vh;">
+        <div class="jingsi-card mx-auto" style="padding: 1.2rem 2rem; max-width: 450px;">
+            <p class="text-2xl font-bold text-purple-800 mb-2">「心能轉境，境隨心轉」</p>
+            <p class="text-lg text-purple-600">Master the mind, master circumstances</p>
+            <p class="text-sm text-purple-500 mt-2">— 證嚴法師靜思語</p>
+        </div>
+    </div>
+    
+    <!-- 下方區域：分數 + 按鈕 (在水面上方) -->
+    <div class="text-center fade-in" style="position: relative; z-index: 10;">
+        <div class="space-y-2 mb-5" style="background: rgba(255,255,255,0.85); padding: 1rem 2rem; border-radius: 16px; border: 2px solid rgba(251,191,36,0.5);">
+            <p class="text-purple-700 font-bold text-xl">🎉 Level 2 Complete!</p>
+            <p class="text-orange-600 font-bold text-2xl">Score: <span id="final-score">0</span>/6 😊</p>
+            <p class="text-green-600 text-xl font-bold">ELO: +<span id="elo-earned">0</span></p>
+        </div>
+        
+        <div class="nav-buttons">
+            <button onclick="goHome()" class="nav-btn nav-btn-home">🏠 <span data-en="Home" data-zh="主頁">主頁</span></button>
+            <button onclick="goToPrevLevel()" class="nav-btn nav-btn-prev">⬅️ <span data-en="Prev Level" data-zh="上一關">上一關</span></button>
+            <button onclick="replayLevel()" class="nav-btn nav-btn-back">🔄 <span data-en="Replay" data-zh="重玩">重玩</span></button>
+            <button onclick="continueJourney()" class="nav-btn nav-btn-next"><span data-en="Next Level" data-zh="下一關">下一關</span> →</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// LANGUAGE
+// ═══════════════════════════════════════════════════════════════════════════
+let currentLang = 'zh';
+
+function setLang(lang) {
+    currentLang = lang;
+    document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+    document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+    document.querySelectorAll('[data-en][data-zh]').forEach(el => {
+        el.innerHTML = el.getAttribute('data-' + lang);
+    });
+    if (state.phase === 'shop' && shopStudents[state.shopIndex]) {
+        const s = shopStudents[state.shopIndex];
+        document.getElementById('student-wish').textContent = '「' + s.wish[lang] + '」';
+        document.getElementById('hint-text').textContent = s.hint[lang];
+    }
+    renderProducts();
+    renderPriceList();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════════════════════════════════════════════
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AUDIO - HAPPY MUSIC!
+// ═══════════════════════════════════════════════════════════════════════════
+let musicPlaying = false;
+
+function startMusic() {
+    const music = document.getElementById('bg-music');
+    music.volume = 0.4;
+    music.play().then(() => {
+        musicPlaying = true;
+        updateMusicButtons('🎵');
+    }).catch(e => console.log('Audio blocked:', e));
+}
+
+function toggleMusic() {
+    const music = document.getElementById('bg-music');
+    if (musicPlaying) {
+        music.pause();
+        musicPlaying = false;
+        updateMusicButtons('🔇');
+    } else {
+        music.volume = 0.4;
+        music.play().then(() => {
+            musicPlaying = true;
+            updateMusicButtons('🎵');
+        }).catch(e => console.log('Audio:', e));
+    }
+}
+
+function updateMusicButtons(icon) {
+    const btns = document.querySelectorAll('.music-btn');
+    btns.forEach(btn => {
+        btn.textContent = icon;
+        btn.classList.toggle('muted', icon === '🔇');
+    });
+}
+
+function playSound(type) {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        if (type === 'award') {
+            osc.frequency.setValueAtTime(523, ctx.currentTime);
+            osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+            osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+            osc.frequency.setValueAtTime(1047, ctx.currentTime + 0.3);
+        } else if (type === 'add') {
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+        } else if (type === 'correct') {
+            osc.frequency.setValueAtTime(523, ctx.currentTime);
+            osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+            osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+        } else if (type === 'wrong') {
+            osc.frequency.setValueAtTime(330, ctx.currentTime);
+            osc.frequency.setValueAtTime(262, ctx.currentTime + 0.15);
+        }
+        
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.5);
+    } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GAME DATA
+// ═══════════════════════════════════════════════════════════════════════════
+// 🌍 DIVERSE STUDENTS - Reflecting Bayview-Hunters Point Community
+// 
+// 🎓 教育設計：
+// ═══════════════════════════════════════════════════════════════════════════
+// 🏆 全勤獎 = +20 Tiger Paw（基本獎勵，每個人都有）
+// 🐯 額外 Tiger Paw = 平時善行（幫助同學、友愛、不欺負人、行為良好）
+//
+// ⚖️ 平衡：有開心也有失落，這才是真實
+// 教育方式：不告訴答案，讓玩家自己感受、自己找方向
+
+const awardStudents = [
+    { name: "Aaliyah", avatar: "👧🏿", grade: "Grade 3", days: 180 },
+    { name: "Wei-Lin 偉琳", avatar: "👦🏻", grade: "Grade 4", days: 180 },
+    { name: "Marcus", avatar: "👦🏿", grade: "Grade 5", days: 180 },
+    { name: "Sofia", avatar: "👧🏽", grade: "Grade 2", days: 180 },
+    { name: "Mai", avatar: "👧🏻", grade: "Grade 3", days: 180 },
+    { name: "Tane", avatar: "👦🏾", grade: "Grade 4", days: 180 }
+];
+
+const shopStudents = [
+    // 👧🏿 Aaliyah - 全勤 +20，平時還不錯 → 共 38 點
+    { name: "Aaliyah", avatar: "👧🏿", grade: "Grade 3", points: 38, 
+      wish: { en: "I want crayons and notebook!", zh: "我想要蠟筆和筆記本！" }, 
+      hint: { en: "🎉 Perfect attendance! She enjoys coming to school.", zh: "🎉 全勤獎！她喜歡來上學。" },
+      isLowPoints: false },
+    
+    // 👦🏻 Wei-Lin - 全勤 +20，平時超棒（幫同學、友愛）→ 共 85 點
+    { name: "Wei-Lin 偉琳", avatar: "👦🏻", grade: "Grade 4", points: 85, 
+      wish: { en: "I want a basketball!", zh: "我想要籃球！" }, 
+      hint: { en: "🎉 Perfect attendance! He's always kind to everyone.", zh: "🎉 全勤獎！他對大家都很友善。" },
+      isLowPoints: false,
+      isHelpful: true },
+    
+    // 👦🏿 Marcus - 全勤 +20，但就只有這樣 → 共 20 點
+    // 想要籃球(60點)但買不起 → 真實的失落感
+    { name: "Marcus", avatar: "👦🏿", grade: "Grade 5", points: 20, 
+      wish: { en: "I really want that basketball... 🏀", zh: "我好想要那個籃球... 🏀" }, 
+      hint: { en: "🎉 Perfect attendance! He loves playing at recess.", zh: "🎉 全勤獎！他最愛下課時間。" },
+      isLowPoints: true },
+    
+    // 👧🏽 Sofia - 全勤 +20，平時表現OK → 共 42 點
+    { name: "Sofia", avatar: "👧🏽", grade: "Grade 2", points: 42, 
+      wish: { en: "Cute things!", zh: "可愛的東西！" }, 
+      hint: { en: "🎉 Perfect attendance! She loves school breakfast!", zh: "🎉 全勤獎！她最愛學校早餐！" },
+      isLowPoints: false },
+    
+    // 👧🏻 Mai - 全勤 +20，但就只有這樣 → 共 20 點
+    // 想要顏料組(35點)但買不起 → 真實的失落感
+    { name: "Mai", avatar: "👧🏻", grade: "Grade 3", points: 20, 
+      wish: { en: "I wish I could get the paint set... 🎨", zh: "好希望能買到顏料組... 🎨" }, 
+      hint: { en: "🎉 Perfect attendance! She comes to see her best friend.", zh: "🎉 全勤獎！她每天來找好朋友。" },
+      isLowPoints: true },
+    
+    // 👦🏾 Tane - 全勤 +20，平時超棒（幫助、友愛、不欺負人、行為良好）→ 共 95 點
+    { name: "Tane", avatar: "👦🏾", grade: "Grade 4", points: 95, 
+      wish: { en: "So many choices! 🌟", zh: "好多選擇！🌟" }, 
+      hint: { en: "🎉 Perfect attendance! He's always helping and caring for others.", zh: "🎉 全勤獎！他總是幫助和關心別人。" },
+      isLowPoints: false,
+      isRoleModel: true }
+];
+
+const products = [
+    { emoji: "✏️", name: { en: "Pencil", zh: "鉛筆" }, price: 5 },
+    { emoji: "📏", name: { en: "Ruler", zh: "尺" }, price: 10 },
+    { emoji: "✂️", name: { en: "Scissors", zh: "剪刀" }, price: 15 },
+    { emoji: "🖍️", name: { en: "Crayons", zh: "蠟筆" }, price: 20 },
+    { emoji: "📒", name: { en: "Notebook", zh: "筆記本" }, price: 15 },
+    { emoji: "🎨", name: { en: "Paint Set", zh: "顏料組" }, price: 35 },
+    { emoji: "⚽", name: { en: "Ball", zh: "足球" }, price: 40 },
+    { emoji: "🏀", name: { en: "Basketball", zh: "籃球" }, price: 60 },
+    { emoji: "🪀", name: { en: "Jump Rope", zh: "跳繩" }, price: 25 },
+    { emoji: "🔮", name: { en: "Marbles", zh: "彈珠" }, price: 10 },
+    { emoji: "🎀", name: { en: "Hair Clips", zh: "髮夾" }, price: 8 },
+    { emoji: "🧸", name: { en: "Plush Toy", zh: "玩偶" }, price: 30 },
+    // 🍫 新增實際獎品！
+    { emoji: "🍫", name: { en: "Chocolate", zh: "巧克力" }, price: 3 },
+    { emoji: "🥤", name: { en: "Energy Bar", zh: "能量棒" }, price: 5 },
+    { emoji: "🍪", name: { en: "Cookies", zh: "餅乾" }, price: 4 },
+    { emoji: "🧃", name: { en: "Juice Box", zh: "果汁盒" }, price: 3 }
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════════════════════════════════════
+const state = {
+    phase: 'intro',
+    ceremonyIndex: 0,
+    shopIndex: 0,
+    cart: [],
+    elo: 1200,
+    eloEarned: 0,
+    happyCount: 0,
+    sadCount: 0
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CEREMONY
+// ═══════════════════════════════════════════════════════════════════════════
+function startGame() {
+    startMusic(); // Play happy music!
+    state.phase = 'ceremony';
+    state.ceremonyIndex = 0;
+    showScreen('ceremony-screen');
+    loadCeremonyStudent(0);
+}
+
+function loadCeremonyStudent(idx) {
+    const s = awardStudents[idx];
+    document.getElementById('ceremony-avatar').textContent = s.avatar;
+    document.getElementById('ceremony-name').textContent = s.name;
+    document.getElementById('ceremony-grade').textContent = s.grade;
+    document.getElementById('ceremony-achievement').textContent = '✓ ' + (currentLang === 'en' ? `Perfect: ${s.days} days!` : `全勤 ${s.days} 天！`);
+    document.getElementById('cert-name').textContent = s.name;
+    document.getElementById('ceremony-progress').textContent = `${idx + 1} / ${awardStudents.length}`;
+    document.getElementById('principal-speech').textContent = currentLang === 'en' ? `"Next award: ${s.name}!"` : `「下一位：${s.name}！」`;
+    document.getElementById('award-btn').disabled = false;
+}
+
+function presentAward() {
+    document.getElementById('award-btn').disabled = true;
+    playSound('award');
+    if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+    state.elo += 20;
+    state.eloEarned += 20;
+    document.getElementById('elo-ceremony').textContent = state.elo;
+    setTimeout(() => {
+        state.ceremonyIndex++;
+        if (state.ceremonyIndex >= awardStudents.length) {
+            setTimeout(() => {
+                state.phase = 'shop';
+                state.shopIndex = 0;
+                showScreen('game-screen');
+                loadShopStudent(0);
+                renderProducts();
+                renderPriceList();
+            }, 600);
+        } else {
+            loadCeremonyStudent(state.ceremonyIndex);
+        }
+    }, 1800);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SHOP
+// ═══════════════════════════════════════════════════════════════════════════
+function loadShopStudent(idx) {
+    const s = shopStudents[idx];
+    document.getElementById('student-avatar').textContent = s.avatar;
+    document.getElementById('student-name').textContent = s.name;
+    document.getElementById('student-grade').textContent = s.grade;
+    document.getElementById('student-points').textContent = s.points;
+    document.getElementById('student-wish').textContent = '「' + s.wish[currentLang] + '」';
+    document.getElementById('hint-text').textContent = s.hint[currentLang];
+    document.getElementById('current-student').textContent = idx + 1;
+    document.getElementById('progress-fill').style.width = ((idx / shopStudents.length) * 100) + '%';
+    document.getElementById('elo-display').textContent = state.elo;
+    state.cart = [];
+    updateCart();
+    updateLogic(s.points);
+    updateProductsAvailability(s.points);
+    
+    // 🎓 視覺設計：全勤獎為主角，保持正面氛圍
+    const studentCard = document.querySelector('.student-card');
+    const pointsBadge = document.querySelector('.tiger-paw-badge');
+    
+    if (s.isRoleModel) {
+        // 模範生 - 金色光芒（輕微強調）
+        studentCard.style.background = 'linear-gradient(135deg, rgba(254,249,195,0.95), rgba(253,224,71,0.9))';
+        studentCard.style.border = '3px solid #fbbf24';
+        pointsBadge.style.background = 'linear-gradient(135deg, #fde047, #fbbf24)';
+        pointsBadge.style.animation = 'pulseGlow 2s infinite';
+    } else if (s.isHelpful) {
+        // 樂於助人 - 溫暖粉色
+        studentCard.style.background = 'linear-gradient(135deg, rgba(252,231,243,0.95), rgba(249,168,212,0.9))';
+        studentCard.style.border = '3px solid #f472b6';
+        pointsBadge.style.background = 'linear-gradient(135deg, #fbbf24, #f59e0b)';
+        pointsBadge.style.animation = 'none';
+    } else {
+        // 一般全勤獎得主 - 都是開心的粉色（全部都值得慶祝！）
+        studentCard.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(252,231,243,0.9))';
+        studentCard.style.border = '3px solid #ec4899';
+        pointsBadge.style.background = 'linear-gradient(135deg, #fbbf24, #f59e0b)';
+        pointsBadge.style.animation = 'none';
+    }
+}
+
+function renderProducts() {
+    document.getElementById('products-grid').innerHTML = products.map((p, i) => `
+        <div class="product-item" data-idx="${i}" onclick="addToCart(${i})">
+            <div class="product-emoji">${p.emoji}</div>
+            <div class="product-name">${p.name[currentLang]}</div>
+            <div class="product-price">${p.price} 🐯</div>
+        </div>
+    `).join('');
+    if (shopStudents[state.shopIndex]) updateProductsAvailability(shopStudents[state.shopIndex].points);
+}
+
+function renderPriceList() {
+    document.getElementById('price-list').innerHTML = products.map(p => `
+        <div class="flex justify-between items-center py-0.5"><span class="truncate">${p.emoji} ${p.name[currentLang]}</span><span class="text-orange-600 font-bold ml-1">${p.price}</span></div>
+    `).join('');
+}
+
+function updateProductsAvailability(budget) {
+    const total = state.cart.reduce((sum, i) => sum + products[i].price, 0);
+    const remaining = budget - total;
+    document.querySelectorAll('.product-item').forEach((el, i) => {
+        const inCart = state.cart.includes(i);
+        el.classList.toggle('in-cart', inCart);
+        el.classList.toggle('disabled', products[i].price > remaining && !inCart);
+    });
+}
+
+function addToCart(idx) {
+    const s = shopStudents[state.shopIndex];
+    const total = state.cart.reduce((sum, i) => sum + products[i].price, 0);
+    const remaining = s.points - total;
+    const existing = state.cart.indexOf(idx);
+    if (existing !== -1) {
+        state.cart.splice(existing, 1);
+    } else if (products[idx].price <= remaining) {
+        state.cart.push(idx);
+    }
+    playSound('add');
+    updateCart();
+    updateLogic(s.points);
+    updateProductsAvailability(s.points);
+}
+
+function removeFromCart(idx) {
+    state.cart.splice(idx, 1);
+    playSound('add');
+    const s = shopStudents[state.shopIndex];
+    updateCart();
+    updateLogic(s.points);
+    updateProductsAvailability(s.points);
+}
+
+function updateCart() {
+    const container = document.getElementById('cart-items');
+    const total = state.cart.reduce((sum, i) => sum + products[i].price, 0);
+    const s = shopStudents[state.shopIndex];
+    const remaining = s ? s.points - total : 0;
+    
+    container.innerHTML = state.cart.length === 0 
+        ? `<span class="text-gray-500 text-sm">${currentLang === 'en' ? 'Empty' : '空的'}</span>`
+        : state.cart.map((idx, ci) => `<div class="cart-item" onclick="removeFromCart(${ci})">${products[idx].emoji} <span class="text-orange-600">${products[idx].price}</span></div>`).join('');
+    
+    document.getElementById('cart-total').textContent = total;
+    document.getElementById('remaining-points').textContent = remaining;
+    document.getElementById('remaining-points').className = 'text-xl font-bold ' + (remaining >= 0 ? 'text-green-600' : 'text-red-600');
+    document.getElementById('checkout-btn').disabled = state.cart.length === 0;
+}
+
+function updateLogic(budget) {
+    const total = state.cart.reduce((sum, i) => sum + products[i].price, 0);
+    const valid = total > 0 && total <= budget;
+    document.getElementById('logic-budget').textContent = budget;
+    document.getElementById('logic-cart').textContent = total;
+    document.getElementById('logic-cart').className = total > budget ? 'logic-false' : '';
+    document.getElementById('logic-result').textContent = valid ? '✓' : '❌';
+    document.getElementById('logic-result').className = valid ? 'logic-true' : 'logic-false';
+    
+    // 🤖 AI 決策可視化
+    updateAIDecision(budget, total);
+}
+
+// 🤖 AI 決策分析 - 核心教育功能
+function updateAIDecision(budget, cartTotal) {
+    const aiSuggestion = document.getElementById('ai-suggestion');
+    const aiStatus = document.getElementById('ai-current-status');
+    const eloGood = document.getElementById('elo-good');
+    const eloOk = document.getElementById('elo-ok');
+    const eloBad = document.getElementById('elo-bad');
+    
+    // 重置高亮
+    [eloGood, eloOk, eloBad].forEach(el => {
+        el.style.transform = 'scale(1)';
+        el.style.boxShadow = 'none';
+    });
+    
+    const remaining = budget - cartTotal;
+    const utilizationRate = cartTotal / budget;
+    
+    if (cartTotal === 0) {
+        // 還沒選
+        aiSuggestion.textContent = currentLang === 'en' ? 'Select items to start!' : '選擇商品開始購物！';
+        aiSuggestion.className = 'text-gray-500';
+        aiStatus.textContent = currentLang === 'en' ? 'Waiting for selection...' : '等待選擇中...';
+        aiStatus.style.background = '#e5e7eb';
+        aiStatus.style.color = '#6b7280';
+    } else if (cartTotal > budget) {
+        // 超支 - 壞決策
+        aiSuggestion.textContent = currentLang === 'en' ? '⚠️ Over budget! Remove items.' : '⚠️ 超支了！請移除商品。';
+        aiSuggestion.className = 'text-red-600 font-bold';
+        aiStatus.innerHTML = `<span class="text-red-600">❌ ${currentLang === 'en' ? 'INVALID - Will lose ELO!' : '無效決策 - 會扣 ELO！'}</span>`;
+        aiStatus.style.background = '#fee2e2';
+        aiStatus.style.color = '#dc2626';
+        eloBad.style.transform = 'scale(1.1)';
+        eloBad.style.boxShadow = '0 0 15px rgba(239,68,68,0.5)';
+    } else if (utilizationRate >= 0.5) {
+        // 好決策 - 用了 50% 以上
+        aiSuggestion.textContent = currentLang === 'en' ? '🎯 Great choice! Good value!' : '🎯 很棒的選擇！物超所值！';
+        aiSuggestion.className = 'text-green-600 font-bold';
+        aiStatus.innerHTML = `<span class="text-green-600">✅ ${currentLang === 'en' ? 'OPTIMAL - Max ELO +30!' : '最佳決策 - ELO +30！'}</span>`;
+        aiStatus.style.background = '#dcfce7';
+        aiStatus.style.color = '#16a34a';
+        eloGood.style.transform = 'scale(1.1)';
+        eloGood.style.boxShadow = '0 0 15px rgba(34,197,94,0.5)';
+    } else {
+        // 普通決策 - 用了不到 50%
+        const moreNeeded = Math.ceil(budget * 0.5) - cartTotal;
+        aiSuggestion.textContent = currentLang === 'en' 
+            ? `💡 OK, but add ${moreNeeded}+ pts for max ELO!` 
+            : `💡 可以，但再加 ${moreNeeded}+ 點可得滿分！`;
+        aiSuggestion.className = 'text-yellow-600 font-bold';
+        aiStatus.innerHTML = `<span class="text-yellow-600">🔶 ${currentLang === 'en' ? 'GOOD - ELO +15' : '良好 - ELO +15'}</span>`;
+        aiStatus.style.background = '#fef9c3';
+        aiStatus.style.color = '#ca8a04';
+        eloOk.style.transform = 'scale(1.1)';
+        eloOk.style.boxShadow = '0 0 15px rgba(202,138,4,0.5)';
+    }
+}
+
+function checkout() {
+    const s = shopStudents[state.shopIndex];
+    const total = state.cart.reduce((sum, i) => sum + products[i].price, 0);
+    const valid = total > 0 && total <= s.points;
+    const good = total >= s.points * 0.5;
+    let elo = 0, emoji, title, msg;
+    
+    // 🎓 教育設計：真實呈現，不說教
+    // 讓玩家自己感受反差，自己找方向
+    
+    if (!valid) {
+        // 超支或空購物車
+        elo = -10; emoji = '😢';
+        title = currentLang === 'en' ? 'Over Budget!' : '超預算！';
+        msg = currentLang === 'en' ? 'Cart exceeds points!' : '超過可用點數！';
+        state.sadCount++;
+        playSound('wrong');
+    } else if (s.isLowPoints) {
+        // 🔑 低點數學生 - 永遠顯示 sad，因為買不到真正想要的
+        // 這才是真實的反差！
+        elo = 15; emoji = '😢';
+        title = currentLang === 'en' ? 'A little sad...' : '有點難過...';
+        msg = `${s.name} ${currentLang === 'en' ? `couldn't get what they really wanted...` : '買不到真正想要的東西...'}`;
+        state.sadCount++;
+        playSound('correct'); // 購物成功，但結果是 sad
+    } else if (good) {
+        // 正常學生，買得不錯
+        elo = 30; emoji = '😊';
+        title = currentLang === 'en' ? 'So Happy!' : '超開心！';
+        msg = `${s.name} ${currentLang === 'en' ? 'got what they wanted!' : '買到想要的了！'}`;
+        state.happyCount++;
+        playSound('correct');
+    } else {
+        // 正常學生，買得少
+        elo = 15; emoji = '🙂';
+        title = currentLang === 'en' ? 'OK!' : '還可以！';
+        msg = `${s.name} ${currentLang === 'en' ? 'is satisfied.' : '還算滿意。'}`;
+        state.happyCount++;
+        playSound('correct');
+    }
+    
+    state.elo += elo;
+    state.eloEarned += Math.max(0, elo);
+    document.getElementById('happy-count').textContent = state.happyCount;
+    document.getElementById('sad-count').textContent = state.sadCount;
+    
+    const card = document.getElementById('result-card');
+    card.className = 'result-card slide-up ' + (emoji === '😊' ? 'correct' : emoji === '😢' ? 'sad' : 'ok');
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-title').className = 'text-2xl font-bold mb-3 ' + 
+        (emoji === '😊' ? 'text-green-600' : emoji === '😢' ? 'text-blue-600' : 'text-yellow-600');
+    document.getElementById('result-message').textContent = msg;
+    
+    // 簡單的邏輯顯示，不說教
+    document.getElementById('result-logic').innerHTML = 
+        `Budget: ${s.points} | Cart: ${total} | ${total <= s.points ? '<span class="text-green-600">✓</span>' : '<span class="text-red-600">✗</span>'}`;
+    
+    document.getElementById('result-elo').textContent = (elo >= 0 ? '+' : '') + elo + ' ELO';
+    document.getElementById('result-elo').className = 'text-xl font-bold mb-5 ' + (elo >= 0 ? 'text-orange-500' : 'text-red-500');
+    
+    document.getElementById('result-overlay').style.display = 'flex';
+    if (emoji === '😊' && typeof confetti === 'function') {
+        confetti({ particleCount: 80, spread: 70, origin: { y: 0.7 } });
+    }
+}
+
+function nextStudent() {
+    document.getElementById('result-overlay').style.display = 'none';
+    state.shopIndex++;
+    if (state.shopIndex >= shopStudents.length) completeLevel();
+    else { loadShopStudent(state.shopIndex); renderProducts(); }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// COMPLETE & NAVIGATION
+// ═══════════════════════════════════════════════════════════════════════════
+function completeLevel() {
+    document.getElementById('bg-music').pause();
+    musicPlaying = false;
+    const med = document.getElementById('meditation-music');
+    med.volume = 0.5;
+    med.play().catch(e => {});
+    document.getElementById('final-score').textContent = state.happyCount;
+    document.getElementById('elo-earned').textContent = state.eloEarned;
+    showScreen('ataraxy-screen');
+    startBreathing();
+    if (typeof confetti === 'function') setTimeout(() => confetti({ particleCount: 180, spread: 100, origin: { y: 0.5 } }), 800);
+}
+
+function startBreathing() {
+    let c = 3;
+    const el = document.getElementById('breath-counter');
+    el.textContent = '3';
+    const t = setInterval(() => {
+        c--;
+        if (c > 0) el.textContent = c;
+        else { clearInterval(t); el.textContent = '🙏'; }
+    }, 2500);
+}
+
+function goHome() {
+    document.getElementById('meditation-music').pause();
+    window.location.href = '../index.html';
+}
+
+function goToPrevLevel() {
+    document.getElementById('meditation-music').pause();
+    window.location.href = '../level1/index.html';
+}
+
+function replayLevel() {
+    document.getElementById('meditation-music').pause();
+    resetState();
+    showScreen('intro-screen');
+}
+
+function continueJourney() {
+    document.getElementById('meditation-music').pause();
+    window.location.href = '../level3/index.html';
+}
+
+function resetState() {
+    state.phase = 'intro';
+    state.ceremonyIndex = 0;
+    state.shopIndex = 0;
+    state.cart = [];
+    state.happyCount = 0;
+    state.sadCount = 0;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🐯 Level 2 Ready!');
+    console.log('🎵 Music: happy_campus.mp3');
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>善的旅程 Level 3: MDP | Sister Maya 的故事</title>
+    
+    <!-- Audio Files -->
+    <audio id="bgMusic" loop>
+        <source src="stage3.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="meditationMusic" loop>
+        <source src="AnaCaptainslogue_-_Noir_Et_Blanc_Vie.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="levelUpSound">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdH2LkZeUj4J0ZFtXXWVvfIiRl5aOgXJkWVVbY3B9iZKYlo+CdGVbV11lcH2IkZeWjoFyZFpVW2NwfYmSmJaPgnRlW1ddZXB9iJGXlo6BcmRaVVtjcH2JkpiWj4J0ZVtXXWVwfYiRl5aOgXJkWlVbY3B9iZKYlo+CdGVbV11lcH2IkZeWjoFyZFpVW2NwfQ==" type="audio/wav">
+    </audio>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Noto Sans TC', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        :root {
+            --warm-gold: #f59e0b;
+            --soft-green: #10b981;
+            --calm-blue: #3b82f6;
+            --gentle-purple: #8b5cf6;
+            --warm-pink: #ec4899;
+        }
+        
+        .screen { display: none; min-height: 100vh; position: relative; }
+        .screen.active { display: flex; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); } 50% { box-shadow: 0 0 40px rgba(245, 158, 11, 0.6); } }
+        @keyframes breathe { 0%, 100% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.05); opacity: 1; } }
+        
+        .fade-in { animation: fadeIn 0.6s ease-out; }
+        .pulse { animation: pulse 2s infinite; }
+        .glow { animation: glow 3s infinite; }
+        .breathe { animation: breathe 4s ease-in-out infinite; }
+        
+        .bg-warm {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 50%, #3d5a7f 100%);
+        }
+        
+        /* Scene background - FULL VISIBILITY */
+        .scene-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.95;
+            z-index: 0;
+            transition: background-image 0.5s ease;
+        }
+        
+        .game-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Journey path */
+        .journey-path {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stage-node {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            transition: all 0.3s;
+            border: 3px solid rgba(255,255,255,0.35);
+            background: rgba(255,255,255,0.1);
+            cursor: pointer;
+        }
+        
+        .stage-node.current {
+            background: linear-gradient(135deg, var(--warm-gold), #fbbf24);
+            border-color: white;
+            transform: scale(1.15);
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
+        }
+        
+        .stage-node.completed {
+            background: linear-gradient(135deg, var(--soft-green), #34d399);
+            border-color: rgba(255,255,255,0.8);
+        }
+        
+        .stage-node.locked {
+            opacity: 0.4;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .stage-label {
+            font-size: 10px;
+            color: white;
+            text-align: center;
+            margin-top: 6px;
+        }
+        
+        .path-connector {
+            width: 30px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+        
+        .path-connector.active {
+            background: linear-gradient(90deg, var(--soft-green), var(--warm-gold));
+        }
+        
+        /* Action cards - GLASS EFFECT */
+        .action-card {
+            background: rgba(30, 50, 80, 0.2);
+            backdrop-filter: blur(3px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 140px;
+            text-align: center;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--warm-gold);
+            background: rgba(245, 158, 11, 0.15);
+        }
+        
+        .action-card.selected {
+            border-color: var(--warm-gold);
+            background: rgba(245, 158, 11, 0.25);
+        }
+        
+        .action-icon { font-size: 2.5rem; margin-bottom: 10px; }
+        
+        /* Info panel - GLASS EFFECT - very transparent */
+        .info-panel {
+            background: rgba(20, 40, 70, 0.2);
+            backdrop-filter: blur(4px);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.25);
+            padding: 15px;
+            color: white;
+        }
+        
+        .value-display {
+            background: rgba(20, 40, 70, 0.15);
+            border-radius: 12px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .bellman-box {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.35), rgba(59, 130, 246, 0.35));
+            border: 2px solid rgba(251, 191, 36, 0.5);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--warm-gold), #fbbf24);
+            color: #1e3a5f;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(245, 158, 11, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* Story panel - GLASS EFFECT */
+        .story-panel {
+            background: rgba(20, 40, 70, 0.25);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            border: 2px solid rgba(251, 191, 36, 0.4);
+            padding: 25px;
+            max-width: 600px;
+            color: white;
+        }
+        
+        /* Meditation styles */
+        .breath-ring {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 5px solid #fbbf24;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(251, 191, 36, 0.3);
+            animation: breathe 4s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .jingsi-card {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(168, 85, 247, 0.15));
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 30px 40px;
+            border: 2px solid rgba(251, 191, 36, 0.5);
+            text-align: center;
+        }
+        
+        /* Language toggle */
+        .lang-toggle { display: flex; gap: 8px; }
+        
+        .lang-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+        
+        .lang-btn.active {
+            background: var(--warm-gold);
+            color: #1e3a5f;
+        }
+        
+        .lang-btn:not(.active) {
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        /* Music button */
+        .music-btn {
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .music-btn.playing {
+            background: var(--soft-green);
+            border-color: var(--soft-green);
+        }
+        
+        /* Probability bar */
+        .prob-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .prob-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+        
+        /* ELO badge */
+        .elo-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1e3a5f;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .stage-node { width: 60px; height: 60px; font-size: 1.5rem; }
+            .action-card { min-width: 100px; padding: 15px; }
+        }
+    </style>
+</head>
+<body class="bg-warm text-white overflow-x-hidden">
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCREEN 1: INTRO
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="intro-screen" class="screen active flex-col items-center justify-center p-6" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);">
+    <div class="text-center fade-in">
+        <!-- Controls -->
+        <div class="flex justify-center gap-4 mb-6">
+            <div class="lang-toggle">
+                <button class="lang-btn active" onclick="setLanguage('en')" data-lang="en">EN</button>
+                <button class="lang-btn" onclick="setLanguage('zh')" data-lang="zh">中文</button>
+            </div>
+            <button onclick="toggleMusic()" class="music-btn" id="intro-music-btn">🔇</button>
+        </div>
+        
+        <h1 class="text-4xl font-bold mb-4" style="text-shadow: 0 0 30px rgba(245, 158, 11, 0.5);">
+            🌱 <span class="lang-text" data-en="Level 3: MDP" data-zh="第三關：MDP">Level 3: MDP</span>
+        </h1>
+        <h2 class="text-2xl text-yellow-300 mb-4 lang-text" data-en="Sister Maya's Journey" data-zh="瑪雅師姊的故事">Sister Maya's Journey</h2>
+        <p class="text-white/80 mb-6 lang-text" data-en="A Story of Transformation" data-zh="一個轉變的故事">A Story of Transformation</p>
+        
+        <div class="story-panel mx-auto mb-8 text-left">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-4xl">👩🏿</div>
+                <div>
+                    <h3 class="text-yellow-300 font-bold text-lg">Sister Maya</h3>
+                    <p class="text-white/70 text-sm lang-text" data-en="First Local Commissioner from Hunters Point" data-zh="獵人角第一位本土女委員">First Local Commissioner from Hunters Point</p>
+                </div>
+            </div>
+            <p class="text-lg leading-relaxed mb-4 lang-text" data-en="Maya first came to Tzu Chi's food distribution as a single mother seeking help. She never imagined she would one day become a Commissioner — leading the very program that once helped her. This is her story of growth, choice by choice." data-zh="瑪雅第一次來慈濟食物發放時，是一位尋求幫助的單親媽媽。她從未想過有一天會成為委員——帶領當初幫助她的這個計畫。這是她一步一步成長的故事。">Maya first came to Tzu Chi's food distribution as a single mother seeking help. She never imagined she would one day become a Commissioner — leading the very program that once helped her. This is her story of growth, choice by choice.</p>
+            <p class="text-yellow-300 text-center italic text-lg lang-text" data-en="「Willing to do, happy to receive」" data-zh="「甘願做，歡喜受」">「Willing to do, happy to receive」</p>
+        </div>
+        
+        <div class="info-panel mx-auto mb-6" style="max-width: 500px; background: rgba(139, 92, 246, 0.25);">
+            <p class="text-purple-200 text-sm lang-text" data-en="⚠️ This is a fictional story inspired by real volunteers. Names and timelines are created for educational purposes." data-zh="⚠️ 這是一個虛構故事，靈感來自真實志工。姓名和時間線為教育目的而創作。">⚠️ This is a fictional story inspired by real volunteers. Names and timelines are created for educational purposes.</p>
+        </div>
+        
+        <p class="text-sm text-white/70 mb-6 lang-text" data-en="Learn how MDP (Markov Decision Process) models decision-making under uncertainty" data-zh="學習 MDP（馬可夫決策過程）如何在不確定性下做決策">Learn how MDP (Markov Decision Process) models decision-making under uncertainty</p>
+        
+        <button onclick="startGame()" class="btn btn-primary text-lg glow">
+            <span class="lang-text" data-en="Begin Maya's Journey 🚀" data-zh="開始瑪雅的旅程 🚀">Begin Maya's Journey 🚀</span>
+        </button>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCREEN 2: GAME
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="game-screen" class="screen flex-col bg-warm" style="position: relative;">
+    <!-- Scene Background -->
+    <div class="scene-bg" id="scene-background"></div>
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center p-4 game-content" style="background: rgba(20, 40, 70, 0.25); backdrop-filter: blur(4px);">
+        <button onclick="goBack()" class="text-white/80 hover:text-white">
+            ← <span class="lang-text" data-en="Menu" data-zh="選單">Menu</span>
+        </button>
+        <div class="text-center">
+            <div class="text-lg font-bold">🌱 Level 3: MDP</div>
+            <div class="text-xs text-yellow-300 lang-text" data-en="Sister Maya's Journey" data-zh="瑪雅師姊的故事">Sister Maya's Journey</div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="toggleMusic()" class="music-btn" id="game-music-btn">🔇</button>
+            <div class="elo-badge">⭐ <span id="elo-display">1200</span></div>
+            <div class="lang-toggle">
+                <button class="lang-btn active" onclick="setLanguage('en')" data-lang="en">EN</button>
+                <button class="lang-btn" onclick="setLanguage('zh')" data-lang="zh">中文</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Game Area -->
+    <div class="flex-1 flex flex-col lg:flex-row gap-4 p-4 overflow-auto game-content">
+        <!-- Left: Journey Visualization -->
+        <div class="lg:w-2/3 flex flex-col gap-4">
+            <!-- Journey Path -->
+            <div class="info-panel">
+                <h3 class="text-yellow-300 font-bold mb-3">🗺️ <span class="lang-text" data-en="Your Journey" data-zh="你的旅程">Your Journey</span></h3>
+                <div class="journey-path" id="journey-path"></div>
+            </div>
+            
+            <!-- Current Situation -->
+            <div class="info-panel flex-1">
+                <h3 class="text-yellow-300 font-bold mb-3">📍 <span class="lang-text" data-en="Current Situation" data-zh="目前狀況">Current Situation</span></h3>
+                <div id="situation-text" class="text-lg mb-4"></div>
+                
+                <h4 class="text-blue-300 font-bold mb-3">🎯 <span class="lang-text" data-en="Choose Your Action" data-zh="選擇你的行動">Choose Your Action</span></h4>
+                <div class="flex flex-wrap gap-4 justify-center" id="action-cards"></div>
+                
+                <div class="mt-4 text-center">
+                    <button onclick="executeAction()" class="btn btn-primary" id="execute-btn" disabled>
+                        <span class="lang-text" data-en="Make Decision" data-zh="做出決定">Make Decision</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Story/Result Panel -->
+            <div class="info-panel" id="story-panel" style="display:none;">
+                <div id="story-content" class="text-center"></div>
+            </div>
+        </div>
+        
+        <!-- Right: MDP Visualization -->
+        <div class="lg:w-1/3 flex flex-col gap-4">
+            <div class="info-panel">
+                <h3 class="text-purple-300 font-bold mb-2">🧠 <span class="lang-text" data-en="MDP Components" data-zh="MDP 元件">MDP Components</span></h3>
+                <div class="text-sm space-y-2">
+                    <div><span class="text-yellow-300">S</span> = <span class="lang-text" data-en="States (growth stages)" data-zh="狀態（成長階段）">States (growth stages)</span></div>
+                    <div><span class="text-green-300">A</span> = <span class="lang-text" data-en="Actions (your choices)" data-zh="動作（你的選擇）">Actions (your choices)</span></div>
+                    <div><span class="text-blue-300">P</span> = <span class="lang-text" data-en="Probability (uncertainty)" data-zh="機率（不確定性）">Probability (uncertainty)</span></div>
+                    <div><span class="text-pink-300">R</span> = <span class="lang-text" data-en="Reward (inner joy)" data-zh="獎勵（內心喜悅）">Reward (inner joy)</span></div>
+                    <div><span class="text-orange-300">γ</span> = <span class="lang-text" data-en="Discount (0.9)" data-zh="折扣因子 (0.9)">Discount (0.9)</span></div>
+                </div>
+            </div>
+            
+            <div class="bellman-box">
+                <h4 class="text-purple-300 font-bold mb-2">📐 Bellman Equation</h4>
+                <div class="mono text-sm text-center" style="color:#fef3c7; text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);">V*(s) = max<sub>a</sub> Σ P(s'|s,a)[R + γV*(s')]</div>
+                <p class="text-xs text-yellow-100/90 mt-2 text-center lang-text" data-en="Optimal value = best action's expected reward + future value" data-zh="最優價值 = 最佳行動的期望獎勵 + 未來價值">Optimal value = best action's expected reward + future value</p>
+            </div>
+            
+            <div class="info-panel flex-1">
+                <h3 class="text-blue-300 font-bold mb-2">📊 <span class="lang-text" data-en="Value Iteration" data-zh="價值迭代">Value Iteration</span></h3>
+                <div class="value-display text-xs" id="value-display"></div>
+            </div>
+            
+            <div class="info-panel">
+                <h3 class="text-green-300 font-bold mb-2">📈 <span class="lang-text" data-en="Statistics" data-zh="統計">Statistics</span></h3>
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                    <div><span class="lang-text" data-en="Week" data-zh="週數">Week</span>: <span id="week-display" class="text-yellow-300">1</span></div>
+                    <div><span class="lang-text" data-en="Stage" data-zh="階段">Stage</span>: <span id="stage-display" class="text-green-300">1/6</span></div>
+                    <div><span class="lang-text" data-en="Joy" data-zh="喜悅">Joy</span>: <span id="joy-display" class="text-pink-300">0</span></div>
+                    <div><span class="lang-text" data-en="Impact" data-zh="影響">Impact</span>: <span id="impact-display" class="text-blue-300">0</span></div>
+                </div>
+            </div>
+            
+            <div class="info-panel" style="background:rgba(236, 72, 153, 0.15);border-color:rgba(236, 72, 153, 0.4);">
+                <div class="text-pink-300 font-bold text-sm">📐 Russell & Norvig Ch. 17</div>
+                <div class="text-xs mt-1">• Markov Decision Processes<br>• Value Iteration Algorithm<br>• Bellman Optimality Equation</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCREEN 3: MEDITATION GATE
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="meditation-screen" class="screen flex-col items-center justify-center p-6" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);">
+    <div class="absolute inset-0" style="background: url('L3_p7_lotus_.png') center center/cover no-repeat; opacity: 0.85;"></div>
+    
+    <div class="relative z-10 text-center">
+        <h2 class="text-3xl font-bold text-white mb-8 lang-text" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8);" data-en="Gate of Serenity" data-zh="靜心之門">Gate of Serenity</h2>
+        
+        <div class="breath-ring mx-auto mb-6">
+            <span id="breath-counter" class="text-5xl font-bold mono" style="color: #fbbf24; text-shadow: 0 0 15px rgba(251, 191, 36, 0.8), 0 0 30px rgba(251, 191, 36, 0.5);">3</span>
+        </div>
+        
+        <p class="text-lg mb-8 lang-text" style="color: #fcd34d; text-shadow: 0 0 10px rgba(251, 191, 36, 0.6);" data-en="Take 3 deep breaths..." data-zh="深呼吸三次...">Take 3 deep breaths...</p>
+        
+        <div class="jingsi-card max-w-lg mx-auto mb-8">
+            <p class="text-xl font-bold text-yellow-300 mb-3 lang-text" data-en="「Willing to do, happy to receive」" data-zh="「甘願做，歡喜受」">「Willing to do, happy to receive」</p>
+            <p class="text-white/90 mb-4 lang-text" data-en="Maya's journey shows us: every choice matters. From receiving help to giving it — transformation happens one decision at a time." data-zh="瑪雅的旅程告訴我們：每個選擇都重要。從接受幫助到付出幫助——轉變是一個決定一個決定累積的。">Maya's journey shows us: every choice matters. From receiving help to giving it — transformation happens one decision at a time.</p>
+            <p class="text-purple-200 text-sm lang-text" data-en="— Master Cheng Yen" data-zh="— 證嚴上人">— Master Cheng Yen</p>
+        </div>
+        
+        <div class="info-panel mx-auto mb-6" style="max-width: 500px; background: rgba(0,0,0,0.25);">
+            <p class="text-sm text-white/90 lang-text" data-en="🧠 MDP Insight: The algorithm modeled Maya's decisions, but her real journey was shaped by agency, relationships, and choices no probability can fully capture." data-zh="🧠 MDP 反思：演算法模擬了瑪雅的決策，但她真正的旅程是由主體性、關係和選擇塑造的——這些是機率無法完全捕捉的。">🧠 MDP Insight: The algorithm modeled Maya's decisions, but her real journey was shaped by agency, relationships, and choices no probability can fully capture.</p>
+        </div>
+        
+        <div class="flex flex-wrap gap-4 justify-center">
+            <button onclick="goToMainMenu()" class="btn btn-secondary lang-text" data-en="🏠 Main Menu" data-zh="🏠 主頁面">🏠 Main Menu</button>
+            <button onclick="goToPrevLevel()" class="btn btn-secondary lang-text" data-en="⬅️ Prev Level" data-zh="⬅️ 上一關">⬅️ 上一關</button>
+            <button onclick="backToGame()" class="btn btn-secondary lang-text" data-en="← Play Again" data-zh="← 再玩一次">← Play Again</button>
+            <button onclick="goToNextLevel()" class="btn btn-primary lang-text" data-en="Level 4: KB-Agent →" data-zh="第四關：KB-Agent →">Level 4: KB-Agent →</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════
+let currentLang = 'en';
+let currentStage = 0;
+let selectedAction = null;
+let musicPlaying = false;
+let gameStats = { week: 1, joy: 0, impact: 0, elo: 1200 };
+
+const bgMusic = document.getElementById('bgMusic');
+const meditationMusic = document.getElementById('meditationMusic');
+const levelUpSound = document.getElementById('levelUpSound');
+
+// MDP States
+const STAGES = [
+    { id: 'newcomer', emoji: '👀', en: 'Newcomer', zh: '新朋友', value: 0, bg: 'L3_p1.png' },
+    { id: 'curious', emoji: '🤔', en: 'Curious', zh: '好奇者', value: 2, bg: 'L3_p2.png' },
+    { id: 'helper', emoji: '🤝', en: 'Helper', zh: '幫手', value: 5, bg: 'L3_p3.png' },
+    { id: 'regular', emoji: '💪', en: 'Regular', zh: '常客', value: 10, bg: 'L3_p4.png' },
+    { id: 'mentor', emoji: '🌟', en: 'Mentor', zh: '導師', value: 18, bg: 'L3_p5.png' },
+    { id: 'leader', emoji: '🎓', en: 'Leader', zh: '領袖', value: 30, bg: 'L3_p6.png' }
+];
+
+// Situations
+const SITUATIONS = {
+    newcomer: {
+        en: "It's a Saturday morning in Hunters Point. Maya, a single mother, has heard about Tzu Chi's food distribution. She hesitates outside the community center, watching volunteers in blue vests setting up tables with fresh vegetables...",
+        zh: "獵人角的一個週六早晨。單親媽媽瑪雅聽說慈濟在發放食物。她在社區中心外面猶豫著，看著穿藍色背心的志工們擺放新鮮蔬菜..."
+    },
+    curious: {
+        en: "Maya came back the next week. A warm volunteer named Sister Roxanne noticed her watching. 'Would you like to help sort these tomatoes? Many hands make light work!' No pressure, just a gentle invitation...",
+        zh: "瑪雅下週又來了。一位溫暖的志工 Roxanne 師姊注意到她在旁邊看。「要不要來幫忙分類這些番茄？人多好辦事！」沒有壓力，只是輕輕的邀請..."
+    },
+    helper: {
+        en: "Maya has helped several times now. The other volunteers treat her like family. Today, Sister Roxanne mentions a training workshop. 'It's totally optional,' she says with a smile, 'but I think you'd enjoy learning about our mission.'",
+        zh: "瑪雅已經幫忙了好幾次。其他志工把她當家人。今天，Roxanne 師姊提到一個培訓工作坊。「完全自願，」她微笑著說，「但我覺得你會喜歡了解我們的使命。」"
+    },
+    regular: {
+        en: "A year has passed. Maya knows everyone's names now. A teenage boy named Marcus asks shyly if she can teach him how to organize the vegetable boxes. 'You're so good at this, Miss Maya...' She feels something shift inside her.",
+        zh: "一年過去了。瑪雅現在認識每個人的名字。一個叫 Marcus 的青少年害羞地問她能不能教他整理蔬菜箱。「瑪雅姐姐，你做得好好喔...」她心裡有什麼東西開始轉變。"
+    },
+    mentor: {
+        en: "Two years of mentoring new volunteers. Maya has watched many people grow, just as she once did. Sister Roxanne pulls her aside one day: 'Maya, we see your dedication. Would you consider the Commissioner certification training?' Maya's heart races...",
+        zh: "兩年的帶領新志工。瑪雅看著許多人成長，就像當初的她一樣。有一天 Roxanne 師姊把她拉到一旁：「瑪雅，我們看到你的付出。你願意考慮委員認證培訓嗎？」瑪雅的心跳加速..."
+    },
+    leader: {
+        en: "🎉 Maya did it! From a single mother seeking food assistance to the first local female Commissioner from Hunters Point. The same community center where she once hesitated to enter — she now leads with grace and compassion. Her journey has come full circle.",
+        zh: "🎉 瑪雅做到了！從尋求食物援助的單親媽媽，到獵人角第一位本土女委員。當初她猶豫著不敢進入的社區中心——現在她以優雅和慈悲在這裡帶領。她的旅程畫了一個完整的圓。"
+    }
+};
+
+// Actions
+const ACTIONS = {
+    newcomer: [
+        { id: 'observe', emoji: '👀', en: 'Just watch', zh: '只是看看', prob: { stay: 0.6, advance: 0.4 }, reward: 1 },
+        { id: 'approach', emoji: '👋', en: 'Say hello', zh: '打個招呼', prob: { stay: 0.3, advance: 0.7 }, reward: 3 },
+        { id: 'leave', emoji: '🏠', en: 'Go home', zh: '回家', prob: { stay: 1.0, advance: 0 }, reward: 0 }
+    ],
+    curious: [
+        { id: 'decline', emoji: '🙅', en: 'Not today', zh: '今天不行', prob: { stay: 0.7, advance: 0.3 }, reward: 1 },
+        { id: 'help_once', emoji: '🤝', en: 'Help today', zh: '今天幫忙', prob: { stay: 0.2, advance: 0.8 }, reward: 5 },
+        { id: 'leave', emoji: '🏠', en: 'Just take food', zh: '只拿食物', prob: { stay: 0.9, advance: 0.1 }, reward: 0 }
+    ],
+    helper: [
+        { id: 'occasional', emoji: '📅', en: 'Come sometimes', zh: '偶爾來', prob: { stay: 0.5, advance: 0.5 }, reward: 3 },
+        { id: 'training', emoji: '📚', en: 'Join training', zh: '參加培訓', prob: { stay: 0.1, advance: 0.9 }, reward: 8 },
+        { id: 'pause', emoji: '⏸️', en: 'Take a break', zh: '休息一下', prob: { stay: 0.8, advance: 0.2 }, reward: 1 }
+    ],
+    regular: [
+        { id: 'continue', emoji: '💪', en: 'Keep helping', zh: '繼續幫忙', prob: { stay: 0.4, advance: 0.6 }, reward: 5 },
+        { id: 'mentor', emoji: '🌟', en: 'Mentor Marcus', zh: '指導 Marcus', prob: { stay: 0.1, advance: 0.9 }, reward: 12 },
+        { id: 'reduce', emoji: '📉', en: 'Reduce time', zh: '減少時間', prob: { stay: 0.7, advance: 0.3 }, reward: 2 }
+    ],
+    mentor: [
+        { id: 'decline_cert', emoji: '🙏', en: 'Not ready yet', zh: '還沒準備好', prob: { stay: 0.6, advance: 0.4 }, reward: 5 },
+        { id: 'accept_cert', emoji: '🎓', en: 'Accept training', zh: '接受培訓', prob: { stay: 0.05, advance: 0.95 }, reward: 20 },
+        { id: 'think', emoji: '🤔', en: 'Think about it', zh: '考慮一下', prob: { stay: 0.4, advance: 0.6 }, reward: 3 }
+    ]
+};
+
+const VALUES = { newcomer: 15.2, curious: 18.7, helper: 22.4, regular: 26.8, mentor: 28.5, leader: 30.0 };
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MUSIC CONTROL - FIXED
+// ═══════════════════════════════════════════════════════════════════════════
+function toggleMusic() {
+    if (musicPlaying) {
+        bgMusic.pause();
+        meditationMusic.pause();
+        musicPlaying = false;
+    } else {
+        const currentScreen = document.querySelector('.screen.active');
+        if (currentScreen.id === 'meditation-screen') {
+            meditationMusic.volume = 0.4;
+            meditationMusic.play().catch(e => console.log('Audio error:', e));
+        } else {
+            bgMusic.volume = 0.3;
+            bgMusic.play().catch(e => console.log('Audio error:', e));
+        }
+        musicPlaying = true;
+    }
+    updateMusicButtons();
+}
+
+function updateMusicButtons() {
+    const btns = document.querySelectorAll('.music-btn');
+    btns.forEach(btn => {
+        btn.textContent = musicPlaying ? '🔊' : '🔇';
+        btn.classList.toggle('playing', musicPlaying);
+    });
+}
+
+function switchToMeditationMusic() {
+    bgMusic.pause();
+    if (musicPlaying) {
+        meditationMusic.volume = 0.4;
+        meditationMusic.play().catch(e => console.log('Audio error:', e));
+    }
+}
+
+function playLevelUpSound() {
+    // Create a simple level up sound
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+    
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.4);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// LANGUAGE SYSTEM - FIXED
+// ═══════════════════════════════════════════════════════════════════════════
+function setLanguage(lang) {
+    currentLang = lang;
+    
+    // Update toggle buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+    
+    // Update all text elements
+    document.querySelectorAll('.lang-text').forEach(el => {
+        const text = el.getAttribute(`data-${lang}`);
+        if (text) el.textContent = text;
+    });
+    
+    // Re-render game elements if in game
+    if (document.getElementById('game-screen').classList.contains('active')) {
+        renderJourneyPath();
+        renderSituation();
+        renderActions();
+        updateValueDisplay();
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SCREEN MANAGEMENT
+// ═══════════════════════════════════════════════════════════════════════════
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+}
+
+function startGame() {
+    currentStage = 0;
+    gameStats = { week: 1, joy: 0, impact: 0, elo: 1200 };
+    selectedAction = null;
+    
+    showScreen('game-screen');
+    renderJourneyPath();
+    renderSituation();
+    renderActions();
+    updateStats();
+    updateValueDisplay();
+    
+    // Start music if not playing
+    if (!musicPlaying) {
+        toggleMusic();
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RENDERING
+// ═══════════════════════════════════════════════════════════════════════════
+function renderJourneyPath() {
+    const container = document.getElementById('journey-path');
+    container.innerHTML = '';
+    
+    STAGES.forEach((stage, idx) => {
+        const node = document.createElement('div');
+        node.className = 'stage-node';
+        if (idx < currentStage) node.classList.add('completed');
+        else if (idx === currentStage) node.classList.add('current');
+        else node.classList.add('locked');
+        
+        const label = currentLang === 'en' ? stage.en : stage.zh;
+        node.innerHTML = `<span>${stage.emoji}</span>`;
+        
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'stage-label';
+        labelDiv.textContent = label;
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flex flex-col items-center';
+        wrapper.appendChild(node);
+        wrapper.appendChild(labelDiv);
+        container.appendChild(wrapper);
+        
+        if (idx < STAGES.length - 1) {
+            const connector = document.createElement('div');
+            connector.className = 'path-connector';
+            if (idx < currentStage) connector.classList.add('active');
+            container.appendChild(connector);
+        }
+    });
+}
+
+function renderSituation() {
+    const stageId = STAGES[currentStage].id;
+    const situation = SITUATIONS[stageId];
+    const text = currentLang === 'en' ? situation.en : situation.zh;
+    document.getElementById('situation-text').innerHTML = `<p class="leading-relaxed">${text}</p>`;
+    document.getElementById('story-panel').style.display = 'none';
+}
+
+function renderActions() {
+    const container = document.getElementById('action-cards');
+    container.innerHTML = '';
+    
+    const stageId = STAGES[currentStage].id;
+    
+    if (stageId === 'leader') {
+        const congratsText = currentLang === 'en' ? "Congratulations! You've completed the journey!" : "恭喜！你完成了旅程！";
+        const btnText = currentLang === 'en' ? "Enter Gate of Serenity 🙏" : "進入靜心之門 🙏";
+        container.innerHTML = `
+            <div class="text-center">
+                <p class="text-2xl mb-4">🎉</p>
+                <p class="text-yellow-300 text-lg mb-4">${congratsText}</p>
+                <button onclick="openMeditationGate()" class="btn btn-primary">${btnText}</button>
+            </div>
+        `;
+        document.getElementById('execute-btn').style.display = 'none';
+        if (typeof confetti === 'function') confetti({ particleCount: 150, spread: 80 });
+        return;
+    }
+    
+    const actions = ACTIONS[stageId];
+    if (!actions) return;
+    
+    actions.forEach(action => {
+        const card = document.createElement('div');
+        card.className = 'action-card';
+        card.onclick = () => selectAction(action.id);
+        card.id = `action-${action.id}`;
+        
+        const advanceProb = Math.round(action.prob.advance * 100);
+        const actionName = currentLang === 'en' ? action.en : action.zh;
+        const growthText = currentLang === 'en' ? 'Growth chance' : '成長機率';
+        const joyText = currentLang === 'en' ? 'joy' : '喜悅';
+        
+        card.innerHTML = `
+            <div class="action-icon">${action.emoji}</div>
+            <div class="font-bold text-white mb-2">${actionName}</div>
+            <div class="text-xs text-white/70 mb-2">${growthText}: ${advanceProb}%</div>
+            <div class="prob-bar">
+                <div class="prob-fill" style="width: ${advanceProb}%; background: linear-gradient(90deg, var(--soft-green), var(--warm-gold));"></div>
+            </div>
+            <div class="text-xs text-pink-300 mt-2">+${action.reward} ${joyText}</div>
+        `;
+        container.appendChild(card);
+    });
+    
+    document.getElementById('execute-btn').style.display = 'inline-block';
+    document.getElementById('execute-btn').disabled = true;
+}
+
+function selectAction(actionId) {
+    selectedAction = actionId;
+    document.querySelectorAll('.action-card').forEach(card => card.classList.remove('selected'));
+    document.getElementById(`action-${actionId}`).classList.add('selected');
+    document.getElementById('execute-btn').disabled = false;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GAME LOGIC
+// ═══════════════════════════════════════════════════════════════════════════
+function executeAction() {
+    if (!selectedAction) return;
+    
+    const stageId = STAGES[currentStage].id;
+    const actions = ACTIONS[stageId];
+    const action = actions.find(a => a.id === selectedAction);
+    
+    gameStats.joy += action.reward;
+    gameStats.impact += Math.floor(action.reward / 2);
+    gameStats.week++;
+    
+    const roll = Math.random();
+    const advances = roll < action.prob.advance;
+    
+    showResult(action, advances);
+    
+    if (advances && currentStage < STAGES.length - 1) {
+        currentStage++;
+        gameStats.elo += 30;
+        playLevelUpSound();
+    } else {
+        gameStats.elo += 5;
+    }
+    
+    setTimeout(() => {
+        renderJourneyPath();
+        renderSituation();
+        renderActions();
+        updateStats();
+        updateValueDisplay();
+        selectedAction = null;
+    }, 2000);
+}
+
+function showResult(action, advances) {
+    const panel = document.getElementById('story-panel');
+    const content = document.getElementById('story-content');
+    
+    let message;
+    if (advances) {
+        const nextStage = STAGES[currentStage + 1];
+        const nextName = currentLang === 'en' ? nextStage.en : nextStage.zh;
+        message = currentLang === 'en' 
+            ? `✨ Your choice led to growth! Moving to: ${nextStage.emoji} ${nextName}`
+            : `✨ 你的選擇帶來成長！前進到：${nextStage.emoji} ${nextName}`;
+    } else {
+        message = currentLang === 'en'
+            ? `🌱 Sometimes growth takes time. Every experience matters. +${action.reward} joy`
+            : `🌱 成長有時需要時間。每個經歷都很重要。+${action.reward} 喜悅`;
+    }
+    
+    content.innerHTML = `<p class="text-lg ${advances ? 'text-green-300' : 'text-yellow-300'}">${message}</p>`;
+    panel.style.display = 'block';
+    panel.classList.add('fade-in');
+}
+
+function updateStats() {
+    document.getElementById('week-display').textContent = gameStats.week;
+    document.getElementById('stage-display').textContent = `${currentStage + 1}/${STAGES.length}`;
+    document.getElementById('joy-display').textContent = gameStats.joy;
+    document.getElementById('impact-display').textContent = gameStats.impact;
+    document.getElementById('elo-display').textContent = gameStats.elo;
+    
+    // Update scene background
+    const bgElement = document.getElementById('scene-background');
+    if (bgElement && STAGES[currentStage]) {
+        bgElement.style.backgroundImage = `url('${STAGES[currentStage].bg}')`;
+    }
+}
+
+function updateValueDisplay() {
+    const display = document.getElementById('value-display');
+    let html = '<div class="space-y-1">';
+    
+    STAGES.forEach((stage, idx) => {
+        const isCurrent = idx === currentStage;
+        const color = isCurrent ? 'text-yellow-300' : (idx < currentStage ? 'text-green-300' : 'text-white/50');
+        const marker = isCurrent ? '→ ' : '  ';
+        html += `<div class="${color}">${marker}V(${stage.id.substring(0,3)}) = ${VALUES[stage.id].toFixed(1)}</div>`;
+    });
+    
+    html += '</div>';
+    const policyText = currentLang === 'en' ? 'Optimal policy: Choose actions with highest expected value' : '最優策略：選擇期望價值最高的行動';
+    html += `<div class="mt-3 pt-3 border-t border-white/20 text-xs text-white/70">${policyText}</div>`;
+    display.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MEDITATION GATE
+// ═══════════════════════════════════════════════════════════════════════════
+function openMeditationGate() {
+    showScreen('meditation-screen');
+    switchToMeditationMusic();
+    
+    let count = 3;
+    const counter = document.getElementById('breath-counter');
+    const interval = setInterval(() => {
+        count--;
+        if (count > 0) counter.textContent = count;
+        else { clearInterval(interval); counter.textContent = '🙏'; }
+    }, 4000);
+}
+
+function backToGame() {
+    meditationMusic.pause();
+    if (musicPlaying) {
+        bgMusic.play().catch(e => console.log('Audio error:', e));
+    }
+    startGame();
+}
+
+function goToMainMenu() {
+    meditationMusic.pause();
+    bgMusic.pause();
+    // 返回主頁面（index.html）
+    window.location.href = '../index.html';
+}
+
+function goToPrevLevel() {
+    meditationMusic.pause();
+    bgMusic.pause();
+    // 返回上一關
+    window.location.href = '../level2/index.html';
+}
+
+function goToNextLevel() {
+    meditationMusic.pause();
+    bgMusic.pause();
+    // 前往第四關
+    window.location.href = '../level4/index.html';
+}
+
+function goBack() {
+    const msg = currentLang === 'en' ? 'Return to main menu?' : '返回主選單？';
+    if (confirm(msg)) {
+        bgMusic.pause();
+        meditationMusic.pause();
+        window.location.href = '../index.html';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+    setLanguage('en');
+    if (bgMusic) bgMusic.volume = 0.3;
+    if (meditationMusic) meditationMusic.volume = 0.4;
+    updateMusicButtons();
+    console.log('Level 3 MDP - Sister Maya\'s Journey loaded!');
+});
+</script>
+
+</body>
+</html>

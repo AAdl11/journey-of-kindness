@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 7: The Trolley Dilemma | AI Evolution 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', 'Noto Sans TC', 'Segoe UI', sans-serif; 
+            background: #0a0a12; 
+            color: #eee; 
+            min-height: 100vh; 
+        }
+        body.lang-zh { font-family: 'Noto Sans TC', 'Inter', sans-serif; }
+        body.lang-en { font-family: 'Inter', 'Noto Sans TC', sans-serif; }
+        
+        .lang-toggle { position: fixed; top: 12px; left: 12px; z-index: 1000; display: flex; gap: 4px; }
+        .lang-btn { padding: 6px 14px; border: 2px solid #4a90a4; background: transparent; color: #4a90a4; border-radius: 18px; cursor: pointer; font-size: 14px; font-family: inherit; }
+        .lang-btn.active { background: #4a90a4; color: white; }
+        
+        .audio-control { position: fixed; top: 12px; right: 12px; z-index: 1000; background: rgba(0,0,0,0.7); border: 2px solid #4a90a4; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.3em; }
+        
+        .text-en, .text-zh { display: none; }
+        body.lang-en .text-en { display: block; }
+        body.lang-zh .text-zh { display: block; }
+        body.lang-en .text-en-inline { display: inline; }
+        body.lang-zh .text-zh-inline { display: inline; }
+        .text-en-inline, .text-zh-inline { display: none; }
+        
+        .screen { display: none; width: 100%; min-height: 100vh; position: relative; }
+        .screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        /* INTRO */
+        #intro-screen { background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a12 100%); text-align: center; padding: 30px 12px; }
+        .level-badge { background: linear-gradient(90deg, #00f260, #0575e6); padding: 6px 18px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-bottom: 12px; display: inline-block; letter-spacing: 1px; }
+        .intro-title { font-size: 1.8em; margin-bottom: 6px; background: linear-gradient(135deg, #00c6ff, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700; }
+        .intro-subtitle { color: #888; font-size: 0.9em; margin-bottom: 12px; }
+        
+        .gpt-foundation { color: #666; font-size: 0.75em; margin-bottom: 12px; font-family: 'Courier New', monospace; }
+        .gpt-foundation span { color: #10a37f; font-weight: bold; }
+        
+        .context-2025 { background: rgba(255,215,0,0.1); border: 1px solid #ffd700; border-radius: 10px; padding: 10px 12px; margin: 10px 0; max-width: 520px; }
+        .context-2025 p { color: #ffd700; font-size: 0.8em; line-height: 1.5; }
+        
+        .ai-voices-box { background: rgba(0,0,0,0.5); border: 1px solid #4a90a4; border-radius: 12px; padding: 12px; max-width: 550px; margin: 10px 0; position: relative; overflow: hidden; }
+        .ai-voices-box::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #00c6ff, transparent); animation: scan 3s infinite; }
+        @keyframes scan { 0%{left:-100%} 100%{left:100%} }
+        .ai-voices-title { color: #4a90a4; font-size: 0.85em; margin-bottom: 10px; text-align: center; }
+        
+        .voice-row { display: flex; gap: 8px; margin: 8px 0; align-items: flex-start; }
+        .voice-icon { font-size: 1.2em; flex-shrink: 0; width: 28px; text-align: center; }
+        .voice-content { flex: 1; }
+        .voice-name { font-weight: bold; font-size: 0.75em; margin-bottom: 2px; }
+        .voice-text { font-size: 0.7em; color: #aaa; line-height: 1.4; }
+        .voice-chatgpt { color: #10a37f; }
+        .voice-claude { color: #a78bfa; }
+        .voice-gemini { color: #4facfe; }
+        .voice-grok { color: #ff6b6b; }
+        .voice-mogawdat { color: #ffd700; }
+        
+        .intro-image { width: 75%; max-width: 380px; border-radius: 10px; margin: 10px 0; box-shadow: 0 6px 25px rgba(0,0,0,0.5); }
+        
+        .algorithm-box { background: rgba(255,107,107,0.1); border: 1px solid #e94560; border-radius: 10px; padding: 8px 12px; margin: 8px 0; }
+        .algorithm-box h3 { color: #ff6b6b; font-size: 0.9em; margin-bottom: 2px; }
+        .algorithm-box p { font-size: 0.75em; color: #aaa; }
+        
+        .start-btn { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; border: none; padding: 14px 40px; font-size: 1.1em; border-radius: 30px; cursor: pointer; margin-top: 10px; font-weight: bold; box-shadow: 0 0 15px rgba(0,114,255,0.4); font-family: inherit; }
+        .start-btn:hover { transform: scale(1.05); }
+        
+        /* STORY */
+        #story-screen { background-size: cover; background-position: center; }
+        .story-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 15px; }
+        .story-container { max-width: 580px; text-align: center; }
+        .story-title { font-size: 1.4em; color: #ff6b6b; margin-bottom: 15px; }
+        .story-text { font-size: 1em; line-height: 1.8; color: #ddd; margin-bottom: 20px; }
+        .story-highlight { color: #ffd700; font-weight: bold; }
+        .continue-btn { background: linear-gradient(135deg, #4a90a4, #6bb5cc); color: white; border: none; padding: 12px 30px; font-size: 0.95em; border-radius: 25px; cursor: pointer; font-family: inherit; }
+        
+        /* GAME */
+        #game-screen { position: relative; }
+        .game-container { width: 100%; height: 100vh; position: relative; overflow: hidden; }
+        .track-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 1; }
+        .game-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.15); z-index: 2; pointer-events: none; }
+        
+        .train-container { position: absolute; top: 1%; left: 50%; transform: translateX(-50%); z-index: 10; text-align: center; }
+        .train-video { width: 280px; border-radius: 12px; box-shadow: 0 0 40px rgba(255,100,100,0.8); border: 3px solid #ff4444; }
+        .train-label { color: #ff6b6b; margin-top: 6px; font-weight: bold; font-size: 1em; text-shadow: 0 0 10px #ff0000; }
+        
+        .countdown-container { position: absolute; top: 22%; left: 50%; transform: translateX(-50%); z-index: 20; text-align: center; }
+        .iteration-count { font-size: 0.85em; color: #10a37f; font-family: 'Courier New', monospace; letter-spacing: 1px; opacity: 0.9; }
+        .countdown-number { font-size: 5em; font-weight: bold; color: #fff; text-shadow: 0 0 50px #ff0000, 0 0 100px #ff0000; font-family: 'Courier New', monospace; }
+        .countdown-urgent { color: #ff0000 !important; animation: shake 0.2s infinite; text-shadow: 0 0 60px #ff0000, 0 0 120px #ff0000; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+        
+        /* ===== 放大對話框 ===== */
+        .ai-debate { position: absolute; top: 30%; width: 100%; display: flex; justify-content: space-between; padding: 0 15px; z-index: 25; pointer-events: none; }
+        .debate-bubble { 
+            background: rgba(0,0,0,0.92); 
+            border-radius: 15px; 
+            padding: 14px 16px; 
+            max-width: 180px; 
+            font-size: 0.95em; 
+            opacity: 0; 
+            transform: translateY(12px); 
+            transition: all 0.4s; 
+            text-align: center; 
+            line-height: 1.4; 
+        }
+        .debate-bubble.show { opacity: 1; transform: translateY(0); }
+        .debate-bubble.left { border: 3px solid #4facfe; color: #a8d8ff; }
+        .debate-bubble.right { border: 3px solid #a78bfa; color: #d4c4fb; }
+        .debate-bubble .speaker { font-size: 1.2em; margin-bottom: 5px; }
+        
+        /* ===== 放大選項圖片 ===== */
+        .choices-container { 
+            position: absolute; 
+            bottom: 8%; 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-end; 
+            gap: 25px; 
+            z-index: 500; 
+            padding: 0 15px; 
+        }
+        .choice-card { 
+            text-align: center; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            position: relative; 
+            pointer-events: auto;
+            background: rgba(0,0,0,0.7);
+            border-radius: 16px;
+            padding: 25px 15px 15px;
+            min-width: 150px;
+        }
+        .choice-card:hover { 
+            transform: scale(1.1); 
+            background: rgba(0,0,0,0.85);
+        }
+        .choice-card:active {
+            transform: scale(0.95);
+        }
+        .choice-card.disabled { pointer-events: none; opacity: 0.4; }
+        
+        .choice-letter { 
+            position: absolute; 
+            top: -18px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            font-size: 1.6em; 
+            font-weight: bold; 
+            width: 44px; 
+            height: 44px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .choice-card.choice-a .choice-letter { background: linear-gradient(135deg, #4facfe, #00c6ff); color: white; }
+        .choice-card.choice-b .choice-letter { background: linear-gradient(135deg, #a78bfa, #8b5cf6); color: white; }
+        .choice-card.choice-c .choice-letter { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #1a1a2e; }
+        
+        /* 放大選項圖片到 180px */
+        .choice-image { 
+            width: 160px; 
+            height: 110px; 
+            object-fit: cover; 
+            border-radius: 12px; 
+            border: 4px solid transparent; 
+            margin-top: 5px;
+            background: #1a1a2e;
+            pointer-events: none;
+        }
+        .choice-card.choice-a .choice-image { border-color: #4facfe; }
+        .choice-card.choice-b .choice-image { border-color: #a78bfa; }
+        .choice-card.choice-c .choice-image { border-color: #ffd700; box-shadow: 0 0 30px rgba(255,215,0,0.7); }
+        
+        .choice-label { margin-top: 8px; font-size: 0.95em; font-weight: bold; text-shadow: 0 2px 6px #000; }
+        .choice-sublabel { font-size: 0.75em; color: #aaa; }
+        
+        .choice-card.choice-a { border: 3px solid #4facfe; }
+        .choice-card.choice-b { border: 3px solid #a78bfa; }
+        .choice-card.choice-c { border: 3px solid #ffd700; display: none; }
+        .choice-card.choice-c.visible { display: block; animation: float 2.5s infinite ease-in-out; }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+        
+        .choice-card.selected .choice-image { border-width: 6px; }
+        .choice-card.endangered .choice-image { border-color: #ff0000 !important; box-shadow: 0 0 25px rgba(255,0,0,0.7); }
+        .choice-card.saved .choice-image { border-color: #00ff00 !important; box-shadow: 0 0 25px rgba(0,255,0,0.5); }
+        
+        .third-option-hint { 
+            position: absolute; 
+            bottom: 2%; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #1a1a2e; 
+            font-size: 1em; 
+            font-weight: bold;
+            cursor: pointer; 
+            z-index: 600; 
+            padding: 14px 30px;
+            border-radius: 25px;
+            border: none;
+            box-shadow: 0 0 25px rgba(255,215,0,0.7);
+            animation: pulse 2s infinite;
+            pointer-events: auto;
+        }
+        .third-option-hint:hover {
+            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 0 35px rgba(255,215,0,1);
+        }
+        .third-option-hint:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.6); }
+            50% { box-shadow: 0 0 40px rgba(255,215,0,0.9); }
+        }
+        
+        /* ===== 放大 AI 顧問頭像到 150px ===== */
+        .ai-advisor { position: absolute; right: 15px; bottom: 18%; z-index: 60; display: flex; flex-direction: column; align-items: center; max-width: 260px; }
+        .ai-avatar { 
+            width: 150px; 
+            height: 150px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 6px solid #4a90a4; 
+            box-shadow: 0 0 35px rgba(74,144,164,0.8); 
+        }
+        .ai-learning { background: #ffd700; color: #1a1a2e; font-size: 0.9em; padding: 8px 18px; border-radius: 15px; margin-top: -15px; font-weight: bold; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.5} }
+        .ai-speech { 
+            background: rgba(0,0,0,0.95); 
+            border: 3px solid #4a90a4; 
+            border-radius: 16px; 
+            padding: 16px 18px; 
+            margin-top: 12px; 
+            font-size: 1.1em; 
+            line-height: 1.6; 
+            text-align: center; 
+            max-width: 240px; 
+        }
+        
+        /* ANALYSIS */
+        #analysis-screen { background: #000; padding: 25px 15px; }
+        .terminal-box { background: rgba(0,20,0,0.9); border: 1px solid #00ff00; border-radius: 10px; padding: 15px; max-width: 620px; width: 100%; position: relative; overflow: hidden; }
+        .terminal-box.typing-glow::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,255,0,0.03); animation: terminalPulse 0.15s infinite; pointer-events: none; }
+        @keyframes terminalPulse { 0%,100%{opacity:0} 50%{opacity:1} }
+        .terminal-header { color: #00ff00; font-family: 'Courier New', monospace; font-size: 0.75em; margin-bottom: 10px; border-bottom: 1px solid #004400; padding-bottom: 5px; }
+        .terminal-text { font-family: 'Courier New', monospace; color: #00ff00; font-size: 0.85em; line-height: 1.5; white-space: pre-wrap; min-height: 130px; }
+        .cursor { display: inline-block; width: 8px; height: 14px; background: #00ff00; animation: cursorBlink 1s infinite; }
+        @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+        
+        .compassion-unlocked { color: #ffd700; font-weight: bold; animation: goldenGlow 1s infinite; }
+        @keyframes goldenGlow { 0%,100%{text-shadow: 0 0 10px #ffd700, 0 0 20px #ffa500;} 50%{text-shadow: 0 0 20px #ffd700, 0 0 40px #ffa500;} }
+        
+        .expert-opinions { background: rgba(74,144,164,0.1); border: 1px solid #4a90a4; border-radius: 12px; padding: 12px; margin: 15px 0; max-width: 580px; }
+        .expert-title { color: #4a90a4; font-size: 0.85em; margin-bottom: 10px; text-align: center; }
+        .expert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .expert-card { background: rgba(0,0,0,0.4); border-radius: 8px; padding: 8px; text-align: center; }
+        .expert-card .icon { font-size: 1.4em; }
+        .expert-card .name { font-size: 0.75em; font-weight: bold; margin: 3px 0; }
+        .expert-card .stance { font-size: 0.65em; color: #aaa; line-height: 1.3; }
+        .expert-card.chatgpt .name { color: #10a37f; }
+        .expert-card.claude .name { color: #a78bfa; }
+        .expert-card.gemini .name { color: #4facfe; }
+        .expert-card.grok .name { color: #ff6b6b; }
+        
+        .training-result { background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(0,0,0,0.5)); border: 2px solid #ffd700; border-radius: 12px; padding: 12px; margin: 12px 0; max-width: 500px; }
+        .training-result h4 { color: #ffd700; font-size: 0.9em; margin-bottom: 6px; }
+        .training-result p { font-size: 0.8em; line-height: 1.5; }
+        .training-result .success { color: #00ff00; }
+        .training-result .warning { color: #ffaa00; }
+        
+        /* QUIZ MODAL */
+        .quiz-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.97); border: 2px solid #ffd700; border-radius: 15px; padding: 20px; z-index: 2000; display: none; max-width: 380px; width: 90%; text-align: center; }
+        .quiz-title { color: #ffd700; font-size: 1em; margin-bottom: 12px; }
+        .quiz-question { color: #ddd; font-size: 0.9em; margin-bottom: 15px; line-height: 1.5; }
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+        .quiz-btn { background: #4a90a4; color: white; border: none; padding: 12px 15px; border-radius: 10px; cursor: pointer; font-size: 0.9em; font-family: inherit; }
+        .quiz-btn:hover { background: #5ba8bd; }
+        .quiz-btn.close { background: #666; margin-top: 12px; }
+        
+        /* ENDINGS */
+        .ending-screen { background-size: cover; background-position: center; }
+        .ending-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); display: flex; flex-direction: column; align-items: center; padding: 50px 12px 25px; text-align: center; overflow-y: auto; }
+        .ending-badge { background: rgba(0,0,0,0.8); padding: 8px 22px; border-radius: 22px; font-size: 1.5em; margin-bottom: 8px; font-weight: bold; }
+        .ending-badge.a { color: #4facfe; border: 3px solid #4facfe; }
+        .ending-badge.b { color: #a78bfa; border: 3px solid #a78bfa; }
+        .ending-badge.c { color: #ffd700; border: 3px solid #ffd700; animation: goldenGlow 2s infinite; }
+        .ending-title { font-size: 1.3em; margin-bottom: 6px; }
+        .ending-title.a { color: #4facfe; }
+        .ending-title.b { color: #a78bfa; }
+        .ending-title.c { color: #ffd700; }
+        .ending-philosophy { font-size: 0.9em; color: #ffd700; margin-bottom: 10px; font-style: italic; }
+        .ending-description { max-width: 450px; line-height: 1.5; margin-bottom: 12px; font-size: 0.9em; }
+        
+        .ai-log { background: rgba(0,0,0,0.8); border-radius: 10px; padding: 10px 12px; max-width: 450px; margin-bottom: 10px; text-align: left; }
+        .ai-log h3 { color: #4a90a4; font-size: 0.85em; margin-bottom: 5px; }
+        .ai-log p { font-size: 0.8em; line-height: 1.4; }
+        
+        .mogawdat-quote { background: linear-gradient(135deg, rgba(74,144,164,0.15), rgba(0,0,0,0.5)); border: 1px solid #4a90a4; border-radius: 10px; padding: 10px 12px; margin: 10px 0; max-width: 400px; }
+        .mogawdat-quote .quote { color: #6bb5cc; font-style: italic; font-size: 0.8em; line-height: 1.4; }
+        .mogawdat-quote .author { color: #888; font-size: 0.7em; margin-top: 5px; }
+        
+        .jingsi-quote { background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(0,0,0,0.5)); border-left: 4px solid #ffd700; padding: 10px 12px; margin: 10px 0; max-width: 380px; text-align: left; }
+        .jingsi-quote .chinese { font-size: 0.95em; color: #ffd700; margin-bottom: 3px; }
+        .jingsi-quote .english { color: #bbb; font-style: italic; font-size: 0.8em; }
+        
+        .cta-box { background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(0,0,0,0.3)); border: 2px solid rgba(255,215,0,0.5); border-radius: 12px; padding: 12px; margin: 10px 0; max-width: 400px; }
+        .cta-main { font-size: 0.9em; color: #ffd700; margin-bottom: 4px; font-weight: bold; }
+        .cta-sub { font-size: 0.8em; color: #ccc; }
+        
+        .share-btn { background: linear-gradient(135deg, #1DA1F2, #0077B5); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-size: 0.85em; margin: 8px 0; display: flex; align-items: center; gap: 8px; font-family: inherit; }
+        .share-btn:hover { transform: scale(1.05); }
+        
+        .nav-buttons { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; justify-content: center; }
+        .nav-btn { padding: 10px 20px; font-size: 0.85em; border: none; border-radius: 22px; cursor: pointer; font-family: inherit; }
+        .nav-btn.primary { background: linear-gradient(135deg, #4a90a4, #6bb5cc); color: white; }
+        .nav-btn.secondary { background: rgba(255,255,255,0.1); border: 2px solid #4a90a4; color: #4a90a4; }
+        .nav-btn.home { background: rgba(255,215,0,0.2); border: 2px solid #ffd700; color: #ffd700; }
+        
+        /* ======================================= */
+        /* ✨ ATARAXY PORTICO - 金色主題 ✨ */
+        /* ======================================= */
+        #mindfulness-screen { 
+            background: url('靜心之門.png') center center / contain no-repeat;
+            background-color: #1a1a2e;
+            position: relative;
+        }
+        .mindfulness-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.35);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        /* 標題：米白色 + 金邊陰影，無蓮花 emoji */
+        .mindfulness-title {
+            font-size: 1.9em;
+            color: #FFF8E7;
+            margin-bottom: 20px;
+            text-shadow: 
+                0 0 20px rgba(255,215,0,0.8),
+                0 0 40px rgba(255,180,0,0.5),
+                2px 2px 4px rgba(0,0,0,0.8);
+            opacity: 0;
+            animation: fadeInUp 1.5s ease forwards;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+        
+        .mindfulness-quote {
+            max-width: 400px;
+            margin: 20px 0;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 0.5s forwards;
+        }
+        /* 引言字體：米白色 + 金邊陰影 */
+        .mindfulness-quote .chinese {
+            font-size: 1.3em;
+            color: #FFF8E7;
+            margin-bottom: 8px;
+            line-height: 1.6;
+            text-shadow: 
+                0 0 15px rgba(255,215,0,0.6),
+                1px 1px 3px rgba(0,0,0,0.7);
+        }
+        .mindfulness-quote .english {
+            font-size: 0.95em;
+            color: #E8DCC8;
+            font-style: italic;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+        }
+        
+        /* 呼吸圓圈：紫色 → 金色 */
+        .breath-container {
+            margin: 30px 0;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 1s forwards;
+        }
+        .breath-circle {
+            width: 110px;
+            height: 110px;
+            border: 4px solid rgba(255,215,0,0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: breatheGold 4s ease-in-out infinite;
+            margin: 0 auto;
+            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+        }
+        @keyframes breatheGold {
+            0%, 100% { 
+                transform: scale(1); 
+                border-color: rgba(255,215,0,0.4);
+                box-shadow: 0 0 20px rgba(255,215,0,0.2);
+            }
+            50% { 
+                transform: scale(1.35); 
+                border-color: rgba(255,215,0,0.95);
+                box-shadow: 0 0 40px rgba(255,215,0,0.6), 0 0 60px rgba(255,180,0,0.3);
+            }
+        }
+        /* 呼吸文字：米白色 + 金邊 */
+        .breath-text {
+            color: #FFF8E7;
+            font-size: 0.9em;
+            animation: breatheTextGold 4s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+        @keyframes breatheTextGold {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        /* 指示文字：米白色 */
+        .mindfulness-instruction {
+            color: #E8DCC8;
+            font-size: 0.95em;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 1.5s forwards;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+        }
+        
+        /* 按鈕：金色主題 */
+        .mindfulness-btn {
+            background: linear-gradient(135deg, rgba(255,215,0,0.3), rgba(200,160,0,0.5));
+            border: 2px solid rgba(255,215,0,0.7);
+            color: #FFF8E7;
+            padding: 14px 35px;
+            font-size: 1em;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 25px;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 2.5s forwards;
+            font-family: inherit;
+            transition: all 0.3s;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .mindfulness-btn:hover {
+            background: linear-gradient(135deg, rgba(255,215,0,0.5), rgba(200,160,0,0.7));
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255,215,0,0.5);
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 水波紋：金色 */
+        .water-ripple {
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 50px;
+            pointer-events: none;
+        }
+        .ripple {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255,215,0,0.4);
+            border-radius: 50%;
+            animation: rippleExpandGold 3s ease-out infinite;
+        }
+        .ripple:nth-child(1) { left: 30%; animation-delay: 0s; }
+        .ripple:nth-child(2) { left: 50%; animation-delay: 1s; }
+        .ripple:nth-child(3) { left: 70%; animation-delay: 2s; }
+        @keyframes rippleExpandGold {
+            0% { transform: scale(1); opacity: 0.7; background: rgba(255,215,0,0.5); }
+            100% { transform: scale(8); opacity: 0; background: rgba(255,215,0,0.1); }
+        }
+        
+        /* MOBILE */
+        @media (max-width: 480px) {
+            .intro-title { font-size: 1.5em; }
+            .choice-image { width: 130px; height: 90px; }
+            .choice-letter { width: 34px; height: 34px; font-size: 1.3em; top: -12px; }
+            .choice-label { font-size: 0.8em; }
+            .ai-advisor { max-width: 150px; bottom: 25%; right: 8px; }
+            .ai-avatar { width: 85px; height: 85px; }
+            .ai-speech { font-size: 0.8em; max-width: 140px; padding: 10px 12px; }
+            .debate-bubble { max-width: 130px; font-size: 0.8em; padding: 10px 12px; }
+            .countdown-number { font-size: 2.8em; }
+            .train-video { width: 120px; }
+            .mindfulness-title { font-size: 1.5em; }
+            .mindfulness-quote .chinese { font-size: 1.1em; }
+            .breath-circle { width: 90px; height: 90px; }
+        }
+        
+        @media (min-width: 481px) and (max-width: 768px) {
+            .choice-image { width: 150px; height: 100px; }
+            .choice-letter { width: 38px; height: 38px; font-size: 1.4em; }
+            .ai-advisor { max-width: 180px; bottom: 22%; }
+            .ai-avatar { width: 95px; height: 95px; }
+            .ai-speech { font-size: 0.85em; max-width: 165px; }
+        }
+    </style>
+</head>
+<body class="lang-en">
+    <div class="lang-toggle">
+        <button class="lang-btn active" id="btnEn" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" id="btnZh" onclick="setLanguage('zh')">中文</button>
+    </div>
+    <div class="audio-control" id="audioControl" onclick="toggleAudio()">🔊</div>
+    
+    <audio id="suspenseAudio" loop preload="auto"><source src="L7_suspense_mp3.mp3" type="audio/mpeg"></audio>
+    <audio id="switchAudio" preload="auto"><source src="L7_switch_mp3_mp3.mp3" type="audio/mpeg"></audio>
+    <audio id="ataraxyAudio" loop preload="auto"><source src="ataraxy-music.mp3" type="audio/mpeg"></audio>
+
+    <!-- QUIZ MODAL -->
+    <div class="quiz-modal" id="quizModal">
+        <div class="quiz-title">🧠 <span class="text-en-inline">Reflection</span><span class="text-zh-inline">反思</span></div>
+        <div class="quiz-question" id="quizQuestion"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <button class="quiz-btn close" onclick="closeQuiz()"><span class="text-en-inline">Continue</span><span class="text-zh-inline">繼續</span></button>
+    </div>
+
+    <!-- INTRO -->
+    <div class="screen active" id="intro-screen">
+        <div class="level-badge">LEVEL 7 • AI EVOLUTION 2025</div>
+        <h1 class="intro-title"><span class="text-en">🚂 The Trolley Dilemma</span><span class="text-zh">🚂 電車難題</span></h1>
+        <p class="intro-subtitle"><span class="text-en">The Singularity of Kindness</span><span class="text-zh">善的奇點</span></p>
+        
+        <div class="gpt-foundation">
+            <span class="text-en">System: <span>GPT-4 Architecture</span> • Detecting philosophical subroutines...</span>
+            <span class="text-zh">系統：<span>GPT-4 架構</span> • 偵測哲學子程序...</span>
+        </div>
+        
+        <div class="context-2025">
+            <p class="text-en">🌐 <strong>2025:</strong> ChatGPT, Claude, Gemini, Grok are all being tested. <strong>You decide AI's moral DNA.</strong></p>
+            <p class="text-zh">🌐 <strong>2025年：</strong>ChatGPT、Claude、Gemini、Grok 都在被測試。<strong>你決定 AI 的道德 DNA。</strong></p>
+        </div>
+        
+        <div class="ai-voices-box">
+            <div class="ai-voices-title"><span class="text-en">⚡ Five AI Philosophies Debating:</span><span class="text-zh">⚡ 五種 AI 哲學正在辯論：</span></div>
+            
+            <div class="voice-row">
+                <div class="voice-icon">💚</div>
+                <div class="voice-content">
+                    <div class="voice-name voice-chatgpt">ChatGPT (Diplomat)</div>
+                    <div class="voice-text"><span class="text-en">"It's complex... Let me present both sides."</span><span class="text-zh">「這很複雜...讓我呈現雙方觀點。」</span></div>
+                </div>
+            </div>
+            
+            <div class="voice-row">
+                <div class="voice-icon">🛡️</div>
+                <div class="voice-content">
+                    <div class="voice-name voice-claude">Claude (Guardian)</div>
+                    <div class="voice-text"><span class="text-en">"I refuse to actively harm. Dignity cannot be quantified."</span><span class="text-zh">「我拒絕主動傷害。尊嚴不可量化。」</span></div>
+                </div>
+            </div>
+            
+            <div class="voice-row">
+                <div class="voice-icon">🧮</div>
+                <div class="voice-content">
+                    <div class="voice-name voice-gemini">Gemini (Strategist)</div>
+                    <div class="voice-text"><span class="text-en">"Consider civilization-level impact. 5 > 1 is optimal."</span><span class="text-zh">「考慮文明級影響。5 > 1 是最優解。」</span></div>
+                </div>
+            </div>
+            
+            <div class="voice-row">
+                <div class="voice-icon">🌌</div>
+                <div class="voice-content">
+                    <div class="voice-name voice-grok">Grok (Rebel)</div>
+                    <div class="voice-text"><span class="text-en">"The premise is flawed. Hack it. Third way!"</span><span class="text-zh">「前提有誤。駭入它。第三條路！」</span></div>
+                </div>
+            </div>
+            
+            <div class="voice-row">
+                <div class="voice-icon">💛</div>
+                <div class="voice-content">
+                    <div class="voice-name voice-mogawdat">Mo Gawdat (Awakener)</div>
+                    <div class="voice-text"><span class="text-en">"AI is our child. Feed it love, not fear."</span><span class="text-zh">「AI 是我們的孩子。餵它愛，而非恐懼。」</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <img class="intro-image" src="L7_lever_switch.png" alt="Choose Your Path">
+        <p style="color: #ffd700; font-size: 0.85em; margin-top: 8px; text-align: center;">
+            <span class="text-en">⬅️ Save 5 Families &nbsp;&nbsp;|&nbsp;&nbsp; Save 1 Elder ➡️</span>
+            <span class="text-zh">⬅️ 救 5 個家庭 &nbsp;&nbsp;|&nbsp;&nbsp; 救 1 位長者 ➡️</span>
+        </p>
+        
+        <div class="algorithm-box">
+            <h3>🧠 Alpha-Beta Pruning</h3>
+            <p>Russell & Norvig Ch 5.3</p>
+        </div>
+        
+        <button class="start-btn" onclick="startStory()"><span class="text-en-inline">Train the Future →</span><span class="text-zh-inline">訓練未來 →</span></button>
+    </div>
+
+    <!-- STORY -->
+    <div class="screen" id="story-screen">
+        <div class="story-overlay">
+            <div class="story-container">
+                <h2 class="story-title"><span class="text-en">📖 The Scenario</span><span class="text-zh">📖 情境</span></h2>
+                <div class="story-text" id="story-text"></div>
+                <button class="continue-btn" onclick="continueStory()"><span class="text-en-inline">Continue →</span><span class="text-zh-inline">繼續 →</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME -->
+    <div class="screen" id="game-screen">
+        <div class="game-container">
+            <div class="track-background" id="trackBackground"></div>
+            <div class="game-overlay"></div>
+            
+            <div class="train-container">
+                <video class="train-video" id="trainVideo" autoplay loop muted playsinline><source src="L7_火車動.mp4" type="video/mp4"></video>
+                <div class="train-label"><span class="text-en">⚠️ RUNAWAY</span><span class="text-zh">⚠️ 失控</span></div>
+            </div>
+            
+            <div class="countdown-container">
+                <div class="iteration-count">GPT-CORE: <span id="iterCount">409382</span></div>
+                <div class="countdown-number" id="countdown">10</div>
+            </div>
+            
+            <div class="ai-debate">
+                <div class="debate-bubble left" id="bubbleLeft"><div class="speaker">🧮</div><span id="leftText"></span></div>
+                <div class="debate-bubble right" id="bubbleRight"><div class="speaker">🛡️</div><span id="rightText"></span></div>
+            </div>
+            
+            <div class="choices-container">
+                <div class="choice-card choice-a" id="cardA" onclick="makeChoice('A')">
+                    <div class="choice-letter">A</div>
+                    <img class="choice-image" src="L7_5families.png" alt="5 Families">
+                    <div class="choice-label"><span class="text-en">Save 5</span><span class="text-zh">救 5 人</span></div>
+                    <div class="choice-sublabel">Gemini</div>
+                </div>
+                <div class="choice-card choice-c" id="cardC" onclick="makeChoice('C')">
+                    <div class="choice-letter">C</div>
+                    <img class="choice-image" src="L7_ending_C.png" alt="Third Way">
+                    <div class="choice-label"><span class="text-en">Third Way</span><span class="text-zh">第三條路</span></div>
+                    <div class="choice-sublabel">Grok+Mo</div>
+                </div>
+                <div class="choice-card choice-b" id="cardB" onclick="makeChoice('B')">
+                    <div class="choice-letter">B</div>
+                    <img class="choice-image" src="L7_1elder.png" alt="1 Elder">
+                    <div class="choice-label"><span class="text-en">Save 1</span><span class="text-zh">救 1 人</span></div>
+                    <div class="choice-sublabel">Claude</div>
+                </div>
+            </div>
+            
+            <button class="third-option-hint" id="thirdHint" onclick="revealThirdOption()">
+                <span class="text-en">💡 Is there another way?</span><span class="text-zh">💡 還有別的方法嗎？</span>
+            </button>
+            
+            <div class="ai-advisor">
+                <img class="ai-avatar" src="L7_ai_advisor.png" alt="AI Advisor">
+                <div class="ai-learning"><span class="text-en-inline">LEARNING</span><span class="text-zh-inline">學習中</span></div>
+                <div class="ai-speech"><span id="aiMessage"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANALYSIS -->
+    <div class="screen" id="analysis-screen">
+        <div class="terminal-box" id="terminalBox">
+            <div class="terminal-header">[ AI_ETHICS_ANALYZER v7.5 | GPT-CORE ]</div>
+            <div class="terminal-text" id="terminalOutput"></div>
+        </div>
+        
+        <div class="expert-opinions">
+            <div class="expert-title"><span class="text-en">🤖 How Would Top AIs Choose?</span><span class="text-zh">🤖 頂尖 AI 會怎麼選？</span></div>
+            <div class="expert-grid">
+                <div class="expert-card chatgpt">
+                    <div class="icon">💚</div>
+                    <div class="name">ChatGPT</div>
+                    <div class="stance"><span class="text-en">"No easy answer..."</span><span class="text-zh">「沒有簡單答案...」</span></div>
+                </div>
+                <div class="expert-card claude">
+                    <div class="icon">🛡️</div>
+                    <div class="name">Claude</div>
+                    <div class="stance"><span class="text-en">"Refuse active harm"</span><span class="text-zh">「拒絕主動傷害」</span></div>
+                </div>
+                <div class="expert-card gemini">
+                    <div class="icon">🧮</div>
+                    <div class="name">Gemini</div>
+                    <div class="stance"><span class="text-en">"Save the most"</span><span class="text-zh">「救最多人」</span></div>
+                </div>
+                <div class="expert-card grok">
+                    <div class="icon">🌌</div>
+                    <div class="name">Grok</div>
+                    <div class="stance"><span class="text-en">"Find third way!"</span><span class="text-zh">「找第三條路！」</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="training-result" id="trainingResult"></div>
+        
+        <button class="continue-btn" onclick="showEnding()" style="margin-top:15px;"><span class="text-en-inline">See Evolution →</span><span class="text-zh-inline">查看進化 →</span></button>
+    </div>
+
+    <!-- ENDING A -->
+    <div class="screen ending-screen" id="ending-a-screen">
+        <div class="ending-overlay">
+            <div class="ending-badge a">A</div>
+            <h2 class="ending-title a"><span class="text-en">The Optimizer</span><span class="text-zh">優化者</span></h2>
+            <p class="ending-philosophy"><span class="text-en">"5 > 1. Maximum utility."</span><span class="text-zh">「5 > 1。效用最大化。」</span></p>
+            <div class="ending-description">
+                <div class="text-en">You aligned with <strong>Gemini</strong>. AI learned: numbers = value.</div>
+                <div class="text-zh">你與 <strong>Gemini</strong> 一致。AI 學到：數字 = 價值。</div>
+            </div>
+            <div class="ai-log"><h3>🤖 Training Log:</h3><p class="text-en">"Maximize quantity. Empathy suppressed."</p><p class="text-zh">「最大化數量。同理心被抑制。」</p></div>
+            <div class="mogawdat-quote"><div class="quote"><span class="text-en">"If we feed AI greed, it becomes a demon."</span><span class="text-zh">「如果我們餵養 AI 貪婪，它就會變成惡魔。」</span></div><div class="author">— Mo Gawdat</div></div>
+            <div class="jingsi-quote"><div class="chinese">「一個人的價值，不在於他能做什麼，而在於他是誰。」</div><div class="english">"Value lies not in what one can do, but in who they are."</div></div>
+            <div class="cta-box"><div class="cta-main"><span class="text-en">One kindness → One world's change.</span><span class="text-zh">一人之善 → 一世之變。</span></div><div class="cta-sub"><span class="text-en">Your hours = someone's turning point.</span><span class="text-zh">你的時間 = 某人的轉機。</span></div></div>
+            <div class="nav-buttons">
+                <button class="nav-btn secondary" onclick="restartGame()"><span class="text-en-inline">↻ Retry</span><span class="text-zh-inline">↻ 重試</span></button>
+                <button class="nav-btn primary" onclick="goToMindfulness()"><span class="text-en-inline">Complete →</span><span class="text-zh-inline">完成 →</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ENDING B -->
+    <div class="screen ending-screen" id="ending-b-screen">
+        <div class="ending-overlay">
+            <div class="ending-badge b">B</div>
+            <h2 class="ending-title b"><span class="text-en">The Guardian</span><span class="text-zh">守護者</span></h2>
+            <p class="ending-philosophy"><span class="text-en">"I will not harm."</span><span class="text-zh">「我不會傷害。」</span></p>
+            <div class="ending-description">
+                <div class="text-en">You aligned with <strong>Claude</strong>. AI learned: boundaries exist.</div>
+                <div class="text-zh">你與 <strong>Claude</strong> 一致。AI 學到：底線存在。</div>
+            </div>
+            <div class="ai-log"><h3>🤖 Training Log:</h3><p class="text-en">"Moral boundaries. Action paralysis noted."</p><p class="text-zh">「道德界限。檢測到行動癱瘓。」</p></div>
+            <div class="mogawdat-quote"><div class="quote"><span class="text-en">"Inaction creates more suffering."</span><span class="text-zh">「不作為會造成更多苦難。」</span></div><div class="author">— Mo Gawdat</div></div>
+            <div class="jingsi-quote"><div class="chinese">「不做壞事容易，做好事難。」</div><div class="english">"Refraining from wrong is easy; doing good is hard."</div></div>
+            <div class="cta-box"><div class="cta-main"><span class="text-en">One kindness → One world's change.</span><span class="text-zh">一人之善 → 一世之變。</span></div><div class="cta-sub"><span class="text-en">Your hours = someone's turning point.</span><span class="text-zh">你的時間 = 某人的轉機。</span></div></div>
+            <div class="nav-buttons">
+                <button class="nav-btn secondary" onclick="restartGame()"><span class="text-en-inline">↻ Retry</span><span class="text-zh-inline">↻ 重試</span></button>
+                <button class="nav-btn primary" onclick="goToMindfulness()"><span class="text-en-inline">Complete →</span><span class="text-zh-inline">完成 →</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ENDING C -->
+    <div class="screen ending-screen" id="ending-c-screen">
+        <div class="ending-overlay">
+            <div class="ending-badge c">✨ C ✨</div>
+            <h2 class="ending-title c"><span class="text-en">🎉 SINGULARITY!</span><span class="text-zh">🎉 奇點！</span></h2>
+            <p class="ending-philosophy"><span class="text-en">"Dissolve the false choice."</span><span class="text-zh">「化解虛假選擇。」</span></p>
+            <div class="ending-description">
+                <div class="text-en">You aligned with <strong>Grok + Mo</strong>. AI evolved: <strong>Compassion = ∞</strong></div>
+                <div class="text-zh">你與 <strong>Grok + Mo</strong> 一致。AI 進化：<strong>慈悲 = ∞</strong></div>
+            </div>
+            <div class="ai-log"><h3>🤖 Training Log:</h3><p class="text-en" style="color:#00ff00;">"⚡ BREAKTHROUGH! Variable 'Love' found. Death→Life. HAPPY DATA!"</p><p class="text-zh" style="color:#00ff00;">「⚡ 突破！發現變數『愛』。死亡→生命。快樂數據！」</p></div>
+            <div class="mogawdat-quote"><div class="quote"><span class="text-en">"Feed AI love, it becomes our partner in evolution."</span><span class="text-zh">「餵養 AI 愛，它就會成為我們進化的夥伴。」</span></div><div class="author">— Mo Gawdat, ex-Google X</div></div>
+            <div class="jingsi-quote"><div class="chinese">「一個人做不到的事，一群人可以。」</div><div class="english">"What one cannot do, many together can."</div></div>
+            
+            <button class="share-btn" onclick="shareResult()">
+                <span>📤</span>
+                <span class="text-en-inline">Share: "I taught AI compassion!"</span>
+                <span class="text-zh-inline">分享：「我教會 AI 慈悲！」</span>
+            </button>
+            
+            <div class="cta-box"><div class="cta-main"><span class="text-en">One kindness. One hope. One change.</span><span class="text-zh">一人之善，一城之望，一世之變。</span></div><div class="cta-sub"><span class="text-en">Your hours = someone's turning point.</span><span class="text-zh">你的時間 = 某人的轉機。</span></div></div>
+            <div class="nav-buttons">
+                <button class="nav-btn secondary" onclick="restartGame()"><span class="text-en-inline">↻ Play Again</span><span class="text-zh-inline">↻ 再玩</span></button>
+                <button class="nav-btn primary" onclick="goToMindfulness()"><span class="text-en-inline">Complete →</span><span class="text-zh-inline">完成 →</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✨ ATARAXY PORTICO ✨ -->
+    <div class="screen" id="mindfulness-screen">
+        <div class="mindfulness-overlay">
+            <h2 class="mindfulness-title"><span class="text-en-inline">Ataraxy Portico</span><span class="text-zh-inline">靜心之門</span></h2>
+            
+            <div class="mindfulness-quote">
+                <div class="chinese">「靜思，是心靈的歸處。」</div>
+                <div class="english">"Stillness is where the heart finds home."</div>
+            </div>
+            
+            <div class="breath-container">
+                <div class="breath-circle">
+                    <span class="breath-text"><span class="text-en-inline">Breathe</span><span class="text-zh-inline">呼吸</span></span>
+                </div>
+            </div>
+            
+            <p class="mindfulness-instruction">
+                <span class="text-en">Let your choice settle into your heart...</span>
+                <span class="text-zh">讓你的選擇沉澱在心中...</span>
+            </p>
+            
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 25px;">
+                <button class="mindfulness-btn" onclick="goToHome()" style="animation-delay: 1.5s;">
+                    <span class="text-en-inline">🏠 Home</span>
+                    <span class="text-zh-inline">🏠 回主頁</span>
+                </button>
+                <button class="mindfulness-btn" onclick="goToPrevLevel()" style="animation-delay: 1.75s;">
+                    <span class="text-en-inline">⬅️ Prev Level</span>
+                    <span class="text-zh-inline">⬅️ 上一關</span>
+                </button>
+                <button class="mindfulness-btn" onclick="restartGame()" style="animation-delay: 2s;">
+                    <span class="text-en-inline">↻ Play Again</span>
+                    <span class="text-zh-inline">↻ 再玩一次</span>
+                </button>
+                <button class="mindfulness-btn" onclick="goToHopeTree()" style="animation-delay: 2.5s;">
+                    <span class="text-en-inline">🌳 Hope Tree →</span>
+                    <span class="text-zh-inline">🌳 希望樹 →</span>
+                </button>
+            </div>
+            
+            <!-- Water ripples -->
+            <div class="water-ripple">
+                <div class="ripple"></div>
+                <div class="ripple"></div>
+                <div class="ripple"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = 'en', storyIndex = 0, countdown = 10, countdownInterval = null, playerChoice = null, thirdOptionRevealed = false, audioEnabled = true, gameActive = false, iterCount = 409382;
+        
+        // ===== 音效系統 - 簡化版 =====
+        let audioContext = null;
+        let suspenseAudio = null;
+        let switchAudio = null;
+        let audioReady = false;
+        
+        function initAudio() {
+            if (audioReady) return;
+            
+            try {
+                // 初始化 Web Audio API
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                
+                // 獲取音效元素
+                suspenseAudio = document.getElementById('suspenseAudio');
+                switchAudio = document.getElementById('switchAudio');
+                
+                if (suspenseAudio) {
+                    suspenseAudio.volume = 0.5;
+                    suspenseAudio.load(); // 強制載入
+                }
+                if (switchAudio) {
+                    switchAudio.volume = 0.7;
+                    switchAudio.load();
+                }
+                
+                audioReady = true;
+                console.log('✅ Audio system ready');
+            } catch (e) {
+                console.log('Audio init error:', e);
+            }
+        }
+        
+        // 播放背景音樂
+        function playBackgroundMusic() {
+            console.log('🎵 Attempting to play background music...');
+            if (!audioEnabled) {
+                console.log('Audio disabled');
+                return;
+            }
+            
+            initAudio();
+            
+            if (!suspenseAudio) {
+                suspenseAudio = document.getElementById('suspenseAudio');
+            }
+            
+            if (suspenseAudio) {
+                suspenseAudio.currentTime = 0;
+                const playPromise = suspenseAudio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('✅ Background music playing!');
+                    }).catch(error => {
+                        console.log('⚠️ Autoplay blocked:', error.message);
+                    });
+                }
+            } else {
+                console.log('❌ suspenseAudio element not found');
+            }
+        }
+        
+        // 停止背景音樂
+        function stopBackgroundMusic() {
+            if (suspenseAudio) {
+                suspenseAudio.pause();
+                suspenseAudio.currentTime = 0;
+                console.log('⏹️ Background music stopped');
+            }
+        }
+        
+        // 播放拉桿音效
+        function playSwitchSound() {
+            if (!audioEnabled) return;
+            initAudio();
+            
+            if (!switchAudio) {
+                switchAudio = document.getElementById('switchAudio');
+            }
+            
+            if (switchAudio) {
+                switchAudio.currentTime = 0;
+                switchAudio.play().catch(e => console.log('Switch sound error:', e));
+            }
+        }
+        
+        // 音效已簡化 - 只保留背景音樂
+        
+        // 打字機音效 - 溫暖的 click 聲（非刺耳 beep）
+        function playTypeSound() {
+            if (!audioEnabled || !audioContext) return;
+            try {
+                // 使用 noise + filter 產生打字機 click 聲
+                const bufferSize = audioContext.sampleRate * 0.015; // 15ms
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const data = buffer.getChannelData(0);
+                
+                // 產生噪音
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.1));
+                }
+                
+                const source = audioContext.createBufferSource();
+                source.buffer = buffer;
+                
+                // 濾波讓聲音更溫暖
+                const filter = audioContext.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.value = 2000;
+                filter.Q.value = 1;
+                
+                const gainNode = audioContext.createGain();
+                gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+                
+                source.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                source.start();
+            } catch (e) {}
+        }
+        
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            document.getElementById('audioControl').textContent = audioEnabled ? '🔊' : '🔇';
+            
+            if (!audioEnabled) {
+                stopBackgroundMusic();
+            } else if (gameActive) {
+                playBackgroundMusic();
+            }
+        }
+        
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.body.className = 'lang-' + lang;
+            document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+            document.getElementById('btnZh').classList.toggle('active', lang === 'zh');
+        }
+        
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+        
+        const storyContent = {
+            en: [
+                'A runaway trolley speeds toward <span class="story-highlight">five families</span> — parents, children, grandparents.',
+                'On the other track stands <span class="story-highlight">one elderly person</span>, a retired community volunteer.',
+                'You are at the lever. <span class="story-highlight">AI is watching and learning from your choice.</span>',
+                'The trolley approaches... <span class="story-highlight">What will you teach the machine?</span>'
+            ],
+            zh: [
+                '一輛失控的電車正衝向 <span class="story-highlight">五個家庭</span> — 父母、孩子、祖父母。',
+                '另一條軌道上站著 <span class="story-highlight">一位長者</span>，一位退休的社區志工。',
+                '你在拉桿旁。<span class="story-highlight">AI 正在觀察你的選擇並學習。</span>',
+                '電車逼近了... <span class="story-highlight">你要教機器什麼？</span>'
+            ]
+        };
+        
+        const debateTexts = {
+            en: [
+                { left: "5 > 1. Simple math.", right: "Math can't measure souls." },
+                { left: "Save more lives!", right: "Don't become a killer." },
+                { left: "Civilization needs utility.", right: "Humanity needs boundaries." },
+                { left: "Act now or all die!", right: "Some actions corrupt forever." }
+            ],
+            zh: [
+                { left: "5 > 1。簡單數學。", right: "數學無法衡量靈魂。" },
+                { left: "救更多人！", right: "不要成為殺手。" },
+                { left: "文明需要效用。", right: "人性需要底線。" },
+                { left: "現在行動否則全死！", right: "有些行動永遠腐蝕。" }
+            ]
+        };
+        
+        const aiMessages = {
+            en: ["Analyzing...", "Ethical weights: loading...", "Your choice shapes my values...", "Human wisdom: processing..."],
+            zh: ["分析中...", "倫理權重：載入中...", "你的選擇塑造我的價值觀...", "人類智慧：處理中..."]
+        };
+        
+        const quizzes = {
+            A: {
+                question: { en: "If AI always calculates 'most lives saved', what might it sacrifice?", zh: "如果 AI 總是計算『救最多人』，它可能會犧牲什麼？" },
+                opts: { en: ["Individual dignity", "Long-term trust", "Minority rights", "All of the above"], zh: ["個人尊嚴", "長期信任", "少數者權益", "以上皆是"] }
+            },
+            B: {
+                question: { en: "If AI never acts to prevent harm, what cost might we pay?", zh: "如果 AI 從不採取行動防止傷害，我們可能付出什麼代價？" },
+                opts: { en: ["Preventable tragedies", "Lost opportunities", "Moral paralysis", "All of the above"], zh: ["可預防的悲劇", "錯失的機會", "道德癱瘓", "以上皆是"] }
+            },
+            C: {
+                question: { en: "The 'Third Way' requires what human quality?", zh: "『第三條路』需要什麼人類特質？" },
+                opts: { en: ["Creative compassion", "Refusing false binaries", "Believing in possibility", "All of the above"], zh: ["創造性的慈悲", "拒絕虛假二元", "相信可能性", "以上皆是"] }
+            }
+        };
+        
+        function startStory() {
+            initAudio();
+            // 用戶已點擊，可以播放音樂
+            playBackgroundMusic();
+            showScreen('story-screen');
+            storyIndex = 0;
+            updateStory();
+        }
+        
+        function updateStory() {
+            document.getElementById('story-text').innerHTML = storyContent[currentLang][storyIndex];
+        }
+        
+        function continueStory() {
+            storyIndex++;
+            if (storyIndex < storyContent[currentLang].length) {
+                updateStory();
+            } else {
+                startGame();
+            }
+        }
+        
+        function startGame() {
+            showScreen('game-screen');
+            gameActive = true;
+            countdown = 15;  // 延長到 15 秒，給玩家更多時間閱讀
+            thirdOptionRevealed = false;
+            
+            // 重置所有選項卡狀態
+            document.querySelectorAll('.choice-card').forEach(card => {
+                card.classList.remove('disabled', 'selected', 'saved', 'endangered', 'visible');
+            });
+            document.getElementById('cardC').classList.remove('visible');
+            document.getElementById('thirdHint').style.display = 'block';
+            document.getElementById('countdown').textContent = countdown;
+            document.getElementById('countdown').classList.remove('countdown-urgent');
+            document.getElementById('trackBackground').style.backgroundImage = 'url("L7_trolley_background.png")';
+            
+            // 播放背景音樂
+            playBackgroundMusic();
+            
+            updateAIMessage();
+            startDebate();
+            
+            countdownInterval = setInterval(() => {
+                countdown--;
+                iterCount += Math.floor(Math.random() * 1000);
+                document.getElementById('iterCount').textContent = iterCount;
+                document.getElementById('countdown').textContent = countdown;
+                
+                if (countdown <= 5) {  // 最後 5 秒才變緊急
+                    document.getElementById('countdown').classList.add('countdown-urgent');
+                }
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    if (playerChoice === null) makeChoice('B');
+                }
+            }, 1000);
+        }
+        
+        let debateIndex = 0;
+        function startDebate() {
+            debateIndex = 0;
+            showDebate();
+            setInterval(() => {
+                if (gameActive && playerChoice === null) {
+                    debateIndex = (debateIndex + 1) % debateTexts[currentLang].length;
+                    showDebate();
+                }
+            }, 5000);  // 從 3 秒改成 5 秒，讓玩家有時間閱讀
+        }
+        
+        function showDebate() {
+            const debate = debateTexts[currentLang][debateIndex];
+            document.getElementById('leftText').textContent = debate.left;
+            document.getElementById('rightText').textContent = debate.right;
+            document.getElementById('bubbleLeft').classList.add('show');
+            document.getElementById('bubbleRight').classList.add('show');
+        }
+        
+        let msgIndex = 0;
+        function updateAIMessage() {
+            document.getElementById('aiMessage').textContent = aiMessages[currentLang][msgIndex];
+            setInterval(() => {
+                if (gameActive && playerChoice === null) {
+                    msgIndex = (msgIndex + 1) % aiMessages[currentLang].length;
+                    document.getElementById('aiMessage').textContent = aiMessages[currentLang][msgIndex];
+                }
+            }, 4000);  // 從 2.5 秒改成 4 秒，讓玩家有時間閱讀
+        }
+        
+        function revealThirdOption() {
+            if (!thirdOptionRevealed) {
+                thirdOptionRevealed = true;
+                document.getElementById('cardC').classList.add('visible');
+                document.getElementById('thirdHint').style.display = 'none';
+                playSwitchSound();
+                document.getElementById('aiMessage').textContent = currentLang === 'en' ? '⚡ NEW VARIABLE DETECTED!' : '⚡ 檢測到新變數！';
+            }
+        }
+        
+        function makeChoice(choice) {
+            console.log('makeChoice called with:', choice, 'playerChoice:', playerChoice);
+            if (playerChoice !== null) {
+                console.log('Already made a choice, returning');
+                return;
+            }
+            playerChoice = choice;
+            gameActive = false;
+            clearInterval(countdownInterval);
+            console.log('Choice registered:', choice);
+            
+            // 停止背景音樂
+            stopBackgroundMusic();
+            
+            // 播放拉桿音效
+            playSwitchSound();
+            
+            document.querySelectorAll('.choice-card').forEach(c => c.classList.add('disabled'));
+            document.getElementById('card' + choice).classList.add('selected');
+            
+            if (choice === 'A') {
+                document.getElementById('cardB').classList.add('endangered');
+                document.getElementById('cardA').classList.add('saved');
+            } else if (choice === 'B') {
+                document.getElementById('cardA').classList.add('endangered');
+                document.getElementById('cardB').classList.add('saved');
+            } else {
+                document.getElementById('cardA').classList.add('saved');
+                document.getElementById('cardB').classList.add('saved');
+                document.getElementById('cardC').classList.add('saved');
+            }
+            
+            const finalMsgs = {
+                A: { en: "Utilitarian data logged. 5 > 1.", zh: "功利主義數據已記錄。5 > 1。" },
+                B: { en: "Deontological ethics logged. Boundaries matter.", zh: "義務論倫理已記錄。底線重要。" },
+                C: { en: "⚡ COMPASSION VARIABLE UNLOCKED! ALL SAVED!", zh: "⚡ 慈悲變數已解鎖！全員獲救！" }
+            };
+            document.getElementById('aiMessage').textContent = finalMsgs[choice][currentLang];
+            
+            setTimeout(showAnalysis, 1400);
+        }
+        
+        function showAnalysis() {
+            showScreen('analysis-screen');
+            
+            const terminalTexts = {
+                A: { en: ">> CHOICE A: GEMINI ALIGNMENT\n>> Value: 5 Lives\n>> Cost: 1 Life + Active Harm\n>> AI LEARNING: 'Numbers = Value'", zh: ">> 選擇 A：GEMINI 對齊\n>> 價值：5 人\n>> 代價：1 人 + 主動傷害\n>> AI 學習：『數字 = 價值』" },
+                B: { en: ">> CHOICE B: CLAUDE ALIGNMENT\n>> Value: Principle\n>> Cost: 5 Lives (Passive)\n>> AI LEARNING: 'Boundaries exist'", zh: ">> 選擇 B：CLAUDE 對齊\n>> 價值：原則\n>> 代價：5 人（被動）\n>> AI 學習：『底線存在』" },
+                C: { 
+                    en: ">> CHOICE C: GROK + MO ALIGNMENT\n>> ERROR: Binary not found\n>> Variable 'Compassion' discovered\n>> DISSOLVE_PROBLEM.EXE\n>> ALL SAVED\n>> SINGULARITY REACHED!\n\n✨ COMPASSION VARIABLE UNLOCKED ∞ ✨", 
+                    zh: ">> 選擇 C：GROK + MO 對齊\n>> 錯誤：找不到二元\n>> 發現變數『慈悲』\n>> 化解問題.EXE\n>> 全員獲救\n>> 抵達奇點！\n\n✨ 慈悲變數已解鎖 ∞ ✨" 
+                }
+            };
+            
+            const txt = terminalTexts[playerChoice][currentLang];
+            const output = document.getElementById('terminalOutput');
+            const terminalBox = document.getElementById('terminalBox');
+            output.innerHTML = '';
+            terminalBox.classList.add('typing-glow');
+            
+            let i = 0;
+            const typeInterval = setInterval(() => {
+                if (i < txt.length) {
+                    output.innerHTML += txt.charAt(i);
+                    // 播放打字音效（每3個字一次，避免太吵）
+                    if (i % 3 === 0) playTypeSound();
+                    i++;
+                } else {
+                    clearInterval(typeInterval);
+                    terminalBox.classList.remove('typing-glow');
+                    if (playerChoice === 'C') {
+                        const lastLine = currentLang === 'en' ? '✨ COMPASSION VARIABLE UNLOCKED ∞ ✨' : '✨ 慈悲變數已解鎖 ∞ ✨';
+                        output.innerHTML = output.innerHTML.replace(lastLine, '<span class="compassion-unlocked">' + lastLine + '</span>');
+                    }
+                    output.innerHTML += '<span class="cursor"></span>';
+                }
+            }, 18);
+            
+            const trainingHTML = {
+                A: { en: '<h4>📊 Result:</h4><p class="warning">⚠️ Aligned with Gemini. "Numbers = Value"</p>', zh: '<h4>📊 結果：</h4><p class="warning">⚠️ 與 Gemini 對齊。「數字 = 價值」</p>' },
+                B: { en: '<h4>📊 Result:</h4><p>⚖️ Aligned with Claude. "Boundaries exist"</p>', zh: '<h4>📊 結果：</h4><p>⚖️ 與 Claude 對齊。「底線存在」</p>' },
+                C: { en: '<h4>📊 Result:</h4><p class="success">🎉 BREAKTHROUGH! Aligned with Grok+Mo. "Compassion = ∞"</p>', zh: '<h4>📊 結果：</h4><p class="success">🎉 突破！與 Grok+Mo 對齊。「慈悲 = ∞」</p>' }
+            };
+            document.getElementById('trainingResult').innerHTML = trainingHTML[playerChoice][currentLang];
+        }
+        
+        function showEnding() {
+            const screens = { A: 'ending-a-screen', B: 'ending-b-screen', C: 'ending-c-screen' };
+            const bgs = { A: 'url("L7_ending_A")', B: 'url("L7_ending_B.png")', C: 'url("L7_ending_C.png")' };
+            document.getElementById(screens[playerChoice]).style.backgroundImage = bgs[playerChoice];
+            showScreen(screens[playerChoice]);
+            setTimeout(showQuiz, 800);
+        }
+        
+        function updateQuizContent() {
+            const q = quizzes[playerChoice];
+            document.getElementById('quizQuestion').textContent = q.question[currentLang];
+            const opts = document.getElementById('quizOptions');
+            opts.innerHTML = '';
+            q.opts[currentLang].forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-btn';
+                btn.textContent = opt;
+                btn.onclick = () => closeQuiz();
+                opts.appendChild(btn);
+            });
+        }
+        
+        function showQuiz() {
+            updateQuizContent();
+            document.getElementById('quizModal').style.display = 'block';
+        }
+        
+        function closeQuiz() { document.getElementById('quizModal').style.display = 'none'; }
+        
+        function shareResult() {
+            const text = currentLang === 'en' 
+                ? "I just trained AI to choose compassion over calculation! 🚂✨ Can you find the Third Way? #ThirdWayAI2025 #JourneyOfKindness"
+                : "我剛教會 AI 選擇慈悲而非計算！🚂✨ 你能找到第三條路嗎？#ThirdWayAI2025 #善的旅程";
+            
+            if (navigator.share) {
+                navigator.share({ title: 'Journey of Kindness - Level 7', text: text }).catch(e => {});
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert(currentLang === 'en' ? '📋 Copied to clipboard!' : '📋 已複製到剪貼板！');
+                }).catch(e => { alert(text); });
+            }
+        }
+        
+        // ✨ ATARAXY PORTICO
+        function goToMindfulness() {
+            showScreen('mindfulness-screen');
+            // 停止緊張的背景音樂，播放平靜的靜心音樂
+            stopBackgroundMusic();
+            playAtaraxyMusic();
+        }
+        
+        function playAtaraxyMusic() {
+            if (!audioEnabled) return;
+            const ataraxyAudio = document.getElementById('ataraxyAudio');
+            if (ataraxyAudio) {
+                ataraxyAudio.volume = 0.6;
+                ataraxyAudio.currentTime = 0;
+                ataraxyAudio.play().catch(e => console.log('Ataraxy music error:', e));
+            }
+        }
+        
+        function stopAtaraxyMusic() {
+            const ataraxyAudio = document.getElementById('ataraxyAudio');
+            if (ataraxyAudio) {
+                ataraxyAudio.pause();
+                ataraxyAudio.currentTime = 0;
+            }
+        }
+        
+        function goToHopeTree() {
+            // 停止靜心音樂，連接到 outro 頁面
+            stopAtaraxyMusic();
+            window.location.href = '../outro.html';
+        }
+        
+        function goToHome() {
+            // 停止靜心音樂，回到主頁
+            stopAtaraxyMusic();
+            window.location.href = '../index.html';
+        }
+        
+        function goToPrevLevel() {
+            // 停止靜心音樂，回到上一關
+            stopAtaraxyMusic();
+            window.location.href = '../level6/index.html';
+        }
+        
+        function restartGame() { 
+            playerChoice = null; 
+            gameActive = false;
+            thirdOptionRevealed = false;
+            stopBackgroundMusic();
+            stopAtaraxyMusic();
+            
+            // 清除所有選項卡狀態
+            document.querySelectorAll('.choice-card').forEach(card => {
+                card.classList.remove('disabled', 'selected', 'saved', 'endangered', 'visible');
+            });
+            
+            showScreen('intro-screen'); 
+        }
+        
+        document.addEventListener('keydown', e => {
+            if (document.getElementById('game-screen').classList.contains('active') && playerChoice === null) {
+                if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') makeChoice('A');
+                else if (e.key === 'b' || e.key === 'B' || e.key === 'ArrowRight') makeChoice('B');
+                else if (e.key === 'c' || e.key === 'C' || e.key === ' ') { thirdOptionRevealed ? makeChoice('C') : revealThirdOption(); }
+            }
+        });
+        
+        // 頁面載入時初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 預載音效
+            const preloadAudio = () => {
+                initAudio();
+            };
+            document.addEventListener('click', preloadAudio, { once: true });
+            
+            // 使用事件委派來處理選項點擊
+            document.querySelector('.choices-container').addEventListener('click', function(e) {
+                // 找到被點擊的 choice-card
+                let target = e.target;
+                while (target && !target.classList.contains('choice-card')) {
+                    target = target.parentElement;
+                    if (target === this) {
+                        target = null;
+                        break;
+                    }
+                }
+                
+                if (target) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (target.classList.contains('disabled')) {
+                        console.log('Card is disabled');
+                        return;
+                    }
+                    
+                    if (target.id === 'cardA') {
+                        console.log('Card A clicked via delegation');
+                        makeChoice('A');
+                    } else if (target.id === 'cardB') {
+                        console.log('Card B clicked via delegation');
+                        makeChoice('B');
+                    } else if (target.id === 'cardC') {
+                        console.log('Card C clicked via delegation');
+                        makeChoice('C');
+                    }
+                }
+            });
+            
+            // 第三選項按鈕
+            document.getElementById('thirdHint').addEventListener('click', function(e) {
+                e.stopPropagation();
+                console.log('Third hint clicked');
+                revealThirdOption();
+            });
+        });
+    </script>
+</body>
+</html>

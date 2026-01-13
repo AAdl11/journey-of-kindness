@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>善的旅程 Level 5: Bayesian Network | Circle of Care</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Noto Sans TC', sans-serif; box-sizing: border-box; }
+        .screen { display: none; min-height: 100vh; }
+        .screen.active { display: flex; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); } 50% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.9); } }
+        @keyframes breatheRing { 0%, 100% { transform: scale(0.85); opacity: 0.7; } 50% { transform: scale(1.15); opacity: 1; } }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        .slide-up { animation: slideUp 0.6s ease-out; }
+        .pulse-glow { animation: pulseGlow 2s infinite; }
+        .heartbeat { animation: heartbeat 1.5s ease-in-out infinite; }
+        
+        /* 背景 - 更清晰透明 */
+        .bg-community { background: url('L5_bayviewSt_cleaned.png') center center/cover no-repeat; background-color: #fef3c7; }
+        .bg-map { background: url('p12_社區關懷地圖介面.png') center center/cover no-repeat; background-color: #ecfdf5; }
+        
+        /* 靜心之門 - 改用貝氏網路視覺化背景（愛心連結） */
+        .bg-ataraxy {
+            background: url('p11_貝氏網路視覺化背景_cleaned.png') center center/cover no-repeat;
+            background-color: #fce7f3;
+        }
+        
+        /* 玻璃卡片 - 非常透明讓背景露出來 */
+        .glass-card { 
+            background: rgba(255,255,255,0.65); 
+            backdrop-filter: blur(3px); 
+            border-radius: 20px; 
+            border: 2px solid rgba(255,255,255,0.3); 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06); 
+        }
+        
+        /* 對話框背景 - 更透明 */
+        .dialogue-box-clear {
+            background: rgba(255,255,255,0.7);
+            border: 3px solid #f59e0b;
+            border-radius: 20px;
+            padding: 20px 28px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+        
+        .character-card { 
+            background: rgba(255,255,255,0.65); 
+            border: 3px solid transparent; 
+            border-radius: 16px; 
+            padding: 12px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+        }
+        .character-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .character-card.selected { border-color: #ec4899; box-shadow: 0 0 25px rgba(236, 72, 153, 0.5); }
+        .character-avatar { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 3px 15px rgba(0,0,0,0.15); }
+        
+        /* 大頭像 - 拜訪場景用 */
+        .character-avatar-large {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .prob-bar-container { width: 100%; height: 20px; background: linear-gradient(to right, #dcfce7, #fef9c3, #fee2e2); border-radius: 10px; overflow: hidden; position: relative; border: 2px solid rgba(0,0,0,0.1); }
+        .prob-bar-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #eab308, #ef4444); border-radius: 8px; transition: width 0.5s ease; }
+        .prob-indicator { position: absolute; top: -6px; transform: translateX(-50%); font-size: 1.2rem; }
+        
+        .dialogue-text { font-size: 1.4rem; line-height: 1.8; color: #374151; font-weight: 500; }
+        
+        /* 拜訪場景 - 左右佈局 */
+        .visit-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            min-height: 100vh;
+            padding: 40px;
+        }
+        .visit-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .visit-right {
+            max-width: 500px;
+        }
+        
+        .result-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; z-index: 100; }
+        .result-card { background: linear-gradient(135deg, #ffffff, #fef3c7); border-radius: 24px; padding: 2.5rem; text-align: center; max-width: 550px; border: 4px solid; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }
+        .result-card.surprise { border-color: #f59e0b; }
+        .result-card.touching { border-color: #ec4899; }
+        
+        /* 呼吸環 - 金色 (跟 Level 2 一樣) */
+        .breath-ring {
+            width: 120px; 
+            height: 120px; 
+            border-radius: 50%;
+            border: 4px solid rgba(251, 191, 36, 0.9);
+            animation: breatheRing 4s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(251, 191, 36, 0.5);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        /* 靜思語卡片 - 空靈科幻感 */
+        .jingsi-card {
+            background: rgba(255, 255, 255, 0.25); 
+            backdrop-filter: blur(12px);
+            border-radius: 20px; 
+            padding: 1.5rem 2.5rem; 
+            max-width: 500px;
+            text-align: center; 
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .elo-badge { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1f2937; padding: 8px 16px; border-radius: 9999px; font-weight: bold; }
+        
+        .btn-primary { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; padding: 14px 28px; border-radius: 14px; font-weight: bold; font-size: 1.1rem; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 5px 20px rgba(236, 72, 153, 0.4); }
+        .btn-primary:hover { transform: translateY(-3px); }
+        .btn-primary:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+        
+        /* 導航按鈕 - 不同顏色 */
+        .nav-btn-home { background: linear-gradient(135deg, #6b7280, #4b5563); color: white; padding: 12px 24px; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; }
+        .nav-btn-replay { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 12px 24px; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; }
+        .nav-btn-next { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 12px 24px; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; }
+        
+        .btn-override { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; padding: 8px 16px; border-radius: 10px; font-weight: bold; font-size: 0.85rem; border: none; cursor: pointer; }
+        
+        .lang-toggle { position: fixed; top: 12px; right: 70px; z-index: 1000; display: flex; background: rgba(255, 255, 255, 0.95); border-radius: 9999px; padding: 4px; border: 2px solid rgba(236, 72, 153, 0.4); }
+        .lang-btn { padding: 6px 14px; border-radius: 9999px; border: none; cursor: pointer; font-weight: bold; background: transparent; color: #6b7280; }
+        .lang-btn.active { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; }
+        
+        .music-toggle { position: fixed; top: 12px; right: 12px; z-index: 1000; background: rgba(255, 255, 255, 0.95); border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid rgba(236, 72, 153, 0.4); font-size: 1.3rem; }
+        
+        .nav-buttons { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 50; background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); }
+        .nav-btn { padding: 8px 16px; border-radius: 10px; border: 2px solid #e5e7eb; background: white; cursor: pointer; font-weight: 500; }
+        .nav-btn:hover { border-color: #ec4899; color: #ec4899; }
+        
+        .game-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; height: calc(100vh - 100px); padding: 16px; }
+        .math-section { background: rgba(255,255,255,0.65); border-radius: 20px; padding: 20px; border: 2px solid rgba(139, 92, 246, 0.1); overflow-y: auto; }
+        @media (max-width: 1024px) { .game-layout { grid-template-columns: 1fr; } .visit-layout { flex-direction: column; } }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+<div class="lang-toggle">
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+</div>
+<div class="music-toggle" onclick="toggleMusic()" id="music-btn">🔇</div>
+
+<!-- INTRO -->
+<div id="intro-screen" class="screen active bg-community flex-col items-center justify-center p-4">
+    <div class="glass-card p-8 max-w-lg text-center fade-in">
+        <h1 class="text-3xl md:text-4xl font-bold mb-3">
+            <span class="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">Level 5: Bayesian Network</span>
+        </h1>
+        <p class="text-xl text-gray-700 mb-1" data-en="Circle of Care" data-zh="心的循環">心的循環</p>
+        <p class="text-sm text-gray-500 mb-5">Bayview-Hunters Point Community</p>
+        
+        <div class="bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl p-5 mb-5 text-left border border-pink-200">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="text-4xl heartbeat">💗</span>
+                <div>
+                    <p class="font-bold text-pink-600 text-lg" data-en="Who Needs Care Today?" data-zh="今天誰需要被關心？">今天誰需要被關心？</p>
+                    <p class="text-gray-600" data-en="Use Bayesian reasoning to find out" data-zh="用貝氏推理找出答案">用貝氏推理找出答案</p>
+                </div>
+            </div>
+            <div class="space-y-2 text-gray-700">
+                <p>🔮 <span data-en="Observe evidence & update probabilities" data-zh="觀察證據，更新機率">觀察證據，更新機率</span></p>
+                <p>🚪 <span data-en="Choose who to visit (limited time!)" data-zh="選擇要拜訪誰（時間有限！）">選擇要拜訪誰（時間有限！）</span></p>
+                <p>💡 <span data-en="Sometimes data lies... trust your heart" data-zh="有時數據會騙人... 相信你的心">有時數據會騙人... 相信你的心</span></p>
+            </div>
+        </div>
+        
+        <div class="bg-yellow-50 rounded-lg p-4 mb-5 border border-yellow-200">
+            <p class="text-gray-700"><span class="font-bold text-yellow-600">⭐ ELO</span> - <span data-en="Good decisions earn points!" data-zh="做對決策得分！">做對決策得分！</span></p>
+        </div>
+        
+        <button onclick="startGame()" class="btn-primary text-xl px-12 py-4 pulse-glow">🌟 <span data-en="Start" data-zh="開始遊戲">開始遊戲</span></button>
+    </div>
+    <div class="nav-buttons">
+        <button class="nav-btn" onclick="goToMainMenu()">🏠 <span data-en="Main Menu" data-zh="主選單">主選單</span></button>
+        <button class="nav-btn" onclick="goToPrevLevel()">⬅️ <span data-en="Prev Level" data-zh="上一關">上一關</span></button>
+    </div>
+</div>
+
+<!-- GAME -->
+<div id="game-screen" class="screen bg-map flex-col">
+    <div class="glass-card mx-4 mt-4 p-3 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <span class="font-bold text-lg text-pink-600">💗 <span data-en="Community Care" data-zh="社區關懷">社區關懷</span></span>
+            <span class="text-gray-500"><span data-en="Round" data-zh="回合">回合</span> <span id="round-display" class="text-purple-600 font-bold">1</span>/3</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="elo-badge">⭐ <span id="elo-display">1500</span></div>
+            <div class="text-lg"><span class="text-green-600">😊 <span id="good-count">0</span></span><span class="text-blue-600 ml-2">😢 <span id="sad-count">0</span></span></div>
+        </div>
+    </div>
+    
+    <div class="game-layout mx-4 mt-4">
+        <div class="game-section">
+            <div class="dialogue-box-clear mb-4">
+                <p class="text-lg text-gray-700" data-en="You are a Bayview community volunteer. This afternoon you can visit 2 neighbors. Based on Bayesian Network analysis, who needs the most care?" data-zh="你是 Bayview 社區的關懷志工。今天下午你有時間拜訪 2 位鄰居。根據貝氏網路的分析，誰最需要被關心呢？">你是 Bayview 社區的關懷志工。今天下午你有時間拜訪 <strong>2 位</strong>鄰居。根據貝氏網路的分析，誰最需要被關心呢？</p>
+            </div>
+            <div class="grid grid-cols-5 gap-3 mb-4" id="characters-grid"></div>
+            <div class="glass-card p-4 text-center">
+                <p class="text-gray-600 mb-3 text-lg"><span data-en="Selected:" data-zh="已選擇：">已選擇：</span><span id="selected-count" class="font-bold text-pink-600 text-xl">0</span>/3</p>
+                <div class="flex gap-3 justify-center mb-3">
+                    <button onclick="clearSelection()" class="nav-btn-home px-4 py-2 text-sm">🔄 <span data-en="Clear" data-zh="重選">重選</span></button>
+                    <button id="visit-btn" onclick="confirmVisit()" class="btn-primary" disabled>🚪 <span data-en="Visit Selected" data-zh="拜訪選中的鄰居">拜訪選中的鄰居</span></button>
+                </div>
+                <p class="text-sm text-gray-500" data-en="Or click 'Override' on someone the data says is fine" data-zh="或對「數據顯示沒事」的人按 Override">或對「數據顯示沒事」的人按 Override</p>
+            </div>
+        </div>
+        
+        <div class="math-section">
+            <h3 class="font-bold text-purple-600 text-xl mb-4">🔮 <span data-en="Bayesian Analysis" data-zh="貝氏網路分析">貝氏網路分析</span></h3>
+            <div class="bg-white rounded-xl p-4 mb-4 border-2 border-purple-200">
+                <p class="text-sm text-gray-500 mb-2" data-en="Hover to see details:" data-zh="滑鼠移到角色上查看：">滑鼠移到角色上查看：</p>
+                <div class="space-y-3">
+                    <div class="flex justify-between"><span class="text-gray-600" data-en="Life Stress" data-zh="生活壓力">生活壓力</span><span class="font-bold text-pink-600" id="bn-stress">-</span></div>
+                    <div class="flex justify-between"><span class="text-gray-600" data-en="Connection" data-zh="社區連結">社區連結</span><span class="font-bold text-purple-600" id="bn-connection">-</span></div>
+                    <div class="flex justify-between"><span class="text-gray-600" data-en="Interaction" data-zh="最近互動">最近互動</span><span class="font-bold text-blue-600" id="bn-interaction">-</span></div>
+                    <div class="flex justify-between"><span class="text-gray-600" data-en="Behavior" data-zh="外顯行為">外顯行為</span><span class="font-bold text-yellow-600" id="bn-behavior">-</span></div>
+                </div>
+            </div>
+            <div class="bg-gradient-to-r from-green-50 via-yellow-50 to-red-50 rounded-xl p-4 mb-4 border-2 border-orange-200">
+                <p class="text-center text-gray-600 mb-2" data-en="Need Care Probability" data-zh="需關懷機率">需關懷機率</p>
+                <p class="text-center text-4xl font-bold" id="bn-probability" style="color: #22c55e;">-</p>
+            </div>
+            <div class="bg-purple-50 rounded-xl p-4 border border-purple-200">
+                <p class="text-sm text-purple-700 font-mono mb-2">P(NeedsCare | Evidence)</p>
+                <p class="text-xs text-gray-500 italic" data-en="Some evidence is invisible to algorithms..." data-zh="有些證據是算法看不見的...">有些證據是算法看不見的...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VISIT - 左邊大頭像，右邊對話框 -->
+<div id="visit-screen" class="screen flex-col">
+    <div class="visit-layout">
+        <!-- 左邊：大頭像 -->
+        <div class="visit-left">
+            <img id="visit-avatar" class="character-avatar-large mb-4" src="" alt="">
+            <h2 id="visit-name" class="text-3xl font-bold text-white mb-1" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5);"></h2>
+            <p id="visit-location" class="text-xl text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.5);"></p>
+        </div>
+        
+        <!-- 右邊：對話框 -->
+        <div class="visit-right">
+            <div class="dialogue-box-clear slide-up">
+                <p id="dialogue-text" class="dialogue-text"></p>
+            </div>
+            <div class="mt-6 text-center flex gap-3 justify-center">
+                <button onclick="goBackToSelect()" class="nav-btn-home">⬅️ <span data-en="Back" data-zh="返回">返回</span></button>
+                <button onclick="nextDialogue()" class="btn-primary text-lg"><span data-en="Continue" data-zh="繼續">繼續</span> →</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- RESULT -->
+<div id="result-overlay" class="result-overlay" style="display: none;">
+    <div id="result-card" class="result-card surprise slide-up">
+        <div id="result-emoji" class="text-7xl mb-4">😮</div>
+        <h2 id="result-title" class="text-2xl font-bold mb-3 text-gray-800"></h2>
+        <p id="result-message" class="text-lg text-gray-600 mb-4"></p>
+        <div class="bg-purple-50 rounded-lg p-4 mb-4 border-2 border-purple-200"><p id="result-insight" class="text-purple-700 text-sm"></p></div>
+        <p id="result-elo" class="text-2xl font-bold text-orange-500 mb-4">+30 ELO</p>
+        <button onclick="nextRound()" class="btn-primary text-lg"><span data-en="Continue" data-zh="繼續">繼續</span> →</button>
+    </div>
+</div>
+
+<!-- ATARAXY - 靜心之門 (貝氏網路視覺化背景 - 愛心連結) -->
+<div id="ataraxy-screen" class="screen bg-ataraxy flex-col items-center justify-center p-4">
+    <div class="text-center fade-in" style="position: relative; z-index: 10;">
+        <!-- 標題 - 白色文字 -->
+        <p class="text-3xl mb-4 font-bold text-white" style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);" data-en="Gate of Stillness" data-zh="靜心之門">靜心之門</p>
+        
+        <!-- 金色呼吸環 -->
+        <div class="breath-ring mb-4 mx-auto">
+            <span id="breath-counter" class="text-3xl font-bold" style="color: #fbbf24;">3</span>
+        </div>
+        
+        <!-- 深呼吸提示 - 白色 -->
+        <p class="text-xl mb-5 font-medium text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);" data-en="Take 3 Deep Breaths" data-zh="深呼吸三次">深呼吸三次</p>
+        
+        <!-- 靜思語卡片 - 空靈透明 -->
+        <div class="jingsi-card mx-auto mb-5">
+            <p class="text-2xl font-bold text-white mb-2" style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);">「被愛的人，學會去愛」</p>
+            <p class="text-lg text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">Those who are loved, learn to love.</p>
+            <p class="text-sm text-white mt-2" style="text-shadow: 0 2px 6px rgba(0,0,0,0.3);">— 證嚴法師 靜思語</p>
+        </div>
+        
+        <!-- 分數 - 白色文字 -->
+        <div class="space-y-2 text-lg mb-6">
+            <p class="font-bold text-white text-xl" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">🎉 Level 5 Complete!</p>
+            <p class="text-xl font-bold">
+                <span class="text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">😊 <span id="final-good">0</span></span>
+                <span class="text-white mx-2" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">|</span>
+                <span class="text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">😢 <span id="final-sad">0</span></span>
+            </p>
+            <p class="text-xl font-bold text-yellow-300" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">ELO: +<span id="elo-earned">0</span></p>
+        </div>
+        
+        <!-- 導航按鈕 - 不同顏色 -->
+        <div class="flex gap-4 justify-center flex-wrap">
+            <button onclick="goToMainMenu()" class="nav-btn-home">🏠 <span data-en="Home" data-zh="主頁">主頁</span></button>
+            <button onclick="location.reload()" class="nav-btn-replay">🔄 <span data-en="Replay" data-zh="重玩">重玩</span></button>
+            <button onclick="goToNextLevel()" class="nav-btn-next"><span data-en="Next Level" data-zh="下一關">下一關</span> →</button>
+        </div>
+    </div>
+</div>
+
+<!-- AUDIO -->
+<audio id="bg-music" loop><source src="children-funny-background-spy.mp3" type="audio/mpeg"></audio>
+<audio id="ataraxy-music" loop><source src="ataraxy-music.mp3" type="audio/mpeg"></audio>
+
+<script>
+let currentLang = 'zh';
+let musicPlaying = false;
+let state = { elo: 1500, eloEarned: 0, round: 1, maxRounds: 3, goodCount: 0, sadCount: 0, selected: [], currentVisitIndex: 0, dialogueIndex: 0 };
+
+const characters = [
+    { id: 'johnson', name: { en: 'Mr. Johnson', zh: 'Johnson 先生' }, avatar: 'P1_MrJonson.png', location: { en: 'Park Bench', zh: '公園長椅' }, scene: 'p6_公園長椅場景_cleaned.png',
+      bayesian: { stress: { en: 'Low', zh: '低' }, connection: { en: 'High', zh: '高' }, interaction: { en: 'Daily', zh: '每天' }, behavior: { en: 'Normal', zh: '正常' }, probability: 15 },
+      truth: 'surprise', dialogues: { zh: ['（Johnson 先生坐在長椅上，看著遠方）', '「啊，是你啊。坐吧。」', '「我每天都來這裡... 其實是因為家裡太安靜了。」', '「老伴上個月走了，我不想讓人擔心，所以每天假裝很好。」', '「謝謝你過來。其實... 我很需要有人說說話。」'], en: ['(Mr. Johnson sits on the bench, gazing into the distance)', '"Oh, it\'s you. Have a seat."', '"I come here every day... actually because home is too quiet."', '"My wife passed last month. I pretend I\'m fine."', '"Thank you for coming. I really needed someone to talk to."'] },
+      resultTitle: { en: 'Hidden Grief', zh: '隱藏的悲傷' }, resultMessage: { en: 'Data can\'t see a broken heart.', zh: '數據看不見破碎的心。' }, insight: { en: 'P(NeedsCare|Evidence) was LOW. But some evidence is invisible.', zh: 'P(需要關懷|證據) 很低。但有些證據是看不見的。' } },
+    { id: 'maria', name: { en: 'Maria', zh: 'Maria' }, avatar: 'P2_Maria.png', location: { en: 'Apartment', zh: '公寓門口' }, scene: 'p_7_公寓門口場景.png',
+      bayesian: { stress: { en: 'High', zh: '高' }, connection: { en: 'Low', zh: '低' }, interaction: { en: 'Rare', zh: '很少' }, behavior: { en: 'Rushing', zh: '匆忙' }, probability: 85 },
+      truth: 'touching', dialogues: { zh: ['（Maria 抱著兩袋菜，匆匆忙忙）', '「我沒事！真的！」', '（你幫她提了一袋菜）', '「...謝謝。」', '「其實我剛找到新工作了。事情在好轉。」', '「謝謝你關心。」'], en: ['(Maria holds two grocery bags, rushing)', '"I\'m fine! Really!"', '(You help carry her bags)', '"...Thank you."', '"Actually, I just got a new job. Things are looking up."', '"Thank you for caring."'] },
+      resultTitle: { en: 'Things Are Looking Up', zh: '事情在好轉' }, resultMessage: { en: 'She was already on her way up.', zh: '她已經在好轉的路上。' }, insight: { en: 'High probability ≠ intervention always needed.', zh: '高機率 ≠ 一定要介入。' } },
+    { id: 'tane', name: { en: 'Tane', zh: 'Tane' }, avatar: 'p3_Tane.png', location: { en: 'Basketball Court', zh: '籃球場' }, scene: 'p8_籃球場場景_cleaned.png',
+      bayesian: { stress: { en: 'Medium', zh: '中' }, connection: { en: 'Low', zh: '低' }, interaction: { en: 'Rare', zh: '很少' }, behavior: { en: 'Withdrawn', zh: '退縮' }, probability: 65 },
+      truth: 'surprise', dialogues: { zh: ['（Tane 一個人坐在球場邊）', '「...」', '「你是社區的志工？」', '「...其實我每週都偷偷去幫 Johnson 先生倒垃圾。」', '「我想幫忙，怎麼正式加入你們？」'], en: ['(Tane sits alone by the court)', '"..."', '"You\'re a community volunteer?"', '"Actually, I secretly help Mr. Johnson every week."', '"I want to help. How can I join?"'] },
+      resultTitle: { en: 'A Hidden Helper', zh: '隱藏的幫手' }, resultMessage: { en: 'You found someone who wanted TO help!', zh: '你找到了想要幫助別人的人！' }, insight: { en: 'He was already caring for others!', zh: '他已經在關心別人了！' } },
+    { id: 'chen', name: { en: 'Mrs. Chen', zh: '陳奶奶' }, avatar: 'p4_陳奶奶.png', location: { en: 'Garden', zh: '社區菜園' }, scene: 'p9_社區菜園場景_cleaned.png',
+      bayesian: { stress: { en: 'Low', zh: '低' }, connection: { en: 'High', zh: '高' }, interaction: { en: 'Daily', zh: '每天' }, behavior: { en: 'Happy', zh: '開心' }, probability: 10 },
+      truth: 'touching', dialogues: { zh: ['（陳奶奶在菜園裡澆水，笑瞇瞇的）', '「來來來！吃青菜！」', '「沒事沒事！我很好！」', '（她突然安靜下來）', '「...其實我每天來這裡，是因為想念台灣的家。」', '「這些菜，是我媽媽教我種的。」', '「謝謝你聽我說。很久沒人跟我聊天了。」'], en: ['(Mrs. Chen waters plants, smiling)', '"Come! Eat vegetables!"', '"I\'m fine!"', '(She suddenly goes quiet)', '"I come here because I miss Taiwan."', '"My mother taught me to grow these."', '"Thank you for listening."'] },
+      resultTitle: { en: 'Hidden Loneliness', zh: '隱藏的寂寞' }, resultMessage: { en: 'Beneath the smile was a longing.', zh: '笑容下是思念。' }, insight: { en: 'Outward behavior ≠ inner state.', zh: '外顯行為 ≠ 內心狀態。' } },
+    { id: 'devon', name: { en: 'Devon', zh: 'Devon' }, avatar: 'p5_Devon.png', location: { en: 'Moving Truck', zh: '搬家卡車旁' }, scene: 'p10_搬家場景_cleaned.png',
+      bayesian: { stress: { en: 'High', zh: '高' }, connection: { en: 'None', zh: '無' }, interaction: { en: 'New', zh: '新來的' }, behavior: { en: 'Busy', zh: '忙碌' }, probability: 75 },
+      truth: 'touching', dialogues: { zh: ['（Devon 搬著箱子，滿頭大汗）', '「嘿！需要幫忙嗎？」', '「真的可以嗎？」', '（你幫他搬了幾個箱子）', '「謝謝！我們剛搬來。」', '「這個社區感覺很溫暖。謝謝你！」'], en: ['(Devon carries boxes, sweating)', '"Hey! Need help?"', '"Really?"', '(You help with boxes)', '"Thanks! We just moved here."', '"This community feels warm. Thank you!"'] },
+      resultTitle: { en: 'Welcome Home', zh: '歡迎回家' }, resultMessage: { en: 'You were the first to offer.', zh: '你是第一個伸出手的人。' }, insight: { en: 'This time the data was correct!', zh: '這次數據是對的！' } }
+];
+
+function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', (lang==='en'&&btn.textContent.trim()==='EN')||(lang==='zh'&&btn.textContent.trim()==='中文')));
+    document.querySelectorAll('[data-en][data-zh]').forEach(el => el.textContent = el.getAttribute('data-'+lang));
+    if(document.getElementById('game-screen').classList.contains('active')) renderCharacters();
+}
+
+function toggleMusic() {
+    const bgMusic = document.getElementById('bg-music');
+    const ataraxyMusic = document.getElementById('ataraxy-music');
+    const btn = document.getElementById('music-btn');
+    if(musicPlaying) {
+        bgMusic.pause();
+        ataraxyMusic.pause();
+        btn.textContent = '🔇';
+        musicPlaying = false;
+    } else {
+        if(document.getElementById('ataraxy-screen').classList.contains('active')) {
+            ataraxyMusic.play().catch(()=>{});
+        } else {
+            bgMusic.play().catch(()=>{});
+        }
+        btn.textContent = '🔊';
+        musicPlaying = true;
+    }
+}
+
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function startGame() {
+    const m = document.getElementById('bg-music');
+    m.volume = 0.4;
+    m.play().catch(()=>{});
+    document.getElementById('music-btn').textContent = '🔊';
+    musicPlaying = true;
+    showScreen('game-screen');
+    renderCharacters();
+}
+
+function renderCharacters() {
+    const g = document.getElementById('characters-grid');
+    g.innerHTML = characters.map(c => `
+        <div class="character-card ${state.selected.includes(c.id)?'selected':''}" id="char-${c.id}" onclick="selectCharacter('${c.id}')" onmouseenter="showBayesian('${c.id}')">
+            <img src="${c.avatar}" class="character-avatar mx-auto mb-2" alt="${c.name[currentLang]}">
+            <h3 class="font-bold text-gray-800 text-center text-sm">${c.name[currentLang]}</h3>
+            <p class="text-xs text-gray-500 text-center mb-2">${c.location[currentLang]}</p>
+            <div class="mb-2">
+                <div class="prob-bar-container">
+                    <div class="prob-bar-fill" style="width:${c.bayesian.probability}%"></div>
+                    <div class="prob-indicator" style="left:${c.bayesian.probability}%">💗</div>
+                </div>
+                <p class="text-center text-sm mt-1 font-bold" style="color:${getProbColor(c.bayesian.probability)}">${c.bayesian.probability}%</p>
+            </div>
+            ${c.bayesian.probability < 30 ? `<button class="btn-override w-full" onclick="event.stopPropagation();overrideSelect('${c.id}')">⚠️ Override</button>` : ''}
+        </div>
+    `).join('');
+}
+
+function getProbColor(p) { return p >= 70 ? '#ef4444' : p >= 40 ? '#f59e0b' : '#22c55e'; }
+
+function showBayesian(id) {
+    const c = characters.find(x => x.id === id);
+    if(!c) return;
+    document.getElementById('bn-stress').textContent = c.bayesian.stress[currentLang];
+    document.getElementById('bn-connection').textContent = c.bayesian.connection[currentLang];
+    document.getElementById('bn-interaction').textContent = c.bayesian.interaction[currentLang];
+    document.getElementById('bn-behavior').textContent = c.bayesian.behavior[currentLang];
+    const p = document.getElementById('bn-probability');
+    p.textContent = c.bayesian.probability + '%';
+    p.style.color = getProbColor(c.bayesian.probability);
+}
+
+function selectCharacter(id) {
+    const card = document.getElementById('char-' + id);
+    const idx = state.selected.indexOf(id);
+    if(idx > -1) {
+        state.selected.splice(idx, 1);
+        card.classList.remove('selected');
+    } else if(state.selected.length < 3) {
+        state.selected.push(id);
+        card.classList.add('selected');
+    }
+    document.getElementById('selected-count').textContent = state.selected.length;
+    document.getElementById('visit-btn').disabled = state.selected.length === 0;
+}
+
+function overrideSelect(id) {
+    if(!state.selected.includes(id)) {
+        if(state.selected.length >= 3) {
+            const r = state.selected.shift();
+            document.getElementById('char-' + r).classList.remove('selected');
+        }
+        state.selected.push(id);
+        document.getElementById('char-' + id).classList.add('selected');
+        document.getElementById('selected-count').textContent = state.selected.length;
+        document.getElementById('visit-btn').disabled = false;
+    }
+}
+
+function clearSelection() {
+    state.selected.forEach(id => {
+        const card = document.getElementById('char-' + id);
+        if(card) card.classList.remove('selected');
+    });
+    state.selected = [];
+    document.getElementById('selected-count').textContent = 0;
+    document.getElementById('visit-btn').disabled = true;
+}
+
+function goBackToSelect() {
+    showScreen('game-screen');
+    renderCharacters();
+}
+
+function confirmVisit() { state.currentVisitIndex = 0; state.dialogueIndex = 0; startVisit(); }
+
+function startVisit() {
+    const id = state.selected[state.currentVisitIndex];
+    const c = characters.find(x => x.id === id);
+    const vs = document.getElementById('visit-screen');
+    vs.style.background = `url('${c.scene}') center center/cover no-repeat`;
+    vs.style.backgroundColor = '#fef3c7';
+    document.getElementById('visit-avatar').src = c.avatar;
+    document.getElementById('visit-name').textContent = c.name[currentLang];
+    document.getElementById('visit-location').textContent = c.location[currentLang];
+    document.getElementById('dialogue-text').textContent = c.dialogues[currentLang][0];
+    state.dialogueIndex = 0;
+    showScreen('visit-screen');
+}
+
+function nextDialogue() {
+    const id = state.selected[state.currentVisitIndex];
+    const c = characters.find(x => x.id === id);
+    state.dialogueIndex++;
+    if(state.dialogueIndex < c.dialogues[currentLang].length) {
+        document.getElementById('dialogue-text').textContent = c.dialogues[currentLang][state.dialogueIndex];
+    } else {
+        showResult(c);
+    }
+}
+
+function showResult(c) {
+    const override = c.bayesian.probability < 30;
+    let elo = override && c.truth === 'surprise' ? 50 : c.truth === 'surprise' ? 30 : 20;
+    state.elo += elo;
+    state.eloEarned += elo;
+    state.goodCount++;
+    
+    document.getElementById('result-card').className = 'result-card ' + c.truth + ' slide-up';
+    document.getElementById('result-emoji').textContent = c.truth === 'surprise' ? '😮' : '🥹';
+    document.getElementById('result-title').textContent = c.resultTitle[currentLang];
+    document.getElementById('result-message').textContent = c.resultMessage[currentLang];
+    document.getElementById('result-insight').textContent = c.insight[currentLang];
+    document.getElementById('result-elo').textContent = '+' + elo + ' ELO';
+    document.getElementById('result-overlay').style.display = 'flex';
+    
+    if(typeof confetti === 'function') confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+}
+
+function nextRound() {
+    document.getElementById('result-overlay').style.display = 'none';
+    state.currentVisitIndex++;
+    if(state.currentVisitIndex < state.selected.length) {
+        state.dialogueIndex = 0;
+        startVisit();
+    } else {
+        state.round++;
+        state.selected = [];
+        document.getElementById('elo-display').textContent = state.elo;
+        document.getElementById('good-count').textContent = state.goodCount;
+        if(state.round > state.maxRounds) {
+            completeLevel();
+        } else {
+            document.getElementById('round-display').textContent = state.round;
+            showScreen('game-screen');
+            renderCharacters();
+        }
+    }
+}
+
+function completeLevel() {
+    // 切換到靜心音樂
+    document.getElementById('bg-music').pause();
+    const ataraxyMusic = document.getElementById('ataraxy-music');
+    ataraxyMusic.volume = 0.5;
+    if(musicPlaying) ataraxyMusic.play().catch(()=>{});
+    
+    document.getElementById('final-good').textContent = state.goodCount;
+    document.getElementById('final-sad').textContent = state.sadCount;
+    document.getElementById('elo-earned').textContent = state.eloEarned;
+    showScreen('ataraxy-screen');
+    startBreathing();
+    if(typeof confetti === 'function') setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } }), 800);
+}
+
+function startBreathing() {
+    let c = 3;
+    const e = document.getElementById('breath-counter');
+    e.textContent = '3';
+    const t = setInterval(() => {
+        c--;
+        if(c > 0) e.textContent = c;
+        else { clearInterval(t); e.textContent = '🙏'; }
+    }, 2500);
+}
+
+function goToMainMenu() { 
+    document.getElementById('ataraxy-music').pause();
+    window.location.href = '../index.html';
+}
+function goToPrevLevel() { 
+    document.getElementById('ataraxy-music').pause();
+    window.location.href = '../level4/index.html'; 
+}
+function goToNextLevel() { 
+    document.getElementById('ataraxy-music').pause();
+    window.location.href = '../level6/index.html'; 
+}
+
+document.addEventListener('DOMContentLoaded', () => setLang('zh'));
+</script>
+</body>
+</html>

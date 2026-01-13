@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>Journey Complete - Unity Wishing Tree | 善的旅程</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌳</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: #0a0a20;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        /* 語言切換 */
+        .lang-toggle {
+            position: fixed;
+            top: 1rem; left: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+        
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .lang-btn:hover, .lang-btn.active {
+            background: rgba(255, 215, 0, 0.4);
+            border-color: #ffd700;
+        }
+        
+        /* 音效控制 */
+        .audio-control {
+            position: fixed;
+            top: 1rem; right: 1rem;
+            z-index: 100;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #4CAF50;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.3em;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* ===== 第一區：全屏背景圖 ===== */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: url('earth_tree.jpg') center center / cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 3rem;
+        }
+        
+        /* 底部漸層，讓文字更清楚 */
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 40%;
+            background: linear-gradient(to top, rgba(10, 10, 32, 0.9) 0%, transparent 100%);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        
+        .completion-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #ffeb3b);
+            color: #1a237e;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 4px 40px rgba(255, 215, 0, 0.8); }
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+            margin-bottom: 0.3rem;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #a5d6a7;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            margin-bottom: 0.5rem;
+        }
+        
+        .scroll-hint {
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+        
+        /* ===== 第二區：內容區（深藍背景） ===== */
+        .content-section {
+            background: linear-gradient(180deg, #0a0a20 0%, #1a237e 50%, #283593 100%);
+            padding: 3rem 1.5rem;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 靜思語卡片 */
+        .message-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .message-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .message-quote {
+            font-style: italic;
+            color: #ffd700;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        /* 問卷提示 */
+        .survey-cta {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            border-radius: 16px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .survey-cta h3 { font-size: 1.1rem; margin-bottom: 0.3rem; }
+        .survey-cta p { font-size: 0.9rem; opacity: 0.95; }
+        
+        /* QR Code 區 */
+        .qr-title {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #a5d6a7;
+        }
+        
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .qr-card {
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            border-radius: 16px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .qr-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .qr-card img {
+            width: 100%;
+            max-width: 100px;
+            height: auto;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+        }
+        
+        .qr-card-icon { font-size: 1.3rem; margin-bottom: 0.3rem; }
+        .qr-card-title { font-size: 0.9rem; font-weight: 700; color: #1a237e; }
+        .qr-card-subtitle { font-size: 0.75rem; color: #666; }
+        
+        .qr-facebook { border-top: 4px solid #1877f2; }
+        .qr-instagram { border-top: 4px solid #e4405f; }
+        .qr-survey { border-top: 4px solid #34a853; }
+        
+        /* 按鈕 */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.9rem 1.8rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn-gallery {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            color: white;
+        }
+        
+        .btn-home {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-prev {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+        
+        .btn-replay {
+            background: linear-gradient(135deg, #ffd700, #ffb300);
+            color: #1a237e;
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+        }
+        
+        /* 手機優化 */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.6rem; }
+            .hero-section { height: 80vh; }
+            .qr-grid { gap: 0.5rem; }
+            .qr-card { padding: 0.8rem; }
+            .qr-card img { max-width: 70px; }
+            .qr-card-title { font-size: 0.8rem; }
+            .btn-group { flex-direction: column; align-items: center; }
+            .action-btn { width: 80%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 語言切換 -->
+    <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('zh')">中文</button>
+    </div>
+    
+    <!-- 音效控制 -->
+    <div class="audio-control" onclick="toggleAudio()">🔊</div>
+    
+    <!-- ===== 第一區：全屏背景圖 ===== -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="completion-badge" data-zh="🎉 旅程完成！" data-en="🎉 Journey Complete!">🎉 Journey Complete!</div>
+            <h1 data-zh="五族共融 許願樹" data-en="Unity Wishing Tree">Unity Wishing Tree</h1>
+            <p class="subtitle" data-zh="善的種子，遍灑全球" data-en="Seeds of kindness, spread worldwide">Seeds of kindness, spread worldwide</p>
+            <div class="scroll-hint">👇</div>
+        </div>
+    </section>
+    
+    <!-- ===== 第二區：內容 ===== -->
+    <section class="content-section">
+        <div class="container">
+            <div class="message-card">
+                <p class="message-text" data-zh="感謝您完成「善的旅程」！透過這七個關卡，您學習了 AI 的基礎知識，更體驗了如何用智慧與善心幫助他人。" data-en="Thank you for completing 'Journey of Kindness'! Through these seven levels, you learned AI fundamentals and experienced how to help others with wisdom and kindness.">
+                    Thank you for completing 'Journey of Kindness'! Through these seven levels, you learned AI fundamentals and experienced how to help others with wisdom and kindness.
+                </p>
+                <p class="message-quote" data-zh="「心中有愛，人間有情」— 證嚴法師" data-en="'With love in heart, there is warmth in the world' — Master Cheng Yen">'With love in heart, there is warmth in the world' — Master Cheng Yen</p>
+            </div>
+            
+            <div class="survey-cta">
+                <h3 data-zh="📝 請幫我填寫問卷！" data-en="📝 Please fill out the survey!">📝 Please fill out the survey!</h3>
+                <p data-zh="您的意見對我的研究非常重要，只需 2 分鐘！" data-en="Your feedback is very important for my research, only 2 minutes!">Your feedback is very important for my research, only 2 minutes!</p>
+            </div>
+            
+            <h2 class="qr-title" data-zh="📱 掃描 QR Code" data-en="📱 Scan QR Code">📱 Scan QR Code</h2>
+            <div class="qr-grid">
+                <div class="qr-card qr-facebook">
+                    <div class="qr-card-icon">📘</div>
+                    <img src="assets/images/qr_facebook.jpg" alt="Facebook QR Code">
+                    <div class="qr-card-title">Facebook</div>
+                    <div class="qr-card-subtitle" data-zh="追蹤專頁" data-en="Follow page">Follow page</div>
+                </div>
+                
+                <div class="qr-card qr-instagram">
+                    <div class="qr-card-icon">📸</div>
+                    <img src="assets/images/qr_instagram.png" alt="Instagram QR Code">
+                    <div class="qr-card-title">Instagram</div>
+                    <div class="qr-card-subtitle" data-zh="追蹤動態" data-en="Follow updates">Follow updates</div>
+                </div>
+                
+                <div class="qr-card qr-survey">
+                    <div class="qr-card-icon">📝</div>
+                    <img src="assets/images/qr_survey.png" alt="Survey QR Code">
+                    <div class="qr-card-title" data-zh="問卷調查" data-en="Survey">Survey</div>
+                    <div class="qr-card-subtitle" data-zh="分享意見" data-en="Share feedback">Share feedback</div>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <a href="gallery.html" class="action-btn btn-gallery">
+                    📸 <span data-zh="14張真實故事" data-en="14 Real Stories">14 Real Stories</span>
+                </a>
+                <a href="index.html" class="action-btn btn-home">
+                    🏠 <span data-zh="回到主頁" data-en="Back to Home">Back to Home</span>
+                </a>
+                <a href="level7/index.html" class="action-btn btn-prev">
+                    ⬅️ <span data-zh="上一關" data-en="Prev Level">Prev Level</span>
+                </a>
+                <a href="index.html" class="action-btn btn-replay">
+                    🔄 <span data-zh="再玩一次" data-en="Play Again">Play Again</span>
+                </a>
+            </div>
+            
+            <footer>
+                <p>Las Positas College | Honors Transfer Program</p>
+                <p>© 2025 Mei Hsien Hsu - Journey of Kindness</p>
+            </footer>
+        </div>
+    </section>
+    
+    <!-- 音樂 -->
+    <audio id="hopeTreeAudio" loop preload="auto">
+        <source src="cinematic-epic-inspiring-362462.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        let currentLang = 'en';
+        let audioEnabled = true;
+        
+        function playMusic() {
+            const audio = document.getElementById('hopeTreeAudio');
+            if (audio) {
+                audio.volume = 0.5;
+                audio.play().catch(e => console.log('Auto-play blocked'));
+            }
+        }
+        
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const audio = document.getElementById('hopeTreeAudio');
+            const btn = document.querySelector('.audio-control');
+            btn.textContent = audioEnabled ? '🔊' : '🔇';
+            if (audioEnabled) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', playMusic);
+        document.addEventListener('click', () => {
+            const audio = document.getElementById('hopeTreeAudio');
+            if (audio.paused && audioEnabled) audio.play();
+        }, { once: true });
+        
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.includes(lang === 'zh' ? '中文' : 'EN'));
+            });
+            document.querySelectorAll('[data-zh][data-en]').forEach(el => {
+                el.textContent = el.getAttribute(`data-${lang}`);
+            });
+            localStorage.setItem('jok-lang', lang);
+        }
+        
+        const savedLang = localStorage.getItem('jok-lang');
+        if (savedLang) setLang(savedLang);
+    </script>
+</body>
+</html>
