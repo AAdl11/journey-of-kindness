@@ -25,48 +25,6 @@
         
         .audio-control { position: fixed; top: 12px; right: 12px; z-index: 1000; background: rgba(0,0,0,0.7); border: 2px solid #4a90a4; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.3em; }
         
-        /* 🎬 浮動故事按鈕 */
-        .story-float-btn { 
-            position: fixed; 
-            bottom: 20px; 
-            left: 20px; 
-            z-index: 1000; 
-            background: rgba(0,0,0,0.7); 
-            border: 2px solid #ffd700; 
-            border-radius: 25px; 
-            padding: 8px 16px; 
-            color: #ffd700; 
-            cursor: pointer; 
-            font-size: 0.85em; 
-            font-family: inherit;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .story-float-btn:hover { 
-            background: rgba(255,215,0,0.2); 
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255,215,0,0.4);
-        }
-        
-        /* 導航按鈕樣式 */
-        .nav-level-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.9em;
-            transition: all 0.3s;
-        }
-        .nav-level-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(102,126,234,0.5);
-        }
-        
         .text-en, .text-zh { display: none; }
         body.lang-en .text-en { display: block; }
         body.lang-zh .text-zh { display: block; }
@@ -567,13 +525,6 @@
     </div>
     <div class="audio-control" id="audioControl" onclick="toggleAudio()">🔊</div>
     
-    <!-- 🎬 浮動故事按鈕 - 隨時溫故知新 -->
-    <button class="story-float-btn" onclick="goToStory()" title="重溫 29 秒故事">
-        <span>🎬</span>
-        <span class="text-en-inline">Story</span>
-        <span class="text-zh-inline">故事</span>
-    </button>
-    
     <audio id="suspenseAudio" loop preload="auto"><source src="L7_suspense_mp3.mp3" type="audio/mpeg"></audio>
     <audio id="switchAudio" preload="auto"><source src="L7_switch_mp3_mp3.mp3" type="audio/mpeg"></audio>
     <audio id="ataraxyAudio" loop preload="auto"><source src="ataraxy-music.mp3" type="audio/mpeg"></audio>
@@ -778,7 +729,6 @@
             <div class="jingsi-quote"><div class="chinese">「一個人的價值，不在於他能做什麼，而在於他是誰。」</div><div class="english">"Value lies not in what one can do, but in who they are."</div></div>
             <div class="cta-box"><div class="cta-main"><span class="text-en">One kindness → One world's change.</span><span class="text-zh">一人之善 → 一世之變。</span></div><div class="cta-sub"><span class="text-en">Your hours = someone's turning point.</span><span class="text-zh">你的時間 = 某人的轉機。</span></div></div>
             <div class="nav-buttons">
-                <button class="nav-btn" onclick="goToLevel6()" style="background: linear-gradient(135deg, #667eea, #764ba2);"><span class="text-en-inline">⬅ Level 6</span><span class="text-zh-inline">⬅ 第六關</span></button>
                 <button class="nav-btn secondary" onclick="restartGame()"><span class="text-en-inline">↻ Retry</span><span class="text-zh-inline">↻ 重試</span></button>
                 <button class="nav-btn primary" onclick="goToMindfulness()"><span class="text-en-inline">Complete →</span><span class="text-zh-inline">完成 →</span></button>
             </div>
@@ -800,7 +750,6 @@
             <div class="jingsi-quote"><div class="chinese">「不做壞事容易，做好事難。」</div><div class="english">"Refraining from wrong is easy; doing good is hard."</div></div>
             <div class="cta-box"><div class="cta-main"><span class="text-en">One kindness → One world's change.</span><span class="text-zh">一人之善 → 一世之變。</span></div><div class="cta-sub"><span class="text-en">Your hours = someone's turning point.</span><span class="text-zh">你的時間 = 某人的轉機。</span></div></div>
             <div class="nav-buttons">
-                <button class="nav-btn" onclick="goToLevel6()" style="background: linear-gradient(135deg, #667eea, #764ba2);"><span class="text-en-inline">⬅ Level 6</span><span class="text-zh-inline">⬅ 第六關</span></button>
                 <button class="nav-btn secondary" onclick="restartGame()"><span class="text-en-inline">↻ Retry</span><span class="text-zh-inline">↻ 重試</span></button>
                 <button class="nav-btn primary" onclick="goToMindfulness()"><span class="text-en-inline">Complete →</span><span class="text-zh-inline">完成 →</span></button>
             </div>
@@ -829,7 +778,6 @@
             
             <div class="cta-box"><div class="cta-main"><span class="text-en">One kindness. One hope. One change.</span><span class="text-zh">一人之善，一城之望，一世之變。</span></div><div class="cta-sub"><span class="text-en">Your hours = someone's turning point.</span><span class="text-zh">你的時間 = 某人的轉機。</span></div></div>
             <div class="nav-buttons">
-                <button class="nav-btn" onclick="goToLevel6()" style="background: linear-gradient(135deg, #667eea, #764ba2);"><span class="text-en-inline">⬅ Level 6</span><span class="text-zh-inline">⬅ 第六關</span></button>
                 <button class="nav-btn secondary" onclick="restartGame()"><span class="text-en-inline">↻ Play Again</span><span class="text-zh-inline">↻ 再玩</span></button>
                 <button class="nav-btn primary" onclick="goToMindfulness()"><span class="text-en-inline">Complete →</span><span class="text-zh-inline">完成 →</span></button>
             </div>
@@ -858,13 +806,13 @@
             </p>
             
             <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 25px;">
-                <button class="mindfulness-btn" onclick="goToLevel6()" style="animation-delay: 1s;">
-                    <span class="text-en-inline">⬅ Level 6</span>
-                    <span class="text-zh-inline">⬅ 第六關</span>
-                </button>
                 <button class="mindfulness-btn" onclick="goToHome()" style="animation-delay: 1.5s;">
                     <span class="text-en-inline">🏠 Home</span>
                     <span class="text-zh-inline">🏠 回主頁</span>
+                </button>
+                <button class="mindfulness-btn" onclick="goToPrevLevel()" style="animation-delay: 1.75s;">
+                    <span class="text-en-inline">⬅️ Prev Level</span>
+                    <span class="text-zh-inline">⬅️ 上一關</span>
                 </button>
                 <button class="mindfulness-btn" onclick="restartGame()" style="animation-delay: 2s;">
                     <span class="text-en-inline">↻ Play Again</span>
@@ -1355,18 +1303,10 @@
             window.location.href = '../index.html';
         }
         
-        function goToLevel6() {
-            // 停止音樂，前往 Level 6
-            stopBackgroundMusic();
+        function goToPrevLevel() {
+            // 停止靜心音樂，回到上一關
             stopAtaraxyMusic();
             window.location.href = '../level6/index.html';
-        }
-        
-        function goToStory() {
-            // 停止音樂，重播 29 秒開場影片
-            stopBackgroundMusic();
-            stopAtaraxyMusic();
-            window.location.href = '../index.html?play=intro';
         }
         
         function restartGame() { 
