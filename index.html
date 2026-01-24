@@ -1,811 +1,744 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Journey of Kindness 善的旅程 | AI Education Game</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Journey of Kindness | 善的旅程</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --glass-blur: 20px;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
             --gold: #fbbf24;
-            --pink: #ec4899;
-            --purple: #8b5cf6;
+            --gold-glow: rgba(251, 191, 36, 0.4);
         }
-        
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Noto Sans TC', 'Inter', sans-serif;
-            background: #0f172a;
-            color: white;
+            font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a1a;
+            color: #fff;
             min-height: 100vh;
             overflow-x: hidden;
         }
-        
-        /* ========== SCREENS ========== */
-        .screen {
-            display: none;
-            min-height: 100vh;
-            width: 100%;
-        }
-        .screen.active { display: flex; }
-        
-        /* ========== VIDEO INTRO SCREEN ========== */
-        #video-screen {
-            position: relative;
+
+        /* ==========================================
+           VIDEO INTRO OVERLAY
+           ========================================== */
+        #videoOverlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: #000;
+            z-index: 9999;
+            display: flex;
             align-items: center;
             justify-content: center;
         }
-        
-        #intro-video {
-            width: 100%;
-            height: 100vh;
-            object-fit: cover;
+
+        #videoOverlay.hidden { display: none !important; }
+
+        #introVideo {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            background: #000;
         }
-        
-        .video-overlay {
+
+        .video-controls {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 30px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            bottom: 40px; right: 40px;
+            display: flex; gap: 15px;
+            z-index: 10000;
         }
-        
-        .video-timer {
-            background: rgba(0,0,0,0.6);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            color: rgba(255,255,255,0.8);
-        }
-        
-        .skip-btn {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 10px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
+
+        .video-btn {
+            padding: 14px 28px;
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 30px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .skip-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.05);
+
+        .video-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
         }
-        
-        /* ========== MAIN MENU SCREEN ========== */
-        #menu-screen {
-            flex-direction: column;
+
+        .video-timer {
+            position: absolute;
+            top: 30px; right: 40px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Cinzel', serif;
+        }
+
+        /* ==========================================
+           MAIN PAGE
+           ========================================== */
+        #mainPage {
+            display: none;
+            min-height: 100vh;
             position: relative;
-            background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1a1a2e 100%);
+            overflow: hidden;
         }
-        
-        /* Hunters Point Map Background */
+
+        #mainPage.active { display: block; }
+
+        /* 3D Disney Hunters Point Map Background */
         .map-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('assets/images/hunters_point_map.png') center center / cover no-repeat;
-            opacity: 0.25;
-            filter: blur(1px) brightness(0.8);
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('assets/hunters_point_map.png') center bottom/cover no-repeat;
+            z-index: 0;
         }
-        
-        /* Animated gradient overlay */
-        .gradient-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(251, 191, 36, 0.1) 0%, transparent 60%);
-            animation: gradientPulse 8s ease-in-out infinite;
+
+        .map-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(
+                180deg,
+                rgba(10, 15, 30, 0.85) 0%,
+                rgba(10, 15, 30, 0.6) 40%,
+                rgba(10, 15, 30, 0.4) 70%,
+                rgba(10, 15, 30, 0.7) 100%
+            );
+            z-index: 1;
         }
-        
-        @keyframes gradientPulse {
-            0%, 100% { opacity: 0.8; }
+
+        /* Stars */
+        .stars {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 60%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px; height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
             50% { opacity: 1; }
         }
-        
-        /* Apple-style Frosted Header */
-        .header {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            padding: 40px 20px 20px;
-            background: linear-gradient(180deg,
-                rgba(0, 0, 0, 0.3) 0%,
-                rgba(0, 0, 0, 0.1) 70%,
-                transparent 100%);
-            backdrop-filter: blur(10px) saturate(180%);
-            -webkit-backdrop-filter: blur(10px) saturate(180%);
+
+        .shooting-star {
+            position: absolute;
+            width: 120px; height: 2px;
+            background: linear-gradient(90deg, #fff, transparent);
+            animation: shoot 6s infinite;
+            opacity: 0;
         }
-        
-        .game-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 900;
-            background: linear-gradient(135deg, #fbbf24, #f97316, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 60px rgba(251, 191, 36, 0.5);
-            margin-bottom: 8px;
+
+        @keyframes shoot {
+            0% { transform: translateX(0) translateY(0); opacity: 0; }
+            5% { opacity: 1; }
+            20% { transform: translateX(400px) translateY(200px); opacity: 0; }
+            100% { opacity: 0; }
         }
-        
-        .game-subtitle {
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-            color: rgba(255,255,255,0.7);
-            font-weight: 400;
-        }
-        
+
         /* Language Toggle */
         .lang-toggle {
             position: fixed;
-            top: 15px;
-            left: 15px;
+            top: 20px; right: 20px;
+            display: flex; gap: 5px;
             z-index: 100;
-            display: flex;
-            gap: 5px;
         }
+
         .lang-btn {
-            padding: 6px 14px;
-            border: 2px solid var(--glass-border);
+            padding: 10px 18px;
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            color: white;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
             border-radius: 20px;
+            color: #fff;
+            font-size: 14px;
             cursor: pointer;
-            font-size: 13px;
             transition: all 0.3s;
         }
+
         .lang-btn.active {
             background: var(--gold);
-            border-color: var(--gold);
-            color: #1a1a2e;
+            color: #000;
+            font-weight: 600;
         }
-        
-        /* Sound Toggle */
-        .sound-toggle {
+
+        /* Story Button */
+        .story-btn {
             position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 100;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: 2px solid var(--glass-border);
+            bottom: 30px; left: 30px;
+            width: 60px; height: 60px;
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            color: white;
-            cursor: pointer;
-            font-size: 1.2rem;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
             transition: all 0.3s;
+            z-index: 100;
         }
-        .sound-toggle:hover {
-            background: rgba(255,255,255,0.2);
+
+        .story-btn:hover {
             transform: scale(1.1);
+            background: rgba(251, 191, 36, 0.3);
+            box-shadow: 0 0 30px var(--gold-glow);
         }
-        
-        /* Level Cards Container */
-        .levels-container {
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 50px 20px 30px;
             position: relative;
             z-index: 10;
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-y: auto;
         }
-        
+
+        .title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold) 0%, #fff 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            text-shadow: 0 0 40px var(--gold-glow);
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.75);
+            margin-bottom: 6px;
+        }
+
+        .professor {
+            font-size: 0.9rem;
+            color: var(--gold);
+        }
+
+        /* Level Grid */
+        .levels-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 10px 25px 80px;
+            position: relative;
+            z-index: 10;
+        }
+
         .levels-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            width: 100%;
-            padding: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 22px;
         }
-        
-        /* Apple-style Glass Card */
+
+        /* Level Card - Apple Glassmorphism */
         .level-card {
-            position: relative;
-            background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.1) 0%,
-                rgba(255, 255, 255, 0.05) 50%,
-                rgba(255, 255, 255, 0.08) 100%);
-            backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 24px;
             padding: 24px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
             overflow: hidden;
-            box-shadow:
-                0 4px 30px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
-        
+
         .level-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--card-accent);
-            border-radius: 20px 20px 0 0;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--card-accent, var(--gold));
+            opacity: 0;
+            transition: opacity 0.3s;
         }
-        
+
         .level-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px var(--card-glow);
-            border-color: var(--card-accent);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            border-color: var(--card-accent, var(--gold));
         }
-        
-        /* Card Colors */
-        .level-card.l1 { --card-accent: #ef4444; --card-glow: rgba(239, 68, 68, 0.3); }
-        .level-card.l2 { --card-accent: #f97316; --card-glow: rgba(249, 115, 22, 0.3); }
-        .level-card.l3 { --card-accent: #eab308; --card-glow: rgba(234, 179, 8, 0.3); }
-        .level-card.l4 { --card-accent: #22c55e; --card-glow: rgba(34, 197, 94, 0.3); }
-        .level-card.l5 { --card-accent: #3b82f6; --card-glow: rgba(59, 130, 246, 0.3); }
-        .level-card.l6 { --card-accent: #8b5cf6; --card-glow: rgba(139, 92, 246, 0.3); }
-        .level-card.l7 { --card-accent: #ec4899; --card-glow: rgba(236, 72, 153, 0.3); }
-        
-        /* Heart Favorite */
-        .favorite-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(0,0,0,0.3);
-            color: rgba(255,255,255,0.5);
-            cursor: pointer;
-            font-size: 1.1rem;
+
+        .level-card:hover::before { opacity: 1; }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 14px;
+        }
+
+        .card-icon {
+            width: 52px; height: 52px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s;
-            z-index: 5;
+            font-size: 24px;
+            background: var(--card-accent, var(--gold));
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
         }
-        .favorite-btn:hover {
-            background: rgba(0,0,0,0.5);
-            transform: scale(1.15);
+
+        .card-title-group {
+            flex: 1;
         }
-        .favorite-btn.active {
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.2);
-            animation: heartPop 0.4s ease;
-        }
-        
-        @keyframes heartPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-        
-        /* Card Content */
-        .card-level {
-            display: inline-block;
-            padding: 4px 12px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: var(--card-accent);
-            margin-bottom: 12px;
-        }
-        
-        .card-title {
-            font-size: 1.3rem;
+
+        .card-title-group h3 {
+            font-size: 1.2rem;
             font-weight: 700;
-            margin-bottom: 6px;
-            color: white;
+            margin-bottom: 3px;
         }
-        
-        .card-algorithm {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.6);
-            margin-bottom: 12px;
-            font-family: 'Courier New', monospace;
+
+        .card-title-group .algorithm {
+            font-size: 0.82rem;
+            color: var(--card-accent, var(--gold));
+            font-weight: 600;
         }
-        
+
+        .card-title-group .chapter {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 2px;
+        }
+
+        /* Story Description */
         .card-story {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.8);
-            line-height: 1.5;
+            font-size: 0.92rem;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.55;
             margin-bottom: 12px;
+            min-height: 44px;
         }
-        
-        .card-lesson {
-            font-size: 0.85rem;
+
+        /* Jing Si Aphorism */
+        .card-jingsi {
+            font-size: 0.8rem;
             color: var(--gold);
             font-style: italic;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 14px;
+            padding: 8px 12px;
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid var(--gold);
         }
-        
+
+        /* Rating Row */
+        .card-rating {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+        }
+
+        .difficulty {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .stars {
+            color: #fbbf24;
+            letter-spacing: 2px;
+        }
+
+        .likes {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #f472b6;
+        }
+
         /* Play Button */
         .play-btn {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--card-accent), var(--card-glow));
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, var(--card-accent, var(--gold)) 0%, color-mix(in srgb, var(--card-accent, var(--gold)) 70%, #000) 100%);
             border: none;
-            color: white;
-            font-size: 1.2rem;
+            border-radius: 12px;
+            color: #000;
+            font-size: 0.95rem;
+            font-weight: 700;
             cursor: pointer;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px var(--card-glow);
-            transition: all 0.3s;
-            opacity: 0;
+            gap: 8px;
         }
-        .level-card:hover .play-btn {
-            opacity: 1;
-            transform: scale(1.1);
+
+        .play-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.4);
         }
-        
+
+        /* Card Accent Colors */
+        .level-card[data-level="1"] { --card-accent: #10b981; }
+        .level-card[data-level="2"] { --card-accent: #3b82f6; }
+        .level-card[data-level="3"] { --card-accent: #ec4899; }
+        .level-card[data-level="4"] { --card-accent: #f59e0b; }
+        .level-card[data-level="5"] { --card-accent: #14b8a6; }
+        .level-card[data-level="6"] { --card-accent: #8b5cf6; }
+        .level-card[data-level="7"] { --card-accent: #ef4444; }
+
         /* Footer */
         .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
             position: relative;
             z-index: 10;
-            text-align: center;
-            padding: 20px;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.85rem;
         }
+
         .footer a {
             color: var(--gold);
             text-decoration: none;
         }
-        
-        /* Meteor shower effect */
-        .meteors {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .meteor {
-            position: absolute;
-            width: 2px;
-            height: 80px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.4), transparent);
-            border-radius: 50%;
-            animation: meteorFall linear infinite;
-            opacity: 0;
-        }
-        .meteor::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 4px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 0 10px 2px rgba(255,255,255,0.8), 0 0 20px 4px rgba(251,191,36,0.5);
-        }
-        @keyframes meteorFall {
-            0% {
-                transform: translateY(-100px) translateX(0) rotate(45deg);
-                opacity: 0;
-            }
-            5% { opacity: 1; }
-            70% { opacity: 1; }
-            100% {
-                transform: translateY(100vh) translateX(200px) rotate(45deg);
-                opacity: 0;
-            }
-        }
 
-        /* Floating particles (stars) */
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            animation: twinkle 3s ease-in-out infinite;
-            box-shadow: 0 0 6px rgba(255,255,255,0.5);
-        }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-        
         /* Responsive */
         @media (max-width: 768px) {
-            .levels-grid {
-                grid-template-columns: 1fr;
-            }
-            .header { padding: 30px 15px 15px; }
-            .level-card { padding: 20px; }
-        }
-        
-        /* Progress indicator */
-        .progress-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            z-index: 100;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--gold), var(--pink));
-            width: 0%;
-            transition: width 0.5s;
+            .levels-grid { grid-template-columns: 1fr; }
+            .video-controls { bottom: 20px; right: 20px; }
+            .video-btn { padding: 12px 20px; font-size: 14px; }
         }
     </style>
 </head>
 <body>
-    <!-- Language Toggle -->
-    <div class="lang-toggle">
-        <button class="lang-btn" id="lang-en" onclick="setLang('en')">EN</button>
-        <button class="lang-btn active" id="lang-zh" onclick="setLang('zh')">中文</button>
-    </div>
-    
-    <!-- Sound Toggle -->
-    <button class="sound-toggle" id="sound-btn" onclick="toggleSound()">🔇</button>
-    
-    <!-- ========== VIDEO INTRO SCREEN ========== -->
-    <div id="video-screen" class="screen active">
-        <video id="intro-video" playsinline muted>
-            <source src="intro.mp4" type="video/mp4">
-        </video>
-        <div class="video-overlay">
-            <div class="video-timer">
-                <span data-en="Story begins in" data-zh="故事開始於">故事開始於</span> 
-                <span id="countdown">29</span>s
-            </div>
-            <button class="skip-btn" onclick="skipToMenu()">
-                <span data-en="Skip →" data-zh="跳過 →">跳過 →</span>
-            </button>
-        </div>
-    </div>
-    
-    <!-- ========== MAIN MENU SCREEN ========== -->
-    <div id="menu-screen" class="screen">
-        <!-- Background layers -->
-        <div class="map-background"></div>
-        <div class="gradient-overlay"></div>
-        
-        <!-- Meteor shower -->
-        <div class="meteors" id="meteors"></div>
 
-        <!-- Floating particles (stars) -->
-        <div class="particles" id="particles"></div>
-        
-        <!-- Header -->
-        <header class="header">
-            <h1 class="game-title">
-                <span data-en="Journey of Kindness" data-zh="善的旅程">善的旅程</span>
-            </h1>
-            <p class="game-subtitle">
-                <span data-en="Learn 7 AI Algorithms Through Real Community Stories" data-zh="透過真實社區故事學習 7 個 AI 演算法">透過真實社區故事學習 7 個 AI 演算法</span>
-            </p>
-        </header>
-        
-        <!-- Level Cards -->
-        <div class="levels-container">
-            <div class="levels-grid">
-                
-                <!-- Level 1 -->
-                <div class="level-card l1" onclick="goToLevel(1)">
-                    <button class="favorite-btn" onclick="toggleFavorite(event, 1)">♡</button>
-                    <span class="card-level">LEVEL 1</span>
-                    <h3 class="card-title" data-en="Mrs. Garcia's Meal" data-zh="Garcia 太太的餐點">Garcia 太太的餐點</h3>
-                    <p class="card-algorithm">A* Search Algorithm</p>
-                    <p class="card-story" data-en="Find the optimal path to deliver meals, but discover that the shortest path isn't always the best." data-zh="找出送餐的最佳路徑，但發現最短的路不一定是最好的路。">找出送餐的最佳路徑，但發現最短的路不一定是最好的路。</p>
-                    <p class="card-lesson" data-en="「The shortest path isn't always the best path」" data-zh="「最短路徑，不一定是最好的路」">「最短路徑，不一定是最好的路」</p>
-                    <button class="play-btn">▶</button>
+<!-- VIDEO INTRO -->
+<div id="videoOverlay">
+    <video id="introVideo" playsinline>
+        <source src="intro.mp4" type="video/mp4">
+    </video>
+    <div class="video-timer"><span id="timerDisplay">29</span>s</div>
+    <div class="video-controls">
+        <button class="video-btn" onclick="toggleMute()">
+            <span id="muteIcon">🔇</span>
+            <span data-zh="聲音" data-en="Sound">Sound</span>
+        </button>
+        <button class="video-btn" onclick="skipToMain()">
+            <span>⏭️</span>
+            <span data-zh="跳過" data-en="Skip">Skip</span>
+        </button>
+    </div>
+</div>
+
+<!-- MAIN PAGE -->
+<div id="mainPage">
+    <div class="map-background"></div>
+    <div class="map-overlay"></div>
+    <div class="stars" id="starsContainer"></div>
+
+    <div class="lang-toggle">
+        <button class="lang-btn active" id="lang-en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" id="lang-zh" onclick="setLang('zh')">中文</button>
+    </div>
+
+    <button class="story-btn" onclick="replayStory()" title="Replay Story">🎬</button>
+
+    <header class="header">
+        <h1 class="title" data-zh="善的旅程" data-en="Journey of Kindness">Journey of Kindness</h1>
+        <p class="subtitle" data-zh="AI 教育遊戲 | 透過真實社區故事學習 7 種 AI 演算法" data-en="AI Education Game | Learn 7 AI algorithms through real community stories">AI Education Game | Learn 7 AI algorithms through real community stories</p>
+        <p class="professor" data-zh="指導教授：An Lam | Las Positas College" data-en="Professor: An Lam | Las Positas College">Professor: An Lam | Las Positas College</p>
+    </header>
+
+    <div class="levels-container">
+        <div class="levels-grid">
+
+            <!-- Level 1: A* Search -->
+            <div class="level-card" data-level="1">
+                <div class="card-header">
+                    <div class="card-icon">🗺️</div>
+                    <div class="card-title-group">
+                        <h3>Level 1</h3>
+                        <span class="algorithm">A* Search</span>
+                        <div class="chapter">Russell & Norvig Ch. 3</div>
+                    </div>
                 </div>
-                
-                <!-- Level 2 -->
-                <div class="level-card l2" onclick="goToLevel(2)">
-                    <button class="favorite-btn" onclick="toggleFavorite(event, 2)">♡</button>
-                    <span class="card-level">LEVEL 2</span>
-                    <h3 class="card-title" data-en="Happy Campus Award" data-zh="快樂校園獎">快樂校園獎</h3>
-                    <p class="card-algorithm">Propositional Logic</p>
-                    <p class="card-story" data-en="Use logic to determine which students qualify for perfect attendance, understanding the reasoning behind care." data-zh="用邏輯判斷哪些學生符合全勤獎，理解關懷背後的推理。">用邏輯判斷哪些學生符合全勤獎，理解關懷背後的推理。</p>
-                    <p class="card-lesson" data-en="「Logic serves love」" data-zh="「邏輯背後是愛的推理」">「邏輯背後是愛的推理」</p>
-                    <button class="play-btn">▶</button>
+                <p class="card-story" data-zh="Mrs. Garcia 送餐任務 — 用啟發式搜尋找出最佳配送路線" data-en="Mrs. Garcia's Meal Delivery — Find optimal routes using heuristic search">Mrs. Garcia's Meal Delivery — Find optimal routes using heuristic search</p>
+                <div class="card-jingsi">「感恩，是世間最美的語言」</div>
+                <div class="card-rating">
+                    <div class="difficulty"><span>難度:</span> <span class="stars">⭐⭐</span></div>
+                    <div class="likes">❤️ 94%</div>
                 </div>
-                
-                <!-- Level 3 -->
-                <div class="level-card l3" onclick="goToLevel(3)">
-                    <button class="favorite-btn" onclick="toggleFavorite(event, 3)">♡</button>
-                    <span class="card-level">LEVEL 3</span>
-                    <h3 class="card-title" data-en="Sister Maya's Journey" data-zh="Maya 師姊的旅程">Maya 師姊的旅程</h3>
-                    <p class="card-algorithm">Markov Decision Process</p>
-                    <p class="card-story" data-en="Watch how small acts of kindness compound, transforming a food recipient into a community leader." data-zh="看小小的善行如何累積，將一位受助者轉變為社區領袖。">看小小的善行如何累積，將一位受助者轉變為社區領袖。</p>
-                    <p class="card-lesson" data-en="「Willing to do, happy to receive」" data-zh="「甘願做，歡喜受」">「甘願做，歡喜受」</p>
-                    <button class="play-btn">▶</button>
-                </div>
-                
-                <!-- Level 4 -->
-                <div class="level-card l4" onclick="goToLevel(4)">
-                    <button class="favorite-btn" onclick="toggleFavorite(event, 4)">♡</button>
-                    <span class="card-level">LEVEL 4</span>
-                    <h3 class="card-title" data-en="RV Park Search" data-zh="RV Park 搜索">RV Park 搜索</h3>
-                    <p class="card-algorithm">Wumpus World / KB Agent</p>
-                    <p class="card-story" data-en="Navigate through uncertainty in an RV park to find a lost family, using knowledge-based reasoning." data-zh="在 RV 營區的未知中探索，用知識推理找到走失的家庭。">在 RV 營區的未知中探索，用知識推理找到走失的家庭。</p>
-                    <p class="card-lesson" data-en="「Find hope in the unknown」" data-zh="「在未知中找到希望」">「在未知中找到希望」</p>
-                    <button class="play-btn">▶</button>
-                </div>
-                
-                <!-- Level 5 -->
-                <div class="level-card l5" onclick="goToLevel(5)">
-                    <button class="favorite-btn" onclick="toggleFavorite(event, 5)">♡</button>
-                    <span class="card-level">LEVEL 5</span>
-                    <h3 class="card-title" data-en="Community Care" data-zh="社區關懷">社區關懷</h3>
-                    <p class="card-algorithm">Bayesian Network</p>
-                    <p class="card-story" data-en="Predict who needs care using probability, but learn that data can't see everything." data-zh="用機率預測誰需要關懷，但學到數據看不見一切。">用機率預測誰需要關懷，但學到數據看不見一切。</p>
-                    <p class="card-lesson" data-en="「Those who are loved learn to love」" data-zh="「被愛的人，學會去愛」">「被愛的人，學會去愛」</p>
-                    <button class="play-btn">▶</button>
-                </div>
-                
-                <!-- Level 6 -->
-                <div class="level-card l6" onclick="goToLevel(6)">
-                    <button class="favorite-btn" onclick="toggleFavorite(event, 6)">♡</button>
-                    <span class="card-level">LEVEL 6</span>
-                    <h3 class="card-title" data-en="Marcus's Calling" data-zh="Marcus 的召喚">Marcus 的召喚</h3>
-                    <p class="card-algorithm">First-Order Logic</p>
-                    <p class="card-story" data-en="Use FOL to match volunteers with community needs, continuing the legacy of the Raw Rice Incident." data-zh="用一階邏輯將志工與社區需求配對，延續生米事件的傳承。">用一階邏輯將志工與社區需求配對，延續生米事件的傳承。</p>
-                    <p class="card-lesson" data-en="「The legacy continues」" data-zh="「生米事件的傳承」">「生米事件的傳承」</p>
-                    <button class="play-btn">▶</button>
-                </div>
-                
-                <!-- Level 7 -->
-                <div class="level-card l7" onclick="goToLevel(7)">
-                    <button class="favorite-btn" onclick="toggleFavorite(event, 7)">♡</button>
-                    <span class="card-level">LEVEL 7</span>
-                    <h3 class="card-title" data-en="The Trolley Dilemma" data-zh="電車難題">電車難題</h3>
-                    <p class="card-algorithm">Alpha-Beta Pruning</p>
-                    <p class="card-story" data-en="Face the ultimate ethical dilemma with AI advisors. Can you find the third way?" data-zh="與 AI 顧問一起面對終極倫理困境。你能找到第三條路嗎？">與 AI 顧問一起面對終極倫理困境。你能找到第三條路嗎？</p>
-                    <p class="card-lesson" data-en="「AI calculates, but only humans choose compassion」" data-zh="「AI 可以計算，但只有人可以選擇慈悲」">「AI 可以計算，但只有人可以選擇慈悲」</p>
-                    <button class="play-btn">▶</button>
-                </div>
-                
+                <button class="play-btn" onclick="location.href='level1/index.html'">
+                    <span data-zh="開始" data-en="Play">Play</span> →
+                </button>
             </div>
-        </div>
-        
-        <!-- Footer -->
-        <footer class="footer">
-            <p>Las Positas College | Honors Transfer Program | CS4 Introduction to AI</p>
-            <p>© 2025 <a href="#">Mei Hsien Hsu 許美嫻</a> — Professor An Lam</p>
-        </footer>
-        
-        <!-- Progress Bar -->
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress-fill"></div>
+
+            <!-- Level 2: Propositional Logic -->
+            <div class="level-card" data-level="2">
+                <div class="card-header">
+                    <div class="card-icon">🏫</div>
+                    <div class="card-title-group">
+                        <h3>Level 2</h3>
+                        <span class="algorithm">Propositional Logic</span>
+                        <div class="chapter">Russell & Norvig Ch. 7</div>
+                    </div>
+                </div>
+                <p class="card-story" data-zh="Happy Campus 資源分配 — 用邏輯推理做出公平決策" data-en="Happy Campus Resource Allocation — Make fair decisions using logical inference">Happy Campus Resource Allocation — Make fair decisions using logical inference</p>
+                <div class="card-jingsi">「心能轉境，境隨心轉」</div>
+                <div class="card-rating">
+                    <div class="difficulty"><span>難度:</span> <span class="stars">⭐⭐</span></div>
+                    <div class="likes">❤️ 91%</div>
+                </div>
+                <button class="play-btn" onclick="location.href='level2/index.html'">
+                    <span data-zh="開始" data-en="Play">Play</span> →
+                </button>
+            </div>
+
+            <!-- Level 3: MDP -->
+            <div class="level-card" data-level="3">
+                <div class="card-header">
+                    <div class="card-icon">🏕️</div>
+                    <div class="card-title-group">
+                        <h3>Level 3</h3>
+                        <span class="algorithm">MDP</span>
+                        <div class="chapter">Russell & Norvig Ch. 17</div>
+                    </div>
+                </div>
+                <p class="card-story" data-zh="Sister Maya 街友外展 — 用 Bellman 方程式制定最佳策略" data-en="Sister Maya Homeless Outreach — Develop optimal strategy with Bellman equation">Sister Maya Homeless Outreach — Develop optimal strategy with Bellman equation</p>
+                <div class="card-jingsi">「甘願做，歡喜受」</div>
+                <div class="card-rating">
+                    <div class="difficulty"><span>難度:</span> <span class="stars">⭐⭐⭐</span></div>
+                    <div class="likes">❤️ 88%</div>
+                </div>
+                <button class="play-btn" onclick="location.href='level3/index.html'">
+                    <span data-zh="開始" data-en="Play">Play</span> →
+                </button>
+            </div>
+
+            <!-- Level 4: KB-Agent (Wumpus World) -->
+            <div class="level-card" data-level="4">
+                <div class="card-header">
+                    <div class="card-icon">🕵️</div>
+                    <div class="card-title-group">
+                        <h3>Level 4</h3>
+                        <span class="algorithm">KB-Agent (Wumpus World)</span>
+                        <div class="chapter">Russell & Norvig Ch. 7</div>
+                    </div>
+                </div>
+                <p class="card-story" data-zh="RV Park 社區探索 — 用知識庫代理在未知中找到需要幫助的家庭" data-en="RV Park Exploration — Navigate the unknown to find families in need">RV Park Exploration — Navigate the unknown to find families in need</p>
+                <div class="card-jingsi">「在未知中前行，用智慧照亮道路」</div>
+                <div class="card-rating">
+                    <div class="difficulty"><span>難度:</span> <span class="stars">⭐⭐⭐</span></div>
+                    <div class="likes">❤️ 92%</div>
+                </div>
+                <button class="play-btn" onclick="location.href='level4/index.html'">
+                    <span data-zh="開始" data-en="Play">Play</span> →
+                </button>
+            </div>
+
+            <!-- Level 5: Bayesian Network -->
+            <div class="level-card" data-level="5">
+                <div class="card-header">
+                    <div class="card-icon">💗</div>
+                    <div class="card-title-group">
+                        <h3>Level 5</h3>
+                        <span class="algorithm">Bayesian Network</span>
+                        <div class="chapter">Russell & Norvig Ch. 13</div>
+                    </div>
+                </div>
+                <p class="card-story" data-zh="志工留存率預測 — 用機率推理預測誰需要關懷" data-en="Volunteer Retention Prediction — Predict who needs support using probabilistic reasoning">Volunteer Retention Prediction — Predict who needs support using probabilistic reasoning</p>
+                <div class="card-jingsi">「靜思勤行道，慈濟人間路」</div>
+                <div class="card-rating">
+                    <div class="difficulty"><span>難度:</span> <span class="stars">⭐⭐⭐⭐</span></div>
+                    <div class="likes">❤️ 86%</div>
+                </div>
+                <button class="play-btn" onclick="location.href='level5/index.html'">
+                    <span data-zh="開始" data-en="Play">Play</span> →
+                </button>
+            </div>
+
+            <!-- Level 6: First-Order Logic -->
+            <div class="level-card" data-level="6">
+                <div class="card-header">
+                    <div class="card-icon">🤝</div>
+                    <div class="card-title-group">
+                        <h3>Level 6</h3>
+                        <span class="algorithm">First-Order Logic</span>
+                        <div class="chapter">Russell & Norvig Ch. 8-9</div>
+                    </div>
+                </div>
+                <p class="card-story" data-zh="Marcus 志工配對 — 用一階邏輯推論找到最適合的志工任務" data-en="Marcus Volunteer Matching — Find the right volunteer assignment using FOL inference">Marcus Volunteer Matching — Find the right volunteer assignment using FOL inference</p>
+                <div class="card-jingsi">「把握時間，珍惜空間」</div>
+                <div class="card-rating">
+                    <div class="difficulty"><span>難度:</span> <span class="stars">⭐⭐⭐⭐</span></div>
+                    <div class="likes">❤️ 89%</div>
+                </div>
+                <button class="play-btn" onclick="location.href='level6/index.html'">
+                    <span data-zh="開始" data-en="Play">Play</span> →
+                </button>
+            </div>
+
+            <!-- Level 7: Alpha-Beta Pruning -->
+            <div class="level-card" data-level="7">
+                <div class="card-header">
+                    <div class="card-icon">🚂</div>
+                    <div class="card-title-group">
+                        <h3>Level 7</h3>
+                        <span class="algorithm">Alpha-Beta Pruning</span>
+                        <div class="chapter">Russell & Norvig Ch. 5</div>
+                    </div>
+                </div>
+                <p class="card-story" data-zh="電車難題 — AI 倫理與對抗搜尋，探索 AI 如何學習人類價值觀" data-en="Trolley Dilemma — AI Ethics & Adversarial Search, explore how AI learns human values">Trolley Dilemma — AI Ethics & Adversarial Search, explore how AI learns human values</p>
+                <div class="card-jingsi">「快樂不在擁有多」</div>
+                <div class="card-rating">
+                    <div class="difficulty"><span>難度:</span> <span class="stars">⭐⭐⭐⭐⭐</span></div>
+                    <div class="likes">❤️ 95%</div>
+                </div>
+                <button class="play-btn" onclick="location.href='level7/index.html'">
+                    <span data-zh="開始" data-en="Play">Play</span> →
+                </button>
+            </div>
+
         </div>
     </div>
-    
-    <!-- Background Music -->
-    <audio id="bg-music" loop>
-        <source src="assets/audio/welcome_mp3.mp3" type="audio/mpeg">
-    </audio>
-    
-    <script>
-    // ========== LANGUAGE ==========
-    let currentLang = 'zh';
-    
+
+    <footer class="footer">
+        <p><strong>Las Positas College</strong> | CS4 Introduction to AI | Fall 2025</p>
+        <p>© 2025 <a href="#">Mei Hsien Hsu 許美嫻</a> — Journey of Kindness</p>
+    </footer>
+</div>
+
+<script>
+    // ==========================================
+    // VIDEO INTRO
+    // ==========================================
+    const videoOverlay = document.getElementById('videoOverlay');
+    const introVideo = document.getElementById('introVideo');
+    const mainPage = document.getElementById('mainPage');
+    const timerDisplay = document.getElementById('timerDisplay');
+    let timerInterval;
+    let timeLeft = 29;
+
+    window.addEventListener('load', function() {
+        introVideo.muted = true;
+        introVideo.play().then(() => {
+            startTimer();
+        }).catch(e => {
+            setTimeout(skipToMain, 1000);
+        });
+    });
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerDisplay.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                skipToMain();
+            }
+        }, 1000);
+    }
+
+    introVideo.addEventListener('ended', skipToMain);
+
+    function toggleMute() {
+        introVideo.muted = !introVideo.muted;
+        document.getElementById('muteIcon').textContent = introVideo.muted ? '🔇' : '🔊';
+    }
+
+    function skipToMain() {
+        clearInterval(timerInterval);
+        introVideo.pause();
+        videoOverlay.classList.add('hidden');
+        mainPage.classList.add('active');
+        createStars();
+    }
+
+    function replayStory() {
+        mainPage.classList.remove('active');
+        videoOverlay.classList.remove('hidden');
+        timeLeft = 29;
+        timerDisplay.textContent = '29';
+        introVideo.currentTime = 0;
+        introVideo.muted = true;
+        introVideo.play().then(startTimer);
+    }
+
+    // ==========================================
+    // LANGUAGE
+    // ==========================================
+    let currentLang = localStorage.getItem('jok-lang') || 'en';
+
     function setLang(lang) {
         currentLang = lang;
+        localStorage.setItem('jok-lang', lang);
         document.getElementById('lang-en').classList.toggle('active', lang === 'en');
         document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
         document.querySelectorAll('[data-en][data-zh]').forEach(el => {
             el.textContent = el.getAttribute('data-' + lang);
         });
-        localStorage.setItem('journey-lang', lang);
     }
-    
-    // ========== SOUND ==========
-    let soundOn = false;
-    const bgMusic = document.getElementById('bg-music');
-    bgMusic.volume = 0.4;
-    
-    function toggleSound() {
-        soundOn = !soundOn;
-        document.getElementById('sound-btn').textContent = soundOn ? '🔊' : '🔇';
-        if (soundOn) {
-            bgMusic.play().catch(e => console.log('Audio blocked:', e));
-        } else {
-            bgMusic.pause();
+    setLang(currentLang);
+
+    // ==========================================
+    // STARS
+    // ==========================================
+    function createStars() {
+        const container = document.getElementById('starsContainer');
+        container.innerHTML = '';
+        for (let i = 0; i < 80; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.width = star.style.height = (Math.random() * 2 + 1) + 'px';
+            container.appendChild(star);
+        }
+        for (let i = 0; i < 2; i++) {
+            const ss = document.createElement('div');
+            ss.className = 'shooting-star';
+            ss.style.left = Math.random() * 40 + '%';
+            ss.style.top = Math.random() * 25 + '%';
+            ss.style.animationDelay = (i * 8 + Math.random() * 4) + 's';
+            container.appendChild(ss);
         }
     }
-    
-    // ========== VIDEO INTRO ==========
-    const video = document.getElementById('intro-video');
-    let countdown = 29;
-    let countdownInterval;
-    
-    function startVideo() {
-        video.play().catch(e => console.log('Video autoplay blocked'));
-        
-        countdownInterval = setInterval(() => {
-            countdown--;
-            document.getElementById('countdown').textContent = countdown;
-            if (countdown <= 0) {
-                clearInterval(countdownInterval);
-                skipToMenu();
+
+    // ==========================================
+    // KEYBOARD
+    // ==========================================
+    document.addEventListener('keydown', function(e) {
+        if (!videoOverlay.classList.contains('hidden')) {
+            if (e.key === 'Escape' || e.key === ' ') {
+                e.preventDefault();
+                skipToMain();
             }
-        }, 1000);
-    }
-    
-    function skipToMenu() {
-        clearInterval(countdownInterval);
-        video.pause();
-        document.getElementById('video-screen').classList.remove('active');
-        document.getElementById('menu-screen').classList.add('active');
-        createParticles();
-        createMeteors();
-
-        // Try to play background music
-        if (soundOn) {
-            bgMusic.play().catch(e => {});
+            if (e.key === 'm' || e.key === 'M') toggleMute();
         }
-    }
-    
-    video.onended = skipToMenu;
-    
-    // ========== FAVORITES ==========
-    let favorites = JSON.parse(localStorage.getItem('journey-favorites') || '[]');
-    
-    function toggleFavorite(event, level) {
-        event.stopPropagation();
-        const btn = event.target;
-        const index = favorites.indexOf(level);
-        
-        if (index > -1) {
-            favorites.splice(index, 1);
-            btn.textContent = '♡';
-            btn.classList.remove('active');
-        } else {
-            favorites.push(level);
-            btn.textContent = '♥';
-            btn.classList.add('active');
-        }
-        
-        localStorage.setItem('journey-favorites', JSON.stringify(favorites));
-    }
-    
-    function loadFavorites() {
-        favorites.forEach(level => {
-            const card = document.querySelector(`.level-card.l${level}`);
-            if (card) {
-                const btn = card.querySelector('.favorite-btn');
-                btn.textContent = '♥';
-                btn.classList.add('active');
-            }
-        });
-    }
-    
-    // ========== NAVIGATION ==========
-    function goToLevel(level) {
-        window.location.href = `level${level}/index.html`;
-    }
-    
-    // ========== METEOR SHOWER ==========
-    function createMeteors() {
-        const container = document.getElementById('meteors');
-        if (!container) return;
-
-        function spawnMeteor() {
-            const meteor = document.createElement('div');
-            meteor.className = 'meteor';
-            meteor.style.left = Math.random() * 100 + '%';
-            meteor.style.top = '-100px';
-            meteor.style.animationDuration = (2 + Math.random() * 2) + 's';
-            meteor.style.animationDelay = '0s';
-            container.appendChild(meteor);
-
-            setTimeout(() => meteor.remove(), 5000);
-        }
-
-        // Spawn meteors periodically
-        setInterval(() => {
-            if (Math.random() > 0.5) spawnMeteor();
-        }, 800);
-
-        // Initial burst
-        for (let i = 0; i < 3; i++) {
-            setTimeout(spawnMeteor, i * 300);
-        }
-    }
-
-    // ========== PARTICLES (STARS) ==========
-    function createParticles() {
-        const container = document.getElementById('particles');
-        if (!container) return;
-
-        for (let i = 0; i < 50; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 3 + 's';
-            particle.style.animationDuration = (2 + Math.random() * 2) + 's';
-            container.appendChild(particle);
-        }
-    }
-    
-    // ========== PROGRESS ==========
-    function updateProgress() {
-        const completed = JSON.parse(localStorage.getItem('journey-progress') || '{}');
-        const count = Object.keys(completed).length;
-        const percent = (count / 7) * 100;
-        document.getElementById('progress-fill').style.width = percent + '%';
-    }
-    
-    // ========== INIT ==========
-    document.addEventListener('DOMContentLoaded', () => {
-        // Load saved language
-        const savedLang = localStorage.getItem('journey-lang');
-        if (savedLang) setLang(savedLang);
-        
-        // Load favorites
-        loadFavorites();
-        
-        // Update progress
-        updateProgress();
-        
-        // Start video
-        startVideo();
     });
-    
-    // Enable sound on first interaction
-    document.addEventListener('click', function enableSound() {
-        document.removeEventListener('click', enableSound);
-        // User has interacted, sound can now be enabled
-    }, { once: true });
-    </script>
+</script>
+
 </body>
 </html>
