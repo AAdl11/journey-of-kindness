@@ -345,6 +345,22 @@
             .fol-line { font-size: 0.85rem; padding: 10px 12px; }
             .btn-primary { padding: 14px 28px; font-size: 1rem; }
         }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; justify-content: center; gap: 8px; padding: 12px 16px;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.9));
+            backdrop-filter: blur(20px); border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .bottom-nav .nav-btn {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.9);
+            cursor: pointer; transition: all 0.3s; font-size: 12px; min-width: 70px;
+        }
+        .bottom-nav .nav-btn:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-2px); }
+        .bottom-nav .nav-icon { font-size: 20px; }
     </style>
 </head>
 <body>
@@ -1174,7 +1190,23 @@ document.addEventListener('click', function initAudio() {
         playMusic('music-opening');
     }
 }, { once: true });
+
+// BOTTOM NAVIGATION
+function navHome() { window.location.href = '../index.html'; }
+function navPrev() { window.location.href = '../level5/index.html'; }
+function navNext() { window.location.href = '../level7/index.html'; }
+function navReplayStory() {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('intro-screen').classList.add('active');
+}
 </script>
+
+<nav class="bottom-nav">
+    <button class="nav-btn" onclick="navHome()"><span class="nav-icon">🏠</span><span>主頁</span></button>
+    <button class="nav-btn" onclick="navPrev()"><span class="nav-icon">⬅️</span><span>上一關</span></button>
+    <button class="nav-btn" onclick="navNext()"><span class="nav-icon">➡️</span><span>下一關</span></button>
+    <button class="nav-btn" onclick="navReplayStory()"><span class="nav-icon">🎬</span><span>重聽故事</span></button>
+</nav>
 
 </body>
 </html>
