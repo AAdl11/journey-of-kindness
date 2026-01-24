@@ -11,9 +11,10 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.12);
-            --glass-border: rgba(255, 255, 255, 0.25);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --glass-blur: 20px;
             --gold: #fbbf24;
             --pink: #ec4899;
             --purple: #8b5cf6;
@@ -100,8 +101,8 @@
             right: 0;
             bottom: 0;
             background: url('assets/images/hunters_point_map.png') center center / cover no-repeat;
-            opacity: 0.15;
-            filter: blur(2px);
+            opacity: 0.25;
+            filter: blur(1px) brightness(0.8);
         }
         
         /* Animated gradient overlay */
@@ -123,12 +124,18 @@
             50% { opacity: 1; }
         }
         
-        /* Header */
+        /* Apple-style Frosted Header */
         .header {
             position: relative;
             z-index: 10;
             text-align: center;
             padding: 40px 20px 20px;
+            background: linear-gradient(180deg,
+                rgba(0, 0, 0, 0.3) 0%,
+                rgba(0, 0, 0, 0.1) 70%,
+                transparent 100%);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
         }
         
         .game-title {
@@ -220,18 +227,24 @@
             padding: 10px;
         }
         
-        /* Glass Card */
+        /* Apple-style Glass Card */
         .level-card {
             position: relative;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 50%,
+                rgba(255, 255, 255, 0.08) 100%);
+            backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 24px;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             overflow: hidden;
+            box-shadow:
+                0 4px 30px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
         
         .level-card::before {
@@ -376,7 +389,51 @@
             text-decoration: none;
         }
         
-        /* Floating particles */
+        /* Meteor shower effect */
+        .meteors {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .meteor {
+            position: absolute;
+            width: 2px;
+            height: 80px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.4), transparent);
+            border-radius: 50%;
+            animation: meteorFall linear infinite;
+            opacity: 0;
+        }
+        .meteor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(255,255,255,0.8), 0 0 20px 4px rgba(251,191,36,0.5);
+        }
+        @keyframes meteorFall {
+            0% {
+                transform: translateY(-100px) translateX(0) rotate(45deg);
+                opacity: 0;
+            }
+            5% { opacity: 1; }
+            70% { opacity: 1; }
+            100% {
+                transform: translateY(100vh) translateX(200px) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        /* Floating particles (stars) */
         .particles {
             position: absolute;
             top: 0;
@@ -388,17 +445,16 @@
         }
         .particle {
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(251, 191, 36, 0.6);
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.8);
             border-radius: 50%;
-            animation: float 15s infinite;
+            animation: twinkle 3s ease-in-out infinite;
+            box-shadow: 0 0 6px rgba(255,255,255,0.5);
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
         
         /* Responsive */
@@ -460,7 +516,10 @@
         <div class="map-background"></div>
         <div class="gradient-overlay"></div>
         
-        <!-- Floating particles -->
+        <!-- Meteor shower -->
+        <div class="meteors" id="meteors"></div>
+
+        <!-- Floating particles (stars) -->
         <div class="particles" id="particles"></div>
         
         <!-- Header -->
@@ -627,7 +686,8 @@
         document.getElementById('video-screen').classList.remove('active');
         document.getElementById('menu-screen').classList.add('active');
         createParticles();
-        
+        createMeteors();
+
         // Try to play background music
         if (soundOn) {
             bgMusic.play().catch(e => {});
@@ -673,15 +733,46 @@
         window.location.href = `level${level}/index.html`;
     }
     
-    // ========== PARTICLES ==========
+    // ========== METEOR SHOWER ==========
+    function createMeteors() {
+        const container = document.getElementById('meteors');
+        if (!container) return;
+
+        function spawnMeteor() {
+            const meteor = document.createElement('div');
+            meteor.className = 'meteor';
+            meteor.style.left = Math.random() * 100 + '%';
+            meteor.style.top = '-100px';
+            meteor.style.animationDuration = (2 + Math.random() * 2) + 's';
+            meteor.style.animationDelay = '0s';
+            container.appendChild(meteor);
+
+            setTimeout(() => meteor.remove(), 5000);
+        }
+
+        // Spawn meteors periodically
+        setInterval(() => {
+            if (Math.random() > 0.5) spawnMeteor();
+        }, 800);
+
+        // Initial burst
+        for (let i = 0; i < 3; i++) {
+            setTimeout(spawnMeteor, i * 300);
+        }
+    }
+
+    // ========== PARTICLES (STARS) ==========
     function createParticles() {
         const container = document.getElementById('particles');
-        for (let i = 0; i < 20; i++) {
+        if (!container) return;
+
+        for (let i = 0; i < 50; i++) {
             const particle = document.createElement('div');
             particle.className = 'particle';
             particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 15 + 's';
-            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 3 + 's';
+            particle.style.animationDuration = (2 + Math.random() * 2) + 's';
             container.appendChild(particle);
         }
     }
