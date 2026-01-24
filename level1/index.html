@@ -188,6 +188,7 @@
 <div class="lang-toggle" style="left: 10px; right: auto;">
     <button id="lang-en" class="lang-btn" onclick="setLang('en')">EN</button>
     <button id="lang-zh" class="lang-btn active" onclick="setLang('zh')">中</button>
+    <button id="lang-es" class="lang-btn" onclick="setLang('es')">ES</button>
 </div>
 
 <!-- Audio elements -->
@@ -363,7 +364,11 @@ function setLang(lang) {
     currentLang = lang;
     document.getElementById('lang-en').classList.toggle('active', lang === 'en');
     document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
-    document.querySelectorAll('[data-en][data-zh]').forEach(el => el.textContent = el.getAttribute('data-' + lang));
+    document.getElementById('lang-es').classList.toggle('active', lang === 'es');
+    document.querySelectorAll('[data-en][data-zh]').forEach(el => {
+        const text = el.getAttribute('data-' + lang) || el.getAttribute('data-en');
+        el.textContent = text;
+    });
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1053,19 +1058,19 @@ function navReplayStory() {
 <nav class="bottom-nav">
     <button class="nav-btn" onclick="navHome()">
         <span class="nav-icon">🏠</span>
-        <span data-en="Home" data-zh="主頁">主頁</span>
+        <span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span>
     </button>
     <button class="nav-btn" onclick="navPrev()" disabled>
         <span class="nav-icon">⬅️</span>
-        <span data-en="Prev" data-zh="上一關">上一關</span>
+        <span data-en="Prev" data-zh="上一關" data-es="Anterior">上一關</span>
     </button>
     <button class="nav-btn" onclick="navNext()">
         <span class="nav-icon">➡️</span>
-        <span data-en="Next" data-zh="下一關">下一關</span>
+        <span data-en="Next" data-zh="下一關" data-es="Siguiente">下一關</span>
     </button>
     <button class="nav-btn" onclick="navReplayStory()">
         <span class="nav-icon">🎬</span>
-        <span data-en="Story" data-zh="重聽故事">重聽故事</span>
+        <span data-en="Story" data-zh="重聽故事" data-es="Historia">重聽故事</span>
     </button>
 </nav>
 

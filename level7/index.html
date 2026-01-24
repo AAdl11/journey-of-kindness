@@ -538,6 +538,7 @@
     <div class="lang-toggle">
         <button class="lang-btn active" id="btnEn" onclick="setLanguage('en')">EN</button>
         <button class="lang-btn" id="btnZh" onclick="setLanguage('zh')">中文</button>
+        <button class="lang-btn" id="btnEs" onclick="setLanguage('es')">ES</button>
     </div>
     <div class="audio-control" id="audioControl" onclick="toggleAudio()">🔊</div>
     
@@ -1409,10 +1410,10 @@
     </script>
 
     <nav class="bottom-nav">
-        <button class="nav-btn" onclick="navHome()"><span class="nav-icon">🏠</span><span>主頁</span></button>
-        <button class="nav-btn" onclick="navPrev()"><span class="nav-icon">⬅️</span><span>上一關</span></button>
-        <button class="nav-btn" onclick="navNext()"><span class="nav-icon">➡️</span><span>結局</span></button>
-        <button class="nav-btn" onclick="navReplayStory()"><span class="nav-icon">🎬</span><span>重聽故事</span></button>
+        <button class="nav-btn" onclick="navHome()"><span class="nav-icon">🏠</span><span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span></button>
+        <button class="nav-btn" onclick="navPrev()"><span class="nav-icon">⬅️</span><span data-en="Prev" data-zh="上一關" data-es="Anterior">上一關</span></button>
+        <button class="nav-btn" onclick="navNext()"><span class="nav-icon">➡️</span><span data-en="Ending" data-zh="結局" data-es="Final">結局</span></button>
+        <button class="nav-btn" onclick="navReplayStory()"><span class="nav-icon">🎬</span><span data-en="Story" data-zh="重聽故事" data-es="Historia">重聽故事</span></button>
     </nav>
 
 </body>

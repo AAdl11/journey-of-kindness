@@ -371,6 +371,7 @@
     <div class="lang-toggle">
         <button class="lang-btn active" onclick="setLang('zh')">中文</button>
         <button class="lang-btn" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('es')">ES</button>
     </div>
 </div>
 
@@ -1202,10 +1203,10 @@ function navReplayStory() {
 </script>
 
 <nav class="bottom-nav">
-    <button class="nav-btn" onclick="navHome()"><span class="nav-icon">🏠</span><span>主頁</span></button>
-    <button class="nav-btn" onclick="navPrev()"><span class="nav-icon">⬅️</span><span>上一關</span></button>
-    <button class="nav-btn" onclick="navNext()"><span class="nav-icon">➡️</span><span>下一關</span></button>
-    <button class="nav-btn" onclick="navReplayStory()"><span class="nav-icon">🎬</span><span>重聽故事</span></button>
+    <button class="nav-btn" onclick="navHome()"><span class="nav-icon">🏠</span><span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span></button>
+    <button class="nav-btn" onclick="navPrev()"><span class="nav-icon">⬅️</span><span data-en="Prev" data-zh="上一關" data-es="Anterior">上一關</span></button>
+    <button class="nav-btn" onclick="navNext()"><span class="nav-icon">➡️</span><span data-en="Next" data-zh="下一關" data-es="Siguiente">下一關</span></button>
+    <button class="nav-btn" onclick="navReplayStory()"><span class="nav-icon">🎬</span><span data-en="Story" data-zh="重聽故事" data-es="Historia">重聽故事</span></button>
 </nav>
 
 </body>
