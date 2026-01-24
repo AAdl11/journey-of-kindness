@@ -81,15 +81,16 @@ The game showcases Tzu Chi San Francisco's community programs:
 
 ```
 journey-of-kindness/
-├── index.html          # Main game file
-├── README.md           # This file
-├── DEVELOPMENT_TIMELINE.md  # 16-week development journey
+├── index.html              # Main game file (React SPA)
+├── main.py                 # Python algorithm implementations
+├── README.md               # This file
+├── DEVELOPMENT_TIMELINE.md # 16-week development journey
 └── media/
-    ├── intro.mp4       # 29-second opening video
-    ├── hunters_point_map.png  # Interactive community map
-    ├── 靜心之門.png     # Ataraxy Portico gate
-    ├── [level photos]  # Real photos from community service
-    └── [QR codes]      # Social media links
+    ├── intro.mp4           # 29-second opening video
+    ├── hunters_point_map.png   # Interactive community map
+    ├── 靜心之門.png         # Ataraxy Portico gate
+    ├── [level photos]      # Real photos from community service
+    └── [QR codes]          # Social media links
 ```
 
 ## 🙏 Acknowledgments
