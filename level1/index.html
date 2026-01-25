@@ -302,7 +302,7 @@
     
     <!-- Navigation buttons -->
     <div class="relative z-10 flex flex-wrap gap-4 justify-center" style="margin-bottom: 8%;">
-        <button onclick="goToMainMenu()" class="btn btn-secondary text-base px-6 py-2">🏠 <span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span></button>
+        <button onclick="watchStory()" class="btn btn-secondary text-base px-6 py-2">📺 <span data-en="Story" data-zh="故事" data-es="Historia">故事</span></button>`n        <button onclick="goToMainMenu()" class="btn btn-secondary text-base px-6 py-2">🏠 <span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span></button>
         <button onclick="goToPrevLevel()" class="btn btn-secondary text-base px-6 py-2">⬅️ <span data-en="Prev" data-zh="上一關" data-es="Anterior">上一關</span></button>
         <button onclick="replayLevel()" class="btn btn-secondary text-base px-6 py-2">🔄 <span data-en="Replay" data-zh="重玩" data-es="Repetir">重玩</span></button>
         <button id="continue-btn" onclick="continueJourney()" class="btn btn-primary text-base px-6 py-2" style="box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);"><span data-en="Next" data-zh="下一關" data-es="Siguiente">下一關</span> →</button>
@@ -775,7 +775,7 @@ function startBreathingAnimation() {
     }, 2000);
 }
 
-function goToMainMenu() {
+function watchStory() { window.location.href = "../index.html?autoplay=true"; }`n`nfunction goToMainMenu() {
     const meditationMusic = document.getElementById('meditation-music');
     meditationMusic.pause(); meditationMusic.currentTime = 0;
     window.location.href = '../index.html';
