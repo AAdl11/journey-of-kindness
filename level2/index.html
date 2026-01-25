@@ -864,8 +864,9 @@ function setLang(lang) {
     currentLang = lang;
     document.getElementById('lang-en').classList.toggle('active', lang === 'en');
     document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+    document.getElementById('lang-es')?.classList.toggle('active', lang === 'es');
     document.querySelectorAll('[data-en][data-zh]').forEach(el => {
-        el.innerHTML = el.getAttribute('data-' + lang);
+        el.innerHTML = el.getAttribute('data-' + lang) || el.getAttribute('data-en');
     });
     if (state.phase === 'shop' && shopStudents[state.shopIndex]) {
         const s = shopStudents[state.shopIndex];
