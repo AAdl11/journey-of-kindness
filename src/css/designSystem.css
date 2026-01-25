@@ -1,0 +1,26 @@
+﻿/* Journey of Kindness - Core Styles Module */
+/* Tzu Chi Design System */
+
+:root {
+    --tzu-chi-blue: #003366;
+    --tzu-chi-gold: #D4A84B;
+    --eco-green: #10b981;
+    --ataraxy-purple: #8B5CF6;
+}
+
+.jok-button {
+    background: linear-gradient(135deg, var(--tzu-chi-gold), #e6b84d);
+    border: none;
+    border-radius: 30px;
+    padding: 15px 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.jok-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+}

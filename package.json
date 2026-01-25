@@ -1,0 +1,12 @@
+﻿{
+    "name": "journey-of-kindness",
+    "version": "2.0.0",
+    "description": "AI education game with 7 algorithms through Tzu Chi stories",
+    "scripts": {
+        "start": "python -m http.server 8000",
+        "test": "python -m pytest tests/"
+    },
+    "keywords": ["AI", "education", "game", "algorithms", "Tzu Chi"],
+    "author": "Mei Hsien Hsu",
+    "license": "MIT"
+}
