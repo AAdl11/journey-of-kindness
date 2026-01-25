@@ -19,10 +19,10 @@
         @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.5); } 50% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.8); } }
         @keyframes playerMove { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
         @keyframes breatheRing { 
-            0% { transform: scale(0.8); opacity: 0.6; } 
-            33% { transform: scale(1.3); opacity: 1; } 
-            66% { transform: scale(1.3); opacity: 0.9; } 
-            100% { transform: scale(0.8); opacity: 0.6; } 
+            0% { transform: scale(0.85); opacity: 0.7; } 
+            33% { transform: scale(1.15); opacity: 1; } 
+            66% { transform: scale(1.15); opacity: 0.9; } 
+            100% { transform: scale(0.85); opacity: 0.7; } 
         }
         @keyframes breatheCard { 0%, 100% { transform: scale(0.97); box-shadow: 0 8px 32px rgba(251, 191, 36, 0.2); } 50% { transform: scale(1.03); box-shadow: 0 12px 48px rgba(251, 191, 36, 0.5); } }
         
@@ -58,21 +58,21 @@
             text-align: center; border: 2px solid rgba(251, 191, 36, 0.5);
         }
         .breathing-card {
-            animation: breatheCard 4s ease-in-out infinite;
+            animation: breatheCard 12s ease-in-out infinite;
         }
         
-        .astar-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; width: 100%; max-width: 580px; margin: 0 auto; padding: 0.75rem; background: rgba(0, 0, 0, 0.3); border-radius: 16px; }
-        .astar-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; cursor: pointer; transition: all 0.2s; position: relative; font-size: 1.6rem; min-height: 55px; border: 2px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.15); }
-        .astar-cell:hover:not(.obstacle) { transform: scale(1.05); border-color: rgba(255, 255, 255, 0.5); }
+        .astar-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; width: 100%; max-width: 580px; margin: 0 auto; padding: 0.75rem; background: rgba(0, 0, 0, 0.5); border-radius: 16px; backdrop-filter: blur(10px); }
+        .astar-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; cursor: pointer; transition: all 0.2s; position: relative; font-size: 1.6rem; min-height: 55px; border: 2px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.2); }
+        .astar-cell:hover:not(.obstacle) { transform: scale(1.05); border-color: rgba(255, 255, 255, 0.6); }
         .astar-cell.player { background: linear-gradient(135deg, #3b82f6, #2563eb); border-color: #60a5fa; box-shadow: 0 0 15px rgba(59, 130, 246, 0.6); animation: playerMove 0.3s; }
         .astar-cell.goal { background: linear-gradient(135deg, #f97316, #ea580c); border-color: #fb923c; }
         .astar-cell.garcia { background: linear-gradient(135deg, #ec4899, #db2777); border-color: #f472b6; animation: pulseGlow 2s infinite; }
-        .astar-cell.obstacle { background: rgba(100, 116, 139, 0.7); cursor: not-allowed; }
+        .astar-cell.obstacle { background: rgba(100, 116, 139, 0.8); cursor: not-allowed; }
         .astar-cell.visited { background: rgba(168, 85, 247, 0.5); }
-        .astar-cell.adjacent { background: rgba(34, 197, 94, 0.35); border-color: rgba(34, 197, 94, 0.7); }
+        .astar-cell.adjacent { background: rgba(34, 197, 94, 0.4); border-color: rgba(34, 197, 94, 0.8); }
         .astar-cell.ai-current { background: linear-gradient(135deg, #fbbf24, #f59e0b); border-color: #fcd34d; }
-        .astar-cell.ai-path { background: rgba(251, 191, 36, 0.35); }
-        .f-score { position: absolute; bottom: 1px; right: 2px; font-size: 0.5rem; color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.4); padding: 0 2px; border-radius: 2px; }
+        .astar-cell.ai-path { background: rgba(251, 191, 36, 0.4); }
+        .f-score { position: absolute; bottom: 1px; right: 2px; font-size: 0.5rem; color: rgba(255,255,255,0.8); background: rgba(0,0,0,0.5); padding: 0 2px; border-radius: 2px; }
         
         .side-panel { background: rgba(30, 58, 95, 0.95); backdrop-filter: blur(15px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.2); width: 280px; }
         .formula-box { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 0.75rem; border-left: 4px solid #fbbf24; }
@@ -86,7 +86,6 @@
         .ctrl-btn.ai-auto { background: linear-gradient(135deg, #fbbf24, #f59e0b); border-color: #fcd34d; color: #1f2937; }
         .ctrl-btn.forward { background: rgba(34, 197, 94, 0.3); border-color: #22c55e; color: #22c55e; }
         .ctrl-btn.backward { background: rgba(239, 68, 68, 0.3); border-color: #ef4444; color: #ef4444; }
-        .ctrl-btn.player-btn { background: rgba(59, 130, 246, 0.3); border-color: #3b82f6; color: #3b82f6; }
         .ctrl-btn.reset { background: rgba(100, 116, 139, 0.5); border-color: #64748b; color: white; }
         .ctrl-btn.complete { background: linear-gradient(135deg, #22c55e, #16a34a); border-color: #4ade80; color: white; }
         .ctrl-btn.sound { background: rgba(168, 85, 247, 0.3); border-color: #a855f7; color: #a855f7; }
@@ -115,18 +114,6 @@
         .game-header { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.8rem; background: rgba(0,0,0,0.5); border-radius: 10px; }
         .elo-badge { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1f2937; padding: 0.3rem 0.8rem; border-radius: 9999px; font-weight: bold; font-size: 0.85rem; }
         
-        .start-btn {
-            width: 120px; height: 120px; border-radius: 50%;
-            background: linear-gradient(135deg, #ec4899, #8b5cf6);
-            border: 4px solid white; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 3rem; color: white;
-            box-shadow: 0 0 40px rgba(236, 72, 153, 0.6);
-            transition: all 0.3s;
-        }
-        .start-btn:hover { transform: scale(1.1); box-shadow: 0 0 60px rgba(236, 72, 153, 0.8); }
-        
-        /* 靜心之門背景 */
         .ataraxy-bg {
             background: url('../assets/images/靜心之門.png') center top/auto 100% no-repeat,
                         linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
@@ -134,57 +121,29 @@
         
         @media (max-width: 1100px) { .game-layout { flex-direction: column !important; } .side-panel { width: 100%; max-width: 520px; margin: 0 auto; } }
         @media (max-width: 640px) { .astar-cell { min-height: 38px; font-size: 1.1rem; } .f-score { display: none; } }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
     </style>
 </head>
 <body class="text-white min-h-screen" translate="no">
 
-<!-- Language Toggle - Top Left with ES -->
+<!-- Language Toggle -->
 <div class="lang-toggle" style="left: 10px; right: auto;">
     <button id="lang-en" class="lang-btn" onclick="setLang('en')">EN</button>
     <button id="lang-zh" class="lang-btn active" onclick="setLang('zh')">中</button>
     <button id="lang-es" class="lang-btn" onclick="setLang('es')">ES</button>
 </div>
 
-<!-- Audio elements - 修正路徑 -->
+<!-- Audio -->
 <audio id="bg-music" src="../assets/audio/welcome_mp3.mp3" loop></audio>
 <audio id="meditation-music" src="../assets/audio/AnaCaptainslogue_-_Noir_Et_Blanc_Vie.mp3" loop></audio>
 
 <!-- ══════════════════════════════════════════════════════════════════════════
-     SCREEN 1: VIDEO INTRO - 29秒完整介紹影片
-══════════════════════════════════════════════════════════════════════════ -->
-<div id="video-screen" class="screen flex-col items-center justify-center" style="background: #000; display: none !important;">
-    <div style="position: relative; width: 100%; height: 100%;">
-        <video id="intro-video" style="width: 100%; height: 100%; object-fit: cover;" playsinline autoplay muted>
-            <source src="../assets/video/intro.mp4" type="video/mp4">
-        </video>
-        
-        <div style="position: absolute; bottom: 20px; right: 20px; display: flex; gap: 10px;">
-            <button onclick="toggleVideoMute()" id="video-mute-btn" class="btn btn-secondary text-sm">🔇 <span data-en="Sound" data-zh="聲音" data-es="Sonido">聲音</span></button>
-            <button onclick="goToGame()" class="btn btn-secondary text-sm">
-                <span data-en="Skip" data-zh="跳過" data-es="Saltar">跳過</span> ⏭️
-            </button>
-        </div>
-        
-        <div style="position: absolute; top: 20px; right: 20px; padding: 0.4rem 0.8rem; background: rgba(0,0,0,0.7); color: white; border-radius: 8px; font-size: 0.9rem;">
-            <span id="time-remaining" class="mono">29</span>s
-        </div>
-    </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════════════════
-     SCREEN 2: A* SEARCH GAME
+     GAME SCREEN - 直接顯示遊戲
 ══════════════════════════════════════════════════════════════════════════ -->
 <div id="game-screen" class="screen active bg-hunters-point flex-col p-2">
     <div class="max-w-6xl w-full mx-auto flex-1 flex flex-col gap-2">
         
         <div class="game-header">
-            <button onclick="showMenu()" class="btn btn-secondary text-xs py-1 px-3">← <span data-en="Menu" data-zh="選單" data-es="Menú">選單</span></button>
+            <button onclick="goToMainMenu()" class="btn btn-secondary text-xs py-1 px-3">← <span data-en="Menu" data-zh="選單" data-es="Menú">選單</span></button>
             <div class="text-center">
                 <span class="font-bold text-sm">🚚 Level 1: A* Search</span>
                 <span class="text-xs text-gray-300 ml-1" data-en="— Mrs. Garcia Mission" data-zh="— Mrs. Garcia 送餐任務" data-es="— Misión Mrs. Garcia">— Mrs. Garcia 送餐任務</span>
@@ -210,6 +169,7 @@
                     </div>
                 </div>
                 
+                <!-- 棋盤遊戲區 -->
                 <div class="flex-1 flex items-center justify-center">
                     <div id="astar-grid" class="astar-grid"></div>
                 </div>
@@ -218,7 +178,7 @@
                 
                 <div class="controls-bar">
                     <button id="ai-auto-btn" onclick="aiAutoDemo()" class="ctrl-btn ai-auto">🤖 AI</button>
-                    <button onclick="switchToPlayer()" class="ctrl-btn" style="background: linear-gradient(135deg, #22c55e, #10b981);">🎮</button>
+                    <button onclick="switchToPlayer()" class="ctrl-btn" style="background: linear-gradient(135deg, #22c55e, #10b981); border-color: #22c55e; color: white;">🎮</button>
                     <button id="ai-back-btn" onclick="aiStepBack()" class="ctrl-btn backward">⏪</button>
                     <button id="ai-forward-btn" onclick="aiStepForward()" class="ctrl-btn forward">⏩</button>
                     <button onclick="resetLevel()" class="ctrl-btn reset">🔄</button>
@@ -265,7 +225,6 @@
                     <p class="text-xs font-bold text-gray-300 mb-1">📋 <span data-en="Explored" data-zh="探索" data-es="Explorado">探索</span></p>
                     <div id="explored-list" class="text-xs mono text-gray-400 max-h-12 overflow-y-auto">(0,0) • Start</div>
                 </div>
-                <!-- Mrs. Garcia Story Image - 修正路徑 -->
                 <div class="rounded-xl overflow-hidden border-3 border-pink-400/60 relative" style="box-shadow: 0 6px 25px rgba(236, 72, 153, 0.4); margin: 0 -8px -8px -8px;">
                     <img src="../assets/images/clean_Mrs__Garcia.png" alt="Mrs. Garcia Story" class="w-full h-auto" style="max-height: 160px; object-fit: cover;">
                 </div>
@@ -275,28 +234,24 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════════════════
-     SCREEN 3: 靜心之門 / Gate of Serenity
+     靜心之門 / Gate of Serenity
 ══════════════════════════════════════════════════════════════════════════ -->
 <div id="ataraxy-screen" class="screen flex-col items-center py-2 px-4 ataraxy-bg">
     <div class="absolute inset-0 bg-purple-900/5"></div>
     
-    <!-- Top section with title -->
     <div class="relative z-10 text-center">
         <h2 class="text-3xl font-bold text-white" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 4px 20px rgba(0,0,0,0.7);" data-en="Gate of Serenity" data-zh="靜心之門" data-es="Puerta de Serenidad">靜心之門</h2>
     </div>
     
-    <!-- Breath ring area with countdown -->
     <div class="relative z-10 flex flex-col items-center" style="margin-top: 10px;">
         <div class="breath-ring-large">
-            <p id="breath-counter" class="text-6xl font-bold text-yellow-400 mono" style="text-shadow: 0 0 50px rgba(251, 191, 36, 0.9);">🙏</p>
+            <p id="breath-counter" class="text-5xl font-bold text-yellow-400 mono text-center" style="text-shadow: 0 0 50px rgba(251, 191, 36, 0.9); line-height: 1.2;">4<br><span style="font-size:1rem;">吸氣</span></p>
         </div>
-        <p class="text-lg text-yellow-300 font-bold mt-3" style="text-shadow: 0 2px 15px rgba(0,0,0,0.8);"><span data-en="Take 3 deep breaths..." data-zh="深呼吸三次..." data-es="Respira profundo 3 veces...">深呼吸三次...</span></p>
+        <p class="text-lg text-yellow-300 font-bold mt-3" style="text-shadow: 0 2px 15px rgba(0,0,0,0.8);"><span data-en="4-4-4 Breathing..." data-zh="4-4-4 呼吸法..." data-es="Respiración 4-4-4...">4-4-4 呼吸法...</span></p>
     </div>
     
-    <!-- Spacer -->
     <div style="flex: 1;"></div>
     
-    <!-- Card positioned lower -->
     <div class="relative z-10 flex flex-col items-center" style="margin-bottom: 18%;">
         <div class="jingsi-card fade-in breathing-card">
             <p class="text-lg font-bold text-yellow-300 mb-1" data-en="「Gratitude is the most beautiful language」" data-zh="「感恩，是世間最美的語言」" data-es="「La gratitud es el lenguaje más hermoso」">「感恩，是世間最美的語言」</p>
@@ -305,20 +260,18 @@
         </div>
     </div>
     
-    <!-- Navigation buttons -->
-    <div class="relative z-10 flex flex-wrap gap-4 justify-center" style="margin-bottom: 8%;">
-        <button onclick="skipMeditation()" class="btn btn-secondary text-base px-6 py-2" style="opacity: 0.7;">⏭️ <span data-en="Skip" data-zh="跳過" data-es="Saltar">跳過</span></button>
-        <button onclick="watchStory()" class="btn btn-secondary text-base px-6 py-2">📺 <span data-en="Story" data-zh="故事" data-es="Historia">故事</span></button>
-        <button onclick="goToMainMenu()" class="btn btn-secondary text-base px-6 py-2">🏠 <span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span></button>
-        <button onclick="goToPrevLevel()" class="btn btn-secondary text-base px-6 py-2">⬅️ <span data-en="Prev" data-zh="上一關" data-es="Anterior">上一關</span></button>
-        <button onclick="replayLevel()" class="btn btn-secondary text-base px-6 py-2">🔄 <span data-en="Replay" data-zh="重玩" data-es="Repetir">重玩</span></button>
-        <button id="continue-btn" onclick="continueJourney()" class="btn btn-primary text-base px-6 py-2" style="box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);"><span data-en="Next" data-zh="下一關" data-es="Siguiente">下一關</span> →</button>
+    <div class="relative z-10 flex flex-wrap gap-3 justify-center" style="margin-bottom: 8%;">
+        <button onclick="skipMeditation()" class="btn btn-secondary text-sm px-4 py-2" style="opacity: 0.7;">⏭️ <span data-en="Skip" data-zh="跳過" data-es="Saltar">跳過</span></button>
+        <button onclick="watchStory()" class="btn btn-secondary text-sm px-4 py-2">📺 <span data-en="Story" data-zh="故事" data-es="Historia">故事</span></button>
+        <button onclick="goToMainMenu()" class="btn btn-secondary text-sm px-4 py-2">🏠 <span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span></button>
+        <button onclick="replayLevel()" class="btn btn-secondary text-sm px-4 py-2">🔄 <span data-en="Replay" data-zh="重玩" data-es="Repetir">重玩</span></button>
+        <button onclick="continueJourney()" class="btn btn-primary text-sm px-4 py-2" style="box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);"><span data-en="Next" data-zh="下一關" data-es="Siguiente">下一關</span> →</button>
     </div>
 </div>
 
 <script>
 // ═══════════════════════════════════════════════════════════════════════════
-// LANGUAGE - 支援中英西三語
+// LANGUAGE
 // ═══════════════════════════════════════════════════════════════════════════
 let currentLang = 'zh';
 function setLang(lang) {
@@ -352,7 +305,7 @@ function playFootstep() {
         gain.gain.setValueAtTime(0.3, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
         osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.1);
-    } catch (e) { console.log('Audio error:', e); }
+    } catch (e) {}
 }
 
 function playRescueSound() {
@@ -368,7 +321,7 @@ function playRescueSound() {
             gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.1 + 0.8);
             osc.start(ctx.currentTime + i * 0.1); osc.stop(ctx.currentTime + i * 0.1 + 0.8);
         });
-    } catch (e) { console.log('Audio error:', e); }
+    } catch (e) {}
 }
 
 function playVictorySound() {
@@ -384,7 +337,7 @@ function playVictorySound() {
             gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + note.time + 0.4);
             osc.start(ctx.currentTime + note.time); osc.stop(ctx.currentTime + note.time + 0.4);
         });
-    } catch (e) { console.log('Audio error:', e); }
+    } catch (e) {}
 }
 
 function toggleSound() { 
@@ -403,19 +356,7 @@ function toggleMusic() {
         music.play().then(() => { 
             document.getElementById('music-btn').textContent = '🎶'; 
             musicPlaying = true; 
-        }).catch(e => console.log('Music error:', e)); 
-    }
-}
-
-function toggleVideoMute() {
-    const video = document.getElementById('intro-video');
-    const btn = document.getElementById('video-mute-btn');
-    if (video.muted) {
-        video.muted = false;
-        btn.innerHTML = '🔊 <span data-en="Sound" data-zh="聲音" data-es="Sonido">' + (currentLang === 'en' ? 'Sound' : currentLang === 'es' ? 'Sonido' : '聲音') + '</span>';
-    } else {
-        video.muted = true;
-        btn.innerHTML = '🔇 <span data-en="Sound" data-zh="聲音" data-es="Sonido">' + (currentLang === 'en' ? 'Sound' : currentLang === 'es' ? 'Sonido' : '聲音') + '</span>';
+        }).catch(e => {}); 
     }
 }
 
@@ -425,48 +366,6 @@ function toggleVideoMute() {
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// START & VIDEO INTRO
-// ═══════════════════════════════════════════════════════════════════════════
-let videoTimer = 29, videoInterval = null;
-
-function goToGame() {
-    console.log('Going to game...');
-    if (videoInterval) { clearInterval(videoInterval); videoInterval = null; }
-    const video = document.getElementById('intro-video');
-    video.pause();
-    showScreen('game-screen');
-    resetLevel();
-    setTimeout(() => {
-        const bgMusic = document.getElementById('bg-music');
-        bgMusic.volume = 0.4;
-        bgMusic.play().then(() => { 
-            document.getElementById('music-btn').textContent = '🎶'; 
-            musicPlaying = true; 
-        }).catch(e => console.log('BG music error:', e));
-    }, 500);
-}
-
-function showMenu() { 
-    const bgMusic = document.getElementById('bg-music');
-    bgMusic.pause(); bgMusic.currentTime = 0;
-    musicPlaying = false;
-    document.getElementById('music-btn').textContent = '🎵';
-    resetLevel();
-    showScreen('video-screen');
-    const video = document.getElementById('intro-video');
-    video.currentTime = 0;
-    video.play().catch(e => console.log('Video play error:', e));
-    videoTimer = 29;
-    document.getElementById('time-remaining').textContent = '29';
-    if (videoInterval) clearInterval(videoInterval);
-    videoInterval = setInterval(() => {
-        videoTimer--;
-        document.getElementById('time-remaining').textContent = videoTimer;
-        if (videoTimer <= 0) goToGame();
-    }, 1000);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -609,6 +508,7 @@ function updateDisplay() {
 // ═══════════════════════════════════════════════════════════════════════════
 function renderGrid() {
     const grid = document.getElementById('astar-grid');
+    if (!grid) return;
     const aiPathSet = new Set(gameState.aiPath.map(p => p.x + ',' + p.y));
     let html = '';
     for (let y = 0; y < gameState.gridHeight; y++) {
@@ -729,7 +629,7 @@ function makeChoice(choice) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// LEVEL COMPLETION
+// LEVEL COMPLETION & BREATHING
 // ═══════════════════════════════════════════════════════════════════════════
 function resetLevel() {
     gameState.player = {x:0, y:0};
@@ -757,7 +657,7 @@ function completeLevel() {
     document.getElementById('music-btn').textContent = '🎵';
     const meditationMusic = document.getElementById('meditation-music');
     meditationMusic.volume = 0.5;
-    meditationMusic.play().catch(e => console.log('Meditation music error:', e));
+    meditationMusic.play().catch(e => {});
     playVictorySound();
     showScreen('ataraxy-screen');
     startBreathingAnimation();
@@ -775,12 +675,11 @@ function startBreathingAnimation() {
     function updateDisplay() {
         const lang = currentLang || 'zh';
         const phaseText = lang === 'en' ? phasesEn[phase] : lang === 'es' ? phasesEs[phase] : phases[phase];
-        counter.innerHTML = '<span style="font-size:4rem;">' + seconds + '</span><br><span style="font-size:1.2rem; opacity:0.9;">' + phaseText + '</span>';
+        counter.innerHTML = '<span style="font-size:3.5rem;">' + seconds + '</span><br><span style="font-size:1.1rem; opacity:0.9;">' + phaseText + '</span>';
     }
     
     updateDisplay();
     
-    // 使用 setTimeout 遞迴，比 setInterval 更準確
     function tick() {
         setTimeout(() => {
             seconds--;
@@ -794,7 +693,7 @@ function startBreathingAnimation() {
                     breathCount++;
                 }
                 if (breathCount >= 3) {
-                    counter.innerHTML = '<span style="font-size:4rem;">🙏</span><br><span style="font-size:1.2rem;">完成</span>';
+                    counter.innerHTML = '<span style="font-size:3.5rem;">🙏</span><br><span style="font-size:1.1rem;">完成</span>';
                     if (typeof confetti === 'function') {
                         confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
                     }
@@ -805,17 +704,18 @@ function startBreathingAnimation() {
                     tick();
                 }
             }
-        }, 1000);  // 1000 毫秒 = 1 秒
+        }, 1000);
     }
     
     tick();
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════════════════
 function skipMeditation() {
-    // 停止冥想音樂
     const meditationMusic = document.getElementById('meditation-music');
     meditationMusic.pause(); meditationMusic.currentTime = 0;
-    // 直接進入下一關
     window.location.href = '../level2/index.html';
 }
 
@@ -826,14 +726,10 @@ function watchStory() {
 }
 
 function goToMainMenu() {
+    const bgMusic = document.getElementById('bg-music');
     const meditationMusic = document.getElementById('meditation-music');
-    meditationMusic.pause(); meditationMusic.currentTime = 0;
-    window.location.href = '../index.html';
-}
-
-function goToPrevLevel() {
-    const meditationMusic = document.getElementById('meditation-music');
-    meditationMusic.pause(); meditationMusic.currentTime = 0;
+    if (bgMusic) { bgMusic.pause(); bgMusic.currentTime = 0; }
+    if (meditationMusic) { meditationMusic.pause(); meditationMusic.currentTime = 0; }
     window.location.href = '../index.html';
 }
 
@@ -847,7 +743,7 @@ function replayLevel() {
     bgMusic.play().then(() => { 
         document.getElementById('music-btn').textContent = '🎶'; 
         musicPlaying = true; 
-    }).catch(e => console.log('BG music error:', e));
+    }).catch(e => {});
 }
 
 function continueJourney() {
@@ -860,26 +756,18 @@ function continueJourney() {
 // INIT
 // ═══════════════════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Game initialized');
     gameState.aiPath = computeAStarPath();
-    const video = document.getElementById('intro-video');
-    video.play().catch(e => console.log('Video autoplay blocked:', e));
-    videoTimer = 29;
-    document.getElementById('time-remaining').textContent = '29';
-    if (videoInterval) clearInterval(videoInterval);
-    videoInterval = setInterval(() => {
-        videoTimer--;
-        document.getElementById('time-remaining').textContent = videoTimer;
-        if (videoTimer <= 0) goToGame();
-    }, 1000);
-    video.onended = goToGame;
+    renderGrid();
+    
+    // 鍵盤控制
     document.addEventListener('keydown', function(e) {
         if (!document.getElementById('game-screen').classList.contains('active')) return;
+        const p = gameState.player;
         switch(e.key) {
-            case 'ArrowUp': e.preventDefault(); movePlayer(gameState.player.x, gameState.player.y - 1); break;
-            case 'ArrowDown': e.preventDefault(); movePlayer(gameState.player.x, gameState.player.y + 1); break;
-            case 'ArrowLeft': e.preventDefault(); movePlayer(gameState.player.x - 1, gameState.player.y); break;
-            case 'ArrowRight': e.preventDefault(); movePlayer(gameState.player.x + 1, gameState.player.y); break;
+            case 'ArrowUp': e.preventDefault(); movePlayer(p.x, p.y - 1); break;
+            case 'ArrowDown': e.preventDefault(); movePlayer(p.x, p.y + 1); break;
+            case 'ArrowLeft': e.preventDefault(); movePlayer(p.x - 1, p.y); break;
+            case 'ArrowRight': e.preventDefault(); movePlayer(p.x + 1, p.y); break;
         }
     });
 });
