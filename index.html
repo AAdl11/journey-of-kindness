@@ -432,6 +432,7 @@
     </style>
 </head>
 <body>
+    <audio id="bgMusic" src="assets/audio/welcome_mp3.mp3" loop></audio>
 
 <!-- VIDEO INTRO -->
 <div id="videoOverlay">
@@ -738,6 +739,25 @@
             if (e.key === 'm' || e.key === 'M') toggleMute();
         }
     });
+
+// 背景音樂控制
+let musicPlaying = false;
+function toggleMusic() {
+    const music = document.getElementById('bgMusic');
+    if (musicPlaying) {
+        music.pause();
+        musicPlaying = false;
+    } else {
+        music.volume = 0.3;
+        music.play().catch(e => console.log('Audio autoplay blocked'));
+        musicPlaying = true;
+    }
+    updateMusicBtn();
+}
+function updateMusicBtn() {
+    const btn = document.getElementById('music-btn');
+    if (btn) btn.textContent = musicPlaying ? '🔊' : '🔇';
+}
 </script>
 
 </body>
