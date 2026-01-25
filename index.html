@@ -708,23 +708,6 @@ introVideo.muted = true;
         timeLeft = 29;
         timerDisplay.textContent = '29';
         introVideo.currentTime = 0;
-        // 等待用戶點擊開始
-const startOverlay = document.createElement('div');
-startOverlay.id = 'startOverlay';
-startOverlay.innerHTML = '<div style="text-align:center;color:white;"><h1>🌿 Journey of Kindness</h1><button id="startBtn" style="padding:20px 40px;font-size:1.5em;background:#10b981;color:white;border:none;border-radius:30px;cursor:pointer;">▶ Start Journey</button></div>';
-startOverlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:10000;display:flex;align-items:center;justify-content:center;';
-document.body.appendChild(startOverlay);
-
-document.getElementById('startBtn').onclick = function() {
-    startOverlay.remove();
-    introVideo.muted = false;
-    introVideo.play();
-    startTimer();
-};
-return; // 不自動播放
-introVideo.muted = true;
-        introVideo.play().then(startTimer);
-    }
 
     // ==========================================
     // LANGUAGE
