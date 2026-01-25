@@ -757,22 +757,45 @@ function completeLevel() {
 }
 
 function startBreathingAnimation() {
-    let count = 3;
     const counter = document.getElementById('breath-counter');
-    counter.textContent = '3';
+    const phases = ['吸氣', '屏息', '呼氣'];
+    const phasesEn = ['Inhale', 'Hold', 'Exhale'];
+    const phasesEs = ['Inhala', 'Sostén', 'Exhala'];
+    let breathCount = 0;
+    let phase = 0;
+    let seconds = 4;
+    
+    function updateDisplay() {
+        const lang = currentLang || 'zh';
+        const phaseText = lang === 'en' ? phasesEn[phase] : lang === 'es' ? phasesEs[phase] : phases[phase];
+        counter.innerHTML = seconds + '<br><span style="font-size:1rem;">' + phaseText + '</span>';
+    }
+    
+    updateDisplay();
+    
     const timer = setInterval(() => {
-        count--;
-        if (count > 0) {
-            counter.textContent = count;
+        seconds--;
+        if (seconds > 0) {
+            updateDisplay();
         } else {
-            clearInterval(timer); 
-            counter.textContent = '🙏';
-            if (typeof confetti === 'function') {
-                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            phase++;
+            if (phase > 2) {
+                phase = 0;
+                breathCount++;
             }
-            playVictorySound();
+            if (breathCount >= 3) {
+                clearInterval(timer);
+                counter.textContent = '🙏';
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                }
+                playVictorySound();
+            } else {
+                seconds = 4;
+                updateDisplay();
+            }
         }
-    }, 2000);
+    }, 1000);
 }
 
 function watchStory() { window.location.href = "../index.html?autoplay=true"; }`n`nfunction goToMainMenu() {
