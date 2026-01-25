@@ -1381,6 +1381,12 @@
                 revealThirdOption();
             });
         });
-    </script>
+    
+// 完成旅程，跳轉到許願樹
+function completeJourney() {
+    if (typeof stopBackgroundMusic === 'function') stopBackgroundMusic();
+    window.location.href = '../outro.html';
+}
+</script>
 </body>
 </html>
