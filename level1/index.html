@@ -18,7 +18,12 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.5); } 50% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.8); } }
         @keyframes playerMove { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
-        @keyframes breatheRing { 0%, 100% { transform: scale(0.8); opacity: 0.6; } 50% { transform: scale(1.3); opacity: 1; } }
+        @keyframes breatheRing { 
+            0% { transform: scale(0.8); opacity: 0.6; } 
+            33% { transform: scale(1.3); opacity: 1; } 
+            66% { transform: scale(1.3); opacity: 0.9; } 
+            100% { transform: scale(0.8); opacity: 0.6; } 
+        }
         @keyframes breatheCard { 0%, 100% { transform: scale(0.97); box-shadow: 0 8px 32px rgba(251, 191, 36, 0.2); } 50% { transform: scale(1.03); box-shadow: 0 12px 48px rgba(251, 191, 36, 0.5); } }
         
         .fade-in { animation: fadeIn 0.8s ease-out; }
@@ -32,14 +37,14 @@
         .breath-ring {
             width: 150px; height: 150px; border-radius: 50%;
             border: 5px solid rgba(251, 191, 36, 0.8);
-            animation: breatheRing 4s ease-in-out infinite;
+            animation: breatheRing 12s ease-in-out infinite;
             box-shadow: 0 0 40px rgba(251, 191, 36, 0.5), inset 0 0 40px rgba(251, 191, 36, 0.2);
         }
         
         .breath-ring-large {
             width: 180px; height: 180px; border-radius: 50%;
             border: 6px solid rgba(251, 191, 36, 0.9);
-            animation: breatheRing 4s ease-in-out infinite;
+            animation: breatheRing 12s ease-in-out infinite;
             box-shadow: 0 0 60px rgba(251, 191, 36, 0.6), inset 0 0 50px rgba(251, 191, 36, 0.3);
             display: flex; align-items: center; justify-content: center;
             background: rgba(255, 255, 255, 0.1);
@@ -302,6 +307,7 @@
     
     <!-- Navigation buttons -->
     <div class="relative z-10 flex flex-wrap gap-4 justify-center" style="margin-bottom: 8%;">
+        <button onclick="skipMeditation()" class="btn btn-secondary text-base px-6 py-2" style="opacity: 0.7;">⏭️ <span data-en="Skip" data-zh="跳過" data-es="Saltar">跳過</span></button>
         <button onclick="watchStory()" class="btn btn-secondary text-base px-6 py-2">📺 <span data-en="Story" data-zh="故事" data-es="Historia">故事</span></button>
         <button onclick="goToMainMenu()" class="btn btn-secondary text-base px-6 py-2">🏠 <span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span></button>
         <button onclick="goToPrevLevel()" class="btn btn-secondary text-base px-6 py-2">⬅️ <span data-en="Prev" data-zh="上一關" data-es="Anterior">上一關</span></button>
@@ -769,34 +775,48 @@ function startBreathingAnimation() {
     function updateDisplay() {
         const lang = currentLang || 'zh';
         const phaseText = lang === 'en' ? phasesEn[phase] : lang === 'es' ? phasesEs[phase] : phases[phase];
-        counter.innerHTML = seconds + '<br><span style="font-size:1rem;">' + phaseText + '</span>';
+        counter.innerHTML = '<span style="font-size:4rem;">' + seconds + '</span><br><span style="font-size:1.2rem; opacity:0.9;">' + phaseText + '</span>';
     }
     
     updateDisplay();
     
-    const timer = setInterval(() => {
-        seconds--;
-        if (seconds > 0) {
-            updateDisplay();
-        } else {
-            phase++;
-            if (phase > 2) {
-                phase = 0;
-                breathCount++;
-            }
-            if (breathCount >= 3) {
-                clearInterval(timer);
-                counter.textContent = '🙏';
-                if (typeof confetti === 'function') {
-                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-                }
-                playVictorySound();
-            } else {
-                seconds = 4;
+    // 使用 setTimeout 遞迴，比 setInterval 更準確
+    function tick() {
+        setTimeout(() => {
+            seconds--;
+            if (seconds > 0) {
                 updateDisplay();
+                tick();
+            } else {
+                phase++;
+                if (phase > 2) {
+                    phase = 0;
+                    breathCount++;
+                }
+                if (breathCount >= 3) {
+                    counter.innerHTML = '<span style="font-size:4rem;">🙏</span><br><span style="font-size:1.2rem;">完成</span>';
+                    if (typeof confetti === 'function') {
+                        confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                    }
+                    playVictorySound();
+                } else {
+                    seconds = 4;
+                    updateDisplay();
+                    tick();
+                }
             }
-        }
-    }, 1000);
+        }, 1000);  // 1000 毫秒 = 1 秒
+    }
+    
+    tick();
+}
+
+function skipMeditation() {
+    // 停止冥想音樂
+    const meditationMusic = document.getElementById('meditation-music');
+    meditationMusic.pause(); meditationMusic.currentTime = 0;
+    // 直接進入下一關
+    window.location.href = '../level2/index.html';
 }
 
 function watchStory() {
