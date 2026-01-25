@@ -528,47 +528,6 @@
             .game-layout { flex-direction: column; }
             .side-panel { max-width: 100%; }
         }
-
-        /* Bottom Navigation Bar */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 16px;
-            background: linear-gradient(to top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.9));
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .nav-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.9);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 12px;
-            min-width: 70px;
-        }
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-        .nav-btn .nav-icon { font-size: 20px; }
-        @media (max-width: 480px) {
-            .nav-btn { padding: 6px 10px; min-width: 60px; font-size: 10px; }
-            .nav-btn .nav-icon { font-size: 18px; }
-        }
     </style>
 </head>
 <body class="min-h-screen" translate="no">
@@ -577,7 +536,6 @@
 <div class="lang-toggle">
     <button id="lang-en" class="lang-btn" onclick="setLang('en')">EN</button>
     <button id="lang-zh" class="lang-btn active" onclick="setLang('zh')">中</button>
-    <button id="lang-es" class="lang-btn" onclick="setLang('es')">ES</button>
 </div>
 
 <!-- Audio - HAPPY MUSIC! Will autoplay on interaction -->
@@ -887,10 +845,10 @@
         </div>
         
         <div class="nav-buttons">
-            <button onclick="goHome()" class="nav-btn nav-btn-home">🏠 <span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span></button>
-            <button onclick="goToPrevLevel()" class="nav-btn nav-btn-prev">⬅️ <span data-en="Prev Level" data-zh="上一關" data-es="Anterior">上一關</span></button>
+            <button onclick="goHome()" class="nav-btn nav-btn-home">🏠 <span data-en="Home" data-zh="主頁">主頁</span></button>
+            <button onclick="goToPrevLevel()" class="nav-btn nav-btn-prev">⬅️ <span data-en="Prev Level" data-zh="上一關">上一關</span></button>
             <button onclick="replayLevel()" class="nav-btn nav-btn-back">🔄 <span data-en="Replay" data-zh="重玩">重玩</span></button>
-            <button onclick="continueJourney()" class="nav-btn nav-btn-next"><span data-en="Next Level" data-zh="下一關" data-es="Siguiente">下一關</span> →</button>
+            <button onclick="continueJourney()" class="nav-btn nav-btn-next"><span data-en="Next Level" data-zh="下一關">下一關</span> →</button>
         </div>
     </div>
 </div>
@@ -1458,40 +1416,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🐯 Level 2 Ready!');
     console.log('🎵 Music: happy_campus.mp3');
 });
-
-// ═══════════════════════════════════════════════════════════════════════════
-// BOTTOM NAVIGATION
-// ═══════════════════════════════════════════════════════════════════════════
-function navHome() { window.location.href = '../index.html'; }
-function navPrev() { window.location.href = '../level1/index.html'; }
-function navNext() { window.location.href = '../level3/index.html'; }
-function navReplayStory() {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('video-screen').classList.add('active');
-    const video = document.getElementById('intro-video');
-    if (video) { video.currentTime = 0; video.play().catch(e => {}); }
-}
 </script>
-
-<!-- Bottom Navigation Bar -->
-<nav class="bottom-nav">
-    <button class="nav-btn" onclick="navHome()">
-        <span class="nav-icon">🏠</span>
-        <span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span>
-    </button>
-    <button class="nav-btn" onclick="navPrev()">
-        <span class="nav-icon">⬅️</span>
-        <span data-en="Prev" data-zh="上一關" data-es="Anterior">上一關</span>
-    </button>
-    <button class="nav-btn" onclick="navNext()">
-        <span class="nav-icon">➡️</span>
-        <span data-en="Next" data-zh="下一關" data-es="Siguiente">下一關</span>
-    </button>
-    <button class="nav-btn" onclick="navReplayStory()">
-        <span class="nav-icon">🎬</span>
-        <span data-en="Story" data-zh="重聽故事" data-es="Historia">重聽故事</span>
-    </button>
-</nav>
 
 </body>
 </html>

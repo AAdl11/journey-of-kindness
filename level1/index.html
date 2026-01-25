@@ -130,56 +130,6 @@
             25% { transform: translateX(-5px); }
             75% { transform: translateX(5px); }
         }
-
-        /* Bottom Navigation Bar */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 16px;
-            background: linear-gradient(to top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.9));
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .nav-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.9);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 12px;
-            min-width: 70px;
-        }
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-        .nav-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .nav-btn .nav-icon { font-size: 20px; }
-        .nav-btn.active {
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(139, 92, 246, 0.3));
-            border-color: rgba(236, 72, 153, 0.5);
-        }
-        @media (max-width: 480px) {
-            .nav-btn { padding: 6px 10px; min-width: 60px; font-size: 10px; }
-            .nav-btn .nav-icon { font-size: 18px; }
-        }
     </style>
 </head>
 <body class="text-white min-h-screen" translate="no">
@@ -188,7 +138,6 @@
 <div class="lang-toggle" style="left: 10px; right: auto;">
     <button id="lang-en" class="lang-btn" onclick="setLang('en')">EN</button>
     <button id="lang-zh" class="lang-btn active" onclick="setLang('zh')">中</button>
-    <button id="lang-es" class="lang-btn" onclick="setLang('es')">ES</button>
 </div>
 
 <!-- Audio elements -->
@@ -364,11 +313,7 @@ function setLang(lang) {
     currentLang = lang;
     document.getElementById('lang-en').classList.toggle('active', lang === 'en');
     document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
-    document.getElementById('lang-es').classList.toggle('active', lang === 'es');
-    document.querySelectorAll('[data-en][data-zh]').forEach(el => {
-        const text = el.getAttribute('data-' + lang) || el.getAttribute('data-en');
-        el.textContent = text;
-    });
+    document.querySelectorAll('[data-en][data-zh]').forEach(el => el.textContent = el.getAttribute('data-' + lang));
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1013,66 +958,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
-// ═══════════════════════════════════════════════════════════════════════════
-// BOTTOM NAVIGATION
-// ═══════════════════════════════════════════════════════════════════════════
-function navHome() {
-    window.location.href = '../index.html';
-}
-
-function navPrev() {
-    // Level 1 has no previous level
-    return;
-}
-
-function navNext() {
-    window.location.href = '../level2/index.html';
-}
-
-function navReplayStory() {
-    // Show video screen and replay
-    document.getElementById('game-screen').classList.remove('active');
-    document.getElementById('portico-screen').classList.remove('active');
-    document.getElementById('video-screen').classList.add('active');
-
-    const video = document.getElementById('intro-video');
-    video.currentTime = 0;
-    video.play().catch(e => console.log('Video replay blocked'));
-
-    // Restart countdown
-    videoTimer = 29;
-    document.getElementById('time-remaining').textContent = '29';
-    if (videoInterval) clearInterval(videoInterval);
-    videoInterval = setInterval(() => {
-        videoTimer--;
-        document.getElementById('time-remaining').textContent = videoTimer;
-        if (videoTimer <= 0) {
-            goToGame();
-        }
-    }, 1000);
-}
 </script>
-
-<!-- Bottom Navigation Bar -->
-<nav class="bottom-nav">
-    <button class="nav-btn" onclick="navHome()">
-        <span class="nav-icon">🏠</span>
-        <span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span>
-    </button>
-    <button class="nav-btn" onclick="navPrev()" disabled>
-        <span class="nav-icon">⬅️</span>
-        <span data-en="Prev" data-zh="上一關" data-es="Anterior">上一關</span>
-    </button>
-    <button class="nav-btn" onclick="navNext()">
-        <span class="nav-icon">➡️</span>
-        <span data-en="Next" data-zh="下一關" data-es="Siguiente">下一關</span>
-    </button>
-    <button class="nav-btn" onclick="navReplayStory()">
-        <span class="nav-icon">🎬</span>
-        <span data-en="Story" data-zh="重聽故事" data-es="Historia">重聽故事</span>
-    </button>
-</nav>
 
 </body>
 </html>
