@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
@@ -26,7 +26,7 @@
         
         /* Background with RV Park */
         .bg-rv-park {
-            background: url('rv_park_map.png') center center/cover no-repeat;
+            background: url('../assets/images/rv_park_map.png') center center/cover no-repeat;
             background-color: #1e3a5f;
         }
         
@@ -326,8 +326,8 @@
 <body translate="no">
 
 <!-- Audio Elements -->
-<audio id="game-music" src="exploration_music.mp3" loop></audio>
-<audio id="meditation-music" src="meditation.mp3" loop></audio>
+<audio id="game-music" src="../assets/audio/exploration_music.mp3" loop></audio>
+<audio id="meditation-music" src="../assets/audio/meditation.mp3" loop></audio>
 
 <!-- Language Toggle -->
 <div class="lang-toggle">
@@ -494,7 +494,7 @@
      SCREEN 2: 靜心之門 / Gate of Serenity
 ══════════════════════════════════════════════════════════════════════════ -->
 <div id="ataraxy-screen" class="screen flex-col items-center py-2 px-4" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);">
-    <div class="absolute inset-0" style="background: url('靜心之門.png') center top/auto 100% no-repeat;"></div>
+    <div class="absolute inset-0" style="background: url('../assets/images/靜心之門.png') center top/auto 100% no-repeat;"></div>
     <div class="absolute inset-0 bg-purple-900/5"></div>
     
     <div class="relative z-10 text-center">
@@ -1247,7 +1247,7 @@ function renderGrid() {
 function showStory(msg, showImg = false) {
     const box = document.getElementById('story-box');
     box.innerHTML = showImg ? 
-        `<img src="family_found.png" class="family-img"><div style="color:white;font-size:16px;">${msg}</div>` :
+        `<img src="../assets/images/family_found.png" class="family-img"><div style="color:white;font-size:16px;">${msg}</div>` :
         `<div style="color:white;font-size:16px;">${msg}</div>`;
     box.classList.add('show');
 }

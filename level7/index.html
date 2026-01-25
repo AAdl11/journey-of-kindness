@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -333,7 +333,7 @@
         /* ✨ ATARAXY PORTICO - 金色主題 ✨ */
         /* ======================================= */
         #mindfulness-screen { 
-            background: url('靜心之門.png') center center / contain no-repeat;
+            background: url('../assets/images/靜心之門.png') center center / contain no-repeat;
             background-color: #1a1a2e;
             position: relative;
         }
@@ -525,9 +525,9 @@
     </div>
     <div class="audio-control" id="audioControl" onclick="toggleAudio()">🔊</div>
     
-    <audio id="suspenseAudio" loop preload="auto"><source src="L7_suspense_mp3.mp3" type="audio/mpeg"></audio>
-    <audio id="switchAudio" preload="auto"><source src="L7_switch_mp3_mp3.mp3" type="audio/mpeg"></audio>
-    <audio id="ataraxyAudio" loop preload="auto"><source src="ataraxy-music.mp3" type="audio/mpeg"></audio>
+    <audio id="suspenseAudio" loop preload="auto"><source src="../assets/audio/L7_suspense_mp3.mp3" type="audio/mpeg"></audio>
+    <audio id="switchAudio" preload="auto"><source src="../assets/audio/L7_switch_mp3_mp3.mp3" type="audio/mpeg"></audio>
+    <audio id="ataraxyAudio" loop preload="auto"><source src="../assets/audio/ataraxy-music.mp3" type="audio/mpeg"></audio>
 
     <!-- QUIZ MODAL -->
     <div class="quiz-modal" id="quizModal">
@@ -597,7 +597,7 @@
             </div>
         </div>
         
-        <img class="intro-image" src="L7_lever_switch.png" alt="Choose Your Path">
+        <img class="intro-image" src="../assets/images/L7_lever_switch.png" alt="Choose Your Path">
         <p style="color: #ffd700; font-size: 0.85em; margin-top: 8px; text-align: center;">
             <span class="text-en">⬅️ Save 5 Families &nbsp;&nbsp;|&nbsp;&nbsp; Save 1 Elder ➡️</span>
             <span class="text-zh">⬅️ 救 5 個家庭 &nbsp;&nbsp;|&nbsp;&nbsp; 救 1 位長者 ➡️</span>
@@ -629,7 +629,7 @@
             <div class="game-overlay"></div>
             
             <div class="train-container">
-                <video class="train-video" id="trainVideo" autoplay loop muted playsinline><source src="L7_火車動.mp4" type="video/mp4"></video>
+                <video class="train-video" id="trainVideo" autoplay loop muted playsinline><source src="../assets/video/L7_火車動.mp4" type="video/mp4"></video>
                 <div class="train-label"><span class="text-en">⚠️ RUNAWAY</span><span class="text-zh">⚠️ 失控</span></div>
             </div>
             
@@ -646,19 +646,19 @@
             <div class="choices-container">
                 <div class="choice-card choice-a" id="cardA" onclick="makeChoice('A')">
                     <div class="choice-letter">A</div>
-                    <img class="choice-image" src="L7_5families.png" alt="5 Families">
+                    <img class="choice-image" src="../assets/images/L7_5families.png" alt="5 Families">
                     <div class="choice-label"><span class="text-en">Save 5</span><span class="text-zh">救 5 人</span></div>
                     <div class="choice-sublabel">Gemini</div>
                 </div>
                 <div class="choice-card choice-c" id="cardC" onclick="makeChoice('C')">
                     <div class="choice-letter">C</div>
-                    <img class="choice-image" src="L7_ending_C.png" alt="Third Way">
+                    <img class="choice-image" src="../assets/images/L7_ending_C.png" alt="Third Way">
                     <div class="choice-label"><span class="text-en">Third Way</span><span class="text-zh">第三條路</span></div>
                     <div class="choice-sublabel">Grok+Mo</div>
                 </div>
                 <div class="choice-card choice-b" id="cardB" onclick="makeChoice('B')">
                     <div class="choice-letter">B</div>
-                    <img class="choice-image" src="L7_1elder.png" alt="1 Elder">
+                    <img class="choice-image" src="../assets/images/L7_1elder.png" alt="1 Elder">
                     <div class="choice-label"><span class="text-en">Save 1</span><span class="text-zh">救 1 人</span></div>
                     <div class="choice-sublabel">Claude</div>
                 </div>
@@ -669,7 +669,7 @@
             </button>
             
             <div class="ai-advisor">
-                <img class="ai-avatar" src="L7_ai_advisor.png" alt="AI Advisor">
+                <img class="ai-avatar" src="../assets/images/L7_ai_advisor.png" alt="AI Advisor">
                 <div class="ai-learning"><span class="text-en-inline">LEARNING</span><span class="text-zh-inline">學習中</span></div>
                 <div class="ai-speech"><span id="aiMessage"></span></div>
             </div>
