@@ -692,6 +692,12 @@ introVideo.muted = true;
             bgMusic.volume = 0.3;
             bgMusic.play().catch(e => console.log('Music autoplay blocked'));
         }
+        // 播放背景音樂
+        const bgMusic = document.getElementById('bgMusic');
+        if (bgMusic) {
+            bgMusic.volume = 0.3;
+            bgMusic.play().catch(e => console.log('Music autoplay blocked'));
+        }
         mainPage.classList.add('active');
         createStars();
     }
