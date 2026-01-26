@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -692,12 +692,6 @@ introVideo.muted = true;
             bgMusic.volume = 0.3;
             bgMusic.play().catch(e => console.log('Music autoplay blocked'));
         }
-        // 播放背景音樂
-        const bgMusic = document.getElementById('bgMusic');
-        if (bgMusic) {
-            bgMusic.volume = 0.3;
-            bgMusic.play().catch(e => console.log('Music autoplay blocked'));
-        }
         mainPage.classList.add('active');
         createStars();
     }
@@ -708,6 +702,9 @@ introVideo.muted = true;
         timeLeft = 29;
         timerDisplay.textContent = '29';
         introVideo.currentTime = 0;
+        introVideo.play();
+        startTimer();
+    }
 
     // ==========================================
     // LANGUAGE
@@ -730,6 +727,7 @@ introVideo.muted = true;
     // ==========================================
     function createStars() {
         const container = document.getElementById('starsContainer');
+        if (!container) return;
         container.innerHTML = '';
         for (let i = 0; i < 80; i++) {
             const star = document.createElement('div');
@@ -763,28 +761,25 @@ introVideo.muted = true;
         }
     });
 
-// 背景音樂控制
-let musicPlaying = false;
-function toggleMusic() {
-    const music = document.getElementById('bgMusic');
-    if (musicPlaying) {
-        music.pause();
-        musicPlaying = false;
-    } else {
-        music.volume = 0.3;
-        music.play().catch(e => console.log('Audio autoplay blocked'));
-        musicPlaying = true;
+    // 背景音樂控制
+    let musicPlaying = false;
+    function toggleMusic() {
+        const music = document.getElementById('bgMusic');
+        if (musicPlaying) {
+            music.pause();
+            musicPlaying = false;
+        } else {
+            music.volume = 0.3;
+            music.play().catch(e => console.log('Audio autoplay blocked'));
+            musicPlaying = true;
+        }
+        updateMusicBtn();
     }
-    updateMusicBtn();
-}
-function updateMusicBtn() {
-    const btn = document.getElementById('music-btn');
-    if (btn) btn.textContent = musicPlaying ? '🔊' : '🔇';
-}
+    function updateMusicBtn() {
+        const btn = document.getElementById('music-btn');
+        if (btn) btn.textContent = musicPlaying ? '🔊' : '🔇';
+    }
 </script>
 
 </body>
 </html>
-< ! - -   d e p l o y   t r i g g e r   - - > 
- 
- 
