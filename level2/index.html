@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
@@ -36,19 +36,19 @@
         
         /* Intro - Let the ceremony image SHINE! */
         .bg-ceremony {
-            background: url('../assets/images/L2_ceremony.png') center center/cover no-repeat;
+            background: url('L2_ceremony.png') center center/cover no-repeat;
             background-color: #fce7f3;
         }
         
         /* Shop - Bright playground */
         .bg-playground {
-            background: url('../assets/images/L2_p2_Scool.png') center center/cover no-repeat;
+            background: url('L2_p2_Scool.png') center center/cover no-repeat;
             background-color: #ecfdf5;
         }
         
         /* Ataraxy - Show the beautiful gate with its built-in water */
         .bg-ataraxy {
-            background: url('../assets/images/ataraxy_gate.png') center center/contain no-repeat;
+            background: url('ataraxy_gate.png') center center/contain no-repeat;
             background-color: #c4b5fd;
         }
         
@@ -455,7 +455,6 @@
         .nav-btn:hover { transform: translateY(-3px); }
         
         .nav-btn-home { background: linear-gradient(135deg, #6b7280, #4b5563); color: white; }
-        .nav-btn-prev { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
         .nav-btn-back { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
         .nav-btn-next { 
             background: linear-gradient(135deg, #ec4899, #8b5cf6); 
@@ -531,17 +530,17 @@
     </style>
 </head>
 <body class="min-h-screen" translate="no">
-    <audio id="bgMusic" src="../assets/audio/welcome_mp3.mp3" loop></audio>
 
 <!-- Language Toggle -->
 <div class="lang-toggle">
     <button id="lang-en" class="lang-btn" onclick="setLang('en')">EN</button>
-    <button id="lang-zh" class="lang-btn active" onclick="setLang('zh')">中</button><button class="lang-btn" onclick="setLang('es')">ES</button>
+    <button id="lang-zh" class="lang-btn active" onclick="setLang('zh')">中</button>
+    <button id="lang-es" class="lang-btn" onclick="setLang('es')">ES</button>
 </div>
 
 <!-- Audio - HAPPY MUSIC! Will autoplay on interaction -->
-<audio id="bg-music" src="../assets/audio/happy_campus.mp3" loop preload="auto"></audio>
-<audio id="meditation-music" src="../assets/audio/AnaCaptainslogue_-_Noir_Et_Blanc_Vie.mp3" loop preload="auto"></audio>
+<audio id="bg-music" src="happy_campus.mp3" loop preload="auto"></audio>
+<audio id="meditation-music" src="AnaCaptainslogue_-_Noir_Et_Blanc_Vie.mp3" loop preload="auto"></audio>
 
 <!-- ═══════════════════════════════════════════════════════════════════════
      SCREEN 1: INTRO - TRANSPARENT TO SHOW BEAUTIFUL BACKGROUND!
@@ -553,7 +552,7 @@
                 Level 2: Propositional Logic
             </span>
         </h1>
-        <p class="text-lg text-gray-700 mb-1">命題邏輯 • Happy Campus 幸福校園</p>
+        <p class="text-lg text-gray-700 mb-1" data-en="Propositional Logic • Happy Campus" data-zh="命題邏輯 • Happy Campus 幸福校園" data-es="Lógica Proposicional • Campus Feliz">命題邏輯 • Happy Campus 幸福校園</p>
         <p class="text-sm text-gray-500 mb-4">Bret Harte Elementary School, Bayview-Hunters Point</p>
         
         <div class="info-box text-left mb-4">
@@ -582,7 +581,7 @@
         </div>
         
         <button onclick="startGame()" class="btn btn-primary text-lg px-10 py-4 pulse-glow">
-            🎮 <span data-en="Start Ceremony!" data-zh="開始典禮！">開始典禮！</span>
+            🎮 <span data-en="Start Ceremony!" data-zh="開始典禮！" data-es="¡Iniciar Ceremonia!">開始典禮！</span>
         </button>
         
         <p class="text-xs text-gray-400 mt-3" data-en="🎵 Music will play when you start" data-zh="🎵 點擊開始後會播放音樂">🎵 點擊開始後會播放音樂</p>
@@ -818,14 +817,14 @@
 <div id="ataraxy-screen" class="screen bg-ataraxy flex-col items-center justify-between p-4" style="padding-top: 1vh; padding-bottom: 2vh;">
     <!-- 上方區域：標題 + 呼吸環 (在蓮花上方) -->
     <div class="text-center fade-in" style="position: relative; z-index: 10;">
-        <p class="text-4xl mb-3 font-bold" style="color: #fbbf24; text-shadow: 0 0 20px rgba(251,191,36,0.8), 0 3px 15px rgba(0,0,0,0.3);" data-en="Ataraxy Portico" data-zh="靜心之門">靜心之門</p>
+        <p class="text-4xl mb-3 font-bold" style="color: #fbbf24; text-shadow: 0 0 20px rgba(251,191,36,0.8), 0 3px 15px rgba(0,0,0,0.3);" data-en="Ataraxy Portico" data-zh="靜心之門" data-es="Portal de Serenidad">靜心之門</p>
         
         <!-- 加大加亮的呼吸環 -->
         <div class="breath-ring-enhanced mb-3 mx-auto">
             <span id="breath-counter" class="text-5xl font-bold" style="color: #fbbf24; text-shadow: 0 0 15px rgba(251,191,36,1);">3</span>
         </div>
         
-        <p class="text-2xl font-bold" style="color: #fef3c7; text-shadow: 0 0 15px rgba(251,191,36,0.9), 0 2px 10px rgba(0,0,0,0.5);" data-en="Take 3 Deep Breaths" data-zh="深呼吸三次">深呼吸三次</p>
+        <p class="text-2xl font-bold" style="color: #fef3c7; text-shadow: 0 0 15px rgba(251,191,36,0.9), 0 2px 10px rgba(0,0,0,0.5);" data-en="Take 3 Deep Breaths" data-zh="深呼吸三次" data-es="Respira Profundo 3 Veces">深呼吸三次</p>
     </div>
     
     <!-- 中間區域：靜思語卡片 (在蓮花花托與枝幹之間) -->
@@ -846,10 +845,9 @@
         </div>
         
         <div class="nav-buttons">
-            <button onclick="goHome()" class="nav-btn nav-btn-home">🏠 <span data-en="Home" data-zh="主頁">主頁</span></button>
-            <button onclick="goToPrevLevel()" class="nav-btn nav-btn-prev">⬅️ <span data-en="Prev Level" data-zh="上一關">上一關</span></button>
-            <button onclick="replayLevel()" class="nav-btn nav-btn-back">🔄 <span data-en="Replay" data-zh="重玩">重玩</span></button>
-            <button onclick="continueJourney()" class="nav-btn nav-btn-next"><span data-en="Next Level" data-zh="下一關">下一關</span> →</button>
+            <button onclick="goHome()" class="nav-btn nav-btn-home">🏠 <span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span></button>
+            <button onclick="replayLevel()" class="nav-btn nav-btn-back">🔄 <span data-en="Replay" data-zh="重玩" data-es="Repetir">重玩</span></button>
+            <button onclick="continueJourney()" class="nav-btn nav-btn-next"><span data-en="Next Level" data-zh="下一關" data-es="Siguiente">下一關</span> →</button>
         </div>
     </div>
 </div>
@@ -864,14 +862,15 @@ function setLang(lang) {
     currentLang = lang;
     document.getElementById('lang-en').classList.toggle('active', lang === 'en');
     document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
-    document.getElementById('lang-es')?.classList.toggle('active', lang === 'es');
+    document.getElementById('lang-es').classList.toggle('active', lang === 'es');
     document.querySelectorAll('[data-en][data-zh]').forEach(el => {
-        el.innerHTML = el.getAttribute('data-' + lang) || el.getAttribute('data-en');
+        const text = el.getAttribute('data-' + lang) || el.getAttribute('data-en');
+        el.innerHTML = text;
     });
     if (state.phase === 'shop' && shopStudents[state.shopIndex]) {
         const s = shopStudents[state.shopIndex];
-        document.getElementById('student-wish').textContent = '「' + s.wish[lang] + '」';
-        document.getElementById('hint-text').textContent = s.hint[lang];
+        document.getElementById('student-wish').textContent = '「' + (s.wish[lang] || s.wish.en) + '」';
+        document.getElementById('hint-text').textContent = s.hint[lang] || s.hint.en;
     }
     renderProducts();
     renderPriceList();
@@ -1384,11 +1383,6 @@ function startBreathing() {
 function goHome() {
     document.getElementById('meditation-music').pause();
     window.location.href = '../index.html';
-}
-
-function goToPrevLevel() {
-    document.getElementById('meditation-music').pause();
-    window.location.href = '../level1/index.html';
 }
 
 function replayLevel() {
