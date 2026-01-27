@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
@@ -8,10 +8,10 @@
     
     <!-- Audio Files -->
     <audio id="bgMusic" loop>
-        <source src="../assets/audio/stage3.mp3" type="audio/mpeg">
+        <source src="stage3.mp3" type="audio/mpeg">
     </audio>
     <audio id="meditationMusic" loop>
-        <source src="../assets/audio/AnaCaptainslogue_-_Noir_Et_Blanc_Vie.mp3" type="audio/mpeg">
+        <source src="AnaCaptainslogue_-_Noir_Et_Blanc_Vie.mp3" type="audio/mpeg">
     </audio>
     <audio id="levelUpSound">
         <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdH2LkZeUj4J0ZFtXXWVvfIiRl5aOgXJkWVVbY3B9iZKYlo+CdGVbV11lcH2IkZeWjoFyZFpVW2NwfYmSmJaPgnRlW1ddZXB9iJGXlo6BcmRaVVtjcH2JkpiWj4J0ZVtXXWVwfYiRl5aOgXJkWlVbY3B9iZKYlo+CdGVbV11lcH2IkZeWjoFyZFpVW2NwfQ==" type="audio/wav">
@@ -330,36 +330,37 @@
             <div class="lang-toggle">
                 <button class="lang-btn active" onclick="setLanguage('en')" data-lang="en">EN</button>
                 <button class="lang-btn" onclick="setLanguage('zh')" data-lang="zh">中文</button>
+                <button class="lang-btn" onclick="setLanguage('es')" data-lang="es">ES</button>
             </div>
             <button onclick="toggleMusic()" class="music-btn" id="intro-music-btn">🔇</button>
         </div>
         
         <h1 class="text-4xl font-bold mb-4" style="text-shadow: 0 0 30px rgba(245, 158, 11, 0.5);">
-            🌱 <span class="lang-text" data-en="Level 3: MDP" data-zh="第三關：MDP">Level 3: MDP</span>
+            🌱 <span class="lang-text" data-en="Level 3: MDP" data-zh="第三關：MDP" data-es="Nivel 3: MDP">Level 3: MDP</span>
         </h1>
-        <h2 class="text-2xl text-yellow-300 mb-4 lang-text" data-en="Sister Maya's Journey" data-zh="瑪雅師姊的故事">Sister Maya's Journey</h2>
-        <p class="text-white/80 mb-6 lang-text" data-en="A Story of Transformation" data-zh="一個轉變的故事">A Story of Transformation</p>
+        <h2 class="text-2xl text-yellow-300 mb-4 lang-text" data-en="Sister Maya's Journey" data-zh="瑪雅師姊的故事" data-es="El Viaje de la Hermana Maya">Sister Maya's Journey</h2>
+        <p class="text-white/80 mb-6 lang-text" data-en="A Story of Transformation" data-zh="一個轉變的故事" data-es="Una Historia de Transformación">A Story of Transformation</p>
         
         <div class="story-panel mx-auto mb-8 text-left">
             <div class="flex items-center gap-4 mb-4">
                 <div class="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-4xl">👩🏿</div>
                 <div>
                     <h3 class="text-yellow-300 font-bold text-lg">Sister Maya</h3>
-                    <p class="text-white/70 text-sm lang-text" data-en="First Local Commissioner from Hunters Point" data-zh="獵人角第一位本土女委員">First Local Commissioner from Hunters Point</p>
+                    <p class="text-white/70 text-sm lang-text" data-en="First Local Commissioner from Hunters Point" data-zh="獵人角第一位本土女委員" data-es="Primera Comisionada Local de Hunters Point">First Local Commissioner from Hunters Point</p>
                 </div>
             </div>
-            <p class="text-lg leading-relaxed mb-4 lang-text" data-en="Maya first came to Tzu Chi's food distribution as a single mother seeking help. She never imagined she would one day become a Commissioner — leading the very program that once helped her. This is her story of growth, choice by choice." data-zh="瑪雅第一次來慈濟食物發放時，是一位尋求幫助的單親媽媽。她從未想過有一天會成為委員——帶領當初幫助她的這個計畫。這是她一步一步成長的故事。">Maya first came to Tzu Chi's food distribution as a single mother seeking help. She never imagined she would one day become a Commissioner — leading the very program that once helped her. This is her story of growth, choice by choice.</p>
-            <p class="text-yellow-300 text-center italic text-lg lang-text" data-en="「Willing to do, happy to receive」" data-zh="「甘願做，歡喜受」">「Willing to do, happy to receive」</p>
+            <p class="text-lg leading-relaxed mb-4 lang-text" data-en="Maya first came to Tzu Chi's food distribution as a single mother seeking help. She never imagined she would one day become a Commissioner — leading the very program that once helped her. This is her story of growth, choice by choice." data-zh="瑪雅第一次來慈濟食物發放時，是一位尋求幫助的單親媽媽。她從未想過有一天會成為委員——帶領當初幫助她的這個計畫。這是她一步一步成長的故事。" data-es="Maya llegó por primera vez a la distribución de alimentos de Tzu Chi como madre soltera buscando ayuda. Nunca imaginó que un día se convertiría en Comisionada — liderando el mismo programa que una vez la ayudó. Esta es su historia de crecimiento, elección por elección.">Maya first came to Tzu Chi's food distribution as a single mother seeking help. She never imagined she would one day become a Commissioner — leading the very program that once helped her. This is her story of growth, choice by choice.</p>
+            <p class="text-yellow-300 text-center italic text-lg lang-text" data-en="「Willing to do, happy to receive」" data-zh="「甘願做，歡喜受」" data-es="「Dispuesto a hacer, feliz de recibir」">「Willing to do, happy to receive」</p>
         </div>
         
         <div class="info-panel mx-auto mb-6" style="max-width: 500px; background: rgba(139, 92, 246, 0.25);">
-            <p class="text-purple-200 text-sm lang-text" data-en="⚠️ This is a fictional story inspired by real volunteers. Names and timelines are created for educational purposes." data-zh="⚠️ 這是一個虛構故事，靈感來自真實志工。姓名和時間線為教育目的而創作。">⚠️ This is a fictional story inspired by real volunteers. Names and timelines are created for educational purposes.</p>
+            <p class="text-purple-200 text-sm lang-text" data-en="⚠️ This is a fictional story inspired by real volunteers. Names and timelines are created for educational purposes." data-zh="⚠️ 這是一個虛構故事，靈感來自真實志工。姓名和時間線為教育目的而創作。" data-es="⚠️ Esta es una historia ficticia inspirada en voluntarios reales. Los nombres y líneas de tiempo se crearon con fines educativos.">⚠️ This is a fictional story inspired by real volunteers. Names and timelines are created for educational purposes.</p>
         </div>
         
-        <p class="text-sm text-white/70 mb-6 lang-text" data-en="Learn how MDP (Markov Decision Process) models decision-making under uncertainty" data-zh="學習 MDP（馬可夫決策過程）如何在不確定性下做決策">Learn how MDP (Markov Decision Process) models decision-making under uncertainty</p>
+        <p class="text-sm text-white/70 mb-6 lang-text" data-en="Learn how MDP (Markov Decision Process) models decision-making under uncertainty" data-zh="學習 MDP（馬可夫決策過程）如何在不確定性下做決策" data-es="Aprende cómo MDP (Proceso de Decisión de Markov) modela la toma de decisiones bajo incertidumbre">Learn how MDP (Markov Decision Process) models decision-making under uncertainty</p>
         
         <button onclick="startGame()" class="btn btn-primary text-lg glow">
-            <span class="lang-text" data-en="Begin Maya's Journey 🚀" data-zh="開始瑪雅的旅程 🚀">Begin Maya's Journey 🚀</span>
+            <span class="lang-text" data-en="Begin Maya's Journey 🚀" data-zh="開始瑪雅的旅程 🚀" data-es="Comenzar el Viaje de Maya 🚀">Begin Maya's Journey 🚀</span>
         </button>
     </div>
 </div>
@@ -374,11 +375,11 @@
     <!-- Header -->
     <div class="flex justify-between items-center p-4 game-content" style="background: rgba(20, 40, 70, 0.25); backdrop-filter: blur(4px);">
         <button onclick="goBack()" class="text-white/80 hover:text-white">
-            ← <span class="lang-text" data-en="Menu" data-zh="選單">Menu</span>
+            ← <span class="lang-text" data-en="Menu" data-zh="選單" data-es="Menú">Menu</span>
         </button>
         <div class="text-center">
             <div class="text-lg font-bold">🌱 Level 3: MDP</div>
-            <div class="text-xs text-yellow-300 lang-text" data-en="Sister Maya's Journey" data-zh="瑪雅師姊的故事">Sister Maya's Journey</div>
+            <div class="text-xs text-yellow-300 lang-text" data-en="Sister Maya's Journey" data-zh="瑪雅師姊的故事" data-es="El Viaje de la Hermana Maya">Sister Maya's Journey</div>
         </div>
         <div class="flex items-center gap-3">
             <button onclick="toggleMusic()" class="music-btn" id="game-music-btn">🔇</button>
@@ -386,6 +387,7 @@
             <div class="lang-toggle">
                 <button class="lang-btn active" onclick="setLanguage('en')" data-lang="en">EN</button>
                 <button class="lang-btn" onclick="setLanguage('zh')" data-lang="zh">中文</button>
+                <button class="lang-btn" onclick="setLanguage('es')" data-lang="es">ES</button>
             </div>
         </div>
     </div>
@@ -396,21 +398,21 @@
         <div class="lg:w-2/3 flex flex-col gap-4">
             <!-- Journey Path -->
             <div class="info-panel">
-                <h3 class="text-yellow-300 font-bold mb-3">🗺️ <span class="lang-text" data-en="Your Journey" data-zh="你的旅程">Your Journey</span></h3>
+                <h3 class="text-yellow-300 font-bold mb-3">🗺️ <span class="lang-text" data-en="Your Journey" data-zh="你的旅程" data-es="Tu Viaje">Your Journey</span></h3>
                 <div class="journey-path" id="journey-path"></div>
             </div>
             
             <!-- Current Situation -->
             <div class="info-panel flex-1">
-                <h3 class="text-yellow-300 font-bold mb-3">📍 <span class="lang-text" data-en="Current Situation" data-zh="目前狀況">Current Situation</span></h3>
+                <h3 class="text-yellow-300 font-bold mb-3">📍 <span class="lang-text" data-en="Current Situation" data-zh="目前狀況" data-es="Situación Actual">Current Situation</span></h3>
                 <div id="situation-text" class="text-lg mb-4"></div>
                 
-                <h4 class="text-blue-300 font-bold mb-3">🎯 <span class="lang-text" data-en="Choose Your Action" data-zh="選擇你的行動">Choose Your Action</span></h4>
+                <h4 class="text-blue-300 font-bold mb-3">🎯 <span class="lang-text" data-en="Choose Your Action" data-zh="選擇你的行動" data-es="Elige Tu Acción">Choose Your Action</span></h4>
                 <div class="flex flex-wrap gap-4 justify-center" id="action-cards"></div>
                 
                 <div class="mt-4 text-center">
                     <button onclick="executeAction()" class="btn btn-primary" id="execute-btn" disabled>
-                        <span class="lang-text" data-en="Make Decision" data-zh="做出決定">Make Decision</span>
+                        <span class="lang-text" data-en="Make Decision" data-zh="做出決定" data-es="Tomar Decisión">Make Decision</span>
                     </button>
                 </div>
             </div>
@@ -424,34 +426,34 @@
         <!-- Right: MDP Visualization -->
         <div class="lg:w-1/3 flex flex-col gap-4">
             <div class="info-panel">
-                <h3 class="text-purple-300 font-bold mb-2">🧠 <span class="lang-text" data-en="MDP Components" data-zh="MDP 元件">MDP Components</span></h3>
+                <h3 class="text-purple-300 font-bold mb-2">🧠 <span class="lang-text" data-en="MDP Components" data-zh="MDP 元件" data-es="Componentes MDP">MDP Components</span></h3>
                 <div class="text-sm space-y-2">
-                    <div><span class="text-yellow-300">S</span> = <span class="lang-text" data-en="States (growth stages)" data-zh="狀態（成長階段）">States (growth stages)</span></div>
-                    <div><span class="text-green-300">A</span> = <span class="lang-text" data-en="Actions (your choices)" data-zh="動作（你的選擇）">Actions (your choices)</span></div>
-                    <div><span class="text-blue-300">P</span> = <span class="lang-text" data-en="Probability (uncertainty)" data-zh="機率（不確定性）">Probability (uncertainty)</span></div>
-                    <div><span class="text-pink-300">R</span> = <span class="lang-text" data-en="Reward (inner joy)" data-zh="獎勵（內心喜悅）">Reward (inner joy)</span></div>
-                    <div><span class="text-orange-300">γ</span> = <span class="lang-text" data-en="Discount (0.9)" data-zh="折扣因子 (0.9)">Discount (0.9)</span></div>
+                    <div><span class="text-yellow-300">S</span> = <span class="lang-text" data-en="States (growth stages)" data-zh="狀態（成長階段）" data-es="Estados (etapas de crecimiento)">States (growth stages)</span></div>
+                    <div><span class="text-green-300">A</span> = <span class="lang-text" data-en="Actions (your choices)" data-zh="動作（你的選擇）" data-es="Acciones (tus elecciones)">Actions (your choices)</span></div>
+                    <div><span class="text-blue-300">P</span> = <span class="lang-text" data-en="Probability (uncertainty)" data-zh="機率（不確定性）" data-es="Probabilidad (incertidumbre)">Probability (uncertainty)</span></div>
+                    <div><span class="text-pink-300">R</span> = <span class="lang-text" data-en="Reward (inner joy)" data-zh="獎勵（內心喜悅）" data-es="Recompensa (alegría interior)">Reward (inner joy)</span></div>
+                    <div><span class="text-orange-300">γ</span> = <span class="lang-text" data-en="Discount (0.9)" data-zh="折扣因子 (0.9)" data-es="Descuento (0.9)">Discount (0.9)</span></div>
                 </div>
             </div>
             
             <div class="bellman-box">
                 <h4 class="text-purple-300 font-bold mb-2">📐 Bellman Equation</h4>
                 <div class="mono text-sm text-center" style="color:#fef3c7; text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);">V*(s) = max<sub>a</sub> Σ P(s'|s,a)[R + γV*(s')]</div>
-                <p class="text-xs text-yellow-100/90 mt-2 text-center lang-text" data-en="Optimal value = best action's expected reward + future value" data-zh="最優價值 = 最佳行動的期望獎勵 + 未來價值">Optimal value = best action's expected reward + future value</p>
+                <p class="text-xs text-yellow-100/90 mt-2 text-center lang-text" data-en="Optimal value = best action's expected reward + future value" data-zh="最優價值 = 最佳行動的期望獎勵 + 未來價值" data-es="Valor óptimo = recompensa esperada de la mejor acción + valor futuro">Optimal value = best action's expected reward + future value</p>
             </div>
             
             <div class="info-panel flex-1">
-                <h3 class="text-blue-300 font-bold mb-2">📊 <span class="lang-text" data-en="Value Iteration" data-zh="價值迭代">Value Iteration</span></h3>
+                <h3 class="text-blue-300 font-bold mb-2">📊 <span class="lang-text" data-en="Value Iteration" data-zh="價值迭代" data-es="Iteración de Valor">Value Iteration</span></h3>
                 <div class="value-display text-xs" id="value-display"></div>
             </div>
             
             <div class="info-panel">
-                <h3 class="text-green-300 font-bold mb-2">📈 <span class="lang-text" data-en="Statistics" data-zh="統計">Statistics</span></h3>
+                <h3 class="text-green-300 font-bold mb-2">📈 <span class="lang-text" data-en="Statistics" data-zh="統計" data-es="Estadísticas">Statistics</span></h3>
                 <div class="grid grid-cols-2 gap-2 text-sm">
-                    <div><span class="lang-text" data-en="Week" data-zh="週數">Week</span>: <span id="week-display" class="text-yellow-300">1</span></div>
-                    <div><span class="lang-text" data-en="Stage" data-zh="階段">Stage</span>: <span id="stage-display" class="text-green-300">1/6</span></div>
-                    <div><span class="lang-text" data-en="Joy" data-zh="喜悅">Joy</span>: <span id="joy-display" class="text-pink-300">0</span></div>
-                    <div><span class="lang-text" data-en="Impact" data-zh="影響">Impact</span>: <span id="impact-display" class="text-blue-300">0</span></div>
+                    <div><span class="lang-text" data-en="Week" data-zh="週數" data-es="Semana">Week</span>: <span id="week-display" class="text-yellow-300">1</span></div>
+                    <div><span class="lang-text" data-en="Stage" data-zh="階段" data-es="Etapa">Stage</span>: <span id="stage-display" class="text-green-300">1/6</span></div>
+                    <div><span class="lang-text" data-en="Joy" data-zh="喜悅" data-es="Alegría">Joy</span>: <span id="joy-display" class="text-pink-300">0</span></div>
+                    <div><span class="lang-text" data-en="Impact" data-zh="影響" data-es="Impacto">Impact</span>: <span id="impact-display" class="text-blue-300">0</span></div>
                 </div>
             </div>
             
@@ -467,32 +469,31 @@
      SCREEN 3: MEDITATION GATE
 ═══════════════════════════════════════════════════════════════════════ -->
 <div id="meditation-screen" class="screen flex-col items-center justify-center p-6" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);">
-    <div class="absolute inset-0" style="background: url('../assets/images/L3_p7_lotus_.png') center center/cover no-repeat; opacity: 0.85;"></div>
+    <div class="absolute inset-0" style="background: url('L3_p7_lotus_.png') center center/cover no-repeat; opacity: 0.85;"></div>
     
     <div class="relative z-10 text-center">
-        <h2 class="text-3xl font-bold text-white mb-8 lang-text" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8);" data-en="Gate of Serenity" data-zh="靜心之門">Gate of Serenity</h2>
+        <h2 class="text-3xl font-bold text-white mb-8 lang-text" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8);" data-en="Ataraxy Portico" data-zh="靜心之門" data-es="Portal de Serenidad">靜心之門</h2>
         
         <div class="breath-ring mx-auto mb-6">
-            <span id="breath-counter" class="text-5xl font-bold mono" style="color: #fbbf24; text-shadow: 0 0 15px rgba(251, 191, 36, 0.8), 0 0 30px rgba(251, 191, 36, 0.5);">3</span>
+            <span id="breath-counter" class="text-3xl font-bold mono" style="color: #fbbf24; text-shadow: 0 0 15px rgba(251, 191, 36, 0.8), 0 0 30px rgba(251, 191, 36, 0.5); transition: transform 0.5s ease-in-out;">準備...</span>
         </div>
         
-        <p class="text-lg mb-8 lang-text" style="color: #fcd34d; text-shadow: 0 0 10px rgba(251, 191, 36, 0.6);" data-en="Take 3 deep breaths..." data-zh="深呼吸三次...">Take 3 deep breaths...</p>
+        <p class="text-lg mb-8 lang-text" style="color: #fcd34d; text-shadow: 0 0 10px rgba(251, 191, 36, 0.6);" data-en="Follow the breathing..." data-zh="跟隨呼吸..." data-es="Sigue la respiración...">跟隨呼吸...</p>
         
         <div class="jingsi-card max-w-lg mx-auto mb-8">
-            <p class="text-xl font-bold text-yellow-300 mb-3 lang-text" data-en="「Willing to do, happy to receive」" data-zh="「甘願做，歡喜受」">「Willing to do, happy to receive」</p>
-            <p class="text-white/90 mb-4 lang-text" data-en="Maya's journey shows us: every choice matters. From receiving help to giving it — transformation happens one decision at a time." data-zh="瑪雅的旅程告訴我們：每個選擇都重要。從接受幫助到付出幫助——轉變是一個決定一個決定累積的。">Maya's journey shows us: every choice matters. From receiving help to giving it — transformation happens one decision at a time.</p>
-            <p class="text-purple-200 text-sm lang-text" data-en="— Master Cheng Yen" data-zh="— 證嚴上人">— Master Cheng Yen</p>
+            <p class="text-xl font-bold text-yellow-300 mb-3 lang-text" data-en="「Willing to do, happy to receive」" data-zh="「甘願做，歡喜受」" data-es="「Dispuesto a hacer, feliz de recibir」">「Willing to do, happy to receive」</p>
+            <p class="text-white/90 mb-4 lang-text" data-en="Maya's journey shows us: every choice matters. From receiving help to giving it — transformation happens one decision at a time." data-zh="瑪雅的旅程告訴我們：每個選擇都重要。從接受幫助到付出幫助——轉變是一個決定一個決定累積的。" data-es="El viaje de Maya nos muestra: cada elección importa. De recibir ayuda a darla — la transformación sucede una decisión a la vez.">Maya's journey shows us: every choice matters. From receiving help to giving it — transformation happens one decision at a time.</p>
+            <p class="text-purple-200 text-sm lang-text" data-en="— Master Cheng Yen" data-zh="— 證嚴上人" data-es="— Maestra Cheng Yen">— Master Cheng Yen</p>
         </div>
         
         <div class="info-panel mx-auto mb-6" style="max-width: 500px; background: rgba(0,0,0,0.25);">
-            <p class="text-sm text-white/90 lang-text" data-en="🧠 MDP Insight: The algorithm modeled Maya's decisions, but her real journey was shaped by agency, relationships, and choices no probability can fully capture." data-zh="🧠 MDP 反思：演算法模擬了瑪雅的決策，但她真正的旅程是由主體性、關係和選擇塑造的——這些是機率無法完全捕捉的。">🧠 MDP Insight: The algorithm modeled Maya's decisions, but her real journey was shaped by agency, relationships, and choices no probability can fully capture.</p>
+            <p class="text-sm text-white/90 lang-text" data-en="🧠 MDP Insight: The algorithm modeled Maya's decisions, but her real journey was shaped by agency, relationships, and choices no probability can fully capture." data-zh="🧠 MDP 反思：演算法模擬了瑪雅的決策，但她真正的旅程是由主體性、關係和選擇塑造的——這些是機率無法完全捕捉的。" data-es="🧠 Reflexión MDP: El algoritmo modeló las decisiones de Maya, pero su verdadero viaje fue moldeado por la voluntad, las relaciones y las elecciones que ninguna probabilidad puede capturar completamente.">🧠 MDP Insight: The algorithm modeled Maya's decisions, but her real journey was shaped by agency, relationships, and choices no probability can fully capture.</p>
         </div>
         
         <div class="flex flex-wrap gap-4 justify-center">
-            <button onclick="goToMainMenu()" class="btn btn-secondary lang-text" data-en="🏠 Main Menu" data-zh="🏠 主頁面">🏠 Main Menu</button>
-            <button onclick="goToPrevLevel()" class="btn btn-secondary lang-text" data-en="⬅️ Prev Level" data-zh="⬅️ 上一關">⬅️ 上一關</button>
-            <button onclick="backToGame()" class="btn btn-secondary lang-text" data-en="← Play Again" data-zh="← 再玩一次">← Play Again</button>
-            <button onclick="goToNextLevel()" class="btn btn-primary lang-text" data-en="Level 4: KB-Agent →" data-zh="第四關：KB-Agent →">Level 4: KB-Agent →</button>
+            <button onclick="goToMainMenu()" class="btn btn-secondary lang-text" data-en="🏠 Main Menu" data-zh="🏠 主頁面" data-es="🏠 Menú">🏠 Main Menu</button>
+            <button onclick="backToGame()" class="btn btn-secondary lang-text" data-en="← Play Again" data-zh="← 再玩一次" data-es="← Jugar de nuevo">← Play Again</button>
+            <button onclick="goToNextLevel()" class="btn btn-primary lang-text" data-en="Level 4: KB-Agent →" data-zh="第四關：KB-Agent →" data-es="Nivel 4: KB-Agent →">Level 4: KB-Agent →</button>
         </div>
     </div>
 </div>
@@ -651,7 +652,7 @@ function setLanguage(lang) {
     
     // Update all text elements
     document.querySelectorAll('.lang-text').forEach(el => {
-        const text = el.getAttribute(`data-${lang}`);
+        const text = el.getAttribute(`data-${lang}`) || el.getAttribute('data-en');
         if (text) el.textContent = text;
     });
     
@@ -883,19 +884,47 @@ function updateValueDisplay() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// MEDITATION GATE
+// MEDITATION GATE - 深呼吸/吐氣 循環
 // ═══════════════════════════════════════════════════════════════════════════
 function openMeditationGate() {
     showScreen('meditation-screen');
     switchToMeditationMusic();
     
-    let count = 3;
     const counter = document.getElementById('breath-counter');
-    const interval = setInterval(() => {
-        count--;
-        if (count > 0) counter.textContent = count;
-        else { clearInterval(interval); counter.textContent = '🙏'; }
-    }, 4000);
+    const breathTexts = {
+        inhale: { en: 'Inhale...', zh: '深呼吸...', es: 'Inhala...' },
+        exhale: { en: 'Exhale...', zh: '吐氣...', es: 'Exhala...' },
+        done: '🙏'
+    };
+    
+    let cycle = 0;
+    const totalCycles = 3;
+    
+    function breathCycle() {
+        if (cycle >= totalCycles) {
+            counter.textContent = breathTexts.done;
+            return;
+        }
+        
+        // 深呼吸 4秒
+        counter.textContent = breathTexts.inhale[currentLang] || breathTexts.inhale.en;
+        counter.style.transform = 'scale(1.2)';
+        
+        setTimeout(() => {
+            // 吐氣 4秒
+            counter.textContent = breathTexts.exhale[currentLang] || breathTexts.exhale.en;
+            counter.style.transform = 'scale(0.9)';
+            
+            setTimeout(() => {
+                cycle++;
+                counter.style.transform = 'scale(1)';
+                breathCycle();
+            }, 4000);
+        }, 4000);
+    }
+    
+    // 開始呼吸循環
+    setTimeout(breathCycle, 1000);
 }
 
 function backToGame() {
@@ -911,13 +940,6 @@ function goToMainMenu() {
     bgMusic.pause();
     // 返回主頁面（index.html）
     window.location.href = '../index.html';
-}
-
-function goToPrevLevel() {
-    meditationMusic.pause();
-    bgMusic.pause();
-    // 返回上一關
-    window.location.href = '../level2/index.html';
 }
 
 function goToNextLevel() {

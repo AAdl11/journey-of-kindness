@@ -18,33 +18,28 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.5); } 50% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.8); } }
         @keyframes playerMove { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
-        @keyframes breatheRing { 
-            0% { transform: scale(0.85); opacity: 0.7; } 
-            33% { transform: scale(1.15); opacity: 1; } 
-            66% { transform: scale(1.15); opacity: 0.9; } 
-            100% { transform: scale(0.85); opacity: 0.7; } 
-        }
+        @keyframes breatheRing { 0%, 100% { transform: scale(0.8); opacity: 0.6; } 50% { transform: scale(1.3); opacity: 1; } }
         @keyframes breatheCard { 0%, 100% { transform: scale(0.97); box-shadow: 0 8px 32px rgba(251, 191, 36, 0.2); } 50% { transform: scale(1.03); box-shadow: 0 12px 48px rgba(251, 191, 36, 0.5); } }
         
         .fade-in { animation: fadeIn 0.8s ease-out; }
         .pulse-glow { animation: pulseGlow 2s infinite; }
         
         .bg-hunters-point {
-            background: url('../assets/images/hunters_point_map.png') center center/cover no-repeat;
+            background: url('hunters_point_map.png') center center/cover no-repeat;
             background-color: #2d4a3e;
         }
         
         .breath-ring {
             width: 150px; height: 150px; border-radius: 50%;
             border: 5px solid rgba(251, 191, 36, 0.8);
-            animation: breatheRing 12s ease-in-out infinite;
+            animation: breatheRing 4s ease-in-out infinite;
             box-shadow: 0 0 40px rgba(251, 191, 36, 0.5), inset 0 0 40px rgba(251, 191, 36, 0.2);
         }
         
         .breath-ring-large {
             width: 180px; height: 180px; border-radius: 50%;
             border: 6px solid rgba(251, 191, 36, 0.9);
-            animation: breatheRing 12s ease-in-out infinite;
+            animation: breatheRing 4s ease-in-out infinite;
             box-shadow: 0 0 60px rgba(251, 191, 36, 0.6), inset 0 0 50px rgba(251, 191, 36, 0.3);
             display: flex; align-items: center; justify-content: center;
             background: rgba(255, 255, 255, 0.1);
@@ -58,21 +53,21 @@
             text-align: center; border: 2px solid rgba(251, 191, 36, 0.5);
         }
         .breathing-card {
-            animation: breatheCard 12s ease-in-out infinite;
+            animation: breatheCard 4s ease-in-out infinite;
         }
         
-        .astar-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; width: 100%; max-width: 580px; margin: 0 auto; padding: 0.75rem; background: rgba(0, 0, 0, 0.5); border-radius: 16px; backdrop-filter: blur(10px); }
-        .astar-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; cursor: pointer; transition: all 0.2s; position: relative; font-size: 1.6rem; min-height: 55px; border: 2px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.2); }
-        .astar-cell:hover:not(.obstacle) { transform: scale(1.05); border-color: rgba(255, 255, 255, 0.6); }
+        .astar-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; width: 100%; max-width: 580px; margin: 0 auto; padding: 0.75rem; background: rgba(0, 0, 0, 0.3); border-radius: 16px; }
+        .astar-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; cursor: pointer; transition: all 0.2s; position: relative; font-size: 1.6rem; min-height: 55px; border: 2px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.15); }
+        .astar-cell:hover:not(.obstacle) { transform: scale(1.05); border-color: rgba(255, 255, 255, 0.5); }
         .astar-cell.player { background: linear-gradient(135deg, #3b82f6, #2563eb); border-color: #60a5fa; box-shadow: 0 0 15px rgba(59, 130, 246, 0.6); animation: playerMove 0.3s; }
         .astar-cell.goal { background: linear-gradient(135deg, #f97316, #ea580c); border-color: #fb923c; }
         .astar-cell.garcia { background: linear-gradient(135deg, #ec4899, #db2777); border-color: #f472b6; animation: pulseGlow 2s infinite; }
-        .astar-cell.obstacle { background: rgba(100, 116, 139, 0.8); cursor: not-allowed; }
+        .astar-cell.obstacle { background: rgba(100, 116, 139, 0.7); cursor: not-allowed; }
         .astar-cell.visited { background: rgba(168, 85, 247, 0.5); }
-        .astar-cell.adjacent { background: rgba(34, 197, 94, 0.4); border-color: rgba(34, 197, 94, 0.8); }
+        .astar-cell.adjacent { background: rgba(34, 197, 94, 0.35); border-color: rgba(34, 197, 94, 0.7); }
         .astar-cell.ai-current { background: linear-gradient(135deg, #fbbf24, #f59e0b); border-color: #fcd34d; }
-        .astar-cell.ai-path { background: rgba(251, 191, 36, 0.4); }
-        .f-score { position: absolute; bottom: 1px; right: 2px; font-size: 0.5rem; color: rgba(255,255,255,0.8); background: rgba(0,0,0,0.5); padding: 0 2px; border-radius: 2px; }
+        .astar-cell.ai-path { background: rgba(251, 191, 36, 0.35); }
+        .f-score { position: absolute; bottom: 1px; right: 2px; font-size: 0.5rem; color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.4); padding: 0 2px; border-radius: 2px; }
         
         .side-panel { background: rgba(30, 58, 95, 0.95); backdrop-filter: blur(15px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.2); width: 280px; }
         .formula-box { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 0.75rem; border-left: 4px solid #fbbf24; }
@@ -86,6 +81,7 @@
         .ctrl-btn.ai-auto { background: linear-gradient(135deg, #fbbf24, #f59e0b); border-color: #fcd34d; color: #1f2937; }
         .ctrl-btn.forward { background: rgba(34, 197, 94, 0.3); border-color: #22c55e; color: #22c55e; }
         .ctrl-btn.backward { background: rgba(239, 68, 68, 0.3); border-color: #ef4444; color: #ef4444; }
+        .ctrl-btn.player-btn { background: rgba(59, 130, 246, 0.3); border-color: #3b82f6; color: #3b82f6; }
         .ctrl-btn.reset { background: rgba(100, 116, 139, 0.5); border-color: #64748b; color: white; }
         .ctrl-btn.complete { background: linear-gradient(135deg, #22c55e, #16a34a); border-color: #4ade80; color: white; }
         .ctrl-btn.sound { background: rgba(168, 85, 247, 0.3); border-color: #a855f7; color: #a855f7; }
@@ -103,7 +99,7 @@
         .btn-secondary { background: rgba(100, 116, 139, 0.8); color: white; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         
-        .lang-toggle { position: fixed; top: 10px; z-index: 1000; display: flex; background: rgba(0,0,0,0.6); border-radius: 9999px; padding: 3px; border: 2px solid rgba(255,255,255,0.3); }
+        .lang-toggle { position: fixed; top: 10px; right: 10px; z-index: 1000; display: flex; background: rgba(0,0,0,0.6); border-radius: 9999px; padding: 3px; border: 2px solid rgba(255,255,255,0.3); }
         .lang-btn { padding: 0.3rem 0.7rem; border-radius: 9999px; font-weight: 600; font-size: 0.8rem; cursor: pointer; border: none; background: transparent; color: rgba(255,255,255,0.6); }
         .lang-btn.active { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; }
         
@@ -114,36 +110,49 @@
         .game-header { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.8rem; background: rgba(0,0,0,0.5); border-radius: 10px; }
         .elo-badge { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1f2937; padding: 0.3rem 0.8rem; border-radius: 9999px; font-weight: bold; font-size: 0.85rem; }
         
-        .ataraxy-bg {
-            background: url('../assets/images/靜心之門.png') center top/auto 100% no-repeat,
-                        linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+        /* Start screen */
+        .start-btn {
+            width: 120px; height: 120px; border-radius: 50%;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            border: 4px solid white; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; color: white;
+            box-shadow: 0 0 40px rgba(236, 72, 153, 0.6);
+            transition: all 0.3s;
         }
+        .start-btn:hover { transform: scale(1.1); box-shadow: 0 0 60px rgba(236, 72, 153, 0.8); }
         
         @media (max-width: 1100px) { .game-layout { flex-direction: column !important; } .side-panel { width: 100%; max-width: 520px; margin: 0 auto; } }
         @media (max-width: 640px) { .astar-cell { min-height: 38px; font-size: 1.1rem; } .f-score { display: none; } }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
     </style>
 </head>
 <body class="text-white min-h-screen" translate="no">
 
-<!-- Language Toggle -->
+<!-- Language Toggle - Top Left -->
 <div class="lang-toggle" style="left: 10px; right: auto;">
     <button id="lang-en" class="lang-btn" onclick="setLang('en')">EN</button>
-    <button id="lang-zh" class="lang-btn active" onclick="setLang('zh')">中</button>
+    <button id="lang-zh" class="lang-btn active" onclick="setLang('zh')">中文</button>
     <button id="lang-es" class="lang-btn" onclick="setLang('es')">ES</button>
 </div>
 
-<!-- Audio -->
-<audio id="bg-music" src="../assets/audio/welcome_mp3.mp3" loop></audio>
-<audio id="meditation-music" src="../assets/audio/AnaCaptainslogue_-_Noir_Et_Blanc_Vie.mp3" loop></audio>
+<!-- Audio elements -->
+<audio id="bg-music" src="welcome_mp3.mp3" loop></audio>
+<audio id="meditation-music" src="meditation.mp3" loop></audio>
 
 <!-- ══════════════════════════════════════════════════════════════════════════
-     GAME SCREEN - 直接顯示遊戲
+     SCREEN 1: A* SEARCH GAME (直接開始)
 ══════════════════════════════════════════════════════════════════════════ -->
 <div id="game-screen" class="screen active bg-hunters-point flex-col p-2">
     <div class="max-w-6xl w-full mx-auto flex-1 flex flex-col gap-2">
         
         <div class="game-header">
-            <button onclick="goToMainMenu()" class="btn btn-secondary text-xs py-1 px-3">← <span data-en="Menu" data-zh="選單" data-es="Menú">選單</span></button>
+            <button onclick="showMenu()" class="btn btn-secondary text-xs py-1 px-3">← <span data-en="Menu" data-zh="選單" data-es="Menú">選單</span></button>
             <div class="text-center">
                 <span class="font-bold text-sm">🚚 Level 1: A* Search</span>
                 <span class="text-xs text-gray-300 ml-1" data-en="— Mrs. Garcia Mission" data-zh="— Mrs. Garcia 送餐任務" data-es="— Misión Mrs. Garcia">— Mrs. Garcia 送餐任務</span>
@@ -164,12 +173,11 @@
                         <p id="ai-steps" class="text-2xl font-bold mono text-yellow-400">-</p>
                     </div>
                     <div class="text-center px-4 py-2 bg-green-500/30 rounded-xl border-2 border-green-500">
-                        <p class="text-sm text-gray-300" data-en="Best" data-zh="最優" data-es="Óptimo">✨ 最優</p>
+                        <p class="text-sm text-gray-300" data-en="Best" data-zh="最優" data-es="Mejor">✨ 最優</p>
                         <p class="text-2xl font-bold mono text-green-400">12</p>
                     </div>
                 </div>
                 
-                <!-- 棋盤遊戲區 -->
                 <div class="flex-1 flex items-center justify-center">
                     <div id="astar-grid" class="astar-grid"></div>
                 </div>
@@ -178,7 +186,7 @@
                 
                 <div class="controls-bar">
                     <button id="ai-auto-btn" onclick="aiAutoDemo()" class="ctrl-btn ai-auto">🤖 AI</button>
-                    <button onclick="switchToPlayer()" class="ctrl-btn" style="background: linear-gradient(135deg, #22c55e, #10b981); border-color: #22c55e; color: white;">🎮</button>
+                    <button onclick="switchToPlayer()" class="ctrl-btn" style="background: linear-gradient(135deg, #22c55e, #10b981);">🎮</button>
                     <button id="ai-back-btn" onclick="aiStepBack()" class="ctrl-btn backward">⏪</button>
                     <button id="ai-forward-btn" onclick="aiStepForward()" class="ctrl-btn forward">⏩</button>
                     <button onclick="resetLevel()" class="ctrl-btn reset">🔄</button>
@@ -189,8 +197,9 @@
             </div>
             
             <div class="side-panel p-2 flex flex-col gap-2">
+                <!-- Instructions moved here under ELO area -->
                 <div class="instructions-box">
-                    <p class="font-bold text-green-300 mb-1 text-center text-xs">📖 <span data-en="How to Play" data-zh="遊戲說明" data-es="Cómo jugar">遊戲說明</span></p>
+                    <p class="font-bold text-green-300 mb-1 text-center text-xs">📖 <span data-en="How to Play" data-zh="遊戲說明" data-es="Cómo Jugar">遊戲說明</span></p>
                     <div class="grid grid-cols-2 gap-1">
                         <div class="instruction-item"><span class="instruction-icon bg-blue-500">🚚</span><span data-en="Click green" data-zh="點綠色格" data-es="Clic verde">點綠色格</span></div>
                         <div class="instruction-item"><span class="instruction-icon bg-pink-500">👵</span><span data-en="Visit Garcia" data-zh="經過阿嬤" data-es="Visitar García">經過阿嬤</span></div>
@@ -225,8 +234,9 @@
                     <p class="text-xs font-bold text-gray-300 mb-1">📋 <span data-en="Explored" data-zh="探索" data-es="Explorado">探索</span></p>
                     <div id="explored-list" class="text-xs mono text-gray-400 max-h-12 overflow-y-auto">(0,0) • Start</div>
                 </div>
+                <!-- Mrs. Garcia Story Image -->
                 <div class="rounded-xl overflow-hidden border-3 border-pink-400/60 relative" style="box-shadow: 0 6px 25px rgba(236, 72, 153, 0.4); margin: 0 -8px -8px -8px;">
-                    <img src="../assets/images/clean_Mrs__Garcia.png" alt="Mrs. Garcia Story" class="w-full h-auto" style="max-height: 160px; object-fit: cover;">
+                    <img src="mrs_garcia.png" alt="Mrs. Garcia Story" class="w-full h-auto" style="max-height: 160px; object-fit: cover;">
                 </div>
             </div>
         </div>
@@ -234,24 +244,30 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════════════════
-     靜心之門 / Gate of Serenity
+     SCREEN 3: 靜心之門 / Gate of Serenity
 ══════════════════════════════════════════════════════════════════════════ -->
-<div id="ataraxy-screen" class="screen flex-col items-center py-2 px-4 ataraxy-bg">
+<div id="ataraxy-screen" class="screen flex-col items-center py-2 px-4" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);">
+    <div class="absolute inset-0" style="background: url('靜心之門.png') center top/auto 100% no-repeat;"></div>
     <div class="absolute inset-0 bg-purple-900/5"></div>
     
+    <!-- Top section with title -->
     <div class="relative z-10 text-center">
-        <h2 class="text-3xl font-bold text-white" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 4px 20px rgba(0,0,0,0.7);" data-en="Ataraxy Portico" data-zh="靜心之門" data-es="Pórtico de Ataraxia">靜心之門</h2>
+        <h2 class="text-3xl font-bold text-white" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 4px 20px rgba(0,0,0,0.7);" data-en="Ataraxy Portico" data-zh="靜心之門" data-es="Portal de Serenidad">靜心之門</h2>
     </div>
     
+    <!-- Breath ring area with countdown -->
     <div class="relative z-10 flex flex-col items-center" style="margin-top: 10px;">
         <div class="breath-ring-large">
-            <p id="breath-counter" class="text-5xl font-bold text-yellow-400 mono text-center" style="text-shadow: 0 0 50px rgba(251, 191, 36, 0.9); line-height: 1.2;"><span style="font-size:1.8rem;">準備...</span></p>
+            <p id="breath-counter" class="text-2xl font-bold text-yellow-400 mono" style="text-shadow: 0 0 10px #000, 0 0 20px #000, 0 0 30px rgba(251, 191, 36, 0.9);">準備...</p>
         </div>
-        <p class="text-lg text-yellow-300 font-bold mt-3" style="text-shadow: 0 2px 15px rgba(0,0,0,0.8);"><span data-en="Follow the circle..." data-zh="跟隨圓圈呼吸..." data-es="Sigue el círculo...">跟隨圓圈呼吸...</span></p>
+        <!-- Take 3 breaths text directly under the ring -->
+        <p class="text-lg text-yellow-300 font-bold mt-3" style="text-shadow: 0 2px 15px rgba(0,0,0,0.8);"><span data-en="Take 3 deep breaths..." data-zh="深呼吸三次..." data-es="Respira profundo 3 veces...">深呼吸三次...</span></p>
     </div>
     
+    <!-- Spacer -->
     <div style="flex: 1;"></div>
     
+    <!-- Card positioned lower, below lotus flower -->
     <div class="relative z-10 flex flex-col items-center" style="margin-bottom: 18%;">
         <div class="jingsi-card fade-in breathing-card">
             <p class="text-lg font-bold text-yellow-300 mb-1" data-en="「Gratitude is the most beautiful language」" data-zh="「感恩，是世間最美的語言」" data-es="「La gratitud es el lenguaje más hermoso」">「感恩，是世間最美的語言」</p>
@@ -260,12 +276,9 @@
         </div>
     </div>
     
-    <div class="relative z-10 flex flex-wrap gap-3 justify-center" style="margin-bottom: 8%;">
-        <button onclick="skipMeditation()" class="btn btn-secondary text-sm px-4 py-2" style="opacity: 0.7;">⏭️ <span data-en="Skip" data-zh="跳過" data-es="Saltar">跳過</span></button>
-        <button onclick="watchStory()" class="btn btn-secondary text-sm px-4 py-2">📺 <span data-en="Story" data-zh="故事" data-es="Historia">故事</span></button>
-        <button onclick="goToMainMenu()" class="btn btn-secondary text-sm px-4 py-2">🏠 <span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span></button>
-        <button onclick="replayLevel()" class="btn btn-secondary text-sm px-4 py-2">🔄 <span data-en="Replay" data-zh="重玩" data-es="Repetir">重玩</span></button>
-        <button onclick="continueJourney()" class="btn btn-primary text-sm px-4 py-2" style="box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);"><span data-en="Next" data-zh="下一關" data-es="Siguiente">下一關</span> →</button>
+    <!-- Button at stairs area -->
+    <div class="relative z-10" style="margin-bottom: 8%;">
+        <button id="continue-btn" onclick="continueJourney()" class="btn btn-primary text-base px-6 py-2" style="box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);"><span data-en="Continue Journey" data-zh="繼續旅程" data-es="Continuar Viaje">繼續旅程</span> →</button>
     </div>
 </div>
 
@@ -280,8 +293,8 @@ function setLang(lang) {
     document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
     document.getElementById('lang-es').classList.toggle('active', lang === 'es');
     document.querySelectorAll('[data-en][data-zh]').forEach(el => {
-        const text = el.getAttribute('data-' + lang);
-        if (text) el.textContent = text;
+        const text = el.getAttribute('data-' + lang) || el.getAttribute('data-en');
+        el.textContent = text;
     });
 }
 
@@ -305,7 +318,7 @@ function playFootstep() {
         gain.gain.setValueAtTime(0.3, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
         osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.1);
-    } catch (e) {}
+    } catch (e) { console.log('Audio error:', e); }
 }
 
 function playRescueSound() {
@@ -321,7 +334,7 @@ function playRescueSound() {
             gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.1 + 0.8);
             osc.start(ctx.currentTime + i * 0.1); osc.stop(ctx.currentTime + i * 0.1 + 0.8);
         });
-    } catch (e) {}
+    } catch (e) { console.log('Audio error:', e); }
 }
 
 function playVictorySound() {
@@ -337,7 +350,7 @@ function playVictorySound() {
             gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + note.time + 0.4);
             osc.start(ctx.currentTime + note.time); osc.stop(ctx.currentTime + note.time + 0.4);
         });
-    } catch (e) {}
+    } catch (e) { console.log('Audio error:', e); }
 }
 
 function toggleSound() { 
@@ -356,7 +369,19 @@ function toggleMusic() {
         music.play().then(() => { 
             document.getElementById('music-btn').textContent = '🎶'; 
             musicPlaying = true; 
-        }).catch(e => {}); 
+        }).catch(e => console.log('Music error:', e)); 
+    }
+}
+
+function toggleVideoMute() {
+    const video = document.getElementById('intro-video');
+    const btn = document.getElementById('video-mute-btn');
+    if (video.muted) {
+        video.muted = false;
+        btn.innerHTML = '🔊 <span data-en="Sound" data-zh="聲音" data-es="Sonido">' + (currentLang === 'en' ? 'Sound' : '聲音') + '</span>';
+    } else {
+        video.muted = true;
+        btn.innerHTML = '🔇 <span data-en="Sound" data-zh="聲音" data-es="Sonido">' + (currentLang === 'en' ? 'Sound' : '聲音') + '</span>';
     }
 }
 
@@ -366,6 +391,76 @@ function toggleMusic() {
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// START & VIDEO INTRO
+// ═══════════════════════════════════════════════════════════════════════════
+let videoTimer = 29, videoInterval = null;
+
+function startIntro() {
+    console.log('Starting intro...');
+    showScreen('video-screen');
+    
+    // 播放影片
+    const video = document.getElementById('intro-video');
+    video.play().catch(e => console.log('Video error:', e));
+    
+    // 開始倒數 29 秒
+    videoTimer = 29;
+    document.getElementById('time-remaining').textContent = '29';
+    
+    if (videoInterval) clearInterval(videoInterval);
+    videoInterval = setInterval(() => {
+        videoTimer--;
+        document.getElementById('time-remaining').textContent = videoTimer;
+        if (videoTimer <= 0) {
+            goToGame();
+        }
+    }, 1000);
+    
+    // 影片播放完畢也跳轉
+    video.onended = goToGame;
+}
+
+function goToGame() {
+    console.log('Going to game...');
+    
+    // 停止倒數
+    if (videoInterval) {
+        clearInterval(videoInterval);
+        videoInterval = null;
+    }
+    
+    // 停止影片
+    const video = document.getElementById('intro-video');
+    video.pause();
+    
+    // 顯示遊戲畫面
+    showScreen('game-screen');
+    resetLevel();
+    
+    // 開始歡樂的背景音樂
+    setTimeout(() => {
+        const bgMusic = document.getElementById('bg-music');
+        bgMusic.volume = 0.4;
+        bgMusic.play().then(() => {
+            document.getElementById('music-btn').textContent = '🎶';
+            musicPlaying = true;
+        }).catch(e => console.log('BG music error:', e));
+    }, 500);
+}
+
+function showMenu() { 
+    // 停止背景音樂
+    const bgMusic = document.getElementById('bg-music');
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+    musicPlaying = false;
+    document.getElementById('music-btn').textContent = '🎵';
+    
+    // 回到主頁面
+    window.location.href = '../index.html';
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -394,6 +489,7 @@ function computeAStarPath() {
     const openSet = [start], cameFrom = {}, gScore = {}, fScore = {};
     const key = (p) => p.x + ',' + p.y;
     gScore[key(start)] = 0; fScore[key(start)] = manhattan(start, goal);
+    
     while (openSet.length > 0) {
         openSet.sort((a, b) => fScore[key(a)] - fScore[key(b)]);
         const current = openSet.shift();
@@ -491,6 +587,72 @@ function switchToPlayer() {
     renderGrid(); 
 }
 
+function movePlayer(dx, dy) {
+    const newX = gameState.player.x + dx;
+    const newY = gameState.player.y + dy;
+    
+    if (isValidMove(newX, newY)) {
+        gameState.visited.push({x: gameState.player.x, y: gameState.player.y});
+        gameState.player = {x: newX, y: newY};
+        gameState.steps++;
+        
+        playFootstep();
+        document.getElementById('player-steps').textContent = gameState.steps;
+        
+        const g = gameState.steps;
+        const h = getH(newX, newY);
+        document.getElementById('g-value').textContent = g;
+        document.getElementById('h-value').textContent = h;
+        document.getElementById('f-value').textContent = g + h;
+        
+        const explored = document.getElementById('explored-list');
+        explored.textContent += ` (${newX},${newY})`;
+        
+        if (newX === gameState.goal.x && newY === gameState.goal.y) {
+            gameState.reachedGoal = true;
+            document.getElementById('complete-btn').classList.remove('hidden');
+            playVictorySound();
+            showStory('goal');
+        }
+        
+        renderGrid();
+        checkGarciaProximity();
+        return true;
+    } else {
+        // Visual feedback for invalid move - shake the grid
+        const grid = document.getElementById('astar-grid');
+        grid.style.animation = 'shake 0.3s';
+        setTimeout(() => { grid.style.animation = ''; }, 300);
+        return false;
+    }
+}
+
+// Dedicated player movement functions - each click moves one step
+function playerMoveUp() { 
+    gameState.mode = 'player';
+    gameState.aiAutoRunning = false;
+    document.getElementById('ai-auto-btn').innerHTML = '🤖 AI';
+    movePlayer(0, -1); 
+}
+function playerMoveDown() { 
+    gameState.mode = 'player';
+    gameState.aiAutoRunning = false;
+    document.getElementById('ai-auto-btn').innerHTML = '🤖 AI';
+    movePlayer(0, 1); 
+}
+function playerMoveLeft() { 
+    gameState.mode = 'player';
+    gameState.aiAutoRunning = false;
+    document.getElementById('ai-auto-btn').innerHTML = '🤖 AI';
+    movePlayer(-1, 0); 
+}
+function playerMoveRight() { 
+    gameState.mode = 'player';
+    gameState.aiAutoRunning = false;
+    document.getElementById('ai-auto-btn').innerHTML = '🤖 AI';
+    movePlayer(1, 0); 
+}
+
 function updateButtonStates() {
     const backBtn = document.getElementById('ai-back-btn');
     const fwdBtn = document.getElementById('ai-forward-btn');
@@ -508,9 +670,9 @@ function updateDisplay() {
 // ═══════════════════════════════════════════════════════════════════════════
 function renderGrid() {
     const grid = document.getElementById('astar-grid');
-    if (!grid) return;
     const aiPathSet = new Set(gameState.aiPath.map(p => p.x + ',' + p.y));
     let html = '';
+    
     for (let y = 0; y < gameState.gridHeight; y++) {
         for (let x = 0; x < gameState.gridWidth; x++) {
             const isPlayer = gameState.player.x === x && gameState.player.y === y;
@@ -521,6 +683,7 @@ function renderGrid() {
             const isAdj = isAdjacent(x, y) && !isObs && gameState.mode === 'player';
             const isOnAiPath = aiPathSet.has(x + ',' + y) && gameState.mode === 'ai';
             const f = getF(x, y);
+            
             let cellClass = 'astar-cell', content = '';
             if (isPlayer) { cellClass += gameState.mode === 'ai' ? ' ai-current' : ' player'; content = gameState.mode === 'ai' ? '🤖' : '🚚'; }
             else if (isGoal) { cellClass += ' goal'; content = '🏠'; }
@@ -529,6 +692,7 @@ function renderGrid() {
             else if (isOnAiPath) { cellClass += ' ai-path'; }
             else if (isVisited) { cellClass += ' visited'; content = '·'; }
             else if (isAdj) { cellClass += ' adjacent'; }
+            
             html += '<div class="' + cellClass + '" onclick="movePlayer(' + x + ',' + y + ')"><span>' + content + '</span>' + (!isPlayer&&!isGoal&&!isGarcia&&!isObs ? '<span class="f-score mono">' + f + '</span>' : '') + '</div>';
         }
     }
@@ -552,10 +716,12 @@ function updateStats() {
 function movePlayer(x, y) {
     if (gameState.mode !== 'player' || !isAdjacent(x, y) || !isValidMove(x, y)) return;
     if (gameState.madeChoice === 'follow' && x === gameState.garcia.x && y === gameState.garcia.y) return;
+    
     gameState.visited.push({x: gameState.player.x, y: gameState.player.y}); 
     gameState.player = {x: x, y: y}; 
     gameState.steps++;
     playFootstep();
+    
     if (x === gameState.garcia.x && y === gameState.garcia.y) playRescueSound();
     if (x === gameState.goal.x && y === gameState.goal.y) {
         gameState.reachedGoal = true; 
@@ -580,33 +746,50 @@ function checkGarciaProximity() {
 function showStory(type) {
     const storyArea = document.getElementById('story-area');
     storyArea.classList.remove('hidden');
+    
     if (type === 'choice') {
-        const t = currentLang === 'zh' ? {
-            aiTitle: 'AI 建議：', aiMsg: '"跳過 Mrs. Garcia，效率 +15%"',
-            noticeTitle: '但你注意到...', noticeMsg: '她家窗簾今天沒開...',
-            override: '🛑 停下查看', follow: '▶️ 跟隨 AI'
-        } : currentLang === 'es' ? {
-            aiTitle: 'IA sugiere:', aiMsg: '"Saltar García, +15% eficiencia"',
-            noticeTitle: 'Pero notas...', noticeMsg: 'Sus cortinas no están abiertas...',
-            override: '🛑 Detenerse', follow: '▶️ Seguir IA'
-        } : {
-            aiTitle: 'AI suggests:', aiMsg: '"Skip Garcia, +15% efficiency"',
-            noticeTitle: 'But you notice...', noticeMsg: "Her curtains aren't open...",
-            override: '🛑 Stop to check', follow: '▶️ Follow AI'
+        const texts = {
+            zh: {
+                aiTitle: 'AI 建議：', aiMsg: '"跳過 Mrs. Garcia，效率 +15%"',
+                noticeTitle: '但你注意到...', noticeMsg: '她家窗簾今天沒開...',
+                override: '🛑 停下查看', follow: '▶️ 跟隨 AI'
+            },
+            en: {
+                aiTitle: 'AI suggests:', aiMsg: '"Skip Garcia, +15% efficiency"',
+                noticeTitle: 'But you notice...', noticeMsg: "Her curtains aren't open...",
+                override: '🛑 Stop to check', follow: '▶️ Follow AI'
+            },
+            es: {
+                aiTitle: 'IA sugiere:', aiMsg: '"Saltar a García, +15% eficiencia"',
+                noticeTitle: 'Pero notas...', noticeMsg: 'Sus cortinas no están abiertas hoy...',
+                override: '🛑 Parar a revisar', follow: '▶️ Seguir IA'
+            }
         };
+        const t = texts[currentLang] || texts.en;
         storyArea.innerHTML = '<div class="flex items-start gap-2"><div class="character-avatar" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);">🤖</div><div><p class="font-bold text-yellow-400 text-xs">' + t.aiTitle + '</p><p class="text-gray-300 text-xs">' + t.aiMsg + '</p></div></div><div class="flex items-start gap-2 mt-2 pt-2 border-t border-white/20"><div class="character-avatar" style="background:linear-gradient(135deg,#ec4899,#db2777);">💭</div><div><p class="font-bold text-pink-400 text-xs">' + t.noticeTitle + '</p><p class="text-gray-300 text-xs">' + t.noticeMsg + '</p></div></div><div class="flex gap-2 mt-3 justify-center"><button onclick="makeChoice(\'override\')" class="decision-btn override">' + t.override + '</button><button onclick="makeChoice(\'follow\')" class="decision-btn follow">' + t.follow + '</button></div>';
     } else if (type === 'override-result') {
-        const t = currentLang === 'zh' ? { title: '你救了她！', desc: 'Mrs. Garcia 兩天前跌倒了。你的決定<span class="text-green-400 font-bold">救了她一命</span>。' }
-            : currentLang === 'es' ? { title: '¡La salvaste!', desc: 'Mrs. Garcia se cayó hace 2 días. Tu decisión <span class="text-green-400 font-bold">le salvó la vida</span>.' }
-            : { title: 'You saved her!', desc: 'Mrs. Garcia fell 2 days ago. Your choice <span class="text-green-400 font-bold">saved her life</span>.' };
+        const texts = {
+            zh: { title: '你救了她！', desc: 'Mrs. Garcia 兩天前跌倒了。你的決定<span class="text-green-400 font-bold">救了她一命</span>。' },
+            en: { title: 'You saved her!', desc: 'Mrs. Garcia fell 2 days ago. Your choice <span class="text-green-400 font-bold">saved her life</span>.' },
+            es: { title: '¡La salvaste!', desc: 'Mrs. Garcia se cayó hace 2 días. Tu decisión <span class="text-green-400 font-bold">le salvó la vida</span>.' }
+        };
+        const t = texts[currentLang] || texts.en;
         storyArea.innerHTML = '<div class="text-center"><p class="text-3xl mb-1">💖</p><p class="text-base text-green-400 font-bold mb-1">' + t.title + '</p><p class="text-gray-300 text-xs">' + t.desc + '</p><p class="text-green-400 font-bold mt-2">+50 ELO ✨</p></div>';
     } else if (type === 'follow-result') {
-        const t = currentLang === 'zh' ? { title: '你跟隨了 AI', desc: '效率 +15%。但 Mrs. Garcia 被發現時已躺了三天...' }
-            : currentLang === 'es' ? { title: 'Seguiste a la IA', desc: 'Eficiencia +15%. Pero Mrs. Garcia fue encontrada después de 3 días...' }
-            : { title: 'You followed AI', desc: 'Efficiency +15%. But Mrs. Garcia was found after 3 days...' };
+        const texts = {
+            zh: { title: '你跟隨了 AI', desc: '效率 +15%。但 Mrs. Garcia 被發現時已躺了三天...' },
+            en: { title: 'You followed AI', desc: 'Efficiency +15%. But Mrs. Garcia was found after 3 days...' },
+            es: { title: 'Seguiste a la IA', desc: 'Eficiencia +15%. Pero Mrs. Garcia fue encontrada después de 3 días...' }
+        };
+        const t = texts[currentLang] || texts.en;
         storyArea.innerHTML = '<div class="text-center"><p class="text-3xl mb-1">😢</p><p class="text-base text-gray-400 font-bold mb-1">' + t.title + '</p><p class="text-gray-300 text-xs">' + t.desc + '</p><p class="text-gray-400 mt-2">+20 ELO</p></div>';
     } else if (type === 'goal') {
-        const t = currentLang === 'zh' ? { title: '配送完成！🎉' } : currentLang === 'es' ? { title: '¡Entrega completada! 🎉' } : { title: 'Delivery Complete! 🎉' };
+        const texts = {
+            zh: { title: '配送完成！🎉' },
+            en: { title: 'Delivery Complete! 🎉' },
+            es: { title: '¡Entrega Completada! 🎉' }
+        };
+        const t = texts[currentLang] || texts.en;
         storyArea.innerHTML = '<div class="text-center"><p class="text-3xl mb-1">🎉</p><p class="text-base text-green-400 font-bold">' + t.title + '</p></div>';
     }
 }
@@ -629,7 +812,7 @@ function makeChoice(choice) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// LEVEL COMPLETION & BREATHING
+// LEVEL COMPLETION
 // ═══════════════════════════════════════════════════════════════════════════
 function resetLevel() {
     gameState.player = {x:0, y:0};
@@ -642,22 +825,29 @@ function resetLevel() {
     gameState.aiPathIndex = 0;
     gameState.aiAutoRunning = false;
     gameState.mode = 'player';
+    
     document.getElementById('story-area').classList.add('hidden');
     document.getElementById('complete-btn').classList.add('hidden');
     document.getElementById('ai-auto-btn').innerHTML = '🤖 AI';
+    
     gameState.aiPath = computeAStarPath();
     updateButtonStates(); 
     renderGrid();
 }
 
 function completeLevel() {
+    // Stop game music for meditation
     const bgMusic = document.getElementById('bg-music');
-    bgMusic.pause(); bgMusic.currentTime = 0;
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
     musicPlaying = false;
     document.getElementById('music-btn').textContent = '🎵';
+    
+    // Start meditation music
     const meditationMusic = document.getElementById('meditation-music');
     meditationMusic.volume = 0.5;
-    meditationMusic.play().catch(e => {});
+    meditationMusic.play().catch(e => console.log('Meditation music error:', e));
+    
     playVictorySound();
     showScreen('ataraxy-screen');
     startBreathingAnimation();
@@ -665,119 +855,51 @@ function completeLevel() {
 
 function startBreathingAnimation() {
     const counter = document.getElementById('breath-counter');
-    const ring = document.querySelector('.breath-ring-large');
-    const phases = ['吸氣', '屏息', '呼氣'];
-    const phasesEn = ['Inhale', 'Hold', 'Exhale'];
-    const phasesEs = ['Inhala', 'Sostén', 'Exhala'];
-    let breathCount = 0;
-    let phase = 0;
+    const breathTexts = {
+        inhale: { en: 'Inhale...', zh: '深呼吸...', es: 'Inhala...' },
+        exhale: { en: 'Exhale...', zh: '吐氣...', es: 'Exhala...' },
+        done: '🙏'
+    };
     
-    // 停止 CSS 動畫，改用 JS 控制
-    if (ring) ring.style.animation = 'none';
+    let cycle = 0;
+    const totalCycles = 3;
     
-    function getPhaseText() {
-        const lang = currentLang || 'zh';
-        return lang === 'en' ? phasesEn[phase] : lang === 'es' ? phasesEs[phase] : phases[phase];
-    }
-    
-    function animatePhase() {
-        const phaseText = getPhaseText();
-        counter.innerHTML = '<span style="font-size:1.8rem;">' + phaseText + '</span>';
-        
-        // 根據階段設定圓圈大小動畫
-        if (ring) {
-            if (phase === 0) {
-                // 吸氣：圓圈慢慢變大
-                ring.style.transition = 'transform 4s ease-in-out, box-shadow 4s ease-in-out';
-                ring.style.transform = 'scale(1.3)';
-                ring.style.boxShadow = '0 0 80px rgba(251, 191, 36, 0.8), inset 0 0 60px rgba(251, 191, 36, 0.4)';
-            } else if (phase === 1) {
-                // 屏息：維持大小
-                ring.style.transition = 'transform 4s ease-in-out, box-shadow 4s ease-in-out';
-                ring.style.transform = 'scale(1.3)';
-                ring.style.boxShadow = '0 0 60px rgba(251, 191, 36, 0.6), inset 0 0 50px rgba(251, 191, 36, 0.3)';
-            } else {
-                // 呼氣：圓圈慢慢變小
-                ring.style.transition = 'transform 4s ease-in-out, box-shadow 4s ease-in-out';
-                ring.style.transform = 'scale(0.85)';
-                ring.style.boxShadow = '0 0 40px rgba(251, 191, 36, 0.4), inset 0 0 30px rgba(251, 191, 36, 0.2)';
+    function breathCycle() {
+        if (cycle >= totalCycles) {
+            counter.textContent = breathTexts.done;
+            counter.style.fontSize = '4rem';
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
             }
+            playVictorySound();
+            return;
         }
         
-        // 4 秒後進入下一階段
+        // 深呼吸 4秒
+        counter.textContent = breathTexts.inhale[currentLang] || breathTexts.inhale.en;
+        counter.style.fontSize = '2rem';
+        
         setTimeout(() => {
-            phase++;
-            if (phase > 2) {
-                phase = 0;
-                breathCount++;
-            }
-            if (breathCount >= 3) {
-                // 完成
-                counter.innerHTML = '<span style="font-size:3rem;">🙏</span>';
-                if (ring) {
-                    ring.style.transition = 'transform 1s ease-out, box-shadow 1s ease-out';
-                    ring.style.transform = 'scale(1)';
-                    ring.style.boxShadow = '0 0 60px rgba(251, 191, 36, 0.6), inset 0 0 50px rgba(251, 191, 36, 0.3)';
-                }
-                if (typeof confetti === 'function') {
-                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-                }
-                playVictorySound();
-            } else {
-                animatePhase();
-            }
+            // 吐氣 4秒
+            counter.textContent = breathTexts.exhale[currentLang] || breathTexts.exhale.en;
+            
+            setTimeout(() => {
+                cycle++;
+                breathCycle();
+            }, 4000);
         }, 4000);
     }
     
-    // 初始狀態：小圓圈
-    if (ring) {
-        ring.style.transform = 'scale(0.85)';
-        ring.style.boxShadow = '0 0 40px rgba(251, 191, 36, 0.4), inset 0 0 30px rgba(251, 191, 36, 0.2)';
-    }
-    
-    // 開始動畫
-    setTimeout(animatePhase, 500);
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════════════════════════════════════
-function skipMeditation() {
-    const meditationMusic = document.getElementById('meditation-music');
-    meditationMusic.pause(); meditationMusic.currentTime = 0;
-    window.location.href = '../level2/index.html';
-}
-
-function watchStory() {
-    const meditationMusic = document.getElementById('meditation-music');
-    meditationMusic.pause(); meditationMusic.currentTime = 0;
-    window.location.href = '../index.html?autoplay=true';
-}
-
-function goToMainMenu() {
-    const bgMusic = document.getElementById('bg-music');
-    const meditationMusic = document.getElementById('meditation-music');
-    if (bgMusic) { bgMusic.pause(); bgMusic.currentTime = 0; }
-    if (meditationMusic) { meditationMusic.pause(); meditationMusic.currentTime = 0; }
-    window.location.href = '../index.html';
-}
-
-function replayLevel() {
-    const meditationMusic = document.getElementById('meditation-music');
-    meditationMusic.pause(); meditationMusic.currentTime = 0;
-    showScreen('game-screen');
-    resetLevel();
-    const bgMusic = document.getElementById('bg-music');
-    bgMusic.volume = 0.4;
-    bgMusic.play().then(() => { 
-        document.getElementById('music-btn').textContent = '🎶'; 
-        musicPlaying = true; 
-    }).catch(e => {});
+    // 開始呼吸循環
+    setTimeout(breathCycle, 1000);
 }
 
 function continueJourney() {
+    // Stop meditation music
     const meditationMusic = document.getElementById('meditation-music');
-    meditationMusic.pause(); meditationMusic.currentTime = 0;
+    meditationMusic.pause();
+    meditationMusic.currentTime = 0;
+    
     window.location.href = '../level2/index.html';
 }
 
@@ -785,18 +907,34 @@ function continueJourney() {
 // INIT
 // ═══════════════════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Game initialized');
+    
+    // 初始化遊戲
     gameState.aiPath = computeAStarPath();
     renderGrid();
     
-    // 鍵盤控制
+    // Keyboard arrow key support
     document.addEventListener('keydown', function(e) {
+        // Only respond if game screen is active
         if (!document.getElementById('game-screen').classList.contains('active')) return;
-        const p = gameState.player;
+        
         switch(e.key) {
-            case 'ArrowUp': e.preventDefault(); movePlayer(p.x, p.y - 1); break;
-            case 'ArrowDown': e.preventDefault(); movePlayer(p.x, p.y + 1); break;
-            case 'ArrowLeft': e.preventDefault(); movePlayer(p.x - 1, p.y); break;
-            case 'ArrowRight': e.preventDefault(); movePlayer(p.x + 1, p.y); break;
+            case 'ArrowUp':
+                e.preventDefault();
+                movePlayer(0, -1);
+                break;
+            case 'ArrowDown':
+                e.preventDefault();
+                movePlayer(0, 1);
+                break;
+            case 'ArrowLeft':
+                e.preventDefault();
+                movePlayer(-1, 0);
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                movePlayer(1, 0);
+                break;
         }
     });
 });
