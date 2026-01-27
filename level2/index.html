@@ -65,33 +65,36 @@
         
         /* 增強版呼吸光暈 - 更大更亮！ */
         .breath-ring-enhanced {
-            width: 140px; height: 140px; border-radius: 50%;
-            border: 5px solid rgba(251, 191, 36, 1);
+            width: 200px; height: 200px; border-radius: 50%;
+            border: 6px solid rgba(251, 191, 36, 1);
             animation: breatheRingEnhanced 4s ease-in-out infinite;
-            box-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 0 60px rgba(251, 191, 36, 0.5), 0 0 90px rgba(251, 191, 36, 0.3);
+            box-shadow: 0 0 40px rgba(251, 191, 36, 0.9), 0 0 80px rgba(251, 191, 36, 0.6), 0 0 120px rgba(251, 191, 36, 0.3);
             display: flex; align-items: center; justify-content: center;
-            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(251,191,36,0.2) 100%);
-            backdrop-filter: blur(8px);
+            background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(251,191,36,0.2) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
         
         @keyframes breatheRingEnhanced {
             0%, 100% { 
                 transform: scale(0.9); 
-                box-shadow: 0 0 30px rgba(251, 191, 36, 0.6), 0 0 60px rgba(251, 191, 36, 0.3);
+                box-shadow: 0 0 40px rgba(251, 191, 36, 0.7), 0 0 80px rgba(251, 191, 36, 0.4);
             }
             50% { 
                 transform: scale(1.15); 
-                box-shadow: 0 0 50px rgba(251, 191, 36, 1), 0 0 100px rgba(251, 191, 36, 0.6), 0 0 150px rgba(251, 191, 36, 0.3);
+                box-shadow: 0 0 60px rgba(251, 191, 36, 1), 0 0 120px rgba(251, 191, 36, 0.7), 0 0 180px rgba(251, 191, 36, 0.4);
             }
         }
         
+        /* Apple iOS 風格毛玻璃 - Glassmorphism */
         .jingsi-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(243, 232, 255, 0.95)); 
-            backdrop-filter: blur(10px);
-            border-radius: 20px; padding: 1.5rem 2.5rem; max-width: 500px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 28px; padding: 1.5rem 2.5rem; max-width: 500px;
             text-align: center; 
-            border: 3px solid rgba(251, 191, 36, 0.7);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255,255,255,0.1);
         }
         
         /* Layout */
@@ -814,34 +817,34 @@
 <!-- ═══════════════════════════════════════════════════════════════════════
      SCREEN 5: ATARAXY PORTICO - 優化版：加大字體、增強光暈
 ═══════════════════════════════════════════════════════════════════════ -->
-<div id="ataraxy-screen" class="screen bg-ataraxy flex-col items-center justify-between p-4" style="padding-top: 1vh; padding-bottom: 2vh;">
-    <!-- 上方區域：標題 + 呼吸環 (在蓮花上方) -->
-    <div class="text-center fade-in" style="position: relative; z-index: 10;">
-        <p class="text-4xl mb-3 font-bold" style="color: #fbbf24; text-shadow: 0 0 20px rgba(251,191,36,0.8), 0 3px 15px rgba(0,0,0,0.3);" data-en="Ataraxy Portico" data-zh="靜心之門" data-es="Portal de Serenidad" data-es="Portal de Serenidad">靜心之門</p>
+<div id="ataraxy-screen" class="screen bg-ataraxy flex-col items-center justify-between p-4" style="padding-top: 3vh; padding-bottom: 2vh;">
+    <!-- 上方區域：標題 + 呼吸環 (往下移一點) -->
+    <div class="text-center fade-in" style="position: relative; z-index: 10; margin-top: 2vh;">
+        <p class="text-4xl mb-4 font-bold" style="color: #fbbf24; text-shadow: 0 0 20px rgba(251,191,36,0.8), 0 3px 15px rgba(0,0,0,0.3);" data-en="Ataraxy Portico" data-zh="靜心之門" data-es="Portal de Serenidad">靜心之門</p>
         
-        <!-- 加大加亮的呼吸環 -->
-        <div class="breath-ring-enhanced mb-3 mx-auto">
-            <span id="breath-counter" class="text-5xl font-bold" style="color: #fbbf24; text-shadow: 0 0 15px rgba(251,191,36,1);">3</span>
+        <!-- 加大的呼吸環 -->
+        <div class="breath-ring-enhanced mb-4 mx-auto">
+            <span id="breath-counter" class="text-2xl font-bold" style="color: #fbbf24; text-shadow: 0 0 10px #000, 0 0 20px #000, 0 0 30px rgba(251,191,36,1);">準備...</span>
         </div>
         
         <p class="text-2xl font-bold" style="color: #fef3c7; text-shadow: 0 0 15px rgba(251,191,36,0.9), 0 2px 10px rgba(0,0,0,0.5);" data-en="Take 3 Deep Breaths" data-zh="深呼吸三次" data-es="Respira Profundo 3 Veces">深呼吸三次</p>
     </div>
     
     <!-- 中間區域：靜思語卡片 (在蓮花花托與枝幹之間) -->
-    <div class="text-center" style="position: relative; z-index: 10; margin-top: 25vh;">
+    <div class="text-center" style="position: relative; z-index: 10; margin-top: 20vh;">
         <div class="jingsi-card mx-auto" style="padding: 1.2rem 2rem; max-width: 450px;">
-            <p class="text-2xl font-bold text-purple-800 mb-2">「心能轉境，境隨心轉」</p>
-            <p class="text-lg text-purple-600">Master the mind, master circumstances</p>
-            <p class="text-sm text-purple-500 mt-2">— 證嚴法師靜思語</p>
+            <p class="text-2xl font-bold mb-2" style="color: #fbbf24; text-shadow: 0 0 10px rgba(0,0,0,0.3);">「心能轉境，境隨心轉」</p>
+            <p class="text-lg" style="color: rgba(255,255,255,0.95); text-shadow: 0 1px 3px rgba(0,0,0,0.3);">Master the mind, master circumstances</p>
+            <p class="text-sm mt-2" style="color: rgba(255,255,255,0.8);">— 證嚴法師靜思語</p>
         </div>
     </div>
     
     <!-- 下方區域：分數 + 按鈕 (在水面上方) -->
     <div class="text-center fade-in" style="position: relative; z-index: 10;">
-        <div class="space-y-2 mb-5" style="background: rgba(255,255,255,0.85); padding: 1rem 2rem; border-radius: 16px; border: 2px solid rgba(251,191,36,0.5);">
-            <p class="text-purple-700 font-bold text-xl">🎉 Level 2 Complete!</p>
-            <p class="text-orange-600 font-bold text-2xl">Score: <span id="final-score">0</span>/6 😊</p>
-            <p class="text-green-600 text-xl font-bold">ELO: +<span id="elo-earned">0</span></p>
+        <div class="space-y-2 mb-5" style="background: rgba(255,255,255,0.3); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 1rem 2rem; border-radius: 24px; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 8px 32px rgba(0,0,0,0.08);">
+            <p class="font-bold text-xl" style="color: #fbbf24; text-shadow: 0 0 10px rgba(0,0,0,0.3);" data-en="🎉 Level 2 Complete!" data-zh="🎉 第二關完成！" data-es="🎉 ¡Nivel 2 Completado!">🎉 Level 2 Complete!</p>
+            <p class="font-bold text-2xl" style="color: #fbbf24;"><span data-en="Score:" data-zh="得分:" data-es="Puntuación:">Score:</span> <span id="final-score">0</span>/6 😊</p>
+            <p class="text-xl font-bold" style="color: #4ade80;">ELO: +<span id="elo-earned">0</span></p>
         </div>
         
         <div class="nav-buttons">
@@ -955,6 +958,38 @@ function playSound(type) {
 // ═══════════════════════════════════════════════════════════════════════════
 // GAME DATA
 // ═══════════════════════════════════════════════════════════════════════════
+
+// 三語 UI 文字
+const UI_TEXT = {
+    perfect: { en: (days) => `Perfect: ${days} days!`, zh: (days) => `全勤 ${days} 天！`, es: (days) => `¡Perfecto: ${days} días!` },
+    nextAward: { en: (name) => `"Next award: ${name}!"`, zh: (name) => `「下一位：${name}！」`, es: (name) => `"¡Siguiente premio: ${name}!"` },
+    empty: { en: 'Empty', zh: '空的', es: 'Vacío' },
+    selectToStart: { en: 'Select items to start!', zh: '選擇商品開始購物！', es: '¡Selecciona artículos para empezar!' },
+    waiting: { en: 'Waiting for selection...', zh: '等待選擇中...', es: 'Esperando selección...' },
+    overBudget: { en: '⚠️ Over budget! Remove items.', zh: '⚠️ 超支了！請移除商品。', es: '⚠️ ¡Excede presupuesto! Quita artículos.' },
+    invalid: { en: 'INVALID - Will lose ELO!', zh: '無效決策 - 會扣 ELO！', es: '¡INVÁLIDO - Perderás ELO!' },
+    optimal: { en: '🎯 Great choice! Good value!', zh: '🎯 很棒的選擇！物超所值！', es: '🎯 ¡Gran elección! ¡Buen valor!' },
+    optimalStatus: { en: 'OPTIMAL - Max ELO +30!', zh: '最佳決策 - ELO +30！', es: '¡ÓPTIMO - ELO máximo +30!' },
+    goodChoice: { en: (pct) => `Good! Using ${pct}% of budget.`, zh: (pct) => `不錯！使用了 ${pct}% 預算。`, es: (pct) => `¡Bien! Usando ${pct}% del presupuesto.` },
+    goodStatus: { en: 'GOOD - ELO +15', zh: '良好 - ELO +15', es: 'BUENO - ELO +15' },
+    overBudgetTitle: { en: 'Over Budget!', zh: '超預算！', es: '¡Excede Presupuesto!' },
+    overBudgetMsg: { en: 'Cart exceeds points!', zh: '超過可用點數！', es: '¡El carrito excede los puntos!' },
+    sadTitle: { en: 'A little sad...', zh: '有點難過...', es: 'Un poco triste...' },
+    sadMsg: { en: (name) => `${name} couldn't get what they really wanted...`, zh: (name) => `${name} 買不到真正想要的東西...`, es: (name) => `${name} no pudo obtener lo que realmente quería...` },
+    happyTitle: { en: 'So Happy!', zh: '超開心！', es: '¡Muy Feliz!' },
+    happyMsg: { en: (name) => `${name} got what they wanted!`, zh: (name) => `${name} 買到想要的了！`, es: (name) => `¡${name} obtuvo lo que quería!` },
+    okTitle: { en: 'OK!', zh: '還可以！', es: '¡OK!' },
+    okMsg: { en: (name) => `${name} is satisfied.`, zh: (name) => `${name} 還算滿意。`, es: (name) => `${name} está satisfecho/a.` }
+};
+
+// Helper function to get text
+function getText(key, ...args) {
+    const textObj = UI_TEXT[key];
+    if (!textObj) return key;
+    const text = textObj[currentLang] || textObj.en;
+    return typeof text === 'function' ? text(...args) : text;
+}
+
 // 🌍 DIVERSE STUDENTS - Reflecting Bayview-Hunters Point Community
 // 
 // 🎓 教育設計：
@@ -977,63 +1012,63 @@ const awardStudents = [
 const shopStudents = [
     // 👧🏿 Aaliyah - 全勤 +20，平時還不錯 → 共 38 點
     { name: "Aaliyah", avatar: "👧🏿", grade: "Grade 3", points: 38, 
-      wish: { en: "I want crayons and notebook!", zh: "我想要蠟筆和筆記本！" }, 
-      hint: { en: "🎉 Perfect attendance! She enjoys coming to school.", zh: "🎉 全勤獎！她喜歡來上學。" },
+      wish: { en: "I want crayons and notebook!", zh: "我想要蠟筆和筆記本！", es: "¡Quiero crayones y cuaderno!" }, 
+      hint: { en: "🎉 Perfect attendance! She enjoys coming to school.", zh: "🎉 全勤獎！她喜歡來上學。", es: "🎉 ¡Asistencia perfecta! Le gusta venir a la escuela." },
       isLowPoints: false },
     
     // 👦🏻 Wei-Lin - 全勤 +20，平時超棒（幫同學、友愛）→ 共 85 點
     { name: "Wei-Lin 偉琳", avatar: "👦🏻", grade: "Grade 4", points: 85, 
-      wish: { en: "I want a basketball!", zh: "我想要籃球！" }, 
-      hint: { en: "🎉 Perfect attendance! He's always kind to everyone.", zh: "🎉 全勤獎！他對大家都很友善。" },
+      wish: { en: "I want a basketball!", zh: "我想要籃球！", es: "¡Quiero un baloncesto!" }, 
+      hint: { en: "🎉 Perfect attendance! He's always kind to everyone.", zh: "🎉 全勤獎！他對大家都很友善。", es: "🎉 ¡Asistencia perfecta! Siempre es amable con todos." },
       isLowPoints: false,
       isHelpful: true },
     
     // 👦🏿 Marcus - 全勤 +20，但就只有這樣 → 共 20 點
     // 想要籃球(60點)但買不起 → 真實的失落感
     { name: "Marcus", avatar: "👦🏿", grade: "Grade 5", points: 20, 
-      wish: { en: "I really want that basketball... 🏀", zh: "我好想要那個籃球... 🏀" }, 
-      hint: { en: "🎉 Perfect attendance! He loves playing at recess.", zh: "🎉 全勤獎！他最愛下課時間。" },
+      wish: { en: "I really want that basketball... 🏀", zh: "我好想要那個籃球... 🏀", es: "Realmente quiero ese baloncesto... 🏀" }, 
+      hint: { en: "🎉 Perfect attendance! He loves playing at recess.", zh: "🎉 全勤獎！他最愛下課時間。", es: "🎉 ¡Asistencia perfecta! Le encanta jugar en el recreo." },
       isLowPoints: true },
     
     // 👧🏽 Sofia - 全勤 +20，平時表現OK → 共 42 點
     { name: "Sofia", avatar: "👧🏽", grade: "Grade 2", points: 42, 
-      wish: { en: "Cute things!", zh: "可愛的東西！" }, 
-      hint: { en: "🎉 Perfect attendance! She loves school breakfast!", zh: "🎉 全勤獎！她最愛學校早餐！" },
+      wish: { en: "Cute things!", zh: "可愛的東西！", es: "¡Cosas lindas!" }, 
+      hint: { en: "🎉 Perfect attendance! She loves school breakfast!", zh: "🎉 全勤獎！她最愛學校早餐！", es: "🎉 ¡Asistencia perfecta! ¡Le encanta el desayuno escolar!" },
       isLowPoints: false },
     
     // 👧🏻 Mai - 全勤 +20，但就只有這樣 → 共 20 點
     // 想要顏料組(35點)但買不起 → 真實的失落感
     { name: "Mai", avatar: "👧🏻", grade: "Grade 3", points: 20, 
-      wish: { en: "I wish I could get the paint set... 🎨", zh: "好希望能買到顏料組... 🎨" }, 
-      hint: { en: "🎉 Perfect attendance! She comes to see her best friend.", zh: "🎉 全勤獎！她每天來找好朋友。" },
+      wish: { en: "I wish I could get the paint set... 🎨", zh: "好希望能買到顏料組... 🎨", es: "Ojalá pudiera obtener el set de pintura... 🎨" }, 
+      hint: { en: "🎉 Perfect attendance! She comes to see her best friend.", zh: "🎉 全勤獎！她每天來找好朋友。", es: "🎉 ¡Asistencia perfecta! Viene a ver a su mejor amiga." },
       isLowPoints: true },
     
     // 👦🏾 Tane - 全勤 +20，平時超棒（幫助、友愛、不欺負人、行為良好）→ 共 95 點
     { name: "Tane", avatar: "👦🏾", grade: "Grade 4", points: 95, 
-      wish: { en: "So many choices! 🌟", zh: "好多選擇！🌟" }, 
-      hint: { en: "🎉 Perfect attendance! He's always helping and caring for others.", zh: "🎉 全勤獎！他總是幫助和關心別人。" },
+      wish: { en: "So many choices! 🌟", zh: "好多選擇！🌟", es: "¡Tantas opciones! 🌟" }, 
+      hint: { en: "🎉 Perfect attendance! He's always helping and caring for others.", zh: "🎉 全勤獎！他總是幫助和關心別人。", es: "🎉 ¡Asistencia perfecta! Siempre ayuda y cuida a los demás." },
       isLowPoints: false,
       isRoleModel: true }
 ];
 
 const products = [
-    { emoji: "✏️", name: { en: "Pencil", zh: "鉛筆" }, price: 5 },
-    { emoji: "📏", name: { en: "Ruler", zh: "尺" }, price: 10 },
-    { emoji: "✂️", name: { en: "Scissors", zh: "剪刀" }, price: 15 },
-    { emoji: "🖍️", name: { en: "Crayons", zh: "蠟筆" }, price: 20 },
-    { emoji: "📒", name: { en: "Notebook", zh: "筆記本" }, price: 15 },
-    { emoji: "🎨", name: { en: "Paint Set", zh: "顏料組" }, price: 35 },
-    { emoji: "⚽", name: { en: "Ball", zh: "足球" }, price: 40 },
-    { emoji: "🏀", name: { en: "Basketball", zh: "籃球" }, price: 60 },
-    { emoji: "🪀", name: { en: "Jump Rope", zh: "跳繩" }, price: 25 },
-    { emoji: "🔮", name: { en: "Marbles", zh: "彈珠" }, price: 10 },
-    { emoji: "🎀", name: { en: "Hair Clips", zh: "髮夾" }, price: 8 },
-    { emoji: "🧸", name: { en: "Plush Toy", zh: "玩偶" }, price: 30 },
+    { emoji: "✏️", name: { en: "Pencil", zh: "鉛筆", es: "Lápiz" }, price: 5 },
+    { emoji: "📏", name: { en: "Ruler", zh: "尺", es: "Regla" }, price: 10 },
+    { emoji: "✂️", name: { en: "Scissors", zh: "剪刀", es: "Tijeras" }, price: 15 },
+    { emoji: "🖍️", name: { en: "Crayons", zh: "蠟筆", es: "Crayones" }, price: 20 },
+    { emoji: "📒", name: { en: "Notebook", zh: "筆記本", es: "Cuaderno" }, price: 15 },
+    { emoji: "🎨", name: { en: "Paint Set", zh: "顏料組", es: "Set de Pintura" }, price: 35 },
+    { emoji: "⚽", name: { en: "Ball", zh: "足球", es: "Pelota" }, price: 40 },
+    { emoji: "🏀", name: { en: "Basketball", zh: "籃球", es: "Baloncesto" }, price: 60 },
+    { emoji: "🪀", name: { en: "Jump Rope", zh: "跳繩", es: "Cuerda" }, price: 25 },
+    { emoji: "🔮", name: { en: "Marbles", zh: "彈珠", es: "Canicas" }, price: 10 },
+    { emoji: "🎀", name: { en: "Hair Clips", zh: "髮夾", es: "Ganchos" }, price: 8 },
+    { emoji: "🧸", name: { en: "Plush Toy", zh: "玩偶", es: "Peluche" }, price: 30 },
     // 🍫 新增實際獎品！
-    { emoji: "🍫", name: { en: "Chocolate", zh: "巧克力" }, price: 3 },
-    { emoji: "🥤", name: { en: "Energy Bar", zh: "能量棒" }, price: 5 },
-    { emoji: "🍪", name: { en: "Cookies", zh: "餅乾" }, price: 4 },
-    { emoji: "🧃", name: { en: "Juice Box", zh: "果汁盒" }, price: 3 }
+    { emoji: "🍫", name: { en: "Chocolate", zh: "巧克力", es: "Chocolate" }, price: 3 },
+    { emoji: "🥤", name: { en: "Energy Bar", zh: "能量棒", es: "Barra Energética" }, price: 5 },
+    { emoji: "🍪", name: { en: "Cookies", zh: "餅乾", es: "Galletas" }, price: 4 },
+    { emoji: "🧃", name: { en: "Juice Box", zh: "果汁盒", es: "Jugo" }, price: 3 }
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1063,13 +1098,17 @@ function startGame() {
 
 function loadCeremonyStudent(idx) {
     const s = awardStudents[idx];
+    const texts = {
+        perfect: { en: `Perfect: ${s.days} days!`, zh: `全勤 ${s.days} 天！`, es: `¡Perfecto: ${s.days} días!` },
+        next: { en: `"Next award: ${s.name}!"`, zh: `「下一位：${s.name}！」`, es: `"¡Siguiente premio: ${s.name}!"` }
+    };
     document.getElementById('ceremony-avatar').textContent = s.avatar;
     document.getElementById('ceremony-name').textContent = s.name;
     document.getElementById('ceremony-grade').textContent = s.grade;
-    document.getElementById('ceremony-achievement').textContent = '✓ ' + (currentLang === 'en' ? `Perfect: ${s.days} days!` : `全勤 ${s.days} 天！`);
+    document.getElementById('ceremony-achievement').textContent = '✓ ' + (texts.perfect[currentLang] || texts.perfect.en);
     document.getElementById('cert-name').textContent = s.name;
     document.getElementById('ceremony-progress').textContent = `${idx + 1} / ${awardStudents.length}`;
-    document.getElementById('principal-speech').textContent = currentLang === 'en' ? `"Next award: ${s.name}!"` : `「下一位：${s.name}！」`;
+    document.getElementById('principal-speech').textContent = texts.next[currentLang] || texts.next.en;
     document.getElementById('award-btn').disabled = false;
 }
 
@@ -1106,8 +1145,8 @@ function loadShopStudent(idx) {
     document.getElementById('student-name').textContent = s.name;
     document.getElementById('student-grade').textContent = s.grade;
     document.getElementById('student-points').textContent = s.points;
-    document.getElementById('student-wish').textContent = '「' + s.wish[currentLang] + '」';
-    document.getElementById('hint-text').textContent = s.hint[currentLang];
+    document.getElementById('student-wish').textContent = '「' + (s.wish[currentLang] || s.wish.en) + '」';
+    document.getElementById('hint-text').textContent = s.hint[currentLang] || s.hint.en;
     document.getElementById('current-student').textContent = idx + 1;
     document.getElementById('progress-fill').style.width = ((idx / shopStudents.length) * 100) + '%';
     document.getElementById('elo-display').textContent = state.elo;
@@ -1145,7 +1184,7 @@ function renderProducts() {
     document.getElementById('products-grid').innerHTML = products.map((p, i) => `
         <div class="product-item" data-idx="${i}" onclick="addToCart(${i})">
             <div class="product-emoji">${p.emoji}</div>
-            <div class="product-name">${p.name[currentLang]}</div>
+            <div class="product-name">${p.name[currentLang] || p.name.en}</div>
             <div class="product-price">${p.price} 🐯</div>
         </div>
     `).join('');
@@ -1154,7 +1193,7 @@ function renderProducts() {
 
 function renderPriceList() {
     document.getElementById('price-list').innerHTML = products.map(p => `
-        <div class="flex justify-between items-center py-0.5"><span class="truncate">${p.emoji} ${p.name[currentLang]}</span><span class="text-orange-600 font-bold ml-1">${p.price}</span></div>
+        <div class="flex justify-between items-center py-0.5"><span class="truncate">${p.emoji} ${p.name[currentLang] || p.name.en}</span><span class="text-orange-600 font-bold ml-1">${p.price}</span></div>
     `).join('');
 }
 
@@ -1198,9 +1237,10 @@ function updateCart() {
     const total = state.cart.reduce((sum, i) => sum + products[i].price, 0);
     const s = shopStudents[state.shopIndex];
     const remaining = s ? s.points - total : 0;
+    const emptyText = { en: 'Empty', zh: '空的', es: 'Vacío' };
     
     container.innerHTML = state.cart.length === 0 
-        ? `<span class="text-gray-500 text-sm">${currentLang === 'en' ? 'Empty' : '空的'}</span>`
+        ? `<span class="text-gray-500 text-sm">${emptyText[currentLang] || emptyText.en}</span>`
         : state.cart.map((idx, ci) => `<div class="cart-item" onclick="removeFromCart(${ci})">${products[idx].emoji} <span class="text-orange-600">${products[idx].price}</span></div>`).join('');
     
     document.getElementById('cart-total').textContent = total;
@@ -1230,6 +1270,18 @@ function updateAIDecision(budget, cartTotal) {
     const eloOk = document.getElementById('elo-ok');
     const eloBad = document.getElementById('elo-bad');
     
+    // 三語文字
+    const aiTexts = {
+        selectStart: { en: 'Select items to start!', zh: '選擇商品開始購物！', es: '¡Selecciona artículos para comenzar!' },
+        waiting: { en: 'Waiting for selection...', zh: '等待選擇中...', es: 'Esperando selección...' },
+        overBudget: { en: '⚠️ Over budget! Remove items.', zh: '⚠️ 超支了！請移除商品。', es: '⚠️ ¡Excede presupuesto! Quita artículos.' },
+        invalid: { en: 'INVALID - Will lose ELO!', zh: '無效決策 - 會扣 ELO！', es: '¡INVÁLIDO - Perderás ELO!' },
+        great: { en: '🎯 Great choice! Good value!', zh: '🎯 很棒的選擇！物超所值！', es: '🎯 ¡Gran elección! ¡Buen valor!' },
+        optimal: { en: 'OPTIMAL - Max ELO +30!', zh: '最佳決策 - ELO +30！', es: '¡ÓPTIMO - ELO máx +30!' },
+        addMore: { en: (n) => `💡 OK, but add ${n}+ pts for max ELO!`, zh: (n) => `💡 可以，但再加 ${n}+ 點可得滿分！`, es: (n) => `💡 OK, ¡pero agrega ${n}+ pts para máx ELO!` },
+        good: { en: 'GOOD - ELO +15', zh: '良好 - ELO +15', es: 'BUENO - ELO +15' }
+    };
+    
     // 重置高亮
     [eloGood, eloOk, eloBad].forEach(el => {
         el.style.transform = 'scale(1)';
@@ -1240,38 +1292,33 @@ function updateAIDecision(budget, cartTotal) {
     const utilizationRate = cartTotal / budget;
     
     if (cartTotal === 0) {
-        // 還沒選
-        aiSuggestion.textContent = currentLang === 'en' ? 'Select items to start!' : '選擇商品開始購物！';
+        aiSuggestion.textContent = aiTexts.selectStart[currentLang] || aiTexts.selectStart.en;
         aiSuggestion.className = 'text-gray-500';
-        aiStatus.textContent = currentLang === 'en' ? 'Waiting for selection...' : '等待選擇中...';
+        aiStatus.textContent = aiTexts.waiting[currentLang] || aiTexts.waiting.en;
         aiStatus.style.background = '#e5e7eb';
         aiStatus.style.color = '#6b7280';
     } else if (cartTotal > budget) {
-        // 超支 - 壞決策
-        aiSuggestion.textContent = currentLang === 'en' ? '⚠️ Over budget! Remove items.' : '⚠️ 超支了！請移除商品。';
+        aiSuggestion.textContent = aiTexts.overBudget[currentLang] || aiTexts.overBudget.en;
         aiSuggestion.className = 'text-red-600 font-bold';
-        aiStatus.innerHTML = `<span class="text-red-600">❌ ${currentLang === 'en' ? 'INVALID - Will lose ELO!' : '無效決策 - 會扣 ELO！'}</span>`;
+        aiStatus.innerHTML = `<span class="text-red-600">❌ ${aiTexts.invalid[currentLang] || aiTexts.invalid.en}</span>`;
         aiStatus.style.background = '#fee2e2';
         aiStatus.style.color = '#dc2626';
         eloBad.style.transform = 'scale(1.1)';
         eloBad.style.boxShadow = '0 0 15px rgba(239,68,68,0.5)';
     } else if (utilizationRate >= 0.5) {
-        // 好決策 - 用了 50% 以上
-        aiSuggestion.textContent = currentLang === 'en' ? '🎯 Great choice! Good value!' : '🎯 很棒的選擇！物超所值！';
+        aiSuggestion.textContent = aiTexts.great[currentLang] || aiTexts.great.en;
         aiSuggestion.className = 'text-green-600 font-bold';
-        aiStatus.innerHTML = `<span class="text-green-600">✅ ${currentLang === 'en' ? 'OPTIMAL - Max ELO +30!' : '最佳決策 - ELO +30！'}</span>`;
+        aiStatus.innerHTML = `<span class="text-green-600">✅ ${aiTexts.optimal[currentLang] || aiTexts.optimal.en}</span>`;
         aiStatus.style.background = '#dcfce7';
         aiStatus.style.color = '#16a34a';
         eloGood.style.transform = 'scale(1.1)';
         eloGood.style.boxShadow = '0 0 15px rgba(34,197,94,0.5)';
     } else {
-        // 普通決策 - 用了不到 50%
         const moreNeeded = Math.ceil(budget * 0.5) - cartTotal;
-        aiSuggestion.textContent = currentLang === 'en' 
-            ? `💡 OK, but add ${moreNeeded}+ pts for max ELO!` 
-            : `💡 可以，但再加 ${moreNeeded}+ 點可得滿分！`;
+        const addMoreFn = aiTexts.addMore[currentLang] || aiTexts.addMore.en;
+        aiSuggestion.textContent = addMoreFn(moreNeeded);
         aiSuggestion.className = 'text-yellow-600 font-bold';
-        aiStatus.innerHTML = `<span class="text-yellow-600">🔶 ${currentLang === 'en' ? 'GOOD - ELO +15' : '良好 - ELO +15'}</span>`;
+        aiStatus.innerHTML = `<span class="text-yellow-600">🔶 ${aiTexts.good[currentLang] || aiTexts.good.en}</span>`;
         aiStatus.style.background = '#fef9c3';
         aiStatus.style.color = '#ca8a04';
         eloOk.style.transform = 'scale(1.1)';
@@ -1286,36 +1333,46 @@ function checkout() {
     const good = total >= s.points * 0.5;
     let elo = 0, emoji, title, msg;
     
+    // 三語結果文字
+    const resultTexts = {
+        overBudget: { en: 'Over Budget!', zh: '超預算！', es: '¡Excede Presupuesto!' },
+        cartExceeds: { en: 'Cart exceeds points!', zh: '超過可用點數！', es: '¡El carrito excede los puntos!' },
+        littleSad: { en: 'A little sad...', zh: '有點難過...', es: 'Un poco triste...' },
+        couldntGet: { en: (name) => `${name} couldn't get what they really wanted...`, zh: (name) => `${name} 買不到真正想要的東西...`, es: (name) => `${name} no pudo conseguir lo que realmente quería...` },
+        soHappy: { en: 'So Happy!', zh: '超開心！', es: '¡Muy Feliz!' },
+        gotWanted: { en: (name) => `${name} got what they wanted!`, zh: (name) => `${name} 買到想要的了！`, es: (name) => `¡${name} consiguió lo que quería!` },
+        ok: { en: 'OK!', zh: '還可以！', es: '¡OK!' },
+        satisfied: { en: (name) => `${name} is satisfied.`, zh: (name) => `${name} 還算滿意。`, es: (name) => `${name} está satisfecho/a.` }
+    };
+    
     // 🎓 教育設計：真實呈現，不說教
     // 讓玩家自己感受反差，自己找方向
     
     if (!valid) {
-        // 超支或空購物車
         elo = -10; emoji = '😢';
-        title = currentLang === 'en' ? 'Over Budget!' : '超預算！';
-        msg = currentLang === 'en' ? 'Cart exceeds points!' : '超過可用點數！';
+        title = resultTexts.overBudget[currentLang] || resultTexts.overBudget.en;
+        msg = resultTexts.cartExceeds[currentLang] || resultTexts.cartExceeds.en;
         state.sadCount++;
         playSound('wrong');
     } else if (s.isLowPoints) {
-        // 🔑 低點數學生 - 永遠顯示 sad，因為買不到真正想要的
-        // 這才是真實的反差！
         elo = 15; emoji = '😢';
-        title = currentLang === 'en' ? 'A little sad...' : '有點難過...';
-        msg = `${s.name} ${currentLang === 'en' ? `couldn't get what they really wanted...` : '買不到真正想要的東西...'}`;
+        title = resultTexts.littleSad[currentLang] || resultTexts.littleSad.en;
+        const couldntGetFn = resultTexts.couldntGet[currentLang] || resultTexts.couldntGet.en;
+        msg = couldntGetFn(s.name);
         state.sadCount++;
-        playSound('correct'); // 購物成功，但結果是 sad
+        playSound('correct');
     } else if (good) {
-        // 正常學生，買得不錯
         elo = 30; emoji = '😊';
-        title = currentLang === 'en' ? 'So Happy!' : '超開心！';
-        msg = `${s.name} ${currentLang === 'en' ? 'got what they wanted!' : '買到想要的了！'}`;
+        title = resultTexts.soHappy[currentLang] || resultTexts.soHappy.en;
+        const gotWantedFn = resultTexts.gotWanted[currentLang] || resultTexts.gotWanted.en;
+        msg = gotWantedFn(s.name);
         state.happyCount++;
         playSound('correct');
     } else {
-        // 正常學生，買得少
         elo = 15; emoji = '🙂';
-        title = currentLang === 'en' ? 'OK!' : '還可以！';
-        msg = `${s.name} ${currentLang === 'en' ? 'is satisfied.' : '還算滿意。'}`;
+        title = resultTexts.ok[currentLang] || resultTexts.ok.en;
+        const satisfiedFn = resultTexts.satisfied[currentLang] || resultTexts.satisfied.en;
+        msg = satisfiedFn(s.name);
         state.happyCount++;
         playSound('correct');
     }
@@ -1370,14 +1427,40 @@ function completeLevel() {
 }
 
 function startBreathing() {
-    let c = 3;
     const el = document.getElementById('breath-counter');
-    el.textContent = '3';
-    const t = setInterval(() => {
-        c--;
-        if (c > 0) el.textContent = c;
-        else { clearInterval(t); el.textContent = '🙏'; }
-    }, 2500);
+    const breathTexts = {
+        inhale: { en: 'Inhale...', zh: '深呼吸...', es: 'Inhala...' },
+        exhale: { en: 'Exhale...', zh: '吐氣...', es: 'Exhala...' },
+        done: '🙏'
+    };
+    
+    let cycle = 0;
+    const totalCycles = 3;
+    
+    function breathCycle() {
+        if (cycle >= totalCycles) {
+            el.textContent = breathTexts.done;
+            el.style.fontSize = '4rem';
+            return;
+        }
+        
+        // 深呼吸 4秒
+        el.textContent = breathTexts.inhale[currentLang] || breathTexts.inhale.en;
+        el.style.fontSize = '1.5rem';
+        
+        setTimeout(() => {
+            // 吐氣 4秒
+            el.textContent = breathTexts.exhale[currentLang] || breathTexts.exhale.en;
+            
+            setTimeout(() => {
+                cycle++;
+                breathCycle();
+            }, 4000);
+        }, 4000);
+    }
+    
+    // 開始呼吸循環
+    setTimeout(breathCycle, 1000);
 }
 
 function goHome() {
