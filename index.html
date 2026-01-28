@@ -3,454 +3,401 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google" content="notranslate">
-    <title>善的旅程 Journey of Kindness</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Journey of Kindness | 慈悲之旅 - CS4 Final Project</title>
+    <meta name="description" content="Educational AI game teaching 7 algorithms through humanitarian scenarios. Las Positas College CS4 Final Project by Mei Hsien Hsu.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans TC', sans-serif; }
-        
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: white;
-            overflow-x: hidden;
-        }
-        
-        /* ===== VIDEO OVERLAY ===== */
-        .video-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: #000;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .video-overlay.hidden { display: none; }
-        .video-overlay video { width: 100%; height: 100%; object-fit: cover; }
-        .video-controls {
-            position: absolute;
-            bottom: 30px; right: 30px;
-            display: flex; gap: 10px;
-        }
-        .video-btn {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 25px;
-            color: white;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
-        }
-        .video-btn:hover { background: rgba(255,255,255,0.3); }
-        .video-timer {
-            position: absolute;
-            top: 20px; right: 20px;
-            padding: 8px 16px;
-            background: rgba(0,0,0,0.7);
-            border-radius: 20px;
-            font-size: 1.2rem;
-        }
-        
-        /* ===== BACKGROUND LAYERS ===== */
-        .bg-map {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: url('hunters_point_map.png') center/cover;
-            opacity: 0.3;
-            z-index: 0;
-        }
-        .bg-stars {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 3s ease-in-out infinite;
-        }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-        .shooting-star {
-            position: absolute;
-            width: 100px; height: 2px;
-            background: linear-gradient(90deg, white, transparent);
-            animation: shoot 3s linear infinite;
-        }
-        @keyframes shoot {
-            0% { transform: translateX(0) translateY(0); opacity: 1; }
-            100% { transform: translateX(-500px) translateY(500px); opacity: 0; }
-        }
-        
-        /* ===== LANGUAGE TOGGLE ===== */
-        .lang-toggle {
-            position: fixed;
-            top: 15px; left: 15px;
-            z-index: 100;
-            display: flex; gap: 5px;
-            background: rgba(0,0,0,0.5);
-            padding: 5px;
-            border-radius: 25px;
-            backdrop-filter: blur(10px);
-        }
-        .lang-btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            background: transparent;
-            color: rgba(255,255,255,0.6);
-            transition: all 0.3s;
-        }
-        .lang-btn.active {
-            background: linear-gradient(135deg, #ec4899, #8b5cf6);
-            color: white;
-        }
-        
-        /* ===== MAIN CONTENT ===== */
-        .main-content {
-            position: relative;
-            z-index: 10;
-            min-height: 100vh;
-            padding: 80px 20px 40px;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .header h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
-            margin-bottom: 10px;
-        }
-        .header p {
-            color: rgba(255,255,255,0.8);
-            font-size: 1.1rem;
-        }
-        
-        /* ===== LEVEL CARDS ===== */
-        .levels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .level-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        .level-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(251, 191, 36, 0.5);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(251, 191, 36, 0.2);
-        }
-        .level-card.locked {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .level-number {
-            position: absolute;
-            top: 15px; right: 15px;
-            width: 35px; height: 35px;
-            background: linear-gradient(135deg, #ec4899, #8b5cf6);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-        
-        .level-card h3 {
-            font-size: 1.3rem;
-            color: #fbbf24;
-            margin-bottom: 8px;
-        }
-        .level-card .algorithm {
-            font-size: 0.85rem;
-            color: #a78bfa;
-            margin-bottom: 10px;
-        }
-        .level-card .story {
-            font-size: 0.95rem;
-            color: rgba(255,255,255,0.8);
-            line-height: 1.5;
-        }
-        
-        .play-btn {
-            margin-top: 15px;
-            padding: 10px 25px;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            border: none;
-            border-radius: 25px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .play-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
-        }
-        
-        /* ===== FOOTER ===== */
-        .footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: rgba(255,255,255,0.6);
-            font-size: 0.9rem;
-        }
-        .footer .quote {
-            color: #fbbf24;
-            font-style: italic;
-            margin-top: 10px;
-        }
-        
-        /* ===== REPLAY BUTTON ===== */
-        .replay-btn {
-            position: fixed;
-            bottom: 20px; left: 20px;
-            z-index: 100;
-            padding: 10px 15px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 25px;
-            color: white;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 20px rgba(147, 51, 234, 0.3); } 50% { box-shadow: 0 0 40px rgba(147, 51, 234, 0.6); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .float { animation: float 3s ease-in-out infinite; }
+        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; }
     </style>
 </head>
-<body translate="no">
+<body class="bg-slate-900">
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useMemo } = React;
 
-<!-- Video Overlay -->
-<div id="video-overlay" class="video-overlay">
-    <video id="intro-video" autoplay playsinline>
-        <source src="intro.mp4" type="video/mp4">
-    </video>
-    <div class="video-timer"><span id="timer">29</span>s</div>
-    <div class="video-controls">
-        <button class="video-btn" onclick="toggleMute()">🔇 <span data-en="Sound" data-zh="聲音" data-es="Sonido">Sound</span></button>
-        <button class="video-btn" onclick="skipVideo()"><span data-en="Skip" data-zh="跳過" data-es="Saltar">Skip</span> ⏭️</button>
-    </div>
-</div>
+        // ============================================================
+        // GAME CONFIGURATION - 7 ALGORITHMS
+        // ============================================================
+        const LEVELS = [
+            { id: 1, name: "A* Search", nameZh: "A* 搜尋", emoji: "🗺️", algorithm: "A* Search", chapter: "Ch. 3.5-3.6", application: "Food Delivery Route", complexity: "O(b^d)", quote: "感恩，是世間最美的語言", quoteEn: "Gratitude is the world's most beautiful language", story: "Mrs. Garcia 家需要送餐，用 A* 找出最短路線！", storyEn: "Mrs. Garcia's family needs food. Use A* to find the shortest route!" },
+            { id: 2, name: "Propositional Logic", nameZh: "命題邏輯", emoji: "🧠", algorithm: "Propositional Logic", chapter: "Ch. 7", application: "Resource Allocation", complexity: "O(2^n)", quote: "心能轉境，境隨心轉", quoteEn: "Master the mind, master circumstances", story: "哪些家庭符合援助資格？用邏輯推理！", storyEn: "Which families qualify for aid? Use logical reasoning!" },
+            { id: 3, name: "MDP", nameZh: "馬可夫決策", emoji: "🎲", algorithm: "Markov Decision Process", chapter: "Ch. 17", application: "Homeless Outreach", complexity: "O(|S|²|A|)", quote: "甘願做，歡喜受", quoteEn: "Willing to do, happy to receive", story: "街友外展充滿不確定性。用 MDP 規劃！", storyEn: "Homeless outreach is uncertain. Use MDP to plan!" },
+            { id: 4, name: "KB-Agent", nameZh: "知識代理", emoji: "🏕️", algorithm: "Knowledge-Based Agent", chapter: "Ch. 7", application: "RV Park Exploration", complexity: "O(2^n)", quote: "在未知中前行，用智慧照亮道路", quoteEn: "Navigate the unknown with wisdom's light", story: "探索 RV Park 找到需要幫助的家庭！(Wumpus World)", storyEn: "Explore RV Park to find families in need! (Wumpus World)" },
+            { id: 5, name: "Bayesian", nameZh: "貝氏網路", emoji: "📊", algorithm: "Bayesian Networks", chapter: "Ch. 12-13", application: "Volunteer Retention", complexity: "O(2^n)", quote: "靜思勤行道，慈濟人間路", quoteEn: "With calm mind, walk Tzu Chi's path", story: "Maria 會回來當志工嗎？用貝氏預測！", storyEn: "Will Maria return to volunteer? Use Bayesian prediction!" },
+            { id: 6, name: "Alpha-Beta", nameZh: "對抗搜尋", emoji: "⚔️", algorithm: "Adversarial Search", chapter: "Ch. 5", application: "Strategic Game", complexity: "O(b^(m/2))", quote: "快樂不在擁有多", quoteEn: "Happiness isn't having much", story: "和 AI 對戰分配社區資源！", storyEn: "Battle AI to allocate community resources!" },
+            { id: 7, name: "FOL", nameZh: "一階邏輯", emoji: "🔗", algorithm: "First-Order Logic", chapter: "Ch. 8-9", application: "Volunteer Matching", complexity: "O(n!)", quote: "把握時間，珍惜空間", quoteEn: "Seize time, cherish space", story: "Marcus 想加入環保團。用 FOL 推理！", storyEn: "Marcus wants to join recycling. Use FOL reasoning!" }
+        ];
 
-<!-- Background -->
-<div class="bg-map"></div>
-<div class="bg-stars" id="stars"></div>
+        const STORIES = {
+            1: { title: "一把生米", titleEn: "A Handful of Raw Rice", content: "2006年，John Muir 小學。一個七歲小女孩抓起一把生米往嘴裡塞。「妳多久沒吃了？」「兩天。也許三天。」這一刻開啟了慈濟在 Hunters Point 19 年的服務。", contentEn: "2006, John Muir Elementary. A seven-year-old grabbed raw rice to eat. 'How long since you've eaten?' 'Two days. Maybe three.' This began Tzu Chi's 19 years of service." },
+            4: { title: "Mrs. Garcia 的茶", titleEn: "Mrs. Garcia's Tea", content: "演算法說跳過 Mrs. Garcia——她上週收過物資。但志工違反建議。到她門口，才發現她兩天前跌倒無法求救。這個「低效率」決定救了她一命。", contentEn: "The algorithm said skip Mrs. Garcia—she received delivery last week. The volunteer overrode it. At her door, they found she had fallen two days ago. This 'inefficient' stop saved her life." },
+            7: { title: "腎臟移植", titleEn: "Kidney Transplant", content: "2015年，我在 UC Davis 接受女兒捐腎移植。Sacramento 慈濟志工 Chou 和 Joe，這對素未謀面的老夫婦，從醫院送我們回家。法親的愛，跨越陌生。", contentEn: "2015, I received my daughter's kidney at UC Davis. Sacramento Tzu Chi volunteers Chou and Joe, whom I never met, drove us home. Dharma family love transcends strangers." }
+        };
 
-<!-- Language Toggle -->
-<div class="lang-toggle">
-    <button class="lang-btn active" onclick="setLang('en')">EN</button>
-    <button class="lang-btn" onclick="setLang('zh')">中文</button>
-    <button class="lang-btn" onclick="setLang('es')">ES</button>
-</div>
+        // ============================================================
+        // ELO SYSTEM
+        // ============================================================
+        const calcELO = (rating, efficiency, k = 32) => {
+            const expected = 1 / (1 + Math.pow(10, (1600 - rating) / 400));
+            const actual = efficiency >= 100 ? 1.0 : efficiency >= 80 ? 0.75 : efficiency >= 60 ? 0.5 : 0.25;
+            return Math.round(k * (actual - expected));
+        };
 
-<!-- Main Content -->
-<div class="main-content">
-    <header class="header">
-        <h1 data-en="Journey of Kindness" data-zh="善的旅程" data-es="Viaje de Bondad">Journey of Kindness</h1>
-        <p data-en="Learn AI through stories of compassion" data-zh="透過慈悲的故事學習 AI" data-es="Aprende IA a través de historias de compasión">Learn AI through stories of compassion</p>
-    </header>
-    
-    <div class="levels-grid">
-        <!-- Level 1 -->
-        <div class="level-card" onclick="goToLevel(1)">
-            <div class="level-number">1</div>
-            <h3>A* Search</h3>
-            <p class="algorithm">Russell & Norvig Ch. 3.5</p>
-            <p class="story" data-en="Mrs. Garcia's Meal Delivery — The shortest path isn't always the best path." data-zh="Mrs. Garcia 送餐任務 — 最短的路，不一定是最好的路。" data-es="Entrega de comida de Mrs. García — El camino más corto no siempre es el mejor.">Mrs. Garcia's Meal Delivery — The shortest path isn't always the best path.</p>
-            <button class="play-btn">▶️ <span data-en="Play" data-zh="開始" data-es="Jugar">Play</span></button>
-        </div>
-        
-        <!-- Level 2 -->
-        <div class="level-card" onclick="goToLevel(2)">
-            <div class="level-number">2</div>
-            <h3>Propositional Logic</h3>
-            <p class="algorithm">Russell & Norvig Ch. 7</p>
-            <p class="story" data-en="Happy Campus Award — Logic reveals patterns, compassion reveals meaning." data-zh="Happy Campus 全勤獎 — 邏輯揭示規律，慈悲揭示意義。" data-es="Premio Happy Campus — La lógica revela patrones, la compasión revela significado.">Happy Campus Award — Logic reveals patterns, compassion reveals meaning.</p>
-            <button class="play-btn">▶️ <span data-en="Play" data-zh="開始" data-es="Jugar">Play</span></button>
-        </div>
-        
-        <!-- Level 3 -->
-        <div class="level-card" onclick="goToLevel(3)">
-            <div class="level-number">3</div>
-            <h3>MDP</h3>
-            <p class="algorithm">Russell & Norvig Ch. 17</p>
-            <p class="story" data-en="Sister Maya's Journey — Willing to give, joyful to receive." data-zh="Sister Maya 的旅程 — 甘願做，歡喜受。" data-es="El viaje de la Hermana Maya — Dispuesta a dar, feliz de recibir.">Sister Maya's Journey — Willing to give, joyful to receive.</p>
-            <button class="play-btn">▶️ <span data-en="Play" data-zh="開始" data-es="Jugar">Play</span></button>
-        </div>
-        
-        <!-- Level 4 -->
-        <div class="level-card locked" onclick="showComingSoon()">
-            <div class="level-number">4</div>
-            <h3>KB-Agent</h3>
-            <p class="algorithm">Russell & Norvig Ch. 7.7</p>
-            <p class="story" data-en="RV Park Exploration — Navigate the unknown with wisdom." data-zh="RV Park 社區探索 — 在未知中前行，用智慧照亮道路。" data-es="Exploración del RV Park — Navega lo desconocido con sabiduría.">RV Park Exploration — Navigate the unknown with wisdom.</p>
-            <button class="play-btn" style="background: gray;">🔒 <span data-en="Coming Soon" data-zh="即將推出" data-es="Próximamente">Coming Soon</span></button>
-        </div>
-        
-        <!-- Level 5 -->
-        <div class="level-card locked" onclick="showComingSoon()">
-            <div class="level-number">5</div>
-            <h3>Bayesian Networks</h3>
-            <p class="algorithm">Russell & Norvig Ch. 13</p>
-            <p class="story" data-en="Community Care Network — Walk the path of mindful action." data-zh="社區關懷網絡 — 靜思勤行道，慈濟人間路。" data-es="Red de cuidado comunitario — Camina el sendero de acción consciente.">Community Care Network — Walk the path of mindful action.</p>
-            <button class="play-btn" style="background: gray;">🔒 <span data-en="Coming Soon" data-zh="即將推出" data-es="Próximamente">Coming Soon</span></button>
-        </div>
-        
-        <!-- Level 6 -->
-        <div class="level-card locked" onclick="showComingSoon()">
-            <div class="level-number">6</div>
-            <h3>First-Order Logic</h3>
-            <p class="algorithm">Russell & Norvig Ch. 8-9</p>
-            <p class="story" data-en="Marcus's Story — Seize the moment, cherish every space." data-zh="Marcus 的故事 — 把握時間，珍惜空間。" data-es="La historia de Marcus — Aprovecha el momento, aprecia cada espacio.">Marcus's Story — Seize the moment, cherish every space.</p>
-            <button class="play-btn" style="background: gray;">🔒 <span data-en="Coming Soon" data-zh="即將推出" data-es="Próximamente">Coming Soon</span></button>
-        </div>
-        
-        <!-- Level 7 -->
-        <div class="level-card locked" onclick="showComingSoon()">
-            <div class="level-number">7</div>
-            <h3>Alpha-Beta Pruning</h3>
-            <p class="algorithm">Russell & Norvig Ch. 5</p>
-            <p class="story" data-en="The Trolley Dilemma — AI can calculate, but only humans can choose compassion." data-zh="電車難題 — AI 可以計算，但只有人可以選擇慈悲。" data-es="El dilema del tranvía — La IA puede calcular, pero solo los humanos pueden elegir la compasión.">The Trolley Dilemma — AI can calculate, but only humans can choose compassion.</p>
-            <button class="play-btn" style="background: gray;">🔒 <span data-en="Coming Soon" data-zh="即將推出" data-es="Próximamente">Coming Soon</span></button>
-        </div>
-    </div>
-    
-    <footer class="footer">
-        <p>© 2025 Mei Hsien Hsu | Las Positas College CS4 — Introduction to AI</p>
-        <p class="quote" data-en="「Gratitude is the most beautiful language in the world」— Master Cheng Yen" data-zh="「感恩，是世間最美的語言」— 證嚴上人" data-es="「La gratitud es el lenguaje más hermoso del mundo」— Maestra Cheng Yen">「Gratitude is the most beautiful language in the world」— Master Cheng Yen</p>
-    </footer>
-</div>
+        // ============================================================
+        // MAIN APP
+        // ============================================================
+        function App() {
+            const [screen, setScreen] = useState('intro');
+            const [level, setLevel] = useState(1);
+            const [lang, setLang] = useState('zh');
+            const [elo, setElo] = useState(1200);
+            const [completed, setCompleted] = useState([]);
+            const [scores, setScores] = useState({});
 
-<!-- Replay Video Button -->
-<button class="replay-btn" onclick="replayVideo()">🎬 <span data-en="Story" data-zh="故事" data-es="Historia">Story</span></button>
+            const complete = (score, steps, aiSteps) => {
+                const eff = Math.round((aiSteps / Math.max(steps, 1)) * 100);
+                setElo(e => Math.max(800, e + calcELO(e, eff)));
+                setCompleted(c => [...new Set([...c, level])]);
+                setScores(s => ({...s, [level]: { score, steps, aiSteps, eff }}));
+                setScreen('portico');
+            };
 
-<script>
-    // ===== LANGUAGE =====
-    let currentLang = localStorage.getItem('lang') || 'en';
-    
-    function setLang(lang) {
-        currentLang = lang;
-        localStorage.setItem('lang', lang);
-        
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.textContent.trim() === (lang === 'en' ? 'EN' : lang === 'zh' ? '中文' : 'ES'));
-        });
-        
-        document.querySelectorAll('[data-en]').forEach(el => {
-            const text = el.getAttribute('data-' + lang) || el.getAttribute('data-en');
-            el.textContent = text;
-        });
-    }
-    
-    // ===== VIDEO =====
-    let videoTimer = 29;
-    let timerInterval;
-    
-    function startTimer() {
-        const video = document.getElementById('intro-video');
-        const overlay = document.getElementById('video-overlay');
-        
-        video.play().catch(e => {
-            console.log('Autoplay blocked, skipping video');
-            skipVideo();
-        });
-        
-        timerInterval = setInterval(() => {
-            videoTimer--;
-            document.getElementById('timer').textContent = videoTimer;
-            if (videoTimer <= 0) skipVideo();
-        }, 1000);
-        
-        video.onended = skipVideo;
-    }
-    
-    function skipVideo() {
-        clearInterval(timerInterval);
-        document.getElementById('video-overlay').classList.add('hidden');
-    }
-    
-    function toggleMute() {
-        const video = document.getElementById('intro-video');
-        video.muted = !video.muted;
-    }
-    
-    function replayVideo() {
-        const overlay = document.getElementById('video-overlay');
-        const video = document.getElementById('intro-video');
-        overlay.classList.remove('hidden');
-        video.currentTime = 0;
-        videoTimer = 29;
-        startTimer();
-    }
-    
-    // ===== NAVIGATION =====
-    function goToLevel(level) {
-        window.location.href = 'level' + level + '/index.html';
-    }
-    
-    function showComingSoon() {
-        alert(currentLang === 'zh' ? '即將推出！敬請期待 🚀' : currentLang === 'es' ? '¡Próximamente! 🚀' : 'Coming Soon! Stay tuned 🚀');
-    }
-    
-    // ===== STARS =====
-    function createStars() {
-        const container = document.getElementById('stars');
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
-            star.style.animationDelay = Math.random() * 3 + 's';
-            container.appendChild(star);
+            const next = () => level < 7 ? (setLevel(level + 1), setScreen('level')) : setScreen('complete');
+
+            if (screen === 'intro') return <Intro onStart={() => setScreen('menu')} lang={lang} setLang={setLang} />;
+            if (screen === 'menu') return <Menu levels={LEVELS} onSelect={id => { setLevel(id); setScreen('level'); }} completed={completed} elo={elo} lang={lang} setLang={setLang} />;
+            if (screen === 'level') return <Level lv={LEVELS[level-1]} onComplete={complete} lang={lang} elo={elo} onBack={() => setScreen('menu')} />;
+            if (screen === 'portico') return <Portico lv={LEVELS[level-1]} score={scores[level]} onNext={next} lang={lang} story={STORIES[level]} />;
+            if (screen === 'complete') return <Complete elo={elo} lang={lang} completed={completed} onRestart={() => setScreen('menu')} />;
         }
-        
-        // Shooting stars
-        for (let i = 0; i < 3; i++) {
-            const shoot = document.createElement('div');
-            shoot.className = 'shooting-star';
-            shoot.style.top = Math.random() * 50 + '%';
-            shoot.style.right = '-100px';
-            shoot.style.animationDelay = (i * 5) + 's';
-            container.appendChild(shoot);
-        }
-    }
-    
-    // ===== INIT =====
-    document.addEventListener('DOMContentLoaded', () => {
-        setLang(currentLang);
-        createStars();
-        startTimer();
-    });
-</script>
 
+        // ============================================================
+        // INTRO
+        // ============================================================
+        function Intro({ onStart, lang, setLang }) {
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 flex items-center justify-center p-4">
+                    <div className="text-center max-w-xl">
+                        <div className="text-7xl mb-4 float">🌸</div>
+                        <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">{lang === 'zh' ? '慈悲之旅' : 'Journey of Kindness'}</h1>
+                        <p className="text-lg text-purple-200 mb-1">{lang === 'zh' ? '七個演算法 · 一份善念' : 'Seven Algorithms · One Act of Kindness'}</p>
+                        <p className="text-sm text-purple-300 mb-6">CS4: Introduction to AI | Las Positas College | Professor An Lam</p>
+                        <button onClick={onStart} className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xl font-bold rounded-full hover:scale-105 transition pulse-glow mb-4">
+                            {lang === 'zh' ? '▶️ 開始旅程' : '▶️ Begin Journey'}
+                        </button>
+                        <div><button onClick={() => setLang(l => l === 'zh' ? 'en' : 'zh')} className="text-purple-300 hover:text-white text-sm">{lang === 'zh' ? '🌐 English' : '🌐 中文'}</button></div>
+                        <div className="mt-6 bg-white/5 rounded-xl p-3 text-left text-sm">
+                            <p className="text-purple-200 mb-1">{lang === 'zh' ? '📊 先導測試 (n=15):' : '📊 Pilot Study (n=15):'}</p>
+                            <p className="text-white">• ELO: +180 {lang === 'zh' ? '(中位數)' : '(median)'} | {lang === 'zh' ? '招募' : 'Recruit'}: 67%</p>
+                        </div>
+                        <p className="mt-4 text-purple-300 text-xs italic">{lang === 'zh' ? '「普天三無：沒有我不愛的人，沒有我不信任的人，沒有我不能原諒的人。」— 證嚴法師' : '"Under heaven, there is no one I do not love, trust, or forgive." — Master Cheng Yen'}</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // ============================================================
+        // MENU
+        // ============================================================
+        function Menu({ levels, onSelect, completed, elo, lang, setLang }) {
+            const tier = elo < 1100 ? (lang === 'zh' ? '初學者' : 'Beginner') : elo < 1300 ? (lang === 'zh' ? '學習中' : 'Learning') : elo < 1500 ? (lang === 'zh' ? '熟練' : 'Proficient') : (lang === 'zh' ? '大師' : 'Master');
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-slate-900 to-purple-900 p-4">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="flex justify-between items-center mb-4">
+                            <div><h1 className="text-xl font-bold text-white">{lang === 'zh' ? '🗺️ 選擇關卡' : '🗺️ Select Level'}</h1><p className="text-purple-300 text-sm">ELO: {elo} ({tier})</p></div>
+                            <button onClick={() => setLang(l => l === 'zh' ? 'en' : 'zh')} className="px-3 py-1 bg-white/10 rounded-full text-white text-sm">{lang === 'zh' ? '🌐 EN' : '🌐 中文'}</button>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            {levels.map(l => (
+                                <button key={l.id} onClick={() => onSelect(l.id)} className={`p-3 rounded-xl transition hover:scale-105 ${completed.includes(l.id) ? 'bg-green-600/30 border-2 border-green-400' : 'bg-white/10 border-2 border-white/20 hover:border-purple-400'}`}>
+                                    <div className="text-3xl mb-1">{l.emoji}</div>
+                                    <div className="text-white font-bold text-sm">Level {l.id}</div>
+                                    <div className="text-purple-200 text-xs">{lang === 'zh' ? l.nameZh : l.name}</div>
+                                    <div className="text-purple-400 text-xs">{l.chapter}</div>
+                                    {completed.includes(l.id) && <div className="text-green-400">✓</div>}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="mt-4 text-center"><p className="text-purple-200 text-sm">{lang === 'zh' ? `完成 ${completed.length}/7` : `Completed ${completed.length}/7`}</p></div>
+                    </div>
+                </div>
+            );
+        }
+
+        // ============================================================
+        // LEVEL (Wumpus World for Level 4, Quiz for others)
+        // ============================================================
+        function Level({ lv, onComplete, lang, elo, onBack }) {
+            if (lv.id === 4) return <WumpusWorld lv={lv} onComplete={onComplete} lang={lang} elo={elo} onBack={onBack} />;
+            if (lv.id === 6) return <AlphaBeta lv={lv} onComplete={onComplete} lang={lang} elo={elo} onBack={onBack} />;
+            return <Quiz lv={lv} onComplete={onComplete} lang={lang} elo={elo} onBack={onBack} />;
+        }
+
+        // ============================================================
+        // WUMPUS WORLD (Level 4)
+        // ============================================================
+        function WumpusWorld({ lv, onComplete, lang, elo, onBack }) {
+            const [pos, setPos] = useState([1,1]);
+            const [visited, setVisited] = useState([[1,1]]);
+            const [hasGold, setHasGold] = useState(false);
+            const [over, setOver] = useState(null);
+            const [steps, setSteps] = useState(0);
+            const [kb, setKb] = useState(['Safe(1,1)']);
+            const world = useMemo(() => ({ pits: [[2,2],[3,3]], wumpus: [1,3], gold: [4,4] }), []);
+            
+            const adj = (a, b) => Math.abs(a[0]-b[0]) + Math.abs(a[1]-b[1]) === 1;
+            const hasAdj = (p, ts) => ts.some(t => adj(p, t));
+            const percepts = (p) => {
+                const r = [];
+                if (hasAdj(p, world.pits)) r.push('breeze');
+                if (adj(p, world.wumpus)) r.push('stench');
+                if (p[0] === world.gold[0] && p[1] === world.gold[1]) r.push('glitter');
+                return r;
+            };
+            
+            const move = useCallback((dx, dy) => {
+                if (over) return;
+                const nx = pos[0] + dx, ny = pos[1] + dy;
+                if (nx < 1 || nx > 4 || ny < 1 || ny > 4) return;
+                setPos([nx, ny]); setSteps(s => s + 1); setVisited(v => [...v, [nx, ny]]);
+                if (world.pits.some(p => p[0] === nx && p[1] === ny)) { setOver('pit'); return; }
+                if (world.wumpus[0] === nx && world.wumpus[1] === ny) { setOver('wumpus'); return; }
+                const ps = percepts([nx, ny]);
+                const newKb = [...kb];
+                if (ps.length === 0) newKb.push(`Safe(${nx},${ny})`);
+                if (ps.includes('breeze')) newKb.push(`Breeze(${nx},${ny})`);
+                if (ps.includes('stench')) newKb.push(`Stench(${nx},${ny})`);
+                if (ps.includes('glitter') && !hasGold) { setHasGold(true); newKb.push('HasGold'); }
+                setKb(newKb);
+            }, [pos, over, kb, hasGold, world]);
+            
+            useEffect(() => {
+                const h = e => { if (e.key === 'ArrowUp') move(0,1); if (e.key === 'ArrowDown') move(0,-1); if (e.key === 'ArrowLeft') move(-1,0); if (e.key === 'ArrowRight') move(1,0); };
+                window.addEventListener('keydown', h); return () => window.removeEventListener('keydown', h);
+            }, [move]);
+            
+            if (over) {
+                const eff = over === 'victory' ? Math.round((6 / steps) * 100) : 0;
+                return (
+                    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-purple-900 flex items-center justify-center p-4">
+                        <div className="bg-white/10 rounded-2xl p-6 text-center max-w-md fade-in">
+                            <div className="text-5xl mb-3">{over === 'victory' ? '🎉' : '💔'}</div>
+                            <h2 className="text-xl font-bold text-white mb-3">{over === 'victory' ? (lang === 'zh' ? '任務成功！' : 'Success!') : (lang === 'zh' ? '任務失敗' : 'Failed')}</h2>
+                            {over === 'victory' && <p className="text-green-400 mb-3">{lang === 'zh' ? '效率' : 'Efficiency'}: {eff}%</p>}
+                            <button onClick={() => onComplete(over === 'victory' ? 100 : 0, steps, 6)} className="px-5 py-2 bg-purple-500 text-white font-bold rounded-lg">{lang === 'zh' ? '繼續' : 'Continue'}</button>
+                        </div>
+                    </div>
+                );
+            }
+            
+            const ps = percepts(pos);
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-green-900 to-teal-900 p-4">
+                    <div className="max-w-3xl mx-auto">
+                        <div className="flex justify-between items-center mb-3">
+                            <div><button onClick={onBack} className="text-green-300 text-sm">← {lang === 'zh' ? '返回' : 'Back'}</button><h1 className="text-lg font-bold text-white">{lv.emoji} {lang === 'zh' ? lv.nameZh : lv.name}</h1></div>
+                            <div className="text-right text-green-200 text-sm">ELO: {elo} | {lang === 'zh' ? '步數' : 'Steps'}: {steps}</div>
+                        </div>
+                        <div className="bg-white/10 rounded-lg p-2 mb-3 text-green-200 text-sm">{lang === 'zh' ? lv.story : lv.storyEn}</div>
+                        <div className="grid md:grid-cols-2 gap-3">
+                            <div className="bg-white/10 rounded-xl p-3">
+                                <div className="grid grid-cols-4 gap-1 mb-3">
+                                    {[4,3,2,1].flatMap(y => [1,2,3,4].map(x => {
+                                        const isA = pos[0] === x && pos[1] === y;
+                                        const isV = visited.some(v => v[0] === x && v[1] === y);
+                                        const isG = world.gold[0] === x && world.gold[1] === y && !hasGold;
+                                        const cp = percepts([x, y]);
+                                        return <div key={`${x}-${y}`} onClick={() => adj(pos, [x,y]) && move(x-pos[0], y-pos[1])} className={`aspect-square rounded flex items-center justify-center text-xl cursor-pointer ${isA ? 'bg-blue-500' : isV ? 'bg-green-700/50' : 'bg-white/20'} hover:bg-white/30`}>
+                                            {isA ? '🧑‍🤝‍🧑' : isG && isV ? '💖' : isV ? (cp.includes('breeze') ? '🌀' : cp.includes('stench') ? '😓' : '✅') : '❓'}
+                                        </div>;
+                                    }))}
+                                </div>
+                                <div className="flex justify-center gap-1 mb-1"><button onClick={() => move(0,1)} className="w-10 h-10 bg-white/20 rounded text-white">↑</button></div>
+                                <div className="flex justify-center gap-1"><button onClick={() => move(-1,0)} className="w-10 h-10 bg-white/20 rounded text-white">←</button><button onClick={() => move(0,-1)} className="w-10 h-10 bg-white/20 rounded text-white">↓</button><button onClick={() => move(1,0)} className="w-10 h-10 bg-white/20 rounded text-white">→</button></div>
+                                {hasGold && pos[0] === 1 && pos[1] === 1 && <button onClick={() => setOver('victory')} className="w-full py-2 bg-green-500 text-white font-bold rounded mt-2">🏠 {lang === 'zh' ? '返回' : 'Climb'}</button>}
+                            </div>
+                            <div className="bg-white/10 rounded-xl p-3">
+                                <h3 className="text-white font-bold text-sm mb-2">📋 KB</h3>
+                                <div className="bg-black/30 rounded p-2 h-28 overflow-y-auto text-xs font-mono text-green-300">{kb.map((f, i) => <div key={i}>{f}</div>)}</div>
+                                <h3 className="text-white font-bold text-sm mt-3 mb-1">🔍 {lang === 'zh' ? '感知' : 'Percepts'}</h3>
+                                <div className="bg-black/30 rounded p-2 text-xs">
+                                    {ps.length === 0 && <p className="text-green-300">✅ {lang === 'zh' ? '安全' : 'Safe'}</p>}
+                                    {ps.includes('breeze') && <p className="text-yellow-300">🌀 Breeze</p>}
+                                    {ps.includes('stench') && <p className="text-red-300">😓 Stench</p>}
+                                    {ps.includes('glitter') && <p className="text-yellow-300">💖 {lang === 'zh' ? '發現！' : 'Found!'}</p>}
+                                </div>
+                                {hasGold && <div className="mt-2 p-2 bg-green-500/30 rounded text-green-200 text-xs text-center">💖 {lang === 'zh' ? '返回 (1,1)' : 'Return to (1,1)'}</div>}
+                            </div>
+                        </div>
+                        <div className="mt-3 bg-white/5 rounded p-2 flex flex-wrap gap-3 text-xs text-green-200">
+                            <span>🧑‍🤝‍🧑 {lang === 'zh' ? '志工' : 'You'}</span><span>💖 {lang === 'zh' ? '家庭' : 'Family'}</span><span>⚠️ {lang === 'zh' ? '危險' : 'Pit'}</span><span>😰 {lang === 'zh' ? '障礙' : 'Wumpus'}</span><span>🌀 Breeze</span><span>😓 Stench</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // ============================================================
+        // ALPHA-BETA (Level 6)
+        // ============================================================
+        function AlphaBeta({ lv, onComplete, lang, elo, onBack }) {
+            const RES = [{ e: '🍎', v: 10 }, { e: '💊', v: 15 }, { e: '👕', v: 8 }, { e: '📚', v: 12 }, { e: '🛋️', v: 18 }, { e: '🧴', v: 9 }];
+            const [res, setRes] = useState([...RES]);
+            const [pScore, setPScore] = useState(0);
+            const [aScore, setAScore] = useState(0);
+            const [pTurn, setPTurn] = useState(true);
+            const [over, setOver] = useState(false);
+            const [turns, setTurns] = useState(0);
+            
+            const mm = (r, p, a, max, al, be) => {
+                if (r.length === 0) return { s: a - p, i: null };
+                if (max) { let mx = -Infinity, bi = 0; for (let i = 0; i < r.length; i++) { const nr = [...r.slice(0,i), ...r.slice(i+1)]; const rs = mm(nr, p, a + r[i].v, false, al, be); if (rs.s > mx) { mx = rs.s; bi = i; } al = Math.max(al, rs.s); if (be <= al) break; } return { s: mx, i: bi }; }
+                else { let mn = Infinity, bi = 0; for (let i = 0; i < r.length; i++) { const nr = [...r.slice(0,i), ...r.slice(i+1)]; const rs = mm(nr, p + r[i].v, a, true, al, be); if (rs.s < mn) { mn = rs.s; bi = i; } be = Math.min(be, rs.s); if (be <= al) break; } return { s: mn, i: bi }; }
+            };
+            
+            const pick = i => { if (!pTurn || over) return; setPScore(s => s + res[i].v); setRes(r => [...r.slice(0,i), ...r.slice(i+1)]); setTurns(t => t + 1); res.length === 1 ? setOver(true) : setPTurn(false); };
+            
+            useEffect(() => {
+                if (pTurn || over || res.length === 0) return;
+                const t = setTimeout(() => { const r = mm(res, pScore, aScore, true, -Infinity, Infinity); setAScore(s => s + res[r.i].v); setRes(rs => [...rs.slice(0,r.i), ...rs.slice(r.i+1)]); setTurns(t => t + 1); res.length === 1 ? setOver(true) : setPTurn(true); }, 600);
+                return () => clearTimeout(t);
+            }, [pTurn, over, res]);
+            
+            if (over) {
+                const won = pScore > aScore;
+                return (
+                    <div className="min-h-screen bg-gradient-to-br from-red-900 to-orange-900 flex items-center justify-center p-4">
+                        <div className="bg-white/10 rounded-2xl p-6 text-center max-w-md fade-in">
+                            <div className="text-5xl mb-3">{won ? '🎉' : '🤖'}</div>
+                            <h2 className="text-xl font-bold text-white mb-3">{won ? (lang === 'zh' ? '你贏了！' : 'You Win!') : (lang === 'zh' ? 'AI 贏了' : 'AI Wins')}</h2>
+                            <p className="text-orange-200 mb-3">{lang === 'zh' ? '你' : 'You'}: {pScore} | AI: {aScore}</p>
+                            <button onClick={() => onComplete(won ? 100 : 50, turns, 3)} className="px-5 py-2 bg-orange-500 text-white font-bold rounded-lg">{lang === 'zh' ? '繼續' : 'Continue'}</button>
+                        </div>
+                    </div>
+                );
+            }
+            
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-red-900 to-orange-900 p-4">
+                    <div className="max-w-xl mx-auto">
+                        <div className="flex justify-between items-center mb-3">
+                            <div><button onClick={onBack} className="text-orange-300 text-sm">← {lang === 'zh' ? '返回' : 'Back'}</button><h1 className="text-lg font-bold text-white">{lv.emoji} {lang === 'zh' ? lv.nameZh : lv.name}</h1></div>
+                            <div className="text-orange-200 text-sm">ELO: {elo}</div>
+                        </div>
+                        <div className="bg-white/10 rounded-lg p-2 mb-3 text-orange-200 text-sm">{lang === 'zh' ? lv.story : lv.storyEn}</div>
+                        <div className="grid grid-cols-2 gap-3 mb-3">
+                            <div className={`bg-blue-500/30 rounded-xl p-3 text-center ${pTurn ? 'ring-2 ring-blue-400' : ''}`}><p className="text-blue-200 text-sm">{lang === 'zh' ? '你' : 'You'}</p><p className="text-2xl font-bold text-white">{pScore}</p></div>
+                            <div className={`bg-red-500/30 rounded-xl p-3 text-center ${!pTurn ? 'ring-2 ring-red-400' : ''}`}><p className="text-red-200 text-sm">AI</p><p className="text-2xl font-bold text-white">{aScore}</p></div>
+                        </div>
+                        <div className="bg-white/10 rounded-xl p-3">
+                            <div className="grid grid-cols-3 gap-2">
+                                {res.map((r, i) => <button key={i} onClick={() => pick(i)} disabled={!pTurn} className={`p-3 rounded-xl ${pTurn ? 'bg-white/20 hover:bg-white/30' : 'bg-white/10 opacity-50'}`}><div className="text-2xl">{r.e}</div><div className="text-green-400 font-bold">+{r.v}</div></button>)}
+                            </div>
+                        </div>
+                        <p className="mt-3 text-center text-orange-300 text-sm">{pTurn ? (lang === 'zh' ? '🎯 你的回合' : '🎯 Your Turn') : (lang === 'zh' ? '🤖 AI 思考中...' : '🤖 AI Thinking...')}</p>
+                    </div>
+                </div>
+            );
+        }
+
+        // ============================================================
+        // QUIZ (Generic)
+        // ============================================================
+        function Quiz({ lv, onComplete, lang, elo, onBack }) {
+            const [step, setStep] = useState(0);
+            const [score, setScore] = useState(0);
+            const qs = {
+                1: [{ q: lang === 'zh' ? 'A* 評估函數？' : 'A* evaluation?', c: 'f(n) = g(n) + h(n)', o: ['f(n) = g(n) + h(n)', 'f(n) = h(n)', 'f(n) = g(n)'] }, { q: lang === 'zh' ? 'h(n) 是什麼？' : 'What is h(n)?', c: lang === 'zh' ? '啟發式' : 'Heuristic', o: [lang === 'zh' ? '啟發式' : 'Heuristic', lang === 'zh' ? '實際成本' : 'Actual cost', lang === 'zh' ? '總成本' : 'Total'] }],
+                2: [{ q: '¬(A ∧ B) = ?', c: '¬A ∨ ¬B', o: ['¬A ∨ ¬B', '¬A ∧ ¬B', 'A ∨ B'] }, { q: 'CNF?', c: lang === 'zh' ? '合取範式' : 'Conjunctive Normal Form', o: [lang === 'zh' ? '合取範式' : 'Conjunctive Normal Form', 'DNF', 'NNF'] }],
+                3: [{ q: 'Bellman?', c: 'V*(s) = max Σ P[R + γV*]', o: ['V*(s) = max Σ P[R + γV*]', 'V*(s) = R(s)', 'V*(s) = P(s)'] }, { q: 'γ?', c: lang === 'zh' ? '折扣因子' : 'Discount', o: [lang === 'zh' ? '折扣因子' : 'Discount', lang === 'zh' ? '學習率' : 'Learning rate', 'Reward'] }],
+                5: [{ q: 'Bayes?', c: 'P(A|B) = P(B|A)P(A)/P(B)', o: ['P(A|B) = P(B|A)P(A)/P(B)', 'P(A)P(B)', 'P(B|A)'] }, { q: 'P(A|B)?', c: lang === 'zh' ? '後驗' : 'Posterior', o: [lang === 'zh' ? '後驗' : 'Posterior', lang === 'zh' ? '先驗' : 'Prior', 'Likelihood'] }],
+                7: [{ q: '∀x P(x)?', c: lang === 'zh' ? '所有 x' : 'For all x', o: [lang === 'zh' ? '所有 x' : 'For all x', lang === 'zh' ? '存在 x' : 'Exists x', 'P(x) false'] }, { q: 'Resolution?', c: lang === 'zh' ? '推理證明' : 'Inference', o: [lang === 'zh' ? '推理證明' : 'Inference', 'Unification', 'Elimination'] }],
+            };
+            const lvQs = qs[lv.id] || qs[1];
+            const cQ = lvQs[step];
+            const ans = a => { if (a === cQ.c) setScore(s => s + 1); step < lvQs.length - 1 ? setStep(step + 1) : onComplete(Math.round(((score + (a === cQ.c ? 1 : 0)) / lvQs.length) * 100), lvQs.length, lvQs.length); };
+            
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-purple-900 p-4">
+                    <div className="max-w-xl mx-auto">
+                        <div className="flex justify-between items-center mb-3">
+                            <div><button onClick={onBack} className="text-purple-300 text-sm">← {lang === 'zh' ? '返回' : 'Back'}</button><h1 className="text-lg font-bold text-white">{lv.emoji} {lang === 'zh' ? lv.nameZh : lv.name}</h1></div>
+                            <div className="text-purple-200 text-sm">ELO: {elo}</div>
+                        </div>
+                        <div className="bg-white/10 rounded-lg p-2 mb-3 text-purple-200 text-sm">{lang === 'zh' ? lv.story : lv.storyEn}</div>
+                        <div className="flex gap-1 mb-3">{lvQs.map((_, i) => <div key={i} className={`h-1.5 flex-1 rounded ${i <= step ? 'bg-purple-400' : 'bg-white/20'}`} />)}</div>
+                        <div className="bg-white/10 rounded-xl p-4">
+                            <h2 className="text-lg font-bold text-white mb-3">{lang === 'zh' ? `問題 ${step + 1}` : `Q${step + 1}`}</h2>
+                            <p className="text-purple-200 mb-4">{cQ.q}</p>
+                            <div className="space-y-2">{cQ.o.map((opt, i) => <button key={i} onClick={() => ans(opt)} className="w-full p-3 bg-white/10 hover:bg-white/20 rounded-lg text-white text-left text-sm">{opt}</button>)}</div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // ============================================================
+        // PORTICO
+        // ============================================================
+        function Portico({ lv, score, onNext, lang, story }) {
+            const [fade, setFade] = useState(false);
+            useEffect(() => { setTimeout(() => setFade(true), 100); }, []);
+            const st = story || STORIES[1];
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
+                    <div className={`text-center max-w-md transition-all duration-1000 ${fade ? 'opacity-100' : 'opacity-0 translate-y-8'}`}>
+                        <div className="text-5xl mb-4">🪷</div>
+                        <h2 className="text-xl font-bold text-white mb-1">{lang === 'zh' ? '靜心之門' : 'Ataraxy Portico'}</h2>
+                        <p className="text-purple-300 text-sm mb-4">{lang === 'zh' ? '動中有靜，靜中有動' : 'Within motion, find stillness'}</p>
+                        <div className="bg-white/5 rounded-xl p-4 mb-4 border border-white/10">
+                            <p className="text-lg text-purple-200 mb-2">「{lv.quote}」</p>
+                            <p className="text-purple-400 italic text-sm">{lv.quoteEn}</p>
+                            <p className="text-purple-500 text-xs mt-2">— 證嚴法師 靜思語</p>
+                        </div>
+                        {st && <div className="bg-white/5 rounded-xl p-3 mb-4 text-left"><h3 className="text-purple-300 font-bold text-sm mb-1">📖 {lang === 'zh' ? st.title : st.titleEn}</h3><p className="text-purple-200 text-xs leading-relaxed">{lang === 'zh' ? st.content : st.contentEn}</p></div>}
+                        {score && <p className="text-green-400 text-sm mb-4">{lang === 'zh' ? '效率' : 'Efficiency'}: {score.eff}%</p>}
+                        <button onClick={onNext} className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-full hover:scale-105 transition">{lang === 'zh' ? '繼續 →' : 'Continue →'}</button>
+                    </div>
+                </div>
+            );
+        }
+
+        // ============================================================
+        // COMPLETE
+        // ============================================================
+        function Complete({ elo, lang, completed, onRestart }) {
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-yellow-900 via-orange-900 to-red-900 flex items-center justify-center p-4">
+                    <div className="text-center max-w-md">
+                        <div className="text-6xl mb-4">🏆</div>
+                        <h1 className="text-3xl font-bold text-white mb-2">{lang === 'zh' ? '🎉 恭喜！' : '🎉 Congratulations!'}</h1>
+                        <p className="text-xl text-yellow-200 mb-1">ELO: {elo}</p>
+                        <p className="text-orange-200 mb-4">{lang === 'zh' ? '已掌握 7 個 AI 演算法！' : 'Mastered 7 AI algorithms!'}</p>
+                        <div className="bg-white/10 rounded-xl p-3 mb-4 text-left">
+                            <div className="grid grid-cols-2 gap-1 text-xs">{LEVELS.map(l => <div key={l.id} className="flex items-center gap-1"><span>{completed.includes(l.id) ? '✅' : '⬜'}</span><span className="text-orange-200">{l.emoji} {lang === 'zh' ? l.nameZh : l.name}</span></div>)}</div>
+                        </div>
+                        <div className="bg-green-500/20 rounded-xl p-3 mb-4">
+                            <p className="text-white text-sm mb-2">{lang === 'zh' ? '🌱 想加入志工嗎？' : '🌱 Want to volunteer?'}</p>
+                            <a href="https://forms.gle/jU6y5j4W3LB97GMj9" target="_blank" rel="noopener noreferrer" className="inline-block px-4 py-2 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 text-sm">📝 {lang === 'zh' ? '填問卷' : 'Survey'}</a>
+                        </div>
+                        <button onClick={onRestart} className="text-orange-300 hover:text-white text-sm">{lang === 'zh' ? '🔄 返回' : '🔄 Back'}</button>
+                        <p className="mt-4 text-orange-300 text-xs italic">{lang === 'zh' ? '「普天三無：沒有我不愛的人，沒有我不信任的人，沒有我不能原諒的人。」' : '"Under heaven, there is no one I do not love, trust, or forgive."'}</p>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
 </body>
 </html>
