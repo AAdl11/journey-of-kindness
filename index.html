@@ -6,115 +6,51 @@
     <title>Journey of Kindness 善的旅程</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --gold: #fbbf24;
-        }
+        :root { --glass-bg: rgba(255,255,255,0.1); --glass-border: rgba(255,255,255,0.2); --gold: #fbbf24; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: #fff;
-            min-height: 100vh;
-        }
+        body { font-family: 'Noto Sans TC', sans-serif; color: #fff; min-height: 100vh; }
+
+        /* BACKGROUND */
+        .bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+        .bg-map { position: absolute; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(10,10,30,0.75), rgba(20,20,50,0.85)), url('assets/hunters_point_map.png') center/cover no-repeat; }
+        #stars, #meteors { position: absolute; width: 100%; height: 100%; }
+        .star { position: absolute; background: #fff; border-radius: 50%; animation: twinkle 3s ease-in-out infinite; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        .meteor { position: absolute; width: 2px; height: 80px; background: linear-gradient(to bottom, rgba(255,255,255,0.9), transparent); transform: rotate(45deg); animation: meteor 1.5s linear forwards; }
+        @keyframes meteor { 0% { transform: translateY(-100px) translateX(0) rotate(45deg); opacity: 1; } 100% { transform: translateY(100vh) translateX(300px) rotate(45deg); opacity: 0; } }
 
         /* VIDEO */
-        #videoOverlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: #000;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        #videoOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
         #videoOverlay.hidden { display: none !important; }
         #introVideo { width: 100%; height: 100%; object-fit: contain; }
-        .video-controls {
-            position: absolute;
-            bottom: 40px; right: 40px;
-            display: flex; gap: 15px;
-        }
-        .video-btn {
-            padding: 12px 28px;
-            border: 2px solid rgba(255,255,255,0.6);
-            background: rgba(0,0,0,0.5);
-            color: #fff;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
+        .video-controls { position: absolute; bottom: 40px; right: 40px; display: flex; gap: 15px; }
+        .video-btn { padding: 12px 28px; border: 2px solid rgba(255,255,255,0.6); background: rgba(0,0,0,0.5); color: #fff; border-radius: 30px; cursor: pointer; font-size: 1rem; transition: all 0.3s; }
         .video-btn:hover { background: var(--gold); color: #000; }
-
-        /* STARS */
-        #stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-        .star {
-            position: absolute;
-            background: #fff;
-            border-radius: 50%;
-            animation: twinkle 3s ease-in-out infinite;
-        }
-        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        .video-timer { position: absolute; bottom: 40px; left: 40px; color: rgba(255,255,255,0.7); font-size: 1.2rem; }
 
         /* HEADER */
-        header {
-            position: relative; z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            padding: 20px 30px;
-        }
+        header { position: relative; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; }
         .lang-switcher { display: flex; gap: 10px; }
-        .lang-btn {
-            padding: 8px 16px;
-            border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-            color: #fff;
-            border-radius: 20px;
-            cursor: pointer;
-        }
+        .lang-btn { padding: 8px 16px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: #fff; border-radius: 20px; cursor: pointer; transition: all 0.3s; }
         .lang-btn:hover, .lang-btn.active { background: var(--gold); color: #000; }
+        .header-right { display: flex; gap: 10px; }
+        .icon-btn { width: 44px; height: 44px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 50%; color: #fff; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .icon-btn:hover { background: var(--gold); color: #000; }
 
         /* HERO */
-        .hero {
-            position: relative; z-index: 10;
-            text-align: center;
-            padding: 40px 20px;
-        }
-        .main-title {
-            font-family: 'Cinzel', serif;
-            font-size: 3.5rem;
-            background: linear-gradient(135deg, var(--gold), #fff, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
+        .hero { position: relative; z-index: 10; text-align: center; padding: 40px 20px; }
+        .main-title { font-family: 'Cinzel', serif; font-size: 3.5rem; background: linear-gradient(135deg, var(--gold), #fff, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
         .subtitle { font-size: 1.3rem; color: rgba(255,255,255,0.8); margin-bottom: 20px; }
-        .core-message {
-            max-width: 700px;
-            margin: 0 auto 40px;
-            padding: 25px;
-            background: rgba(236, 72, 153, 0.15);
-            border: 1px solid rgba(236, 72, 153, 0.3);
-            border-radius: 20px;
-        }
+        .core-message { max-width: 700px; margin: 0 auto 40px; padding: 25px; background: rgba(236,72,153,0.15); border: 1px solid rgba(236,72,153,0.3); border-radius: 20px; backdrop-filter: blur(10px); }
         .highlight { color: var(--gold); font-weight: 600; }
 
         /* LEVELS */
         .levels-container { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 0 20px 60px; }
         .levels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .level-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .level-card:hover { transform: translateY(-8px); border-color: var(--gold); }
-        .level-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .level-card { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; cursor: pointer; transition: all 0.3s; }
+        .level-card:hover { transform: translateY(-8px); border-color: var(--gold); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .level-header { display: flex; align-items: center; gap: 15px; }
         .level-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
         .l1 .level-icon { background: linear-gradient(135deg, #ef4444, #dc2626); }
         .l2 .level-icon { background: linear-gradient(135deg, #f97316, #ea580c); }
@@ -125,21 +61,22 @@
         .l7 .level-icon { background: linear-gradient(135deg, #ec4899, #db2777); }
         .level-title h3 { font-size: 1.3rem; margin-bottom: 3px; }
         .algorithm { color: var(--gold); font-size: 0.9rem; }
-        .level-desc { color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-bottom: 15px; }
+        .ratings { text-align: right; font-size: 0.8rem; }
+        .rating-row { display: flex; align-items: center; justify-content: flex-end; gap: 5px; margin-bottom: 3px; }
+        .rating-label { color: rgba(255,255,255,0.5); font-size: 0.7rem; }
+        .stars { color: var(--gold); }
+        .hearts { color: #ec4899; }
+        .level-desc { color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-bottom: 12px; line-height: 1.5; }
+        .level-quote { color: var(--gold); font-size: 0.85rem; font-style: italic; margin-bottom: 15px; }
         .level-tags { display: flex; gap: 8px; margin-bottom: 15px; }
         .tag { padding: 4px 10px; background: rgba(255,255,255,0.1); border-radius: 10px; font-size: 0.8rem; }
-        .play-btn {
-            padding: 10px 25px;
-            background: linear-gradient(135deg, #ec4899, #8b5cf6);
-            border: none; border-radius: 25px;
-            color: #fff; font-weight: 600; cursor: pointer;
-        }
+        .play-btn { padding: 10px 25px; background: linear-gradient(135deg, #ec4899, #8b5cf6); border: none; border-radius: 25px; color: #fff; font-weight: 600; cursor: pointer; transition: all 0.3s; }
         .play-btn:hover { transform: scale(1.05); }
         .play-btn.coming-soon { background: rgba(255,255,255,0.2); cursor: not-allowed; }
 
         /* FOOTER */
         footer { position: relative; z-index: 10; text-align: center; padding: 30px; border-top: 1px solid var(--glass-border); }
-        footer a { color: var(--gold); }
+        footer a { color: var(--gold); text-decoration: none; }
         .aphorism { color: #ec4899; font-style: italic; }
 
         /* LANGUAGE */
@@ -149,190 +86,171 @@
         body.lang-es .text-en { display: none; }
         body.lang-es .text-es { display: inline; }
 
-        @media (max-width: 600px) {
-            .main-title { font-size: 2.2rem; }
-            .levels-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 600px) { .main-title { font-size: 2.2rem; } .levels-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body class="lang-en">
 
-    <!-- VIDEO -->
-    <div id="videoOverlay">
-        <video id="introVideo" autoplay playsinline>
-            <source src="intro.mp4" type="video/mp4">
-        </video>
-        <div class="video-controls">
-            <button class="video-btn" onclick="document.getElementById('introVideo').muted = !document.getElementById('introVideo').muted">🔊</button>
-            <button class="video-btn" onclick="skipIntro()">
-                <span class="text-en">Skip →</span>
-                <span class="text-zh">跳過 →</span>
-                <span class="text-es">Saltar →</span>
-            </button>
+<!-- VIDEO -->
+<div id="videoOverlay">
+    <video id="introVideo" autoplay muted playsinline><source src="intro.mp4" type="video/mp4"></video>
+    <div class="video-timer" id="videoTimer">0:29</div>
+    <div class="video-controls">
+        <button class="video-btn" onclick="toggleMute()" id="muteBtn">🔇</button>
+        <button class="video-btn" onclick="skipIntro()"><span class="text-en">Skip →</span><span class="text-zh">跳過 →</span><span class="text-es">Saltar →</span></button>
+    </div>
+</div>
+
+<!-- BACKGROUND -->
+<div class="bg-container"><div class="bg-map"></div><div id="stars"></div><div id="meteors"></div></div>
+
+<!-- HEADER -->
+<header>
+    <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('zh')">中文</button>
+        <button class="lang-btn" onclick="setLang('es')">ES</button>
+    </div>
+    <div class="header-right">
+        <button class="icon-btn" onclick="replayIntro()" title="Replay">🎬</button>
+        <button class="icon-btn" onclick="toggleMusic()" id="musicBtn">🎵</button>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <h1 class="main-title">Journey of Kindness</h1>
+    <p class="subtitle"><span class="text-en">善的旅程 — Learn AI Through Compassion</span><span class="text-zh">善的旅程 — 用慈悲學 AI</span><span class="text-es">Viaje de Bondad — Aprende IA con Compasión</span></p>
+    <div class="core-message"><p>
+        <span class="text-en">In 2006, a volunteer saw a <span class="highlight">7-year-old girl eating raw rice</span> at John Muir Elementary. She wasn't confused — she was <span class="highlight">that hungry</span>. This sparked 18+ years of Tzu Chi service.</span>
+        <span class="text-zh">2006年，志工在 John Muir 小學看到<span class="highlight">七歲女孩在吃生米</span>。她不是不懂事——她只是<span class="highlight">真的很餓</span>。這開啟了慈濟 18 年的服務。</span>
+        <span class="text-es">En 2006, una voluntaria vio a una <span class="highlight">niña de 7 años comiendo arroz crudo</span>. No estaba confundida — tenía <span class="highlight">mucha hambre</span>. Esto inició 18+ años de servicio.</span>
+    </p></div>
+</section>
+
+<!-- LEVELS -->
+<section class="levels-container"><div class="levels-grid">
+
+    <!-- Level 1 -->
+    <div class="level-card l1" onclick="goToLevel(1)">
+        <div class="card-top">
+            <div class="level-header"><div class="level-icon">🗺️</div><div class="level-title"><h3>Level 1</h3><span class="algorithm">A* Search</span></div></div>
+            <div class="ratings"><div class="rating-row"><span class="rating-label">Difficulty</span><span class="stars">⭐</span></div><div class="rating-row"><span class="rating-label">Popular</span><span class="hearts">❤️❤️❤️</span></div></div>
         </div>
+        <p class="level-desc"><span class="text-en">AI said: "Skip her." But the volunteer insisted — and found Mrs. Garcia fallen for two days.</span><span class="text-zh">AI 說跳過她——但志工堅持繞路，發現 Garcia 奶奶跌倒兩天。</span><span class="text-es">La IA dijo: "Sáltala." Pero la voluntaria insistió — y encontró a la Sra. García caída por dos días.</span></p>
+        <p class="level-quote">「感恩，是世間最美的語言」</p>
+        <div class="level-tags"><span class="tag">Ch. 3</span><span class="tag">Russell & Norvig</span></div>
+        <button class="play-btn">▶️ <span class="text-en">Play</span><span class="text-zh">開始</span><span class="text-es">Jugar</span></button>
     </div>
 
-    <div id="stars"></div>
-
-    <header>
-        <div class="lang-switcher">
-            <button class="lang-btn active" onclick="setLang('en')">EN</button>
-            <button class="lang-btn" onclick="setLang('zh')">中文</button>
-            <button class="lang-btn" onclick="setLang('es')">ES</button>
+    <!-- Level 2 -->
+    <div class="level-card l2" onclick="goToLevel(2)">
+        <div class="card-top">
+            <div class="level-header"><div class="level-icon">📚</div><div class="level-title"><h3>Level 2</h3><span class="algorithm">Propositional Logic</span></div></div>
+            <div class="ratings"><div class="rating-row"><span class="rating-label">Difficulty</span><span class="stars">⭐⭐</span></div><div class="rating-row"><span class="rating-label">Popular</span><span class="hearts">❤️❤️❤️</span></div></div>
         </div>
-    </header>
+        <p class="level-desc"><span class="text-en">Perfect Attendance Award — Use logic to find which students qualify!</span><span class="text-zh">全勤獎頒獎典禮 — 用邏輯推理誰符合全勤資格！</span><span class="text-es">Premio de Asistencia Perfecta — ¡Usa la lógica para determinar quién califica!</span></p>
+        <p class="level-quote">「心能轉境，境隨心轉」</p>
+        <div class="level-tags"><span class="tag">Ch. 7</span><span class="tag">Russell & Norvig</span></div>
+        <button class="play-btn">▶️ <span class="text-en">Play</span><span class="text-zh">開始</span><span class="text-es">Jugar</span></button>
+    </div>
 
-    <section class="hero">
-        <h1 class="main-title">Journey of Kindness</h1>
-        <p class="subtitle">
-            <span class="text-en">善的旅程 — Learn AI Through Compassion</span>
-            <span class="text-zh">善的旅程 — 用慈悲學 AI</span>
-            <span class="text-es">Viaje de Bondad — Aprende IA con Compasión</span>
-        </p>
-        <div class="core-message">
-            <p>
-                <span class="text-en">In 2006, a volunteer saw a <span class="highlight">7-year-old girl eating raw rice</span> at John Muir Elementary. She wasn't confused — she was <span class="highlight">that hungry</span>. This sparked 18+ years of Tzu Chi service in Hunters Point.</span>
-                <span class="text-zh">2006年，一位志工在 John Muir 小學看到<span class="highlight">七歲女孩在吃生米</span>。她不是不懂事——她只是<span class="highlight">真的很餓</span>。這開啟了慈濟在獵人角 18 年的服務。</span>
-                <span class="text-es">En 2006, una voluntaria vio a una <span class="highlight">niña de 7 años comiendo arroz crudo</span>. No estaba confundida — tenía <span class="highlight">mucha hambre</span>. Esto inició 18+ años de servicio.</span>
-            </p>
+    <!-- Level 3 -->
+    <div class="level-card l3" onclick="goToLevel(3)">
+        <div class="card-top">
+            <div class="level-header"><div class="level-icon">🪷</div><div class="level-title"><h3>Level 3</h3><span class="algorithm">MDP</span></div></div>
+            <div class="ratings"><div class="rating-row"><span class="rating-label">Difficulty</span><span class="stars">⭐⭐⭐</span></div><div class="rating-row"><span class="rating-label">Popular</span><span class="hearts">❤️❤️</span></div></div>
         </div>
-    </section>
+        <p class="level-desc"><span class="text-en">Sister Maya's Journey — From skeptic to devoted volunteer.</span><span class="text-zh">Maya 師姊的轉變 — 從懷疑者到資深志工。</span><span class="text-es">El Viaje de Maya — De escéptica a voluntaria devota.</span></p>
+        <p class="level-quote">「甘願做，歡喜受」</p>
+        <div class="level-tags"><span class="tag">Ch. 17</span><span class="tag">Russell & Norvig</span></div>
+        <button class="play-btn">▶️ <span class="text-en">Play</span><span class="text-zh">開始</span><span class="text-es">Jugar</span></button>
+    </div>
 
-    <section class="levels-container">
-        <div class="levels-grid">
-            <div class="level-card l1" onclick="goToLevel(1)">
-                <div class="level-header">
-                    <div class="level-icon">🗺️</div>
-                    <div class="level-title"><h3>Level 1</h3><span class="algorithm">A* Search</span></div>
-                </div>
-                <p class="level-desc">
-                    <span class="text-en">Mrs. Garcia's Meal Delivery — The shortest route isn't always the best.</span>
-                    <span class="text-zh">Garcia 奶奶的送餐 — 最短的路，不一定是最好的路。</span>
-                    <span class="text-es">Entrega de Comidas — El camino más corto no siempre es el mejor.</span>
-                </p>
-                <div class="level-tags"><span class="tag">Ch. 3</span></div>
-                <button class="play-btn">▶️ <span class="text-en">Play</span><span class="text-zh">開始</span><span class="text-es">Jugar</span></button>
-            </div>
-
-            <div class="level-card l2" onclick="goToLevel(2)">
-                <div class="level-header">
-                    <div class="level-icon">📚</div>
-                    <div class="level-title"><h3>Level 2</h3><span class="algorithm">Propositional Logic</span></div>
-                </div>
-                <p class="level-desc">
-                    <span class="text-en">Happy Campus — Use logic to understand why children miss school.</span>
-                    <span class="text-zh">快樂校園 — 用邏輯理解孩子缺課的原因。</span>
-                    <span class="text-es">Campus Feliz — Usa la lógica para entender las ausencias.</span>
-                </p>
-                <div class="level-tags"><span class="tag">Ch. 7</span></div>
-                <button class="play-btn">▶️ <span class="text-en">Play</span><span class="text-zh">開始</span><span class="text-es">Jugar</span></button>
-            </div>
-
-            <div class="level-card l3" onclick="goToLevel(3)">
-                <div class="level-header">
-                    <div class="level-icon">🪷</div>
-                    <div class="level-title"><h3>Level 3</h3><span class="algorithm">MDP</span></div>
-                </div>
-                <p class="level-desc">
-                    <span class="text-en">Sister Maya's Journey — 「甘願做，歡喜受」</span>
-                    <span class="text-zh">Maya 師姊的轉變 —「甘願做，歡喜受」</span>
-                    <span class="text-es">El Viaje de Maya — Dispuesta a dar, feliz de recibir.</span>
-                </p>
-                <div class="level-tags"><span class="tag">Ch. 17</span></div>
-                <button class="play-btn">▶️ <span class="text-en">Play</span><span class="text-zh">開始</span><span class="text-es">Jugar</span></button>
-            </div>
-
-            <div class="level-card l4">
-                <div class="level-header">
-                    <div class="level-icon">🏕️</div>
-                    <div class="level-title"><h3>Level 4</h3><span class="algorithm">KB-Agent</span></div>
-                </div>
-                <p class="level-desc">
-                    <span class="text-en">RV Park Search — Navigate uncertainty to find hope.</span>
-                    <span class="text-zh">露營區尋童 — 在未知中找到希望。</span>
-                    <span class="text-es">Búsqueda — Navega la incertidumbre.</span>
-                </p>
-                <div class="level-tags"><span class="tag">Ch. 7</span></div>
-                <button class="play-btn coming-soon">🔒 <span class="text-en">Coming Soon</span><span class="text-zh">即將推出</span><span class="text-es">Próximamente</span></button>
-            </div>
-
-            <div class="level-card l5">
-                <div class="level-header">
-                    <div class="level-icon">💗</div>
-                    <div class="level-title"><h3>Level 5</h3><span class="algorithm">Bayesian Network</span></div>
-                </div>
-                <p class="level-desc">
-                    <span class="text-en">Community Care — Those who are loved, learn to love.</span>
-                    <span class="text-zh">社區關懷 — 被愛的人，學會去愛。</span>
-                    <span class="text-es">Cuidado Comunitario — Los amados aprenden a amar.</span>
-                </p>
-                <div class="level-tags"><span class="tag">Ch. 12-13</span></div>
-                <button class="play-btn coming-soon">🔒 <span class="text-en">Coming Soon</span><span class="text-zh">即將推出</span><span class="text-es">Próximamente</span></button>
-            </div>
-
-            <div class="level-card l6">
-                <div class="level-header">
-                    <div class="level-icon">⚖️</div>
-                    <div class="level-title"><h3>Level 6</h3><span class="algorithm">First-Order Logic</span></div>
-                </div>
-                <p class="level-desc">
-                    <span class="text-en">Marcus's Journey — Use FOL to find the truth!</span>
-                    <span class="text-zh">Marcus 的志工路 — 用 FOL 找出真相！</span>
-                    <span class="text-es">El Viaje de Marcus — ¡Usa FOL!</span>
-                </p>
-                <div class="level-tags"><span class="tag">Ch. 8-9</span></div>
-                <button class="play-btn coming-soon">🔒 <span class="text-en">Coming Soon</span><span class="text-zh">即將推出</span><span class="text-es">Próximamente</span></button>
-            </div>
-
-            <div class="level-card l7">
-                <div class="level-header">
-                    <div class="level-icon">🚂</div>
-                    <div class="level-title"><h3>Level 7</h3><span class="algorithm">Alpha-Beta Pruning</span></div>
-                </div>
-                <p class="level-desc">
-                    <span class="text-en">The Trolley Dilemma — Only humans choose compassion.</span>
-                    <span class="text-zh">電車難題 — 只有人可以選擇慈悲。</span>
-                    <span class="text-es">El Dilema del Tranvía — Solo humanos eligen compasión.</span>
-                </p>
-                <div class="level-tags"><span class="tag">Ch. 5</span></div>
-                <button class="play-btn coming-soon">🔒 <span class="text-en">Coming Soon</span><span class="text-zh">即將推出</span><span class="text-es">Próximamente</span></button>
-            </div>
+    <!-- Level 4 -->
+    <div class="level-card l4">
+        <div class="card-top">
+            <div class="level-header"><div class="level-icon">🏕️</div><div class="level-title"><h3>Level 4</h3><span class="algorithm">KB-Agent</span></div></div>
+            <div class="ratings"><div class="rating-row"><span class="rating-label">Difficulty</span><span class="stars">⭐⭐</span></div><div class="rating-row"><span class="rating-label">Popular</span><span class="hearts">❤️❤️</span></div></div>
         </div>
-    </section>
+        <p class="level-desc"><span class="text-en">Hunters Point RV Park — A volunteer's first visit. Use logic to find families in need.</span><span class="text-zh">獵人角 RV Park — 志工首次進入社區，用知識推理找到需要幫助的家庭。</span><span class="text-es">Parque RV Hunters Point — Primera visita. Usa la lógica para encontrar familias.</span></p>
+        <p class="level-quote">「在未知中前行，用智慧照亮道路」</p>
+        <div class="level-tags"><span class="tag">Ch. 7</span></div>
+        <button class="play-btn coming-soon">🔒 <span class="text-en">Coming Soon</span><span class="text-zh">即將推出</span><span class="text-es">Próximamente</span></button>
+    </div>
 
-    <footer>
-        <p>© 2026 Mei Hsien Hsu | Las Positas College</p>
-        <p><a href="gallery.html">Gallery</a> | <a href="outro.html">Hope Tree</a></p>
-        <p class="aphorism">「感恩，是世間最美的語言」— 證嚴法師</p>
-    </footer>
+    <!-- Level 5 -->
+    <div class="level-card l5">
+        <div class="card-top">
+            <div class="level-header"><div class="level-icon">💗</div><div class="level-title"><h3>Level 5</h3><span class="algorithm">Bayesian Network</span></div></div>
+            <div class="ratings"><div class="rating-row"><span class="rating-label">Difficulty</span><span class="stars">⭐⭐⭐</span></div><div class="rating-row"><span class="rating-label">Popular</span><span class="hearts">❤️❤️❤️</span></div></div>
+        </div>
+        <p class="level-desc"><span class="text-en">Volunteer Retention — Predict who needs care. Those who are loved, learn to love.</span><span class="text-zh">志工留存預測 — 預測誰需要關懷。被愛的人，學會去愛。</span><span class="text-es">Retención de Voluntarios — Predice quién necesita apoyo. Los amados aprenden a amar.</span></p>
+        <p class="level-quote">「靜思勤行道，慈濟人間路」</p>
+        <div class="level-tags"><span class="tag">Ch. 12-13</span></div>
+        <button class="play-btn coming-soon">🔒 <span class="text-en">Coming Soon</span><span class="text-zh">即將推出</span><span class="text-es">Próximamente</span></button>
+    </div>
 
-    <script>
-        // Stars
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;animation-delay:${Math.random()*3}s`;
-            document.getElementById('stars').appendChild(star);
-        }
+    <!-- Level 6 -->
+    <div class="level-card l6">
+        <div class="card-top">
+            <div class="level-header"><div class="level-icon">⚖️</div><div class="level-title"><h3>Level 6</h3><span class="algorithm">First-Order Logic</span></div></div>
+            <div class="ratings"><div class="rating-row"><span class="rating-label">Difficulty</span><span class="stars">⭐⭐⭐</span></div><div class="rating-row"><span class="rating-label">Popular</span><span class="hearts">❤️❤️</span></div></div>
+        </div>
+        <p class="level-desc"><span class="text-en">Marcus (14) wants to join recycling team — Use FOL to find which team fits him!</span><span class="text-zh">14歲的 Marcus 想加入環保組 — 用 FOL 推理他適合哪個團隊！</span><span class="text-es">Marcus (14) quiere unirse al equipo de reciclaje — ¡Usa FOL para encontrar su equipo!</span></p>
+        <p class="level-quote">「把握時間，珍惜空間」</p>
+        <div class="level-tags"><span class="tag">Ch. 8-9</span></div>
+        <button class="play-btn coming-soon">🔒 <span class="text-en">Coming Soon</span><span class="text-zh">即將推出</span><span class="text-es">Próximamente</span></button>
+    </div>
 
-        // Video
-        const video = document.getElementById('introVideo');
-        video.addEventListener('ended', skipIntro);
-        video.addEventListener('error', skipIntro);
-        function skipIntro() { document.getElementById('videoOverlay').classList.add('hidden'); }
+    <!-- Level 7 -->
+    <div class="level-card l7">
+        <div class="card-top">
+            <div class="level-header"><div class="level-icon">🚂</div><div class="level-title"><h3>Level 7</h3><span class="algorithm">Alpha-Beta Pruning</span></div></div>
+            <div class="ratings"><div class="rating-row"><span class="rating-label">Difficulty</span><span class="stars">⭐⭐</span></div><div class="rating-row"><span class="rating-label">Popular</span><span class="hearts">❤️❤️❤️❤️</span></div></div>
+        </div>
+        <p class="level-desc"><span class="text-en">Trolley Dilemma + Multi-AI Dialogue — AI calculates, but only humans choose compassion.</span><span class="text-zh">電車難題 + Multi-AI 對話 — AI 可以計算，但只有人能選擇慈悲。</span><span class="text-es">Dilema del Tranvía + Diálogo Multi-IA — La IA calcula, pero solo humanos eligen compasión.</span></p>
+        <p class="level-quote">「快樂不在擁有多」</p>
+        <div class="level-tags"><span class="tag">Ch. 5</span></div>
+        <button class="play-btn coming-soon">🔒 <span class="text-en">Coming Soon</span><span class="text-zh">即將推出</span><span class="text-es">Próximamente</span></button>
+    </div>
 
-        // Language
-        let lang = localStorage.getItem('jok-lang') || 'en';
-        setLang(lang);
-        function setLang(l) {
-            lang = l;
-            localStorage.setItem('jok-lang', l);
-            document.body.className = 'lang-' + l;
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', (l==='en'&&b.textContent==='EN')||(l==='zh'&&b.textContent==='中文')||(l==='es'&&b.textContent==='ES')));
-        }
+</div></section>
 
-        // Navigation
-        function goToLevel(n) { if (n <= 3) window.location.href = 'level' + n + '/index.html'; }
-    </script>
+<footer>
+    <p>© 2026 Mei Hsien Hsu 許美嫻 | Las Positas College CS5</p>
+    <p><a href="gallery.html">Gallery</a> | <a href="outro.html">Hope Tree 許願樹</a></p>
+    <p class="aphorism">「感恩，是世間最美的語言」— 證嚴法師</p>
+</footer>
+
+<audio id="bgMusic" loop><source src="assets/audio/welcome_mp3.mp3" type="audio/mpeg"></audio>
+
+<script>
+// Stars
+for(let i=0;i<120;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;animation-delay:${Math.random()*3}s`;document.getElementById('stars').appendChild(s);}
+
+// Meteors
+setInterval(()=>{const m=document.createElement('div');m.className='meteor';m.style.left=Math.random()*100+'%';m.style.top='-100px';document.getElementById('meteors').appendChild(m);setTimeout(()=>m.remove(),2000);},2500);
+
+// Video
+const video=document.getElementById('introVideo'),overlay=document.getElementById('videoOverlay'),timer=document.getElementById('videoTimer'),muteBtn=document.getElementById('muteBtn');
+video.addEventListener('timeupdate',()=>{const r=Math.ceil(video.duration-video.currentTime);if(!isNaN(r)&&r>=0)timer.textContent='0:'+String(r).padStart(2,'0');});
+video.addEventListener('ended',skipIntro);video.addEventListener('error',skipIntro);
+setTimeout(()=>{if(video.readyState<2)skipIntro();},3000);
+function skipIntro(){overlay.classList.add('hidden');}
+function toggleMute(){video.muted=!video.muted;muteBtn.textContent=video.muted?'🔇':'🔊';}
+function replayIntro(){overlay.classList.remove('hidden');video.currentTime=0;video.play().catch(()=>{});}
+
+// Language
+let lang=localStorage.getItem('jok-lang')||'en';setLang(lang);
+function setLang(l){lang=l;localStorage.setItem('jok-lang',l);document.body.className='lang-'+l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',(l==='en'&&b.textContent==='EN')||(l==='zh'&&b.textContent==='中文')||(l==='es'&&b.textContent==='ES')));}
+
+// Music
+const bgMusic=document.getElementById('bgMusic'),musicBtn=document.getElementById('musicBtn');let musicOn=false;
+function toggleMusic(){if(musicOn){bgMusic.pause();musicBtn.textContent='🔇';}else{bgMusic.play().catch(()=>{});musicBtn.textContent='🎵';}musicOn=!musicOn;}
+
+// Navigation
+function goToLevel(n){if(n<=3)window.location.href='level'+n+'/index.html';}
+</script>
 </body>
 </html>
