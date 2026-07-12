@@ -148,12 +148,6 @@
         .fs-punch { font-size: 1.05rem; font-weight: 700; color: white; margin: 0.7rem 0 0.4rem; line-height: 1.4; }
         .fs-philo { font-size: 0.82rem; color: #a5b4fc; line-height: 1.5; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.15); }
         .fs-elo { color: #4ade80; font-weight: 800; font-size: 1.1rem; margin-top: 0.6rem; }
-        /* ⭐ 星星獎勵 */
-        .star-box { margin: 0.6rem auto; max-width: 460px; background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.45); border-radius: 12px; padding: 0.6rem; }
-        .star-big { font-size: 2rem; letter-spacing: 4px; }
-        .star-empty { opacity: 0.35; }
-        .star-meta { font-size: 0.85rem; color: #fde68a; margin-top: 2px; font-weight: 700; }
-        .star-tip { font-size: 0.78rem; color: #d1d5db; margin-top: 4px; line-height: 1.4; }
         /* 🪜 三階晉升梯子 */
         .ladder { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.15); }
         .ladder-invite { font-size: 0.9rem; color: #fde68a; line-height: 1.5; margin-bottom: 0.7rem; }
@@ -635,23 +629,8 @@ const gameState = {
     player: { x: 0, y: 0 }, goal: { x: 7, y: 5 }, garcia: { x: 5, y: 3 },
     obstacles: [{x:2,y:1},{x:2,y:2},{x:2,y:3},{x:4,y:4},{x:4,y:5},{x:6,y:2},{x:6,y:3}],
     visited: [], steps: 0, aiPath: [], aiPathIndex: 0, aiAutoRunning: false, mode: 'player',
-    nearGarcia: false, madeChoice: null, reachedGoal: false, garciaDimmed: false, garciaHint: false, savedGarcia: false, challengeMode: false, hardMode: false
+    nearGarcia: false, madeChoice: null, reachedGoal: false, garciaDimmed: false, garciaHint: false, savedGarcia: false, challengeMode: false
 };
-
-// 地圖配置:平常用 NORMAL,大師挑戰換 HARD(障礙更多、最優路徑要真的算)
-const MAP_NORMAL = {
-    garcia: { x: 5, y: 3 },
-    obstacles: [{x:2,y:1},{x:2,y:2},{x:2,y:3},{x:4,y:4},{x:4,y:5},{x:6,y:2},{x:6,y:3}]
-};
-const MAP_HARD = {
-    garcia: { x: 3, y: 2 },
-    obstacles: [{x:1,y:1},{x:2,y:1},{x:3,y:1},{x:5,y:1},{x:5,y:2},{x:5,y:3},{x:1,y:3},{x:2,y:3},{x:3,y:4},{x:6,y:0},{x:6,y:4}]
-};
-function applyMap(hard) {
-    const m = hard ? MAP_HARD : MAP_NORMAL;
-    gameState.garcia = { x: m.garcia.x, y: m.garcia.y };
-    gameState.obstacles = m.obstacles.map(o => ({x:o.x, y:o.y}));
-}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // A* ALGORITHM
@@ -826,7 +805,6 @@ function aiAutoDemo() {
 // ── 頂部「AI」卡入口:看三幕示範(可切換停止)──
 function playAiDemo() {
     if (cinematic.active || searchViz.active) { exitDemo(); return; }
-    applyMap(false);   // 示範用原地圖
     setCardActive('ai');
     startCinematic();
 }
@@ -835,7 +813,6 @@ function playAiDemo() {
 function enterChallenge(hard) {
     stopCinematic();
     searchViz.active = false;
-    applyMap(!!hard);   // 大師換難地圖,中階用原圖
     gameState.mode = 'player';
     gameState.challengeMode = true;
     gameState.hardMode = !!hard;
@@ -1252,37 +1229,6 @@ function showHardFail() {
     storyArea.scrollIntoView({behavior:'smooth', block:'center'});
 }
 
-// ⭐ 星星獎勵:扣回 A* —— 越貼近「跟著最小 f 走」的最優路徑,星星越多
-function getStars(steps, saved) {
-    if (!saved) return 0;
-    if (steps <= 12) return 3;
-    if (steps <= 14) return 2;
-    return 1;
-}
-function loadBestStars() {
-    try { return parseInt(localStorage.getItem('jok_l1_beststars') || '0', 10) || 0; } catch(e) { return 0; }
-}
-function saveBestStars(s) {
-    try { const b = loadBestStars(); if (s > b) localStorage.setItem('jok_l1_beststars', String(s)); } catch(e) {}
-}
-function renderStars(steps, saved) {
-    const s = getStars(steps, saved);
-    saveBestStars(s);
-    const best = loadBestStars();
-    const filled = '⭐'.repeat(s), empty = '☆'.repeat(3 - s);
-    const T = {
-        zh: { got:'本次評星', best:'最佳', tip3:'滿星!你每一步都選了 f 最小的格子——這正是 A* 的走法。', tip2:'兩星!離最優只差一點,再想想哪一步的 f 可以更小?', tip1:'一星!你救了人。下次試著讓每步的 f 都最小,就能追上 A*。' },
-        en: { got:'Stars', best:'Best', tip3:'Full stars! Every step you chose the lowest f — exactly how A* moves.', tip2:'Two stars! Almost optimal — which step could have a smaller f?', tip1:'One star! You saved her. Next time keep each step\u2019s f minimal to match A*.' },
-        es: { got:'Estrellas', best:'Mejor', tip3:'¡Estrellas llenas! Elegiste la f más baja en cada paso — así se mueve A*.', tip2:'¡Dos estrellas! Casi óptimo — ¿qué paso pudo tener menor f?', tip1:'¡Una estrella! La salvaste. La próxima, mantén cada f mínima para igualar A*.' }
-    };
-    const t = T[currentLang] || T.en;
-    const tip = s === 3 ? t.tip3 : (s === 2 ? t.tip2 : t.tip1);
-    return '<div class="star-box">'
-        + '<div class="star-row"><span class="star-big">'+filled+'<span class="star-empty">'+empty+'</span></span></div>'
-        + '<div class="star-meta">'+t.got+': '+s+'/3　·　'+t.best+': '+ '⭐'.repeat(best) + (best<3?'☆'.repeat(3-best):'') +'</div>'
-        + '<div class="star-tip">'+tip+'</div></div>';
-}
-
 // 🔍 中階挑戰結算:全程用「鼓勵式挑釁」,絕不嘲笑
 function showChallengeResult() {
     const storyArea = document.getElementById('story-area');
@@ -1341,7 +1287,6 @@ function showChallengeResult() {
         + '<p class="fs-big">'+icon+' '+title+'</p>'
         + '<div class="fs-row '+tone+'" style="max-width:480px">'+aiLine+'</div>'
         + '<div class="fs-row fs-ai" style="max-width:420px">'+ (currentLang==='zh'?'你':'You')+': '+steps+' · AI: '+best+'</div>'
-        + (saved ? renderStars(steps, saved) : '')
         + (saved && steps <= best ? renderLadder() : '<p class="text-yellow-300 text-sm mt-2">↻ '+t.retry+'</p>')
         + '</div>';
     storyArea.scrollIntoView({behavior:'smooth', block:'center'});
@@ -1523,7 +1468,6 @@ function resetLevel() {
     gameState.savedGarcia = false;
     gameState.challengeMode = false;
     gameState.hardMode = false;
-    applyMap(false);   // 重置回原地圖
     document.querySelectorAll('.scorecard').forEach(c => c.classList.remove('card-active'));
     gameState.aiPath = [];
     gameState.aiPathIndex = 0;
