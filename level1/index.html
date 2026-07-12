@@ -1032,72 +1032,6 @@ function switchToPlayer() {
     renderGrid(); 
 }
 
-function movePlayer(dx, dy) {
-    const newX = gameState.player.x + dx;
-    const newY = gameState.player.y + dy;
-    
-    if (isValidMove(newX, newY)) {
-        gameState.visited.push({x: gameState.player.x, y: gameState.player.y});
-        gameState.player = {x: newX, y: newY};
-        gameState.steps++;
-        
-        playFootstep();
-        document.getElementById('player-steps').textContent = gameState.steps;
-        
-        const g = gameState.steps;
-        const h = getH(newX, newY);
-        document.getElementById('g-value').textContent = g;
-        document.getElementById('h-value').textContent = h;
-        document.getElementById('f-value').textContent = g + h;
-        
-        const explored = document.getElementById('explored-list');
-        explored.textContent += ` (${newX},${newY})`;
-        
-        if (newX === gameState.goal.x && newY === gameState.goal.y) {
-            gameState.reachedGoal = true;
-            document.getElementById('complete-btn').classList.remove('hidden');
-            playVictorySound();
-            showStory('goal');
-        }
-        
-        renderGrid();
-        checkGarciaProximity();
-        return true;
-    } else {
-        // Visual feedback for invalid move - shake the grid
-        const grid = document.getElementById('astar-grid');
-        grid.style.animation = 'shake 0.3s';
-        setTimeout(() => { grid.style.animation = ''; }, 300);
-        return false;
-    }
-}
-
-// Dedicated player movement functions - each click moves one step
-function playerMoveUp() { 
-    gameState.mode = 'player';
-    gameState.aiAutoRunning = false;
-    document.getElementById('ai-auto-btn').innerHTML = '🤖 AI';
-    movePlayer(0, -1); 
-}
-function playerMoveDown() { 
-    gameState.mode = 'player';
-    gameState.aiAutoRunning = false;
-    document.getElementById('ai-auto-btn').innerHTML = '🤖 AI';
-    movePlayer(0, 1); 
-}
-function playerMoveLeft() { 
-    gameState.mode = 'player';
-    gameState.aiAutoRunning = false;
-    document.getElementById('ai-auto-btn').innerHTML = '🤖 AI';
-    movePlayer(-1, 0); 
-}
-function playerMoveRight() { 
-    gameState.mode = 'player';
-    gameState.aiAutoRunning = false;
-    document.getElementById('ai-auto-btn').innerHTML = '🤖 AI';
-    movePlayer(1, 0); 
-}
-
 function updateButtonStates() {
     const backBtn = document.getElementById('ai-back-btn');
     const fwdBtn = document.getElementById('ai-forward-btn');
@@ -1630,22 +1564,23 @@ document.addEventListener('DOMContentLoaded', function() {
         // Only respond if game screen is active
         if (!document.getElementById('game-screen').classList.contains('active')) return;
         
+        const px = gameState.player.x, py = gameState.player.y;
         switch(e.key) {
             case 'ArrowUp':
                 e.preventDefault();
-                movePlayer(0, -1);
+                movePlayer(px, py - 1);
                 break;
             case 'ArrowDown':
                 e.preventDefault();
-                movePlayer(0, 1);
+                movePlayer(px, py + 1);
                 break;
             case 'ArrowLeft':
                 e.preventDefault();
-                movePlayer(-1, 0);
+                movePlayer(px - 1, py);
                 break;
             case 'ArrowRight':
                 e.preventDefault();
-                movePlayer(1, 0);
+                movePlayer(px + 1, py);
                 break;
         }
     });
