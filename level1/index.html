@@ -755,34 +755,28 @@ function subtitleContent() {
         const c = '(' + st.cur.x + ',' + st.cur.y + ')';
         const T = {
             start: {
-                zh: 'AI 志工出發前先想:先去看 Mrs. Garcia,再把餐送到終點。黃框 = 候選格,f 值最小的先走。按 ⏩ 看它一步步想。',
-                en: 'The AI volunteer plans ahead: first check on Mrs. Garcia, then deliver to the goal. Amber = candidates; lowest f goes first. Press ⏩ to watch it think.',
-                es: 'La IA planea: primero visitar a Mrs. Garcia, luego entregar en la meta. Ámbar = candidatos; el f más bajo primero. Pulsa ⏩ para verla pensar.'
+                zh: 'AI 志工出發前先算:直達終點的最短路。黃框 = 候選格,f 值最小的先走。按 ⏩ 看它一步步想。',
+                en: 'The AI volunteer plans ahead: the shortest path straight to the goal. Amber = candidates; lowest f goes first. Press ⏩ to watch it think.',
+                es: 'La IA planea: el camino más corto directo a la meta. Ámbar = candidatos; el f más bajo primero. Pulsa ⏩ para verla pensar.'
             },
             expandFirst: {
-                zh: 'AI 挑 f 最小的 ' + c + ':f = g + h = 已走 ' + st.g + ' + 預估 ' + st.h + ' = ' + st.f + '。紫 = 看過,黃框 = 待考慮。這一段的目標是阿嬤家。',
-                en: 'AI picks ' + c + ', lowest f: f = g + h = ' + st.g + ' + ' + st.h + ' = ' + st.f + '. Purple = examined, amber = waiting. This leg aims for Mrs. Garcia.',
-                es: 'La IA elige ' + c + ', f más bajo: f = g + h = ' + st.g + ' + ' + st.h + ' = ' + st.f + '. Morado = examinado, ámbar = en espera. Esta etapa busca a Mrs. Garcia.'
+                zh: 'AI 挑 f 最小的 ' + c + ':f = g + h = 已走 ' + st.g + ' + 預估 ' + st.h + ' = ' + st.f + '。紫 = 看過,黃框 = 待考慮。它只認距離,直奔終點。',
+                en: 'AI picks ' + c + ', lowest f: f = g + h = ' + st.g + ' + ' + st.h + ' = ' + st.f + '. Purple = examined, amber = waiting. It sees only distance — straight to the goal.',
+                es: 'La IA elige ' + c + ', f más bajo: f = g + h = ' + st.g + ' + ' + st.h + ' = ' + st.f + '. Morado = examinado, ámbar = en espera. Solo ve distancia — directo a la meta.'
             },
             expand: {
-                zh: (st.leg === 2 ? '往終點:' : '往阿嬤家:') + c + ' f=' + st.f + '(g=' + st.g + '+h=' + st.h + ')。h 像指南針,把 AI 拉向' + (st.leg === 2 ? '終點' : '阿嬤') + '。候選 ' + st.open.length + ' 格。',
-                en: (st.leg === 2 ? 'To goal: ' : 'To Mrs. Garcia: ') + c + ' f=' + st.f + ' (g=' + st.g + '+h=' + st.h + '). h is a compass pulling toward ' + (st.leg === 2 ? 'the goal' : 'Garcia') + '. ' + st.open.length + ' candidates.',
-                es: (st.leg === 2 ? 'A la meta: ' : 'A Mrs. Garcia: ') + c + ' f=' + st.f + ' (g=' + st.g + '+h=' + st.h + '). h es una brújula hacia ' + (st.leg === 2 ? 'la meta' : 'García') + '. ' + st.open.length + ' candidatos.'
-            },
-            reachGarcia: {
-                zh: '到阿嬤家了(第 ' + st.g + ' 步)!AI 停下來看她——這一趟關懷,只多花了它幾步。接著再按 ⏩,規劃去終點的路。',
-                en: 'Reached Mrs. Garcia (step ' + st.g + ')! The AI stops to check on her — this act of care cost only a few extra steps. Press ⏩ to plan the way to the goal.',
-                es: '¡Llegó a Mrs. Garcia (paso ' + st.g + ')! La IA se detiene a verla — este gesto costó solo unos pasos más. Pulsa ⏩ para planear la ruta a la meta.'
+                zh: '往終點:' + c + ' f=' + st.f + '(g=' + st.g + '+h=' + st.h + ')。h 像指南針,把 AI 拉向終點。候選 ' + st.open.length + ' 格。',
+                en: 'To goal: ' + c + ' f=' + st.f + ' (g=' + st.g + '+h=' + st.h + '). h is a compass pulling toward the goal. ' + st.open.length + ' candidates.',
+                es: 'A la meta: ' + c + ' f=' + st.f + ' (g=' + st.g + '+h=' + st.h + '). h es una brújula hacia la meta. ' + st.open.length + ' candidatos.'
             },
             goal: {
-                zh: '找到全程了!先看阿嬤、再送達,總共只要 ' + (gameState.aiPath.length - 1) + ' 步——跟「跳過阿嬤」幾乎一樣快。關懷,並不比較慢。再按 ⏩ 看它走一遍。',
-                en: 'Full route found! Visit Garcia, then deliver — just ' + (gameState.aiPath.length - 1) + ' steps, nearly as fast as skipping her. Kindness is not slower. Press ⏩ to watch it walk.',
-                es: '¡Ruta completa! Visitar a García y entregar — solo ' + (gameState.aiPath.length - 1) + ' pasos, casi tan rápido como saltarla. La bondad no es más lenta. Pulsa ⏩ para verla caminar.'
+                zh: '找到最短路了!只要 ' + (gameState.aiPath.length - 1) + ' 步直達終點——但它沒有經過阿嬤家。AI 只看見「距離」。再按 ⏩ 看它走一遍。',
+                en: 'Shortest path found! Just ' + (gameState.aiPath.length - 1) + ' steps straight to the goal — but it never passes Grandma\'s house. The AI sees only distance. Press ⏩ to watch it walk.',
+                es: '¡Ruta más corta encontrada! Solo ' + (gameState.aiPath.length - 1) + ' pasos directo a la meta — pero no pasa por la casa de la abuela. La IA solo ve distancia. Pulsa ⏩ para verla caminar.'
             }
         };
         let kind;
         if (st.type === 'start') kind = 'start';
-        else if (st.type === 'reachGarcia') kind = 'reachGarcia';
         else if (st.type === 'goal') kind = 'goal';
         else kind = (searchViz.idx === 1 ? 'expandFirst' : 'expand');
         return { text: T[kind][currentLang] || T[kind].en, progress: '🧠 ' + (searchViz.idx + 1) + '/' + searchViz.steps.length };
