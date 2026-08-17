@@ -1,6 +1,7 @@
-﻿# Journey of Kindness 善的旅程
+[README (12).md](https://github.com/user-attachments/files/31158268/README.12.md)
+# Journey of Kindness 善的旅程
 
-An AI education game teaching 7 algorithms through real community stories.
+An AI education game — learning algorithms through real community stories.
 
 🎮 **[Play Now](https://aadl11.github.io/journey-of-kindness/)**
 
@@ -10,7 +11,7 @@ An AI education game teaching 7 algorithms through real community stories.
 
 This project bridges **computational thinking** with **compassionate action** — demonstrating how classical AI algorithms can serve humanitarian purposes.
 
-Built as a capstone project for CS4: Introduction to AI at Las Positas College, the game draws from 16 years of volunteer coordination experience with Tzu Chi Foundation in Bayview-Hunters Point, San Francisco.
+Built as a capstone project for CS4: Introduction to AI at Las Positas College, the game draws from twenty years of Tzu Chi volunteer service across San Francisco — beginning in 2006, and reaching Bayview–Hunters Point in 2009.
 
 ---
 
@@ -20,17 +21,20 @@ Built as a capstone project for CS4: Introduction to AI at Las Positas College, 
 
 ---
 
-## The Seven Levels
+## The Levels
 
-| Level | Algorithm | What You'll Learn |
-|-------|-----------|-------------------|
-| 1 | **A* Search** | Finding the best path to deliver meals to elderly neighbors |
-| 2 | **Propositional Logic** | Making fair decisions about who receives resources |
-| 3 | **MDP** | Planning actions when outcomes are uncertain |
-| 4 | **Knowledge-Based Agent** | Exploring new communities safely and respectfully |
-| 5 | **Bayesian Networks** | Understanding what keeps volunteers engaged |
-| 6 | **First-Order Logic** | Matching the right people to the right tasks |
-| 7 | **Alpha-Beta Pruning** | Facing ethical dilemmas with wisdom, not just calculation |
+| Level | Algorithm | AIMA Chapter | What You'll Learn |
+|-------|-----------|--------------|-------------------|
+| 1 | **A* Search** | Ch. 3 · Solving Problems by Searching | Finding the best path to deliver meals to elderly neighbors |
+| 2 | **Propositional Logic** | Ch. 7 · Logical Agents | Making fair decisions about who receives resources |
+| 3 | **MDP** | Ch. 17 · Making Complex Decisions | Planning actions when outcomes are uncertain |
+| 4 | **Knowledge-Based Agent** | Ch. 7 · Logical Agents (Wumpus World) | Exploring new communities safely and respectfully |
+| 5 | **Bayesian Networks** | Ch. 12–13 · Probabilistic Reasoning | Understanding what keeps volunteers engaged |
+| 6 | **First-Order Logic** | Ch. 8–9 · First-Order Logic & Inference | Matching the right people to the right tasks |
+| 7 | **AI Alignment & Safety** | Ch. 27.3 · The Ethics of AI | An aligned AI treats human choices as evidence, not commands |
+| 8 | **Minimax · Alpha-Beta · MCTS** — *coming soon* | Ch. 5 · Adversarial Search and Games | Adversarial search: when the other side is also thinking |
+
+All levels are grounded in Russell & Norvig, *Artificial Intelligence: A Modern Approach* (4th ed., Pearson 2021).
 
 ---
 
@@ -61,7 +65,7 @@ Built as a capstone project for CS4: Introduction to AI at Las Positas College, 
 
 ## Acknowledgments
 
-**Professor An Lam** — For introducing algorithms I never imagined I could understand. Your patience with a returning student has been extraordinary.
+**Professor An Lam** — who taught CS4: Introduction to AI at Las Positas College, where this project first took shape.
 
 **Roxanne Buchwitz 黃淑雲師姊** — My mentor of sixteen years. The handful of raw rice you witnessed at John Muir Elementary in 2006 became the seed of all this.
 
@@ -86,4 +90,4 @@ MIT License — Feel free to adapt for your own community service projects.
 ---
 
 **© 2025-2026 Mei Hsien Hsu 許美嫻**  
-Las Positas College | CS4 Introduction to AI | CS5 Machine Learning
+Las Positas College · AI Certificate Program
