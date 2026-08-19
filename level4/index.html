@@ -742,6 +742,34 @@ function stopMeditationMusic() {
 // ═══════════════════════════════════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════
+// RESEARCH LAYER · GA4 自訂事件 + jok_progress 本地資料模型（2026-08-19）
+// track()：gtag 不存在（離線／被擋）時靜默略過，絕不影響遊戲。
+// jok_progress：localStorage，匿名、僅存本機；供研究層彙整與日後校準計分使用。
+// ═══════════════════════════════════════════════════════════════════════════
+function track(name, params) {
+    try { if (typeof gtag === 'function') gtag('event', name, Object.assign({ level: 4 }, params || {})); } catch (e) {}
+}
+function progressLoad() {
+    try { return JSON.parse(localStorage.getItem('jok_progress') || '{}'); } catch (e) { return {}; }
+}
+function progressSave(fn) {
+    try {
+        const p = progressLoad();
+        p.version = 1;
+        p.levels = p.levels || {};
+        const L = p.levels['4'] = p.levels['4'] || {
+            attempts: 0, rescues: 0,
+            deaths: { danger: 0, barrier: 0, rumor: 0 },
+            dispel: { hit: 0, miss: 0 },
+            proofQueries: 0, aiDemos: 0, lastTier: '', bestSteps: null, updatedAt: ''
+        };
+        fn(L);
+        L.updatedAt = new Date().toISOString();
+        localStorage.setItem('jok_progress', JSON.stringify(p));
+    } catch (e) {}
+}
+
 function posKey(x, y) { return `${x},${y}`; }
 
 function getNeighbors(x, y) {
@@ -940,6 +968,8 @@ function cellQuery(x, y) {
     const goal = '-P' + x + ',' + y;
     const h = resHornFC(kb, goal);
     const r = resProve(kb, goal);
+    track('proof_query', { horn: h.proved, resolution: r.proved, kb_clauses: kb.length });
+    progressSave(L => { L.proofQueries++; });
 
     const badge = (ok, txt) =>
         '<span style="color:' + (ok ? '#22c55e' : '#f87171') + ';font-weight:700">' + txt + '</span>';
@@ -1095,6 +1125,8 @@ function shootArrow(tx, ty) {
     // 物理層：世界解析命中（世界知道自己的真相，這一層合法）
     const hit = !!(world.wumpusPos && world.wumpusAlive
                    && world.wumpusPos.x === target.x && world.wumpusPos.y === target.y);
+    track('dispel', { hit: hit, targeted: (typeof tx === 'number'), tier: TIER, steps: agent.steps });
+    progressSave(L => { hit ? L.dispel.hit++ : L.dispel.miss++; });
 
     if (hit) {
         world.wumpusAlive = false;
@@ -1173,6 +1205,10 @@ function movePlayer(dx, dy) {
     if (_isPit || _isBarrier || _isRumor) {
         world.alive = false;
         playDangerSound();
+        const _causeKey = _isPit ? 'danger' : (_isBarrier ? 'barrier' : 'rumor');
+        track('death', { cause: _causeKey, tier: TIER, grid: GRID_SIZE, steps: agent.steps,
+                         proven_safe: agent.safe.size, kb_facts: agent.kb.size });
+        progressSave(L => { L.deaths[_causeKey]++; L.lastTier = TIER; });
         const _icon  = _isPit ? '💥' : (_isBarrier ? '🚧' : '👻');
         const _cause = _isPit
             ? { en:'Stepped into danger', es:'Caíste en peligro', zh:'踏進了危險' }
@@ -1223,6 +1259,10 @@ function movePlayer(dx, dy) {
     // Win condition
     if (world.hasFamily && newX === 1 && newY === 1) {
         world.escaped = true;
+        track('level_complete', { tier: TIER, grid: GRID_SIZE, steps: agent.steps,
+                                  proven_safe: agent.safe.size, kb_facts: agent.kb.size });
+        progressSave(L => { L.rescues++; L.lastTier = TIER;
+                            if (L.bestSteps === null || agent.steps < L.bestSteps) L.bestSteps = agent.steps; });
         const bonus = Math.max(20, 100 - agent.steps * 2);
         agent.elo += bonus;
         playSuccessSound();
@@ -1267,6 +1307,8 @@ function runAIDemo() {
         stopAIDemo();
         return;
     }
+    track('ai_demo_start', { tier: TIER, grid: GRID_SIZE });
+    progressSave(L => { L.aiDemos++; });
     
     aiDemoRunning = true;
     document.getElementById('demo-btn').innerHTML = '⏹️ <span>停止</span>';
@@ -1420,6 +1462,8 @@ function generateWorld() {
 }
 
 function newRandomWorld() {
+    track('world_new', { tier: TIER, grid: GRID_SIZE });
+    progressSave(L => { L.attempts++; L.lastTier = TIER; });
     var _s1=document.getElementById('m-stage1'),_s2=document.getElementById('m-stage2');
     if(_s1){_s1.style.opacity='1';_s1.style.textDecoration='none';}
     if(_s2){_s2.style.opacity='.45';_s2.style.color='';}
@@ -1644,9 +1688,21 @@ function goBack() {
 // INIT
 // ═══════════════════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
+    track('level_start', {});
     newRandomWorld();
     console.log('Level 4 KB-Agent Final Version loaded!');
     console.log('Use WASD/Arrows to move, SPACE to shoot');
+});
+
+// level_abandon：中途離開（未死、未救援、走過至少一步）才記，transport 用 beacon
+window.addEventListener('beforeunload', () => {
+    try {
+        if (world && world.alive && !world.escaped && agent && agent.steps > 0) {
+            if (typeof gtag === 'function')
+                gtag('event', 'level_abandon', { level: 4, tier: TIER, steps: agent.steps,
+                                                 proven_safe: agent.safe.size, transport_type: 'beacon' });
+        }
+    } catch (e) {}
 });
 </script>
 
