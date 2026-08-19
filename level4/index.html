@@ -1,7 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKBPRQQQ1Y"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BKBPRQQQ1Y');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
     <title>善的旅程 Level 4: KB-Agent | Hunters Point RV Park</title>
@@ -81,6 +84,10 @@
         .grid-cell.danger-cell { background: rgba(239, 68, 68, 0.7); border-color: #ef4444; }
         .grid-cell.barrier-cell { background: rgba(251, 146, 60, 0.7); border-color: #f97316; }
         .grid-cell.family-found { background: rgba(236, 72, 153, 0.6); border-color: #ec4899; }
+        .home-target { box-shadow: 0 0 14px 3px rgba(251,191,36,0.8) inset, 0 0 10px rgba(251,191,36,0.6); animation: homePulse 1.2s ease-in-out infinite; }
+        body.tier-master #kb-display { display:none; }
+        body.tier-master #bc-display { display:none; }
+        @keyframes homePulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.5); } }
         
         .cell-content { font-size: 1.6rem; z-index: 2; }
         .cell-percepts { position: absolute; top: 2px; left: 50%; transform: translateX(-50%); font-size: 0.85rem; display: flex; gap: 1px; }
@@ -332,7 +339,7 @@
 <!-- Language Toggle -->
 <div class="lang-toggle">
     <button class="lang-btn" id="lang-en" onclick="setLang('en')">EN</button>
-    <button class="lang-btn active" id="lang-zh" onclick="setLang('zh')">中</button><button class="lang-btn" onclick="setLang('es')">ES</button>
+    <button class="lang-btn active" id="lang-zh" onclick="setLang('zh')">中</button><button class="lang-btn" id="lang-es" onclick="setLang('es')">ES</button>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════════════════
@@ -345,12 +352,17 @@
             <!-- Header with Story -->
             <div class="header-bar">
                 <button onclick="goBack()" style="background:none;border:none;color:white;cursor:pointer;font-size:14px;">
-                    ← <span data-en="Menu" data-zh="選單">選單</span>
+                    ← <span data-en="Menu" data-zh="選單" data-es="Menú">選單</span>
                 </button>
                 <div style="text-align:center;">
                     <div style="font-size:18px;font-weight:bold;">🏕️ Level 4: KB-Agent</div>
-                    <div style="font-size:12px;color:#fbbf24;margin-top:2px;" data-en="Navigate safely to find displaced families in RV Park" data-zh="安全地探索 RV Park，尋找需要幫助的家庭">安全地探索 RV Park，尋找需要幫助的家庭</div>
+                    <div style="font-size:12px;color:#fbbf24;margin-top:2px;" data-en="Navigate safely to find displaced families in RV Park" data-zh="安全地探索 RV Park，尋找需要幫助的家庭" data-es="Navega con cuidado para encontrar familias desplazadas en el RV Park">安全地探索 RV Park，尋找需要幫助的家庭</div>
                 </div>
+    <div id="mission-bar" style="display:flex;gap:10px;justify-content:center;align-items:center;padding:6px 12px;font-size:0.85rem;">
+        <span id="m-stage1" style="color:#fbbf24;">🔍 <span data-en="① Find the family" data-zh="① 找到家庭" data-es="① Encuentra a la familia">① 找到家庭</span></span>
+        <span style="opacity:.5;">→</span>
+        <span id="m-stage2" style="opacity:.45;">🏡 <span data-en="② Escort them home to (1,1)" data-zh="② 護送回起點 (1,1)" data-es="② Escóltalos a casa, a (1,1)">② 護送回起點 (1,1)</span></span>
+    </div>
                 <div style="display:flex;gap:10px;align-items:center;">
                     <div class="elo-badge">⭐ <span id="elo-display">1200</span></div>
                     <button class="music-btn" id="music-btn" onclick="toggleMusic()">🔇</button>
@@ -380,9 +392,10 @@
             <!-- Difficulty Row -->
             <div class="diff-row">
                 <span style="color:white;font-size:13px;font-weight:500;">難度:</span>
-                <button class="diff-btn active" id="diff-4" onclick="setDifficulty(4)">4×4</button>
-                <button class="diff-btn" id="diff-5" onclick="setDifficulty(5)">5×5</button>
-                <button class="diff-btn" id="diff-6" onclick="setDifficulty(6)">6×6</button>
+                <button class="diff-btn active" id="tier-basic" onclick="setTier('basic')"><span data-en="Pure Logic" data-zh="純邏輯" data-es="Lógica pura">純邏輯</span></button>
+                <button class="diff-btn" id="tier-challenge" onclick="setTier('challenge')"><span data-en="Uncertainty" data-zh="不確定" data-es="Incertidumbre">不確定</span></button>
+                <button class="diff-btn" id="tier-master" onclick="setTier('master')"><span data-en="Unassisted" data-zh="裸推理" data-es="Sin ayuda">裸推理</span></button>
+                <button class="diff-btn" id="diff-6" onclick="setDifficulty(6)"><span data-en="6×6 · Endurance" data-zh="6×6 · 耐力" data-es="6×6 · Resistencia">6×6 · 耐力</span></button>
             </div>
             
             <!-- Game Grid Container -->
@@ -396,13 +409,16 @@
             <!-- Controls -->
             <div class="controls-bar">
                 <button class="ctrl-btn ai-demo" onclick="runAIDemo()" id="demo-btn">
-                    🤖 <span data-en="AI Demo" data-zh="AI 演示">AI 演示</span>
+                    🤖 <span data-en="AI Demo" data-zh="AI 演示" data-es="Demo de IA">AI 演示</span>
                 </button>
                 <button class="ctrl-btn new-world" onclick="newRandomWorld()">
-                    🎲 <span data-en="New World" data-zh="新世界">新世界</span>
+                    🎲 <span data-en="New World" data-zh="新世界" data-es="Mundo nuevo">新世界</span>
+                </button>
+                <button class="ctrl-btn" id="res-btn" onclick="toggleResolution()">
+                    ⚖️ <span data-en="Resolution" data-zh="消解法" data-es="Resolución">消解法</span>
                 </button>
                 <button class="ctrl-btn reset" onclick="resetGame()">
-                    🔄 <span data-en="Reset" data-zh="重置">重置</span>
+                    🔄 <span data-en="Reset" data-zh="重置" data-es="Reiniciar">重置</span>
                 </button>
             </div>
         </div>
@@ -411,25 +427,26 @@
         <div class="side-panel">
             <!-- Legend with VISIBLE EMOJIS -->
             <div class="info-box">
-                <div class="info-title">📋 <span data-en="Legend" data-zh="圖例">圖例</span></div>
+                <div class="info-title">📋 <span data-en="Legend" data-zh="圖例" data-es="Leyenda">圖例</span></div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;">
-                    <div>🧑‍🤝‍🧑 <span data-en="You" data-zh="志工">志工</span></div>
-                    <div>🏠 <span data-en="Family" data-zh="家庭">家庭</span></div>
-                    <div>🚧 <span data-en="Barrier" data-zh="障礙">障礙</span></div>
-                    <div>⚠️ <span data-en="Danger" data-zh="危險">危險</span></div>
-                    <div>💨 <span data-en="Breeze" data-zh="不安">不安</span></div>
-                    <div>😰 <span data-en="Stench" data-zh="緊張">緊張</span></div>
-                    <div>👣 <span data-en="Visited" data-zh="已訪">已訪</span></div>
-                    <div>✅ <span data-en="Inferred" data-zh="推理">推理</span></div>
-                    <div>👻 <span data-en="Rumor" data-zh="謠言">謠言</span></div>
-                    <div>🎯 <span data-en="Dispelled" data-zh="澄清">澄清</span></div>
+                    <div>🧑‍🤝‍🧑 <span data-en="You" data-zh="志工" data-es="Tú">志工</span></div>
+                    <div>🏠 <span data-en="Family" data-zh="家庭" data-es="Familia">家庭</span></div>
+                    <div>🚧 <span data-en="Barrier" data-zh="障礙" data-es="Barrera">障礙</span></div>
+                    <div>⚠️ <span data-en="Danger" data-zh="危險" data-es="Peligro">危險</span></div>
+                    <div>💨 <span data-en="Breeze" data-zh="不安" data-es="Brisa">不安</span></div>
+                    <div>😰 <span data-en="Stench · rumor" data-zh="緊張・謠言" data-es="Hedor · rumor">緊張・謠言</span></div>
+                    <div>🗣️ <span data-en="Murmur · barrier" data-zh="雜音・隔閡" data-es="Murmullo · barrera">雜音・隔閡</span></div>
+                    <div>👣 <span data-en="Visited" data-zh="已訪" data-es="Visitado">已訪</span></div>
+                    <div>✅ <span data-en="Inferred" data-zh="推理" data-es="Inferido">推理</span></div>
+                    <div>👻 <span data-en="Rumor" data-zh="謠言" data-es="Rumor">謠言</span></div>
+                    <div>🎯 <span data-en="Dispelled" data-zh="澄清" data-es="Disipado">澄清</span></div>
                 </div>
             </div>
             
             <!-- Player Controls D-Pad -->
             <div class="info-box">
-                <div class="info-title" style="color:#3b82f6;">🎮 <span data-en="Your Control" data-zh="你的控制">你的控制</span></div>
-                <div style="font-size:11px;text-align:center;margin-bottom:6px;opacity:0.8;"><span data-en="WASD or Arrow Keys" data-zh="WASD 或 方向鍵">WASD 或 方向鍵</span></div>
+                <div class="info-title" style="color:#3b82f6;">🎮 <span data-en="Your Control" data-zh="你的控制" data-es="Tus controles">你的控制</span></div>
+                <div style="font-size:11px;text-align:center;margin-bottom:6px;opacity:0.8;"><span data-en="WASD or Arrow Keys" data-zh="WASD 或 方向鍵" data-es="WASD o flechas">WASD 或 方向鍵</span></div>
                 <div class="dpad-container">
                     <div class="dpad-placeholder"></div>
                     <button class="dpad-btn" onclick="movePlayer(0,1)" id="btn-up">↑</button>
@@ -441,39 +458,43 @@
                     <button class="dpad-btn" onclick="movePlayer(0,-1)" id="btn-down">↓</button>
                     <div class="dpad-placeholder"></div>
                 </div>
-                <div style="font-size:10px;text-align:center;color:#fbbf24;"><span data-en="Press DISPEL (Space) to clear rumors!" data-zh="按 DISPEL (空格鍵) 澄清謠言!">按 DISPEL (空格鍵) 澄清謠言!</span></div>
+                <div style="font-size:10px;text-align:center;color:#fbbf24;"><span data-en="Press DISPEL (Space) to clear rumors!" data-zh="按 DISPEL (空格鍵) 澄清謠言!" data-es="¡Pulsa DISPEL (Espacio) para disipar rumores!">按 DISPEL (空格鍵) 澄清謠言!</span></div>
+                <div class="jingsi-note" style="margin-top:10px;padding:8px 10px;border-left:3px solid #fbbf24;background:rgba(251,191,36,0.08);border-radius:4px;font-size:10.5px;line-height:1.65;">
+                    <div style="color:#fbbf24;" data-en="「Be clear and complete when you talk and listen. Do not pick one sentence here, and another one there, or you may intensely hurt someone by accident.」" data-zh="「聽話、說話要完整，不要只撿前一句、後一句，合起來剛剛好尖尖地刺進人心。」" data-es="「Sé claro y completo al hablar y al escuchar. No tomes una frase de aquí y otra de allá, o podrías herir profundamente a alguien sin querer.」">「聽話、說話要完整，不要只撿前一句、後一句，合起來剛剛好尖尖地刺進人心。」</div>
+                    <div style="color:rgba(255,255,255,0.55);margin-top:3px;font-size:9.5px;">— <span data-en="Master Cheng Yen" data-zh="證嚴上人" data-es="Maestra Cheng Yen">證嚴上人</span></div>
+                </div>
             </div>
             
             <!-- Percepts -->
             <div class="info-box">
-                <div class="info-title" style="color:#f59e0b;">👃 <span data-en="Percepts" data-zh="感知">感知</span></div>
-                <div class="scroll-box" id="percepts-display" style="color:#fbbf24;font-size:13px;">[None, None, None]</div>
+                <div class="info-title" style="color:#f59e0b;">👃 <span data-en="Percepts" data-zh="感知" data-es="Percepciones">感知</span></div>
+                <div class="scroll-box" id="percepts-display" style="color:#fbbf24;font-size:13px;">[None, None, None, None]</div>
             </div>
             
             <!-- Knowledge Base -->
             <div class="info-box">
-                <div class="info-title" style="color:#3b82f6;">🧠 <span data-en="Knowledge Base" data-zh="知識庫">知識庫</span></div>
+                <div class="info-title" style="color:#3b82f6;">🧠 <span data-en="Knowledge Base" data-zh="知識庫" data-es="Base de conocimiento">知識庫</span></div>
                 <div class="scroll-box" id="kb-facts-display" style="color:#60a5fa;">Initializing...</div>
             </div>
             
             <!-- Backward Chaining -->
             <div class="info-box">
-                <div class="info-title" style="color:#a855f7;">🔍 <span data-en="Backward Chaining" data-zh="反向推理">反向推理</span></div>
-                <div class="scroll-box" id="bc-display" style="color:#c084fc;"><span data-en="Move to trigger inference" data-zh="移動以觸發推理">移動以觸發推理</span></div>
+                <div class="info-title" style="color:#a855f7;">🔍 <span data-en="Backward Chaining" data-zh="反向推理" data-es="Encadenamiento hacia atrás">反向推理</span></div>
+                <div class="scroll-box" id="bc-display" style="color:#c084fc;"><span data-en="Move to trigger inference" data-zh="移動以觸發推理" data-es="Muévete para activar la inferencia">移動以觸發推理</span></div>
                 <!-- Formula Box -->
                 <div class="formula-box mono">
-                    Safe(x,y) ← ∀n∈Adj(x,y): ¬Breeze(n) ∧ ¬Stench(n)
+                    Safe(x,y) ← ∃n∈Adj(x,y): ¬Breeze(n) ∧ ∃n: ¬Murmur(n) ∧ ∃n: ¬Stench(n)
                 </div>
             </div>
             
             <!-- Status -->
             <div class="info-box">
-                <div class="info-title">📍 <span data-en="Status" data-zh="狀態">狀態</span></div>
+                <div class="info-title">📍 <span data-en="Status" data-zh="狀態" data-es="Estado">狀態</span></div>
                 <div style="font-size:12px;line-height:1.8;">
-                    <div><span data-en="Position" data-zh="位置">位置</span>: <span id="pos-display" style="color:#60a5fa;">(1,1)</span></div>
-                    <div><span data-en="Found" data-zh="找到">找到</span>: <span id="found-display">❌</span></div>
-                    <div><span data-en="Clarity" data-zh="澄清力">澄清力</span>: <span id="arrows-display" style="color:#fbbf24;">1</span></div>
-                    <div><span data-en="Status" data-zh="狀態">狀態</span>: <span id="status-display" style="color:#4ade80;">🟢 Active</span></div>
+                    <div><span data-en="Position" data-zh="位置" data-es="Posición">位置</span>: <span id="pos-display" style="color:#60a5fa;">(1,1)</span></div>
+                    <div><span data-en="Found" data-zh="找到" data-es="Encontrado">找到</span>: <span id="found-display">❌</span></div>
+                    <div><span data-en="Clarity" data-zh="澄清力" data-es="Claridad">澄清力</span>: <span id="arrows-display" style="color:#fbbf24;">1</span></div>
+                    <div><span data-en="Status" data-zh="狀態" data-es="Estado">狀態</span>: <span id="status-display" style="color:#4ade80;">🟢 Active</span></div>
                 </div>
             </div>
             
@@ -498,31 +519,31 @@
     <div class="absolute inset-0 bg-purple-900/5"></div>
     
     <div class="relative z-10 text-center">
-        <h2 class="text-3xl font-bold text-white" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 4px 20px rgba(0,0,0,0.7);" data-en="Gate of Serenity" data-zh="靜心之門">靜心之門</h2>
+        <h2 class="text-3xl font-bold text-white" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 4px 20px rgba(0,0,0,0.7);" data-en="Gate of Serenity" data-zh="靜心之門" data-es="Puerta de la Serenidad">靜心之門</h2>
     </div>
     
     <div class="relative z-10 flex flex-col items-center" style="margin-top: 10px;">
         <div class="breath-ring-large">
             <p id="breath-counter" class="text-6xl font-bold text-yellow-400 mono" style="text-shadow: 0 0 50px rgba(251, 191, 36, 0.9);">3</p>
         </div>
-        <p class="text-lg text-yellow-300 font-bold mt-3" style="text-shadow: 0 2px 15px rgba(0,0,0,0.8);" data-en="Take 3 deep breaths..." data-zh="深呼吸三次...">深呼吸三次...</p>
+        <p class="text-lg text-yellow-300 font-bold mt-3" style="text-shadow: 0 2px 15px rgba(0,0,0,0.8);" data-en="Take 3 deep breaths..." data-zh="深呼吸三次..." data-es="Respira hondo tres veces...">深呼吸三次...</p>
     </div>
     
     <div style="flex: 1;"></div>
     
     <div class="relative z-10 flex flex-col items-center" style="margin-bottom: 18%;">
         <div class="jingsi-card fade-in breathing-card">
-            <p class="text-lg font-bold text-yellow-300 mb-1" data-en="「Navigate the unknown with wisdom's light」" data-zh="「在未知中前行，用智慧照亮道路」">「在未知中前行，用智慧照亮道路」</p>
-            <p class="text-sm text-white/90 italic" data-en="Through careful reasoning, we find the safe path." data-zh="用謹慎的推理，找到安全的道路。">用謹慎的推理，找到安全的道路。</p>
-            <p class="text-xs text-purple-200 mt-2" data-en="— Master Cheng Yen" data-zh="— 證嚴上人">— 證嚴上人</p>
+            <p class="text-lg font-bold text-yellow-300 mb-1" data-en="「There is no one on earth I cannot love, trust, and forgive」" data-zh="「普天之下，沒有我不愛的人，沒有我不信任的人，也沒有我不原諒的人」" data-es="「No hay nadie en la tierra a quien no pueda amar, en quien no pueda confiar y a quien no pueda perdonar」">「普天之下，沒有我不愛的人，沒有我不信任的人，也沒有我不原諒的人」</p>
+            <p class="text-sm text-white/90 italic">There is no one on earth I cannot love, trust, and forgive.</p>
+            <p class="text-xs text-purple-200 mt-2" data-en="— Master Cheng Yen" data-zh="— 證嚴上人" data-es="— Maestra Cheng Yen">— 證嚴上人</p>
         </div>
     </div>
     
     <div class="relative z-10 flex flex-wrap gap-4 justify-center" style="margin-bottom: 8%;">
-        <button onclick="goToMainMenu()" class="btn btn-secondary" data-en="🏠 Home" data-zh="🏠 主頁">🏠 主頁</button>
-        <button onclick="goToPrevLevel()" class="btn btn-secondary" data-en="⬅️ Prev Level" data-zh="⬅️ 上一關">⬅️ 上一關</button>
-        <button onclick="backToGame()" class="btn btn-secondary" data-en="← Back to Level 4" data-zh="← 返回第四關">← 返回第四關</button>
-        <button onclick="goToNextLevel()" class="btn btn-primary" style="box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);" data-en="Level 5 →" data-zh="前往第五關 →">前往第五關 →</button>
+        <button onclick="goToMainMenu()" class="btn btn-secondary" data-en="🏠 Home" data-zh="🏠 主頁" data-es="🏠 Inicio">🏠 主頁</button>
+        <button onclick="goToPrevLevel()" class="btn btn-secondary" data-en="⬅️ Prev Level" data-zh="⬅️ 上一關" data-es="⬅️ Nivel anterior">⬅️ 上一關</button>
+        <button onclick="backToGame()" class="btn btn-secondary" data-en="← Back to Level 4" data-zh="← 返回第四關" data-es="← Volver al Nivel 4">← 返回第四關</button>
+        <button onclick="goToNextLevel()" class="btn btn-primary" style="box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);" data-en="Level 5 →" data-zh="前往第五關 →" data-es="Nivel 5 →">前往第五關 →</button>
     </div>
 </div>
 
@@ -534,6 +555,7 @@ let GRID_SIZE = 4;
 let currentLang = 'zh';
 let gameMusicPlaying = false;
 let meditationMusicPlaying = false;
+let TIER = 'basic';
 let aiDemoRunning = false;
 let aiDemoInterval = null;
 let audioCtx = null;
@@ -551,6 +573,7 @@ let world = {
     alive: true,
     hasFamily: false,
     escaped: false,
+    trail: null,
     arrows: 1
 };
 
@@ -665,8 +688,9 @@ function setLang(lang) {
     currentLang = lang;
     document.getElementById('lang-en').classList.toggle('active', lang === 'en');
     document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+    document.getElementById('lang-es').classList.toggle('active', lang === 'es');
     document.querySelectorAll('[data-en][data-zh]').forEach(el => {
-        el.textContent = el.getAttribute('data-' + lang);
+        el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-en');
     });
 }
 
@@ -730,27 +754,225 @@ function getNeighbors(x, y) {
 }
 
 function getPercepts(x, y) {
-    let breeze = false, stench = false, glitter = false, scream = false;
-    
+    // FIX-1 · Percept 本體分離
+    // 原版 barrier 與 rumor 共用 stench，使 Stench 事實無法蘊涵謠言源位置。
+    // 現在 barrier → murmur（聽不懂的話語聲），stench 專屬謠言源。
+    let breeze = false, stench = false, murmur = false, glitter = false;
+
     for (const dz of world.dangerZones) {
         if (Math.abs(dz.x - x) + Math.abs(dz.y - y) === 1) breeze = true;
     }
-    
-    if (Math.abs(world.barrierPos.x - x) + Math.abs(world.barrierPos.y - y) === 1) stench = true;
-    
-    // Wumpus stench (for 5x5, 6x6)
+
+    // 語言障礙 → Murmur（獨立感知，與謠言氣息互不混淆）
+    if (Math.abs(world.barrierPos.x - x) + Math.abs(world.barrierPos.y - y) === 1) murmur = true;
+
+    // 謠言源 → Stench（謠言氣息，唯一來源）
     if (world.wumpusPos && world.wumpusAlive) {
         if (Math.abs(world.wumpusPos.x - x) + Math.abs(world.wumpusPos.y - y) === 1) stench = true;
     }
-    
+
     if (x === world.familyPos.x && y === world.familyPos.y && !world.hasFamily) glitter = true;
-    
-    return { breeze, stench, glitter };
+
+    return { breeze, stench, murmur, glitter };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // KNOWLEDGE BASE
 // ═══════════════════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PROPOSITIONAL RESOLUTION  ·  AIMA 3rd ed. §7.5  (Russell & Norvig)
+//
+// 為什麼需要它：Wumpus 世界的核心公理是
+//     B(x,y)  ⟺  P(n1) ∨ P(n2) ∨ ...
+// 右邊是 disjunction，含兩個以上正文字，「不是 Horn 子句」。
+// 前向／反向鏈結只對 Horn 子句完備，所以推不出來。
+// Resolution 是反駁完備的（refutation-complete），可以。代價是最壞指數時間。
+// ═══════════════════════════════════════════════════════════════════════════
+let resolutionMode = false;
+const RES_MAX_STEPS = 4000;
+
+const resNeg    = L => L.startsWith('-') ? L.slice(1) : '-' + L;
+const resClause = (...lits) => new Set(lits);
+const resKey    = c => [...c].sort().join('|');
+const resShow   = c => c.size === 0 ? '□' : '(' + [...c].sort().join(' ∨ ') + ')';
+
+function resIsTautology(c) {
+    for (const L of c) if (c.has(resNeg(L))) return true;
+    return false;
+}
+
+// PL-RESOLVE(Ci, Cj)
+function resResolve(ci, cj) {
+    const out = [];
+    for (const L of ci) {
+        if (cj.has(resNeg(L))) {
+            const r = new Set([...ci, ...cj]);
+            r.delete(L); r.delete(resNeg(L));
+            if (!resIsTautology(r)) out.push(r);
+        }
+    }
+    return out;
+}
+
+// PL-RESOLUTION(KB, α)：反證法。加入 ¬α，推導到空子句 □ 即證明 KB ⊨ α
+function resProve(kb, alpha, maxSteps) {
+    maxSteps = maxSteps || RES_MAX_STEPS;
+    const clauses = kb.map(c => new Set(c));
+    const goalC = resClause(resNeg(alpha));
+    clauses.push(goalC);
+    const seen = new Set(clauses.map(resKey));
+    const trace = [{ t: 'goal', txt: resShow(goalC) }];
+    let steps = 0;
+
+    while (true) {
+        const fresh = [];
+        for (let i = 0; i < clauses.length; i++) {
+            for (let j = i + 1; j < clauses.length; j++) {
+                if (++steps > maxSteps) return { proved: false, steps, trace, exhausted: true };
+                for (const r of resResolve(clauses[i], clauses[j])) {
+                    if (r.size === 0) {
+                        trace.push({ t: 'empty', a: resShow(clauses[i]), b: resShow(clauses[j]) });
+                        return { proved: true, steps, trace, exhausted: false };
+                    }
+                    const k = resKey(r);
+                    if (!seen.has(k)) {
+                        seen.add(k); fresh.push(r);
+                        if (trace.length < 40)
+                            trace.push({ t: 'step', a: resShow(clauses[i]), b: resShow(clauses[j]), r: resShow(r) });
+                    }
+                }
+            }
+        }
+        if (!fresh.length) return { proved: false, steps, trace, exhausted: false };
+        clauses.push(...fresh);
+    }
+}
+
+// 對照組：Horn 前向鏈結。非 Horn 子句直接略過（這就是它的極限）
+function resHornFC(kb, alpha) {
+    const facts = new Set(); const rules = []; let skipped = 0;
+    for (const c of kb) {
+        const pos  = [...c].filter(L => !L.startsWith('-'));
+        const negs = [...c].filter(L =>  L.startsWith('-')).map(L => L.slice(1));
+        if (c.size === 1 && pos.length === 1) facts.add(pos[0]);
+        else if (c.size === 1) facts.add('-' + negs[0]);
+        else if (pos.length === 1) rules.push({ body: negs, head: pos[0] });
+        else skipped++;
+    }
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (const r of rules)
+            if (!facts.has(r.head) && r.body.every(b => facts.has(b))) { facts.add(r.head); changed = true; }
+    }
+    return { proved: facts.has(alpha), skipped, size: facts.size };
+}
+
+// 從玩家「真正走過」的格子建立子句庫（不偷看世界真相）
+function resBuildKB() {
+    const kb = []; const seen = new Set();
+    const push = c => { const k = resKey(c); if (!seen.has(k)) { seen.add(k); kb.push(c); } };
+    for (const key of agent.visited) {
+        const [x, y] = key.split(',').map(Number);
+        const p  = getPercepts(x, y);
+        const ns = getNeighbors(x, y);
+        push(resClause('-P' + x + ',' + y));
+        push(resClause('-W' + x + ',' + y));
+        push(resClause('-B' + x + ',' + y));
+        if (p.breeze) push(resClause(...ns.map(n => 'P' + n.x + ',' + n.y)));
+        else          ns.forEach(n => push(resClause('-P' + n.x + ',' + n.y)));
+        // FIX-1 · Stench 只蘊涵謠言源 W，Murmur 蘊涵語言障礙 B——兩組子句分開
+        if (p.stench) push(resClause(...ns.map(n => 'W' + n.x + ',' + n.y)));
+        else          ns.forEach(n => push(resClause('-W' + n.x + ',' + n.y)));
+        if (p.murmur) push(resClause(...ns.map(n => 'B' + n.x + ',' + n.y)));
+        else          ns.forEach(n => push(resClause('-B' + n.x + ',' + n.y)));
+    }
+    return kb;
+}
+
+// ── 三語文案 ────────────────────────────────────────────────────────────────
+const RT = {
+  en: { title:'Resolution · AIMA §7.5', on:'Resolution: ON — click any cell to ask',
+        off:'Resolution mode off', q:'Is this cell safe?', kb:'KB clauses',
+        horn:'Horn forward chaining', res:'Resolution (refutation)',
+        yes:'PROVED', no:'CANNOT PROVE', skip:'non-Horn clauses skipped',
+        steps:'resolution steps', cap:'step cap reached — complete but exponential',
+        lesson:'Forward chaining is complete only for Horn clauses. A breeze gives P∨P∨…, which has two positive literals — not Horn. That is why it fails here and resolution does not.',
+        same:'Both methods prove it. This cell is inside Horn range — no disjunction needed.',
+        need:'Walk around first. The KB is built only from cells you have actually visited.',
+        close:'Close', trace:'Proof trace' },
+  zh: { title:'Resolution 消解法 · AIMA §7.5', on:'Resolution 已開啟 — 點任一格提問',
+        off:'Resolution 模式關閉', q:'這一格安全嗎？', kb:'知識庫子句數',
+        horn:'Horn 前向鏈結', res:'Resolution 反證法',
+        yes:'證明成立', no:'無法證明', skip:'個非 Horn 子句被略過',
+        steps:'消解步數', cap:'觸及步數上限 — 完備但指數',
+        lesson:'前向鏈結只對 Horn 子句完備。一個 breeze 產生 P∨P∨…，有兩個以上正文字，不是 Horn 子句。這就是它在這裡失效、而 Resolution 不會的原因。',
+        same:'兩個方法都證得出來。這一格落在 Horn 範圍內，不需要 disjunction。',
+        need:'先走幾步。知識庫只用你真正走過的格子建立，不偷看世界真相。',
+        close:'關閉', trace:'證明過程' },
+  es: { title:'Resolución · AIMA §7.5', on:'Resolución activada — pulsa una casilla',
+        off:'Modo resolución desactivado', q:'¿Es segura esta casilla?', kb:'cláusulas en la BC',
+        horn:'Encadenamiento hacia adelante (Horn)', res:'Resolución (refutación)',
+        yes:'DEMOSTRADO', no:'NO SE PUEDE DEMOSTRAR', skip:'cláusulas no-Horn omitidas',
+        steps:'pasos de resolución', cap:'límite de pasos alcanzado — completo pero exponencial',
+        lesson:'El encadenamiento hacia adelante solo es completo para cláusulas de Horn. Una brisa produce P∨P∨…, con dos literales positivos — no es Horn. Por eso falla aquí y la resolución no.',
+        same:'Ambos métodos lo demuestran. Esta casilla está dentro del alcance de Horn.',
+        need:'Camina primero. La base de conocimiento se construye solo con las casillas que has visitado.',
+        close:'Cerrar', trace:'Traza de la demostración' }
+};
+const rt = () => RT[currentLang] || RT.en;
+
+function toggleResolution() {
+    resolutionMode = !resolutionMode;
+    const b = document.getElementById('res-btn');
+    if (b) b.style.background = resolutionMode ? 'rgba(139,92,246,0.55)' : '';
+    showStory((resolutionMode ? '⚖️ ' : '') + (resolutionMode ? rt().on : rt().off));
+    renderGrid();
+}
+
+function cellQuery(x, y) {
+    if (!resolutionMode) return;
+    const T = rt();
+    if (agent.visited.size === 0) { showStory('💭 ' + T.need); return; }
+
+    const kb = resBuildKB();
+    const goal = '-P' + x + ',' + y;
+    const h = resHornFC(kb, goal);
+    const r = resProve(kb, goal);
+
+    const badge = (ok, txt) =>
+        '<span style="color:' + (ok ? '#22c55e' : '#f87171') + ';font-weight:700">' + txt + '</span>';
+
+    let lesson = '';
+    if (!h.proved && r.proved)      lesson = T.lesson;
+    else if (h.proved && r.proved)  lesson = T.same;
+
+    const tr = r.trace.slice(0, 12).map(s =>
+        s.t === 'goal'  ? '¬α = ' + s.txt
+      : s.t === 'empty' ? s.a + ' ⊗ ' + s.b + '  ⟹  □'
+      :                   s.a + ' ⊗ ' + s.b + '  ⟹  ' + s.r
+    ).join('<br>');
+
+    document.getElementById('res-body').innerHTML =
+      '<div style="font-size:15px;margin-bottom:10px;color:#fbbf24">' + T.q + '  <b>(' + x + ',' + y + ')</b></div>'
+    + '<div style="font-size:13px;opacity:.75;margin-bottom:12px">' + T.kb + '：' + kb.length + '</div>'
+    + '<div style="margin-bottom:8px">① ' + T.horn + '：' + badge(h.proved, h.proved ? T.yes : T.no)
+    + (h.skipped ? '<span style="opacity:.6;font-size:12px"> — ' + h.skipped + ' ' + T.skip + '</span>' : '') + '</div>'
+    + '<div style="margin-bottom:12px">② ' + T.res + '：' + badge(r.proved, r.proved ? T.yes : T.no)
+    + '<span style="opacity:.6;font-size:12px"> — ' + r.steps + ' ' + T.steps + '</span>'
+    + (r.exhausted ? '<div style="color:#fbbf24;font-size:12px">⚠️ ' + T.cap + '</div>' : '') + '</div>'
+    + (lesson ? '<div style="background:rgba(139,92,246,.18);border-left:3px solid #8b5cf6;padding:10px;border-radius:6px;font-size:13px;line-height:1.6;margin-bottom:12px">' + lesson + '</div>' : '')
+    + '<div style="font-size:11px;opacity:.55;margin-bottom:4px">' + T.trace + '</div>'
+    + '<div style="font-family:monospace;font-size:11px;line-height:1.7;opacity:.8;max-height:170px;overflow:auto">' + tr + '</div>';
+
+    document.getElementById('res-close').textContent = T.close;
+    document.getElementById('res-title').textContent = T.title;
+    document.getElementById('res-modal').style.display = 'flex';
+}
+
+function closeResolution() { document.getElementById('res-modal').style.display = 'none'; }
+
 function addFact(fact) { agent.kb.add(fact); }
 function hasFact(fact) { return agent.kb.has(fact); }
 
@@ -770,25 +992,35 @@ function updateKB(x, y) {
         addFact(`Breeze(${x},${y})`);
     }
     
+    // FIX-1 · Stench 只談謠言源，Murmur 只談語言障礙
     if (!percepts.stench) {
         addFact(`NoStench(${x},${y})`);
-        for (const n of neighbors) addFact(`NotBarrier(${n.x},${n.y})`);
+        for (const n of neighbors) addFact(`NotRumor(${n.x},${n.y})`);
     } else {
         addFact(`Stench(${x},${y})`);
     }
-    
-    // Forward chaining
+
+    if (!percepts.murmur) {
+        addFact(`NoMurmur(${x},${y})`);
+        for (const n of neighbors) addFact(`NotBarrier(${n.x},${n.y})`);
+    } else {
+        addFact(`Murmur(${x},${y})`);
+    }
+
+    // Forward chaining — 一格要安全，三種危害都得排除
     for (const n of neighbors) {
-        if (hasFact(`NotDanger(${n.x},${n.y})`) && hasFact(`NotBarrier(${n.x},${n.y})`)) {
+        if (hasFact(`NotDanger(${n.x},${n.y})`)
+            && hasFact(`NotBarrier(${n.x},${n.y})`)
+            && (hasFact(`NotRumor(${n.x},${n.y})`) || hasFact(`RumorCleared(${n.x},${n.y})`))) {
             if (!hasFact(`Safe(${n.x},${n.y})`)) {
                 addFact(`Safe(${n.x},${n.y})`);
                 agent.safe.add(posKey(n.x, n.y));
             }
         }
     }
-    
+
     // Update percepts display
-    const perceptStr = `[${percepts.stench ? 'Stench' : 'None'}, ${percepts.breeze ? 'Breeze' : 'None'}, ${percepts.glitter ? 'Glitter' : 'None'}]`;
+    const perceptStr = `[${percepts.stench ? 'Stench' : 'None'}, ${percepts.murmur ? 'Murmur' : 'None'}, ${percepts.breeze ? 'Breeze' : 'None'}, ${percepts.glitter ? 'Glitter' : 'None'}]`;
     document.getElementById('percepts-display').textContent = perceptStr;
     
     return percepts;
@@ -798,16 +1030,21 @@ function backwardChain(x, y) {
     if (hasFact(`Safe(${x},${y})`)) return true;
     
     const neighbors = getNeighbors(x, y);
-    let notDanger = false, notBarrier = false;
-    
+    let notDanger = false, notBarrier = false, notRumor = false;
+
     for (const n of neighbors) {
         if (hasFact(`NoBreeze(${n.x},${n.y})`)) { addFact(`NotDanger(${x},${y})`); notDanger = true; break; }
     }
+    // FIX-1 · Murmur 證明無語言障礙，Stench 證明無謠言源——兩條各走各的
     for (const n of neighbors) {
-        if (hasFact(`NoStench(${n.x},${n.y})`)) { addFact(`NotBarrier(${x},${y})`); notBarrier = true; break; }
+        if (hasFact(`NoMurmur(${n.x},${n.y})`)) { addFact(`NotBarrier(${x},${y})`); notBarrier = true; break; }
     }
-    
-    if (notDanger && notBarrier) {
+    for (const n of neighbors) {
+        if (hasFact(`NoStench(${n.x},${n.y})`)) { addFact(`NotRumor(${x},${y})`); notRumor = true; break; }
+    }
+    if (hasFact(`RumorCleared(${x},${y})`)) notRumor = true;
+
+    if (notDanger && notBarrier && notRumor) {
         addFact(`Safe(${x},${y})`);
         addFact(`BC_Proved(${x},${y})`);
         agent.safe.add(posKey(x, y));
@@ -820,35 +1057,83 @@ function backwardChain(x, y) {
 // ═══════════════════════════════════════════════════════════════════════════
 // DISPEL RUMORS (replaces shooting Wumpus - story-friendly)
 // ═══════════════════════════════════════════════════════════════════════════
-function shootArrow() {
-    if (world.arrows <= 0 || !world.wumpusPos || !world.wumpusAlive) {
-        showStory('💭 ' + (currentLang === 'en' ? 'No clarity power left or no rumors here!' : '沒有澄清力了或這裡沒有謠言！'));
+// FIX-4/6 · 澄清行動改為「指定目標格」。
+// 決策層（AI）傳入由知識庫推得的座標；世界只負責解析命中與否，
+// 結果以 percept 形式回到 KB，世界座標不再直接寫入知識庫。
+// 註：一次性、相鄰作用，屬 JOK 自訂 action model，非 AIMA 原版具方向性的長距 Shoot。
+function shootArrow(tx, ty) {
+    if (world.arrows <= 0) {
+        showStory('💭 ' + (currentLang === 'en' ? 'No clarity power left.' : (currentLang === 'es' ? 'Sin poder de aclaración.' : '澄清力已經用完了。')));
         return;
     }
-    
-    playArrowSound();
-    world.arrows--;
-    
-    // Check if Rumor (Wumpus) is adjacent
+
     const { x, y } = world.agentPos;
-    const neighbors = getNeighbors(x, y);
-    
-    for (const n of neighbors) {
-        if (world.wumpusPos && n.x === world.wumpusPos.x && n.y === world.wumpusPos.y) {
-            world.wumpusAlive = false;
-            playWumpusDeathSound();
-            addFact(`RumorDispelled(${world.wumpusPos.x},${world.wumpusPos.y})`);
-            addFact(`Safe(${world.wumpusPos.x},${world.wumpusPos.y})`);
-            agent.safe.add(posKey(world.wumpusPos.x, world.wumpusPos.y));
-            showStory('👻🎯 ' + (currentLang === 'en' ? 'TRUTH REVEALED! The rumor is dispelled! The path is now safe!' : '真相大白！謠言被澄清了！道路現在安全了！'));
-            agent.elo += 50;
-            updateDisplays();
+    let target = (typeof tx === 'number' && typeof ty === 'number') ? { x: tx, y: ty } : null;
+
+    // 玩家手動：取唯一尚未走過的相鄰格為目標
+    if (!target) {
+        const cands = getNeighbors(x, y).filter(n => !agent.visited.has(posKey(n.x, n.y)));
+        if (cands.length === 1) target = cands[0];
+        else {
+            showStory('🧭 ' + (currentLang === 'en'
+                ? 'Clarity works on one adjacent cell. Move so that exactly one unexplored cell is next to you.'
+                : (currentLang === 'es'
+                    ? 'La aclaración actúa sobre una casilla contigua. Colócate junto a una sola casilla sin explorar.'
+                    : '澄清力作用在相鄰的一格。請移動到只剩一個未探索鄰格的位置。')));
             return;
         }
     }
-    
-    showStory('💭 ' + (currentLang === 'en' ? 'No rumors nearby to dispel.' : '附近沒有謠言可以澄清。'));
+
+    if (Math.abs(target.x - x) + Math.abs(target.y - y) !== 1) {
+        showStory('🧭 ' + (currentLang === 'en' ? 'Clarity reaches one adjacent cell only.' : (currentLang === 'es' ? 'La aclaración solo alcanza una casilla contigua.' : '澄清力只碰得到相鄰的一格。')));
+        return;
+    }
+
+    playArrowSound();
+    world.arrows--;
+
+    // 物理層：世界解析命中（世界知道自己的真相，這一層合法）
+    const hit = !!(world.wumpusPos && world.wumpusAlive
+                   && world.wumpusPos.x === target.x && world.wumpusPos.y === target.y);
+
+    if (hit) {
+        world.wumpusAlive = false;
+        playWumpusDeathSound();
+        // 撤回過期事實：謠言源已散，舊的氣息不再蘊涵任何事
+        for (const f of Array.from(agent.kb)) if (/^Stench\(/.test(f)) agent.kb.delete(f);
+        addFact(`RumorCleared(${target.x},${target.y})`);
+        for (let cx = 1; cx <= GRID_SIZE; cx++) for (let cy = 1; cy <= GRID_SIZE; cy++) addFact(`NotRumor(${cx},${cy})`);
+        showStory('👻🎯 ' + (currentLang === 'en'
+            ? `Truth revealed at (${target.x},${target.y}) — the rumor is dispelled.`
+            : (currentLang === 'es'
+                ? `Verdad revelada en (${target.x},${target.y}) — el rumor se disipa.`
+                : `真相大白 (${target.x},${target.y})——謠言散了。`)));
+        agent.elo += 50;
+    } else {
+        // 落空同樣是知識：那一格不是謠言源
+        addFact(`NotRumor(${target.x},${target.y})`);
+        showStory('💭 ' + (currentLang === 'en'
+            ? `Nothing at (${target.x},${target.y}) — now known: no rumor source there.`
+            : (currentLang === 'es'
+                ? `Nada en (${target.x},${target.y}) — ahora se sabe: allí no hay fuente.`
+                : `(${target.x},${target.y}) 沒有東西——現在知道了：那裡不是謠言源。`)));
+    }
+
+    reinferSafety();
     updateDisplays();
+}
+
+// KB 變動後重跑前向鏈結
+function reinferSafety() {
+    for (let cx = 1; cx <= GRID_SIZE; cx++) for (let cy = 1; cy <= GRID_SIZE; cy++) {
+        if (agent.safe.has(posKey(cx, cy))) continue;
+        if (hasFact(`NotDanger(${cx},${cy})`)
+            && hasFact(`NotBarrier(${cx},${cy})`)
+            && (hasFact(`NotRumor(${cx},${cy})`) || hasFact(`RumorCleared(${cx},${cy})`))) {
+            addFact(`Safe(${cx},${cy})`);
+            agent.safe.add(posKey(cx, cy));
+        }
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -862,6 +1147,7 @@ function movePlayer(dx, dy) {
         return;
     }
     
+    world.trail = { x: world.agentPos.x, y: world.agentPos.y };
     const newX = world.agentPos.x + dx;
     const newY = world.agentPos.y + dy;
     
@@ -878,43 +1164,44 @@ function movePlayer(dx, dy) {
     playFootstep();
     console.log('Moved to:', world.agentPos);
     
-    // Update KB
+    // FIX-7/9 · 先判危害，再更新知識庫。
+    // 原版先跑 updateKB，致死格會被寫成 Safe/Visited，污染死亡畫面的計數。
+    const _isPit     = world.dangerZones.some(dz => dz.x === newX && dz.y === newY);
+    const _isBarrier = (world.barrierPos.x === newX && world.barrierPos.y === newY);
+    const _isRumor   = !!(world.wumpusPos && world.wumpusAlive && world.wumpusPos.x === newX && world.wumpusPos.y === newY);
+
+    if (_isPit || _isBarrier || _isRumor) {
+        world.alive = false;
+        playDangerSound();
+        const _icon  = _isPit ? '💥' : (_isBarrier ? '🚧' : '👻');
+        const _cause = _isPit
+            ? { en:'Stepped into danger', es:'Caíste en peligro', zh:'踏進了危險' }
+            : (_isBarrier
+                ? { en:'Ran into the language barrier', es:'Chocaste con la barrera del idioma', zh:'撞上了語言的隔閡' }
+                : { en:'Swept up by false rumors', es:'Arrastrado por rumores falsos', zh:'被謠言帶走了' });
+        // 三種結局共用同一套歷程回饋
+        const _proved = new Set([...agent.safe, ...agent.bcProved]).size,
+              _walked = agent.visited.size,
+              _kb     = agent.kb.size;
+        showStory(_icon + ' ' + (currentLang === 'en'
+          ? `${_cause.en} — the reasoning still stands: ${_proved} cells proven safe · ${_walked} steps taken · ${_kb} KB facts. Inference evidence ≠ mission complete. Press "New World".`
+          : (currentLang === 'es'
+            ? `${_cause.es} — el razonamiento queda: ${_proved} casillas demostradas · ${_walked} pasos · ${_kb} hechos en la BC. Evidencia de inferencia ≠ misión cumplida. Pulsa «Nuevo mundo».`
+            : `${_cause.zh}——推理成果留下了：證明安全 ${_proved} 格・走過 ${_walked} 步・知識庫 ${_kb} 條。推理足跡 ≠ 完整救援，按「新世界」帶著經驗再來。`)));
+        document.getElementById('status-display').innerHTML = '<span style="color:#ef4444;">🔴 Game Over</span>';
+        updateDisplays();
+        return;
+    }
+
+    // Update KB（只在確認存活後）
     const percepts = updateKB(newX, newY);
-    
-    // Check hazards
-    for (const dz of world.dangerZones) {
-        if (dz.x === newX && dz.y === newY) {
-            world.alive = false;
-            playDangerSound();
-            showStory('💥 ' + (currentLang === 'en' ? 'Fell into danger zone! Press "New World" to try again.' : '掉入危險區域！按「新世界」重新開始。'));
-            document.getElementById('status-display').innerHTML = '<span style="color:#ef4444;">🔴 Game Over</span>';
-            updateDisplays();
-            return;
-        }
-    }
-    
-    if (world.barrierPos.x === newX && world.barrierPos.y === newY) {
-        world.alive = false;
-        playDangerSound();
-        showStory('🚧 ' + (currentLang === 'en' ? 'Hit language barrier! Press "New World" to try again.' : '遇到語言障礙！按「新世界」重新開始。'));
-        document.getElementById('status-display').innerHTML = '<span style="color:#ef4444;">🔴 Game Over</span>';
-        updateDisplays();
-        return;
-    }
-    
-    // Rumor (Wumpus) check - story-friendly
-    if (world.wumpusPos && world.wumpusAlive && world.wumpusPos.x === newX && world.wumpusPos.y === newY) {
-        world.alive = false;
-        playDangerSound();
-        showStory('👻 ' + (currentLang === 'en' ? 'Overwhelmed by false rumors! Press "New World" to try again.' : '被謠言淹沒了！按「新世界」重新開始。'));
-        document.getElementById('status-display').innerHTML = '<span style="color:#ef4444;">🔴 Game Over</span>';
-        updateDisplays();
-        return;
-    }
-    
+
     // Auto-grab family
     if (percepts.glitter && !world.hasFamily) {
         world.hasFamily = true;
+        var _s1=document.getElementById('m-stage1'),_s2=document.getElementById('m-stage2');
+        if(_s1){_s1.style.opacity='.45';_s1.style.textDecoration='line-through';}
+        if(_s2){_s2.style.opacity='1';_s2.style.color='#fbbf24';}
         agent.elo += 30;
         playSuccessSound();
         showStory('🏠 ' + (currentLang === 'en' ? 'Found the family! Now return to (1,1).' : '找到家庭！現在返回起點 (1,1)。'), true);
@@ -999,6 +1286,27 @@ function stopAIDemo() {
     document.getElementById('demo-btn').innerHTML = '🤖 <span>AI 演示</span>';
 }
 
+
+// 從知識庫推斷謠言源候選（不偷看 world.wumpusPos——決策只用 agent 知道的事）
+function inferRumorCandidates() {
+    const stench = [], noStench = [];
+    for (const f of agent.kb) {
+        let m = f.match(/^Stench\((\d+),(\d+)\)$/);      if (m) stench.push({x:+m[1], y:+m[2]});
+        m = f.match(/^NoStench\((\d+),(\d+)\)$/);        if (m) noStench.push({x:+m[1], y:+m[2]});
+    }
+    if (stench.length === 0) return [];
+    const cand = [];
+    for (let cx = 1; cx <= GRID_SIZE; cx++) for (let cy = 1; cy <= GRID_SIZE; cy++) {
+        const k = posKey(cx, cy);
+        if (agent.visited.has(k)) continue;
+        // FIX-4 · 已證明不是謠言源、或已澄清過的格子，退出候選
+        if (hasFact(`NotRumor(${cx},${cy})`) || hasFact(`RumorCleared(${cx},${cy})`)) continue;
+        const adj = p => Math.abs(p.x - cx) + Math.abs(p.y - cy) === 1;
+        if (stench.every(adj) && !noStench.some(adj)) cand.push({x:cx, y:cy});
+    }
+    return cand;
+}
+
 function aiStep() {
     const { x, y } = world.agentPos;
     const neighbors = getNeighbors(x, y);
@@ -1027,13 +1335,25 @@ function aiStep() {
         }
     }
     
-    // No safe moves - try shooting if we have arrows and sense stench
-    if (world.arrows > 0 && world.wumpusPos && world.wumpusAlive) {
-        const percepts = getPercepts(x, y);
-        if (percepts.stench) { shootArrow(); return; }
+    // FIX-5 · 決策層只讀知識庫與自己的資源，世界真相一概不看
+    if (world.arrows > 0) {
+        const cand = inferRumorCandidates();
+        if (cand.length === 1 && Math.abs(cand[0].x - x) + Math.abs(cand[0].y - y) === 1) {
+            showStory('🎯 ' + (currentLang === 'en' ? `KB entails a unique rumor source at (${cand[0].x},${cand[0].y}) — dispelling.` : (currentLang === 'es' ? `La BC infiere una única fuente en (${cand[0].x},${cand[0].y}) — aclarando.` : `知識庫推得唯一謠言源 (${cand[0].x},${cand[0].y})——澄清。`)));
+            shootArrow(cand[0].x, cand[0].y); return;
+        }
     }
-    
+
+
+    // 推理到此為止 — 誠實停下（JOK safe-only policy：可證明安全才走。
+    // 這是本作自訂的保守策略，AIMA 的 HYBRID-WUMPUS-AGENT 允許在無安全路線時
+    // 走 "not unsafe" 的風險路線，此處刻意不採用。）
     stopAIDemo();
+    showStory(currentLang === 'en'
+      ? '🧠 Reasoning exhausted — no cell can be PROVEN safe. The rest is a gamble, and I will not gamble for you.'
+      : (currentLang === 'es'
+        ? '🧠 Razonamiento agotado — ninguna casilla puede DEMOSTRARSE segura. Lo que queda es apostar, y no apostaré por ti.'
+        : '🧠 推理到此為止——沒有任何格子能被「證明」安全。剩下的是賭注，而我不替你賭。'), true);
 }
 
 function findPathTo(goalX, goalY) {
@@ -1084,7 +1404,7 @@ function generateWorld() {
     const barrierPos = cells.splice(0, 1)[0];
     
     // Place dangers
-    const numDangers = Math.max(1, Math.floor(GRID_SIZE * GRID_SIZE * 0.1));
+    const numDangers = (GRID_SIZE === 4) ? ({basic:1, challenge:2, master:3})[TIER] : Math.max(1, Math.floor(GRID_SIZE * GRID_SIZE * 0.1));
     const dangerZones = [];
     for (let i = 0; i < numDangers && cells.length > 0; i++) {
         dangerZones.push(cells.splice(0, 1)[0]);
@@ -1092,7 +1412,7 @@ function generateWorld() {
     
     // Wumpus for 5x5 and 6x6
     let wumpusPos = null;
-    if (GRID_SIZE >= 5 && cells.length > 0) {
+    if ((GRID_SIZE >= 5 || TIER !== 'basic') && cells.length > 0) {
         wumpusPos = cells.splice(0, 1)[0];
     }
     
@@ -1100,6 +1420,9 @@ function generateWorld() {
 }
 
 function newRandomWorld() {
+    var _s1=document.getElementById('m-stage1'),_s2=document.getElementById('m-stage2');
+    if(_s1){_s1.style.opacity='1';_s1.style.textDecoration='none';}
+    if(_s2){_s2.style.opacity='.45';_s2.style.color='';}
     stopAIDemo();
     const config = generateWorld();
     
@@ -1113,7 +1436,8 @@ function newRandomWorld() {
         alive: true,
         hasFamily: false,
         escaped: false,
-        arrows: GRID_SIZE >= 5 ? 1 : 0
+    trail: null,
+        arrows: (GRID_SIZE >= 5 || TIER !== 'basic') ? 1 : 0
     };
     
     agent = {
@@ -1124,15 +1448,24 @@ function newRandomWorld() {
         steps: 0,
         elo: agent.elo
     };
-    
+
     hideStory();
-    document.getElementById('percepts-display').textContent = '[None, None, None]';
     document.getElementById('bc-display').textContent = '移動以觸發推理';
+    // FIX-2 · 新地圖同樣先感知起點
+    updateKB(1, 1);
     updateDisplays();
 }
 
+function setTier(t) {
+    TIER = t; GRID_SIZE = 4;
+    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tier-' + t).classList.add('active');
+    document.body.classList.toggle('tier-master', t === 'master');
+    newRandomWorld();
+}
 function setDifficulty(size) {
-    GRID_SIZE = size;
+    GRID_SIZE = size; TIER = 'endurance';
+    document.body.classList.remove('tier-master');
     document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('diff-' + size).classList.add('active');
     newRandomWorld();
@@ -1145,17 +1478,19 @@ function resetGame() {
     world.hasFamily = false;
     world.escaped = false;
     world.wumpusAlive = world.wumpusPos !== null;
-    world.arrows = GRID_SIZE >= 5 ? 1 : 0;
-    
+    // FIX-3 · 與 newRandomWorld 對齊：4×4 challenge/master 同樣配一次澄清力
+    world.arrows = (GRID_SIZE >= 5 || TIER !== 'basic') ? 1 : 0;
+
     agent.visited = new Set();
     agent.safe = new Set();
     agent.bcProved = new Set();
     agent.kb = new Set();
     agent.steps = 0;
-    
+
     hideStory();
-    document.getElementById('percepts-display').textContent = '[None, None, None]';
     document.getElementById('bc-display').textContent = '移動以觸發推理';
+    // FIX-2 · 起點先感知一次。少了這一步 KB 是空的，AI Demo 一啟動就宣告停步。
+    updateKB(1, 1);
     updateDisplays();
 }
 
@@ -1211,7 +1546,8 @@ function renderGrid() {
             const adjacentVisited = getNeighbors(x, y).some(n => agent.visited.has(posKey(n.x, n.y)));
             if (isDanger && adjacentVisited) cls += ' danger-cell';
             if (isBarrier && adjacentVisited) cls += ' barrier-cell';
-            if (isWumpus && !world.wumpusAlive) cls += ' family-found'; // Show killed wumpus
+            if (isWumpus && !world.wumpusAlive) cls += ' family-found';
+            if (world.hasFamily && x === 1 && y === 1 && !isAgent) cls += ' home-target'; // Show killed wumpus
             
             // Percepts
             const percepts = getPercepts(x, y);
@@ -1224,17 +1560,19 @@ function renderGrid() {
             
             // Content
             let content = '';
-            if (isAgent) content = '🧑‍🤝‍🧑';
+            if (isAgent) content = world.hasFamily ? '🧑‍🤝‍🧑' : '🧑';
             else if (isFamily && !world.hasFamily) content = '🏠';
             else if (isFamily && world.hasFamily && isVisited) content = '✅';
             else if (isWumpus && world.wumpusAlive && adjacentVisited) content = '👻';
             else if (isWumpus && !world.wumpusAlive) content = '🎯';
             else if (isDanger && adjacentVisited) content = '⚠️';
             else if (isBarrier && adjacentVisited) content = '🚧';
+            else if (world.hasFamily && world.trail && world.trail.x === x && world.trail.y === y) content = '👨‍👩‍👧';
             else if (isVisited) content = '👣';
+            else if (world.hasFamily && x === 1 && y === 1) content = '🏡';
             else if (isBCProved) content = '✅';
             
-            html += `<div class="${cls}" style="min-height:${cellSize}px;">
+            html += `<div class="${cls}" style="min-height:${cellSize}px;${resolutionMode ? 'cursor:pointer;box-shadow:inset 0 0 0 1px rgba(139,92,246,.5);' : ''}" onclick="cellQuery(${x},${y})">
                 ${perceptHTML ? `<div class="cell-percepts">${perceptHTML}</div>` : ''}
                 <div class="cell-content">${content}</div>
             </div>`;
@@ -1311,6 +1649,14 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Use WASD/Arrows to move, SPACE to shoot');
 });
 </script>
+
+<div id="res-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9000;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)closeResolution()">
+  <div style="background:#1a1a2e;border:1px solid rgba(139,92,246,.5);border-radius:14px;max-width:560px;width:100%;padding:22px;color:#fff;max-height:86vh;overflow:auto;">
+    <div id="res-title" style="font-weight:700;color:#c084fc;margin-bottom:14px;">Resolution</div>
+    <div id="res-body"></div>
+    <button id="res-close" onclick="closeResolution()" style="margin-top:16px;padding:9px 22px;background:#8b5cf6;border:none;border-radius:20px;color:#fff;cursor:pointer;font-family:inherit;">Close</button>
+  </div>
+</div>
 
 </body>
 </html>
