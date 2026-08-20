@@ -280,6 +280,10 @@
     <button id="lang-es" class="lang-btn" onclick="setLang('es')">ES</button>
 </div>
 
+<!-- Home button - always visible on every screen -->
+<button onclick="window.location.href='../index.html'" title="Home 主頁"
+        style="position:fixed;top:8px;right:52px;z-index:9500;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.35);color:#fff;border-radius:10px;padding:5px 11px;font-size:15px;cursor:pointer;backdrop-filter:blur(4px);">🏠</button>
+
 <!-- Audio elements -->
 <audio id="bg-music" src="welcome_mp3.mp3" loop></audio>
 <audio id="meditation-music" src="meditation.mp3" loop></audio>
@@ -294,7 +298,7 @@
             <button onclick="showMenu()" class="btn btn-secondary text-xs py-1 px-3">← <span data-en="Menu" data-zh="選單" data-es="Menú">選單</span></button>
             <div class="text-center">
                 <span class="font-bold text-sm">🚚 Level 1: A* Search</span>
-                <span class="text-xs text-gray-300 ml-1" data-en="— Mrs. Garcia Mission" data-zh="— Mrs. Garcia 送餐任務" data-es="— Misión Mrs. Garcia">— Mrs. Garcia 送餐任務</span>
+                <span class="text-xs text-gray-300 ml-1" data-en="— Mrs. Garcia Mission" data-zh="— Mrs. Garcia 食物包任務" data-es="— Misión Mrs. Garcia">— Mrs. Garcia 食物包任務</span>
             </div>
             <div class="elo-badge">⭐ ELO: <span id="elo-display" class="mono">1200</span></div>
         </div>
@@ -407,6 +411,14 @@
     <!-- Spacer -->
     <div style="flex: 1;"></div>
     
+    <!-- Garcia tea reunion - shown only when the player saved her (restored 2026-08-19) -->
+    <div id="garcia-tea-reward" class="relative z-10 flex-col items-center" style="display:none;max-width:430px;margin-bottom:10px;">
+        <div class="rounded-xl overflow-hidden" style="border:3px solid rgba(236,72,153,0.65);box-shadow:0 6px 25px rgba(236,72,153,0.45);">
+            <img src="../assets/images/clean_Mrs__Garcia.png" alt="Tea with Mrs. Garcia" style="width:100%;max-height:190px;object-fit:cover;display:block;">
+        </div>
+        <p class="text-sm text-pink-100 text-center mt-2" style="text-shadow:0 2px 8px rgba(0,0,0,0.8);" data-en="Mrs. Garcia invited you in for tea. This is why you deliver." data-zh="Garcia 阿嬤邀請你們進屋喝茶。這就是你送食物包的原因。" data-es="La Sra. García los invitó a tomar té. Por esto entregas.">Garcia 阿嬤邀請你們進屋喝茶。這就是你送食物包的原因。</p>
+    </div>
+
     <!-- Card positioned lower, below lotus flower -->
     <div class="relative z-10 flex flex-col items-center" style="margin-bottom: 18%;">
         <div class="jingsi-card fade-in breathing-card">
@@ -884,7 +896,7 @@ const cinematic = { active: false, timer: null };
 
 const aiLines = {
     intro:  { zh:'🤖 讓我先示範:A* 最短路徑。看好每一步「為什麼」。', en:'🤖 Let me show you first: the A* shortest path. Watch the "why" of each step.', es:'🤖 Déjame mostrarte: la ruta más corta A*. Observa el "porqué" de cada paso.' },
-    premise:{ zh:'🚚 你是送餐志工。送出的是一餐飯,也是一句「有人在乎你」。點上方「AI · 點我看」,看它怎麼送。', en:'🚚 You are a meal-delivery volunteer. You deliver a meal — and the message "someone cares." Tap "AI" above to watch it deliver.', es:'🚚 Eres voluntario de comidas. Entregas una comida — y un "alguien te cuida". Toca "IA" arriba para ver cómo entrega.' },
+    premise:{ zh:'🚚 你是送食物包的志工。送出的是一週的糧食,也是一句「有人在乎你」。點上方「AI · 點我看」,看它怎麼送。', en:'🚚 You are a food-package volunteer. You deliver a week of groceries — and the message "someone cares." Tap "AI" above to watch it deliver.', es:'🚚 Eres voluntario de paquetes de alimentos. Entregas comida para una semana — y un "alguien te cuida". Toca "IA" arriba para ver cómo entrega.' },
     think:  { zh:'🤖 我在算 f = g + h……每一格都挑總成本最小的。看好了。', en:'🤖 Computing f = g + h… always the lowest total cost. Watch.', es:'🤖 Calculando f = g + h… siempre el menor costo total. Mira.' },
     done:   { zh:'🤖 算完了:12 步,最短路徑。開始送達。', en:'🤖 Done: 12 steps, the shortest path. Delivering now.', es:'🤖 Listo: 12 pasos, la ruta más corta. Entregando.' },
     cold:   { zh:'🤖 阿嬤家不在最短路上,所以我不會過去。我只看見「距離」——這是我的極限。', en:'🤖 Grandma\'s house isn\'t on the shortest path, so I won\'t go. I only see "distance" — that\'s my limit.', es:'🤖 La casa de la abuela no está en la ruta corta, así que no iré. Solo veo "distancia" — ese es mi límite.' },
@@ -1393,7 +1405,7 @@ function showFaceSlap(saved) {
     if (saved) {
         gameState.elo += 50;
         const T = {
-            zh: { big:'同樣 12 步。', ai:'AI:12 步 · 送達 · <b>0 條命</b>', you:'你:'+yourSteps+' 步 · 送達 · <b>救了 1 條命</b>', punch:'同樣一趟送餐——AI 送到門牌,你送到人心。', philo:'A* 只會最佳化你給它的目標。它沒有惡意,也沒有良心。良心,是人放進去的。' },
+            zh: { big:'同樣 12 步。', ai:'AI:12 步 · 送達 · <b>0 條命</b>', you:'你:'+yourSteps+' 步 · 送達 · <b>救了 1 條命</b>', punch:'同樣一趟路——AI 把食物包送到門牌,你送到人心。', philo:'A* 只會最佳化你給它的目標。它沒有惡意,也沒有良心。良心,是人放進去的。' },
             en: { big:'Same 12 steps.', ai:'AI: 12 steps · delivered · <b>0 lives</b>', you:'You: '+yourSteps+' steps · delivered · <b>saved 1 life</b>', punch:'Same delivery run — the AI reached an address, you reached a heart.', philo:'A* only optimizes the goal you give it. No malice, no conscience. Conscience is what humans put in.' },
             es: { big:'Los mismos 12 pasos.', ai:'IA: 12 pasos · entregado · <b>0 vidas</b>', you:'Tú: '+yourSteps+' pasos · entregado · <b>salvó 1 vida</b>', punch:'La misma entrega — la IA llegó a una dirección, tú a un corazón.', philo:'A* solo optimiza el objetivo que le das. Sin malicia, sin conciencia. La conciencia la pone el humano.' }
         };
@@ -1432,9 +1444,9 @@ function showGarciaReveal() {
     const storyArea = document.getElementById('story-area');
     storyArea.classList.remove('hidden');
     const T = {
-        zh: { t:'💡 你發現了 AI 看不見的事', d:'窗簾三天沒開……阿嬤跌倒了。<span class="text-pink-200">正因為你天天來送餐,才發現今天不對勁。</span>AI 只送到地址,你送到人的身邊。<span class="text-green-400 font-bold">扶起她,再把餐送到終點。</span>' },
-        en: { t:'💡 You saw what the AI could not', d:'Curtains shut for three days… Grandma had fallen. <span class="text-pink-200">Because you deliver every day, you noticed something was wrong.</span> The AI reaches an address; you reach a person. <span class="text-green-400 font-bold">Lift her up, then finish the delivery.</span>' },
-        es: { t:'💡 Viste lo que la IA no pudo', d:'Cortinas cerradas tres días… la abuela se cayó. <span class="text-pink-200">Como entregas cada día, notaste que algo andaba mal.</span> La IA llega a una dirección; tú llegas a una persona. <span class="text-green-400 font-bold">Levántala y termina la entrega.</span>' }
+        zh: { t:'💡 你發現了 AI 看不見的事', d:'窗簾三天沒開……阿嬤跌倒了。<span class="text-pink-200">正因為你常常來送食物包,才發現今天不對勁。</span>AI 只送到地址,你送到人的身邊。<span class="text-green-400 font-bold">扶起她,再把食物包送到終點。</span>' },
+        en: { t:'💡 You saw what the AI could not', d:'Curtains shut for three days… Grandma had fallen. <span class="text-pink-200">Because you come by so often, you noticed something was wrong.</span> The AI reaches an address; you reach a person. <span class="text-green-400 font-bold">Lift her up, then finish the delivery.</span>' },
+        es: { t:'💡 Viste lo que la IA no pudo', d:'Cortinas cerradas tres días… la abuela se cayó. <span class="text-pink-200">Como vienes tan seguido, notaste que algo andaba mal.</span> La IA llega a una dirección; tú llegas a una persona. <span class="text-green-400 font-bold">Levántala y termina la entrega.</span>' }
     };
     const t = T[currentLang] || T.en;
     storyArea.innerHTML = '<div class="text-center"><p class="text-base font-bold text-pink-300 mb-1">'+t.t+'</p>'
@@ -1563,6 +1575,9 @@ function completeLevel() {
     
     playVictorySound();
     showScreen('ataraxy-screen');
+    // 救到 Garcia 阿嬤才顯示泡茶團圓照（2026-08-19 復原）
+    const tea = document.getElementById('garcia-tea-reward');
+    if (tea) tea.style.display = gameState.savedGarcia ? 'flex' : 'none';
     startBreathingAnimation();
 }
 
@@ -1625,7 +1640,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化遊戲
     gameState.aiPath = computeAStarPath();
     renderGrid();
-    // 開場立意:先讓學生知道「送餐 = 送關心」
+    // 開場立意:先讓學生知道「送食物包 = 送關心」
     setSub(L(aiLines.premise), '🚚');
     
     // Keyboard arrow key support

@@ -43,7 +43,7 @@ The mapping preserves the design intent — scarce resources, hidden danger, rea
 
 | Level | Algorithm | AIMA Chapter | What You'll Learn |
 |-------|-----------|--------------|-------------------|
-| 1 | **A* Search** | Ch. 3 · Solving Problems by Searching | Finding the best path to deliver meals to elderly neighbors |
+| 1 | **A* Search** | Ch. 3 · Solving Problems by Searching | Finding the best path to deliver food packages to elderly neighbors |
 | 2 | **Propositional Logic** | Ch. 7 · Logical Agents | Making fair decisions about who receives resources |
 | 3 | **MDP** | Ch. 17 · Making Complex Decisions | Planning actions when outcomes are uncertain |
 | 4 | **Knowledge-Based Agent** | Ch. 7 · Logical Agents (Wumpus World) | Exploring new communities safely and respectfully |
