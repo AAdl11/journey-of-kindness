@@ -282,7 +282,7 @@
 
 <!-- Home button - always visible on every screen -->
 <button onclick="window.location.href='../index.html'" title="Home 主頁"
-        style="position:fixed;top:8px;right:52px;z-index:9500;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.35);color:#fff;border-radius:10px;padding:5px 11px;font-size:15px;cursor:pointer;backdrop-filter:blur(4px);">🏠</button>
+        style="position:fixed;top:10px;right:10px;z-index:9500;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.35);color:#fff;border-radius:10px;padding:5px 11px;font-size:15px;cursor:pointer;backdrop-filter:blur(4px);">🏠</button>
 
 <!-- Audio elements -->
 <audio id="bg-music" src="welcome_mp3.mp3" loop></audio>
@@ -411,14 +411,6 @@
     <!-- Spacer -->
     <div style="flex: 1;"></div>
     
-    <!-- Garcia tea reunion - shown only when the player saved her (restored 2026-08-19) -->
-    <div id="garcia-tea-reward" class="relative z-10 flex-col items-center" style="display:none;max-width:430px;margin-bottom:10px;">
-        <div class="rounded-xl overflow-hidden" style="border:3px solid rgba(236,72,153,0.65);box-shadow:0 6px 25px rgba(236,72,153,0.45);">
-            <img src="../assets/images/clean_Mrs__Garcia.png" alt="Tea with Mrs. Garcia" style="width:100%;max-height:190px;object-fit:cover;display:block;">
-        </div>
-        <p class="text-sm text-pink-100 text-center mt-2" style="text-shadow:0 2px 8px rgba(0,0,0,0.8);" data-en="Mrs. Garcia invited you in for tea. This is why you deliver." data-zh="Garcia 阿嬤邀請你們進屋喝茶。這就是你送食物包的原因。" data-es="La Sra. García los invitó a tomar té. Por esto entregas.">Garcia 阿嬤邀請你們進屋喝茶。這就是你送食物包的原因。</p>
-    </div>
-
     <!-- Card positioned lower, below lotus flower -->
     <div class="relative z-10 flex flex-col items-center" style="margin-bottom: 18%;">
         <div class="jingsi-card fade-in breathing-card">
@@ -653,17 +645,21 @@ const gameState = {
     nearGarcia: false, madeChoice: null, reachedGoal: false, garciaDimmed: false, garciaHint: false, savedGarcia: false, challengeMode: false, hardMode: false
 };
 
-// 地圖配置:平常用 NORMAL,大師挑戰換 HARD(障礙更多、最優路徑要真的算)
+// 地圖配置:平常用 NORMAL,大師挑戰換 MASTER
+// MASTER 設計（2026-08-19,BFS 窮舉驗證）:跳過阿嬤最短 12 步,救阿嬤最短 16 步。
+// 關懷的代價 = 4 步。油料正好 16——救人且零餘裕,貪婪走法會被誘進死路。
 const MAP_NORMAL = {
     garcia: { x: 5, y: 3 },
     obstacles: [{x:2,y:1},{x:2,y:2},{x:2,y:3},{x:4,y:4},{x:4,y:5},{x:6,y:2},{x:6,y:3}]
 };
-const MAP_HARD = {
-    garcia: { x: 3, y: 2 },
-    obstacles: [{x:1,y:1},{x:2,y:1},{x:3,y:1},{x:5,y:1},{x:5,y:2},{x:5,y:3},{x:1,y:3},{x:2,y:3},{x:3,y:4},{x:6,y:0},{x:6,y:4}]
+const MAP_MASTER = {
+    garcia: { x: 0, y: 2 },
+    skipOptimal: 12,   // BFS 驗證:不經阿嬤的最短
+    saveOptimal: 16,   // BFS 驗證:經阿嬤的最短,且全圖僅存在一條 16 步救人路線(路徑計數=1)
+    obstacles: [{x:0,y:1},{x:0,y:3},{x:1,y:5},{x:2,y:0},{x:2,y:2},{x:2,y:3},{x:2,y:4},{x:3,y:5},{x:4,y:0},{x:4,y:1},{x:4,y:2},{x:5,y:4},{x:6,y:4},{x:6,y:5},{x:7,y:1},{x:7,y:2}]
 };
 function applyMap(hard) {
-    const m = hard ? MAP_HARD : MAP_NORMAL;
+    const m = hard ? MAP_MASTER : MAP_NORMAL;
     gameState.garcia = { x: m.garcia.x, y: m.garcia.y };
     gameState.obstacles = m.obstacles.map(o => ({x:o.x, y:o.y}));
 }
@@ -854,7 +850,7 @@ function enterChallenge(hard) {
     gameState.mode = 'player';
     gameState.challengeMode = true;
     gameState.hardMode = !!hard;
-    gameState.stepBudget = 12;
+    gameState.stepBudget = hard ? MAP_MASTER.saveOptimal : 12;
     gameState.player = {x: 0, y: 0};
     gameState.steps = 0;
     gameState.visited = [{x: 0, y: 0}];
@@ -873,9 +869,9 @@ function enterChallenge(hard) {
         es: '🎮 ¡Tu turno! Planea tu ruta: pasa por la abuela 👵 y llega a la meta 🏠. Iguala los 12 pasos de la IA — ¿puedes salvarla Y empatar? La g/h/f abajo te ayuda.'
     };
     const TH = {
-        zh: '⚡ 大師挑戰:油量只有 12 步,零容錯!要救阿嬤、又剛好 12 步送達。一步都不能浪費——你得先在腦中算出最優路徑。餐涼了就得重來。',
-        en: '⚡ Master challenge: only 12 steps of fuel, zero margin! Save Grandma AND deliver in exactly 12. Not one wasted step — plan the optimal path in your head first. Run out and the meal goes cold.',
-        es: '⚡ Reto maestro: ¡solo 12 pasos de combustible, sin margen! Salva a la abuela Y entrega en 12 exactos. Ni un paso de más — planea la ruta óptima en tu mente. Si te quedas sin pasos, la comida se enfría.'
+        zh: '⚡ 大師挑戰:跳過阿嬤只要 12 步;救她,最少要 16 步——而且整張地圖只存在一條 16 步的路。油料正好 16,零容錯。關懷的代價是 4 步,而通往它的路,只有一條。',
+        en: '⚡ Master challenge: skipping Grandma takes 12 steps; saving her takes at least 16 — and exactly ONE 16-step route exists on this map. Fuel: exactly 16, zero margin. Kindness costs 4 extra steps, and only one path leads there.',
+        es: '⚡ Desafío maestro: saltarte a la abuela toma 12 pasos; salvarla, al menos 16 — y solo existe UNA ruta de 16 pasos en este mapa. Combustible: exactamente 16, sin margen. La bondad cuesta 4 pasos extra, y solo un camino llega ahí.'
     };
     setSub((hard ? TH : T)[currentLang] || (hard ? TH : T).en, hard ? '⚡ 12' : '🎯');
     renderGrid();
@@ -1270,8 +1266,9 @@ function showHardFail() {
 // ⭐ 星星獎勵:扣回 A* —— 越貼近「跟著最小 f 走」的最優路徑,星星越多
 function getStars(steps, saved) {
     if (!saved) return 0;
-    if (steps <= 12) return 3;
-    if (steps <= 14) return 2;
+    const best = gameState.hardMode ? MAP_MASTER.saveOptimal : 12;
+    if (steps <= best) return 3;
+    if (steps <= best + 2) return 2;
     return 1;
 }
 function loadBestStars() {
@@ -1303,7 +1300,7 @@ function showChallengeResult() {
     const storyArea = document.getElementById('story-area');
     storyArea.classList.remove('hidden');
     document.getElementById('ai-subtitle').classList.add('hidden');
-    const steps = gameState.steps, saved = gameState.savedGarcia, best = 12;
+    const steps = gameState.steps, saved = gameState.savedGarcia, best = gameState.hardMode ? MAP_MASTER.saveOptimal : 12;
     let icon, title, aiLine, tone;
     const T = {
         zh: {
@@ -1357,9 +1354,21 @@ function showChallengeResult() {
         + '<div class="fs-row '+tone+'" style="max-width:480px">'+aiLine+'</div>'
         + '<div class="fs-row fs-ai" style="max-width:420px">'+ (currentLang==='zh'?'你':'You')+': '+steps+' · AI: '+best+'</div>'
         + (saved ? renderStars(steps, saved) : '')
+        + (saved ? teaRewardHTML() : '')
         + (saved && steps <= best ? renderLadder() : '<p class="text-yellow-300 text-sm mt-2">↻ '+t.retry+'</p>')
         + '</div>';
     storyArea.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+
+// 🍵 泡茶團圓照:救到阿嬤、送達之後,在遊戲結算裡出現(不進靜心之門——那裡留給冥想)
+function teaRewardHTML() {
+    const cap = { zh:'Garcia 阿嬤邀請你們進屋喝茶。這就是你送食物包的原因。',
+                  en:'Mrs. Garcia invited you in for tea. This is why you deliver.',
+                  es:'La Sra. García los invitó a tomar té. Por esto entregas.' };
+    return '<div style="max-width:430px;margin:10px auto 0;">'
+        + '<img src="../assets/images/clean_Mrs__Garcia.png" alt="Tea with Mrs. Garcia" style="width:100%;max-height:180px;object-fit:cover;border-radius:12px;border:3px solid rgba(236,72,153,0.65);box-shadow:0 6px 25px rgba(236,72,153,0.45);display:block;">'
+        + '<p class="text-sm text-pink-100 mt-2" style="text-shadow:0 2px 8px rgba(0,0,0,0.8);">' + (cap[currentLang]||cap.en) + '</p></div>';
 }
 
 // 🪜 三階晉升梯子:先看戲(已完成)→ 遞出往上爬的階梯
@@ -1369,21 +1378,21 @@ function renderLadder() {
             invite: '你剛走完第一階。想知道 AI 是「怎麼算」出 12 步的嗎?上面還有兩階在等你。',
             t1: '我先看看', t1d: '看懂故事,感受善念', done: '✓ 已完成',
             t2: '我想我會了', t2d: '自己規劃路徑,看你幾步逼近 AI',
-            t3: '大師挑戰', t3d: '油量 12 步,零容錯——又救人又剛好打平',
+            t3: '大師挑戰', t3d: '救她的路全圖只有一條:16 步,油料 16,零容錯',
             soon: '即將開放', go: '▶ 開始'
         },
         en: {
             invite: 'You finished the first rung. Want to see HOW the AI computed 12 steps? Two rungs await above.',
             t1: 'Just show me', t1d: 'Follow the story, feel the kindness', done: '✓ Done',
             t2: 'I think I got it', t2d: 'Plan your own path, match the AI',
-            t3: 'Master challenge', t3d: '12 fuel, zero margin — save her AND tie exactly',
+            t3: 'Master challenge', t3d: 'Only ONE saving route exists: 16 steps, 16 fuel, zero margin',
             soon: 'Coming', go: '▶ Start'
         },
         es: {
             invite: 'Terminaste el primer nivel. ¿Quieres ver CÓMO la IA calculó 12 pasos? Dos niveles te esperan.',
             t1: 'Solo muéstrame', t1d: 'Sigue la historia, siente la bondad', done: '✓ Hecho',
             t2: 'Creo que ya sé', t2d: 'Planea tu ruta, iguala a la IA',
-            t3: 'Reto maestro', t3d: '12 combustible, sin margen — sálvala Y empata',
+            t3: 'Reto maestro', t3d: 'Solo existe UNA ruta que la salva: 16 pasos, 16 de combustible, sin margen',
             soon: 'Pronto', go: '▶ Iniciar'
         }
     };
@@ -1416,6 +1425,7 @@ function showFaceSlap(saved) {
             + '<p class="fs-punch">'+t.punch+'</p>'
             + '<p class="fs-philo">🧠 '+t.philo+'</p>'
             + '<p class="fs-elo">+50 ELO ✨</p>'
+            + teaRewardHTML()
             + renderLadder() + '</div>';
         document.getElementById('elo-display').textContent = gameState.elo;
         storyArea.scrollIntoView({behavior:'smooth', block:'center'});
@@ -1575,9 +1585,6 @@ function completeLevel() {
     
     playVictorySound();
     showScreen('ataraxy-screen');
-    // 救到 Garcia 阿嬤才顯示泡茶團圓照（2026-08-19 復原）
-    const tea = document.getElementById('garcia-tea-reward');
-    if (tea) tea.style.display = gameState.savedGarcia ? 'flex' : 'none';
     startBreathingAnimation();
 }
 
