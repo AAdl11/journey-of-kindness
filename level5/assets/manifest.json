@@ -1,0 +1,22 @@
+{
+  "level": 5,
+  "algorithm": "Bayesian Network",
+  "ownerVerified": "2026-08-22",
+  "mobileStandard": "../level1/level1_STABLE_手機OK.html",
+  "policy": "These are the Owner-supplied originals. Replacing, renaming, or removing an image requires Owner review and a manifest hash update.",
+  "images": [
+    { "file": "L5_bayviewSt_cleaned.png", "role": "intro background", "sha256": "c59465e722ee66386fefacdf8b00603dda04b4424461b73882e6cefdc2ccc31c" },
+    { "file": "P1_MrJonson.png", "role": "Mr. Johnson portrait", "sha256": "3c6a7fb1ce8390bf0d346e2bebc8d72980c38c1e47ccd37acd7946b754e8e6c5" },
+    { "file": "P2_Maria.png", "role": "Maria portrait", "sha256": "d38a90f9a7e32dd509f5e7302ce3cba880e8f7b10c97e041d529f2ccd0a5a9fc" },
+    { "file": "p3_Tane.png", "role": "Tane portrait", "sha256": "1665f54e596d208e2fc91070502ba8c71d86cf7c6a8945e288853be08f7fd1d6" },
+    { "file": "p4_陳奶奶.png", "role": "Mrs. Chen portrait", "sha256": "7d74bc0eacae799923acd0f5713397b58e013b82e348f6b3c9664a38df063ca6" },
+    { "file": "p5_Devon.png", "role": "Devon portrait", "sha256": "5e6b4cb857cd9632acb6f4d93477d888f8e4acb8e6ac36ca31b1323bd22ef906" },
+    { "file": "p6_公園長椅場景_cleaned.png", "role": "Mr. Johnson visit scene", "sha256": "92e4618f0c8b8f2756bf40e4c2ef9ed87530b1c0ee077fa716aa20ac7bb5da38" },
+    { "file": "p_7_公寓門口場景.png", "role": "Maria visit scene", "sha256": "85ce3c4f46e6cdc1f00b119fcee0d928bee1baf7e4dac21c371bffb3ffb90e78" },
+    { "file": "p8_籃球場場景_cleaned.png", "role": "Tane visit scene", "sha256": "950e78e0f7350551a51cf42ca7eeb630e4e03d3d43cfaa4702444230b9581570" },
+    { "file": "p9_社區菜園場景_cleaned.png", "role": "Mrs. Chen visit scene", "sha256": "37d93577cd54341e89a4f9f48c18d82a098bbcbfc0a3efc9ab788dd051ed7474" },
+    { "file": "p10_搬家場景_cleaned.png", "role": "Devon visit scene", "sha256": "62f5f167531bbc8eff99e6327ec247187538571c34606e5e61d6fbc02ebdec46" },
+    { "file": "p11_貝氏網路視覺化背景_cleaned.png", "role": "Gate of Stillness background", "sha256": "c785993f4b4165edc6aa382ea8d09fd97631f8ab6a34fa4a06bf33bb1656210b" },
+    { "file": "p12_社區關懷地圖介面.png", "role": "game map background", "sha256": "e83d5649d29ba6238c85617134820db12c2462664999286ab0cd56ffeebd7885" }
+  ]
+}

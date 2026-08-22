@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
     <title>善的旅程 Level 5: Bayesian Network | Circle of Care</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Noto Sans TC', sans-serif; box-sizing: border-box; }
-        .screen { display: none; min-height: 100vh; }
+        * { font-family: 'Noto Sans TC', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+        button, .character-card, .lang-btn, .music-toggle, .nav-btn { touch-action: manipulation; }
+        .screen { display: none; min-height: 100vh; position: relative; }
         .screen.active { display: flex; }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -24,12 +27,14 @@
         .heartbeat { animation: heartbeat 1.5s ease-in-out infinite; }
         
         /* 背景 - 更清晰透明 */
-        .bg-community { background: url('../assets/images/L5_bayviewSt_cleaned.png') center center/cover no-repeat; background-color: #fef3c7; }
-        .bg-map { background: url('../assets/images/p12_社區關懷地圖介面.png') center center/cover no-repeat; background-color: #ecfdf5; }
+        .bg-community { background: url('assets/images/L5_bayviewSt_cleaned.png') center center/cover no-repeat; background-color: #fef3c7; }
+        .bg-map { background: url('assets/images/p12_社區關懷地圖介面.png') center center/cover no-repeat; background-color: #ecfdf5; }
         
         /* 靜心之門 - 改用貝氏網路視覺化背景（愛心連結） */
         .bg-ataraxy {
-            background: url('../assets/images/p11_貝氏網路視覺化背景_cleaned.png') center center/cover no-repeat;
+            background:
+                linear-gradient(rgba(42, 35, 84, 0.16), rgba(42, 35, 84, 0.22)),
+                url('assets/images/p11_貝氏網路視覺化背景_cleaned.png') center center/cover no-repeat;
             background-color: #fce7f3;
         }
         
@@ -155,9 +160,115 @@
         .game-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; height: calc(100vh - 100px); padding: 16px; }
         .math-section { background: rgba(255,255,255,0.65); border-radius: 20px; padding: 20px; border: 2px solid rgba(139, 92, 246, 0.1); overflow-y: auto; }
         @media (max-width: 1024px) { .game-layout { grid-template-columns: 1fr; } .visit-layout { flex-direction: column; } }
+
+        /* Level 1 STABLE 手機 OK standard: Android avoids large blur surfaces. */
+        @media (max-width: 640px), (orientation: landscape) and (max-height: 600px) {
+            * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+        }
+
+        /* Mobile portrait: normal document flow keeps the entire level scrollable. */
+        @media (max-width: 640px) {
+            .screen { min-height: 100dvh; }
+            .lang-toggle { top: 6px; left: 50%; right: auto; transform: translateX(-50%); padding: 2px; }
+            .lang-btn { padding: 0.2rem 0.55rem; font-size: 0.72rem; }
+            .music-toggle { top: 8px; right: 8px; width: 40px; height: 40px; }
+
+            #intro-screen { padding: 64px 12px 92px; }
+            #intro-screen > .glass-card { padding: 1.25rem; }
+            .nav-buttons {
+                bottom: 8px;
+                width: calc(100% - 16px);
+                justify-content: center;
+                gap: 6px;
+                padding: 8px;
+            }
+            .nav-btn { padding: 7px 10px; font-size: 0.8rem; }
+
+            #game-screen { min-height: auto !important; padding: 44px 0 40px; overflow-x: hidden; }
+            #game-screen.active { display: block !important; min-height: auto !important; }
+            #game-screen > .glass-card {
+                margin: 0 8px;
+                padding: 10px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .game-layout {
+                display: block !important;
+                height: auto;
+                min-height: 0;
+                margin: 8px !important;
+                padding: 0 0 20px;
+            }
+            #characters-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+            .character-card { padding: 8px; }
+            .character-avatar { width: 64px; height: 64px; }
+            .dialogue-box-clear { padding: 16px; }
+            .math-section { margin-top: 12px; padding: 16px; overflow-y: visible; }
+
+            .visit-layout {
+                min-height: 100svh;
+                justify-content: flex-start;
+                gap: 16px;
+                padding: 64px 16px 24px;
+            }
+            .character-avatar-large { width: 120px; height: 120px; }
+            .visit-right { width: 100%; }
+            .dialogue-text { font-size: 1.1rem; line-height: 1.6; }
+
+            .result-overlay { align-items: flex-start; overflow-y: auto; padding: 56px 12px 12px; }
+            .result-card { width: 100%; padding: 1.25rem; }
+
+            #ataraxy-screen { justify-content: flex-start; overflow-y: auto; padding: 64px 12px 24px; }
+            .breath-ring { width: 100px; height: 100px; }
+            .jingsi-card { padding: 1rem; }
+        }
+
+        /* Phone landscape: use the short screen efficiently and keep vertical scroll available. */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .screen { min-height: 100dvh; }
+            .lang-toggle { top: 4px; left: 50%; right: auto; transform: translateX(-50%); padding: 2px; }
+            .lang-btn { padding: 0.15rem 0.5rem; font-size: 0.7rem; }
+            .music-toggle { top: 4px; right: 6px; width: 36px; height: 36px; }
+
+            #intro-screen { justify-content: flex-start; padding: 44px 12px 16px; overflow-y: auto; }
+            #intro-screen > .glass-card { max-width: 720px; padding: 1.25rem; }
+            .nav-buttons { position: static; transform: none; margin: 12px auto 0; }
+
+            #game-screen { min-height: auto !important; padding: 40px 8px 24px; overflow-x: hidden; }
+            #game-screen.active { display: block !important; min-height: auto !important; }
+            #game-screen > .glass-card { margin: 0; padding: 8px; }
+            .game-layout {
+                grid-template-columns: minmax(0, 1.8fr) minmax(250px, 1fr) !important;
+                height: auto;
+                min-height: 0;
+                margin: 8px 0 0 !important;
+                padding: 0 0 16px;
+                gap: 10px;
+            }
+            #characters-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+            .character-card { padding: 6px; }
+            .character-avatar { width: 54px; height: 54px; }
+            .dialogue-box-clear { padding: 12px 16px; }
+            .math-section { padding: 12px; overflow-y: visible; }
+
+            .visit-layout { flex-direction: row; min-height: 100dvh; gap: 20px; padding: 44px 18px 16px; }
+            .visit-left { width: 180px; flex-shrink: 0; }
+            .character-avatar-large { width: 112px; height: 112px; }
+            .visit-right { width: auto; max-width: 620px; flex: 1; }
+            .dialogue-text { font-size: 1rem; line-height: 1.5; }
+
+            .result-overlay { align-items: flex-start; overflow-y: auto; padding: 44px 12px 12px; }
+            .result-card { max-width: 720px; padding: 1rem 1.5rem; }
+            #ataraxy-screen { justify-content: flex-start; overflow-y: auto; padding: 44px 12px 16px; }
+            .breath-ring { width: 82px; height: 82px; }
+            .jingsi-card { max-width: 680px; padding: 0.85rem 1.25rem; }
+        }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100" translate="no">
 
 <div class="lang-toggle">
     <button class="lang-btn" onclick="setLang('en')">EN</button>
@@ -233,7 +344,7 @@
         <div class="math-section">
             <h3 class="font-bold text-purple-600 text-xl mb-4">🔮 <span data-en="Bayesian Analysis" data-zh="貝氏網路分析">貝氏網路分析</span></h3>
             <div class="bg-white rounded-xl p-4 mb-4 border-2 border-purple-200">
-                <p class="text-sm text-gray-500 mb-2" data-en="Hover to see details:" data-zh="滑鼠移到角色上查看：">滑鼠移到角色上查看：</p>
+                <p class="text-sm text-gray-500 mb-2" data-en="Tap or hover to see details:" data-zh="點選角色即可查看：">點選角色即可查看：</p>
                 <div class="space-y-3">
                     <div class="flex justify-between"><span class="text-gray-600" data-en="Life Stress" data-zh="生活壓力">生活壓力</span><span class="font-bold text-pink-600" id="bn-stress">-</span></div>
                     <div class="flex justify-between"><span class="text-gray-600" data-en="Connection" data-zh="社區連結">社區連結</span><span class="font-bold text-purple-600" id="bn-connection">-</span></div>
@@ -339,23 +450,23 @@ let musicPlaying = false;
 let state = { elo: 1500, eloEarned: 0, round: 1, maxRounds: 3, goodCount: 0, sadCount: 0, selected: [], currentVisitIndex: 0, dialogueIndex: 0 };
 
 const characters = [
-    { id: 'johnson', name: { en: 'Mr. Johnson', zh: 'Johnson 先生' }, avatar: 'P1_MrJonson.png', location: { en: 'Park Bench', zh: '公園長椅' }, scene: 'p6_公園長椅場景_cleaned.png',
+    { id: 'johnson', name: { en: 'Mr. Johnson', zh: 'Johnson 先生' }, avatar: 'assets/images/P1_MrJonson.png', location: { en: 'Park Bench', zh: '公園長椅' }, scene: 'assets/images/p6_公園長椅場景_cleaned.png', scenePosition: '70% center',
       bayesian: { stress: { en: 'Low', zh: '低' }, connection: { en: 'High', zh: '高' }, interaction: { en: 'Daily', zh: '每天' }, behavior: { en: 'Normal', zh: '正常' }, probability: 15 },
       truth: 'surprise', dialogues: { zh: ['（Johnson 先生坐在長椅上，看著遠方）', '「啊，是你啊。坐吧。」', '「我每天都來這裡... 其實是因為家裡太安靜了。」', '「老伴上個月走了，我不想讓人擔心，所以每天假裝很好。」', '「謝謝你過來。其實... 我很需要有人說說話。」'], en: ['(Mr. Johnson sits on the bench, gazing into the distance)', '"Oh, it\'s you. Have a seat."', '"I come here every day... actually because home is too quiet."', '"My wife passed last month. I pretend I\'m fine."', '"Thank you for coming. I really needed someone to talk to."'] },
       resultTitle: { en: 'Hidden Grief', zh: '隱藏的悲傷' }, resultMessage: { en: 'Data can\'t see a broken heart.', zh: '數據看不見破碎的心。' }, insight: { en: 'P(NeedsCare|Evidence) was LOW. But some evidence is invisible.', zh: 'P(需要關懷|證據) 很低。但有些證據是看不見的。' } },
-    { id: 'maria', name: { en: 'Maria', zh: 'Maria' }, avatar: 'P2_Maria.png', location: { en: 'Apartment', zh: '公寓門口' }, scene: 'p_7_公寓門口場景.png',
+    { id: 'maria', name: { en: 'Maria', zh: 'Maria' }, avatar: 'assets/images/P2_Maria.png', location: { en: 'Apartment', zh: '公寓門口' }, scene: 'assets/images/p_7_公寓門口場景.png', scenePosition: '28% center',
       bayesian: { stress: { en: 'High', zh: '高' }, connection: { en: 'Low', zh: '低' }, interaction: { en: 'Rare', zh: '很少' }, behavior: { en: 'Rushing', zh: '匆忙' }, probability: 85 },
       truth: 'touching', dialogues: { zh: ['（Maria 抱著兩袋菜，匆匆忙忙）', '「我沒事！真的！」', '（你幫她提了一袋菜）', '「...謝謝。」', '「其實我剛找到新工作了。事情在好轉。」', '「謝謝你關心。」'], en: ['(Maria holds two grocery bags, rushing)', '"I\'m fine! Really!"', '(You help carry her bags)', '"...Thank you."', '"Actually, I just got a new job. Things are looking up."', '"Thank you for caring."'] },
       resultTitle: { en: 'Things Are Looking Up', zh: '事情在好轉' }, resultMessage: { en: 'She was already on her way up.', zh: '她已經在好轉的路上。' }, insight: { en: 'High probability ≠ intervention always needed.', zh: '高機率 ≠ 一定要介入。' } },
-    { id: 'tane', name: { en: 'Tane', zh: 'Tane' }, avatar: 'p3_Tane.png', location: { en: 'Basketball Court', zh: '籃球場' }, scene: 'p8_籃球場場景_cleaned.png',
+    { id: 'tane', name: { en: 'Tane', zh: 'Tane' }, avatar: 'assets/images/p3_Tane.png', location: { en: 'Basketball Court', zh: '籃球場' }, scene: 'assets/images/p8_籃球場場景_cleaned.png', scenePosition: '24% center',
       bayesian: { stress: { en: 'Medium', zh: '中' }, connection: { en: 'Low', zh: '低' }, interaction: { en: 'Rare', zh: '很少' }, behavior: { en: 'Withdrawn', zh: '退縮' }, probability: 65 },
       truth: 'surprise', dialogues: { zh: ['（Tane 一個人坐在球場邊）', '「...」', '「你是社區的志工？」', '「...其實我每週都偷偷去幫 Johnson 先生倒垃圾。」', '「我想幫忙，怎麼正式加入你們？」'], en: ['(Tane sits alone by the court)', '"..."', '"You\'re a community volunteer?"', '"Actually, I secretly help Mr. Johnson every week."', '"I want to help. How can I join?"'] },
       resultTitle: { en: 'A Hidden Helper', zh: '隱藏的幫手' }, resultMessage: { en: 'You found someone who wanted TO help!', zh: '你找到了想要幫助別人的人！' }, insight: { en: 'He was already caring for others!', zh: '他已經在關心別人了！' } },
-    { id: 'chen', name: { en: 'Mrs. Chen', zh: '陳奶奶' }, avatar: 'p4_陳奶奶.png', location: { en: 'Garden', zh: '社區菜園' }, scene: 'p9_社區菜園場景_cleaned.png',
+    { id: 'chen', name: { en: 'Mrs. Chen', zh: '陳奶奶' }, avatar: 'assets/images/p4_陳奶奶.png', location: { en: 'Garden', zh: '社區菜園' }, scene: 'assets/images/p9_社區菜園場景_cleaned.png', scenePosition: '66% center',
       bayesian: { stress: { en: 'Low', zh: '低' }, connection: { en: 'High', zh: '高' }, interaction: { en: 'Daily', zh: '每天' }, behavior: { en: 'Happy', zh: '開心' }, probability: 10 },
       truth: 'touching', dialogues: { zh: ['（陳奶奶在菜園裡澆水，笑瞇瞇的）', '「來來來！吃青菜！」', '「沒事沒事！我很好！」', '（她突然安靜下來）', '「...其實我每天來這裡，是因為想念台灣的家。」', '「這些菜，是我媽媽教我種的。」', '「謝謝你聽我說。很久沒人跟我聊天了。」'], en: ['(Mrs. Chen waters plants, smiling)', '"Come! Eat vegetables!"', '"I\'m fine!"', '(She suddenly goes quiet)', '"I come here because I miss Taiwan."', '"My mother taught me to grow these."', '"Thank you for listening."'] },
       resultTitle: { en: 'Hidden Loneliness', zh: '隱藏的寂寞' }, resultMessage: { en: 'Beneath the smile was a longing.', zh: '笑容下是思念。' }, insight: { en: 'Outward behavior ≠ inner state.', zh: '外顯行為 ≠ 內心狀態。' } },
-    { id: 'devon', name: { en: 'Devon', zh: 'Devon' }, avatar: 'p5_Devon.png', location: { en: 'Moving Truck', zh: '搬家卡車旁' }, scene: 'p10_搬家場景_cleaned.png',
+    { id: 'devon', name: { en: 'Devon', zh: 'Devon' }, avatar: 'assets/images/p5_Devon.png', location: { en: 'Moving Truck', zh: '搬家卡車旁' }, scene: 'assets/images/p10_搬家場景_cleaned.png', scenePosition: '70% center',
       bayesian: { stress: { en: 'High', zh: '高' }, connection: { en: 'None', zh: '無' }, interaction: { en: 'New', zh: '新來的' }, behavior: { en: 'Busy', zh: '忙碌' }, probability: 75 },
       truth: 'touching', dialogues: { zh: ['（Devon 搬著箱子，滿頭大汗）', '「嘿！需要幫忙嗎？」', '「真的可以嗎？」', '（你幫他搬了幾個箱子）', '「謝謝！我們剛搬來。」', '「這個社區感覺很溫暖。謝謝你！」'], en: ['(Devon carries boxes, sweating)', '"Hey! Need help?"', '"Really?"', '(You help with boxes)', '"Thanks! We just moved here."', '"This community feels warm. Thank you!"'] },
       resultTitle: { en: 'Welcome Home', zh: '歡迎回家' }, resultMessage: { en: 'You were the first to offer.', zh: '你是第一個伸出手的人。' }, insight: { en: 'This time the data was correct!', zh: '這次數據是對的！' } }
@@ -437,6 +548,7 @@ function showBayesian(id) {
 }
 
 function selectCharacter(id) {
+    showBayesian(id);
     const card = document.getElementById('char-' + id);
     const idx = state.selected.indexOf(id);
     if(idx > -1) {
@@ -484,7 +596,10 @@ function startVisit() {
     const id = state.selected[state.currentVisitIndex];
     const c = characters.find(x => x.id === id);
     const vs = document.getElementById('visit-screen');
-    vs.style.background = `url('${c.scene}') center center/cover no-repeat`;
+    vs.style.backgroundImage = `url('${c.scene}')`;
+    vs.style.backgroundPosition = c.scenePosition || 'center center';
+    vs.style.backgroundSize = 'cover';
+    vs.style.backgroundRepeat = 'no-repeat';
     vs.style.backgroundColor = '#fef3c7';
     document.getElementById('visit-avatar').src = c.avatar;
     document.getElementById('visit-name').textContent = c.name[currentLang];
