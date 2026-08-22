@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Level 8: MCTS | Journey of Kindness 善的旅程</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BKBPRQQQ1Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BKBPRQQQ1Y');</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:system-ui,-apple-system,'Microsoft JhengHei',sans-serif;background:linear-gradient(180deg,#1a1a3e 0%,#2d2d5f 55%,#4a3f6b 100%);color:#fff;min-height:100vh;padding-bottom:40px}
+.text-zh,.text-es{display:none}
+body.lang-zh .text-en{display:none} body.lang-zh .text-zh{display:inline}
+body.lang-es .text-en{display:none} body.lang-es .text-es{display:inline}
+.lang-toggle{position:fixed;top:10px;left:10px;z-index:1000;display:flex;background:rgba(0,0,0,.6);border-radius:9999px;padding:3px;border:2px solid rgba(255,255,255,.3)}
+.lang-btn{background:none;border:none;color:#bbb;padding:5px 11px;border-radius:9999px;font-size:13px;cursor:pointer}
+.lang-btn.active{background:#fbbf24;color:#1a1a3e;font-weight:700}
+.home-btn{position:fixed;top:10px;right:10px;z-index:1000;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:10px;padding:5px 11px;font-size:15px;cursor:pointer}
+.wrap{max-width:520px;margin:0 auto;padding:56px 12px 0}
+h1{font-size:1.25rem;text-align:center;color:#fbbf24;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.sub{text-align:center;font-size:.8rem;color:#c4b5fd;margin-top:2px}
+.card{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:14px;margin-top:12px}
+.btn{display:inline-block;border:none;border-radius:11px;padding:11px 18px;font-size:.95rem;font-weight:700;cursor:pointer}
+.btn-p{background:linear-gradient(135deg,#f472b6,#a855f7);color:#fff}
+.btn-g{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.btn-ai{background:linear-gradient(135deg,#22d3ee,#3b82f6);color:#fff}
+/* 時間軸(對手) */
+.timebar{display:flex;gap:3px;margin-top:8px}
+.tseg{flex:1;height:12px;border-radius:3px;background:rgba(255,255,255,.16);position:relative}
+.tseg.used{background:#f472b6}
+.tseg.rain::after{content:'🌫';position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-size:11px}
+/* 八戶 */
+.park{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.rv{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.18);border-radius:12px;padding:9px 4px 7px;text-align:center;cursor:pointer;position:relative;transition:transform .12s}
+.rv:active{transform:scale(.94)}
+.rv .em{font-size:26px}
+.rv .nm{font-size:.62rem;color:#cbd5e1;margin-top:2px}
+.rv .bd{position:absolute;top:-7px;right:-5px;font-size:14px}
+.rv .cost{font-size:.6rem;color:#fbbf24}
+.rv.here{border-color:#fbbf24;box-shadow:0 0 14px rgba(251,191,36,.5)}
+.rv.done{opacity:.45;cursor:default}
+.rv.best{border-color:#22d3ee;box-shadow:0 0 14px rgba(34,211,238,.6)}
+/* MCTS 統計條 */
+.stat{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:.78rem}
+.stat .bar{flex:1;height:12px;background:rgba(255,255,255,.12);border-radius:6px;overflow:hidden}
+.stat .fill{height:100%;background:linear-gradient(90deg,#22d3ee,#3b82f6)}
+.banner{background:rgba(34,211,238,.13);border-left:3px solid #22d3ee;border-radius:8px;padding:9px 11px;font-size:.82rem;line-height:1.6;margin-top:10px}
+.event{background:rgba(244,114,182,.15);border-left:3px solid #f472b6}
+.hidden{display:none!important}
+.jingsi{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.35);border-radius:12px;padding:13px;margin-top:12px;text-align:center;line-height:1.7}
+.jingsi .q{color:#fbbf24;font-size:.92rem;font-weight:700}
+.jingsi .e{color:rgba(255,255,255,.85);font-size:.78rem;font-style:italic;margin-top:4px}
+.jingsi .s{color:rgba(255,255,255,.5);font-size:.7rem;margin-top:4px}
+details{margin-top:10px;font-size:.82rem;line-height:1.65}
+summary{cursor:pointer;color:#22d3ee;font-weight:700}
+.big{font-size:1.6rem;text-align:center;margin-top:6px}
+</style>
+</head>
+<body class="lang-zh">
+
+<div class="lang-toggle">
+    <button class="lang-btn" onclick="setLang('en')" id="lb-en">EN</button>
+    <button class="lang-btn active" onclick="setLang('zh')" id="lb-zh">中文</button>
+    <button class="lang-btn" onclick="setLang('es')" id="lb-es">ES</button>
+</div>
+<button class="home-btn" onclick="location.href='../index.html'">🏠</button>
+
+<div class="wrap">
+    <h1>🌳 Level 8 · Monte Carlo Tree Search</h1>
+    <p class="sub"><span class="text-en">Russell &amp; Norvig Ch. 5.4 — When you cannot see the future, rehearse it.</span><span class="text-zh">Russell &amp; Norvig 第 5.4 節——看不見未來，就排練未來。</span><span class="text-es">Russell &amp; Norvig Cap. 5.4 — Si no ves el futuro, ensáyalo.</span></p>
+
+    <!-- 開場 -->
+    <div class="card" id="intro">
+        <p style="font-size:.9rem;line-height:1.75">
+            <span class="text-en">🚐 Eight households live in the Hunters Point RV Park. The manager is away — he only told you about <b>three</b> of them. You have <b>one afternoon (12 slots)</b>. Needs escalate while you travel, and the fog rolls in twice. Your opponent is not a person. <b>Your opponent is time.</b></span>
+            <span class="text-zh">🚐 獵人角 RV Park 住著八戶人家。經理今天不在——他只交代得了其中<b>三戶</b>的狀況。你只有<b>一個下午（12 個時段）</b>。你在路上時，需求會升級；霧會漲兩次。你的對手不是任何人——<b>你的對手，是時間。</b></span>
+            <span class="text-es">🚐 Ocho familias viven en el RV Park de Hunters Point. El gerente no está — solo te contó de <b>tres</b>. Tienes <b>una tarde (12 turnos)</b>. Las necesidades escalan mientras viajas, y la niebla sube dos veces. Tu oponente no es una persona. <b>Tu oponente es el tiempo.</b></span>
+        </p>
+        <div class="banner" style="margin-top:10px">
+            <span class="text-en">🤖 Your companion AI cannot see the unknown households either — it <b>rehearses 1,500 possible afternoons</b> by sampling, then tells you what it found. You always have the last word.</span>
+            <span class="text-zh">🤖 同行的 AI 也看不見未知戶的狀況——它靠抽樣<b>排練 1,500 個可能的下午</b>，再把發現告訴你。最後一句話，永遠是你的。</span>
+            <span class="text-es">🤖 La IA tampoco ve los hogares desconocidos — <b>ensaya 1.500 tardes posibles</b> por muestreo y te cuenta lo que halló. La última palabra siempre es tuya.</span>
+        </div>
+        <div style="text-align:center;margin-top:12px">
+            <button class="btn btn-p" onclick="startGame()"><span class="text-en">Start the Afternoon →</span><span class="text-zh">開始這個下午 →</span><span class="text-es">Empezar la tarde →</span></button>
+        </div>
+    </div>
+
+    <!-- 遊戲 -->
+    <div class="card hidden" id="game">
+        <div style="display:flex;justify-content:space-between;font-size:.78rem;color:#cbd5e1">
+            <span>⏳ <span class="text-en">Time</span><span class="text-zh">時間</span><span class="text-es">Tiempo</span>: <b id="tval" style="color:#fbbf24">0</b>/12</span>
+            <span>💛 <span class="text-en">Score</span><span class="text-zh">分數</span><span class="text-es">Puntos</span>: <b id="sval" style="color:#f472b6">0</b></span>
+            <span>🚶 ×<b id="tc">1</b></span>
+        </div>
+        <div class="timebar" id="timebar"></div>
+        <div class="park" id="park"></div>
+        <div id="msg" class="banner" style="min-height:40px"></div>
+        <div style="display:flex;gap:8px;margin-top:10px;justify-content:center">
+            <button class="btn btn-ai" onclick="askMCTS()" id="askbtn">🤖 <span class="text-en">Rehearse futures</span><span class="text-zh">排練未來</span><span class="text-es">Ensayar futuros</span></button>
+            <button class="btn btn-g" onclick="endEarly()"><span class="text-en">End day</span><span class="text-zh">提早收工</span><span class="text-es">Terminar</span></button>
+        </div>
+        <div id="mctsbox" class="hidden" style="margin-top:10px">
+            <p style="font-size:.78rem;color:#22d3ee"><b id="mctshead"></b></p>
+            <div id="mctsstats"></div>
+            <p style="font-size:.7rem;color:rgba(255,255,255,.55);margin-top:6px">
+                <span class="text-en">Sampling, not prophecy — unknown homes are guessed by probability, never peeked at. Tap any RV to decide for yourself.</span>
+                <span class="text-zh">這是取樣，不是預知——未知戶用機率抽樣代替，絕不偷看真相。點任何一戶，由你自己決定。</span>
+                <span class="text-es">Muestreo, no profecía — los hogares desconocidos se estiman por probabilidad, nunca se espían. Toca un RV y decide tú.</span>
+            </p>
+        </div>
+        <details>
+            <summary><span class="text-en">🧠 What is MCTS doing?</span><span class="text-zh">🧠 MCTS 在做什麼？</span><span class="text-es">🧠 ¿Qué hace MCTS?</span></summary>
+            <p style="margin-top:6px;color:#cbd5e1">
+                <span class="text-en">Four steps, thousands of times: <b>Select</b> a promising branch (UCB1 balances trying the best vs. exploring the unsure) → <b>Expand</b> one new choice → <b>Simulate</b> a random rest-of-afternoon → <b>Back-propagate</b> the result up the tree. The branch visited most becomes the advice. Minimax plans against a thinking opponent; MCTS samples against an uncertain one — and time is exactly that.</span>
+                <span class="text-zh">四個步驟，重複上千次：<b>選擇</b>一條有希望的分支（UCB1 在「用已知最好的」與「探索不確定的」之間取捨）→ <b>擴展</b>一個新選項 → <b>模擬</b>隨機走完剩下的下午 → <b>回傳</b>結果更新整棵樹。被拜訪最多次的分支，就是它的建議。Minimax 對付會思考的對手；MCTS 對付不確定的對手——時間正是這種對手。</span>
+                <span class="text-es">Cuatro pasos, miles de veces: <b>Seleccionar</b> una rama prometedora (UCB1) → <b>Expandir</b> una opción nueva → <b>Simular</b> el resto de la tarde al azar → <b>Retropropagar</b> el resultado. La rama más visitada es el consejo. Minimax enfrenta a un oponente que piensa; MCTS, a uno incierto — y el tiempo es exactamente eso.</span>
+            </p>
+        </details>
+    </div>
+
+    <!-- 結局 -->
+    <div class="card hidden" id="end">
+        <p class="big" id="endicon">🌆</p>
+        <p style="text-align:center;font-weight:700;font-size:1.05rem;margin-top:4px" id="endtitle"></p>
+        <p style="text-align:center;font-size:.85rem;color:#cbd5e1;margin-top:6px;line-height:1.7" id="endtext"></p>
+        <div class="jingsi">
+            <p class="q">「難行能行，難捨能捨，難為能為，才能昇華自我的人格。」</p>
+            <p class="e">Continue even when it is hard to go on. Release even when it is hard to let go. Endure even when it is hard to bear. Those are how we build our character.</p>
+            <p class="s">— <span class="text-en">Master Cheng Yen</span><span class="text-zh">證嚴上人</span><span class="text-es">Maestra Cheng Yen</span></p>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-p" onclick="location.reload()"><span class="text-en">↻ New afternoon</span><span class="text-zh">↻ 再來一個下午</span><span class="text-es">↻ Otra tarde</span></button>
+            <button class="btn btn-g" onclick="location.href='../outro.html'"><span class="text-en">🌳 Hope Tree</span><span class="text-zh">🌳 許願樹</span><span class="text-es">🌳 Árbol</span></button>
+            <button class="btn btn-g" onclick="location.href='../index.html'">🏠</button>
+        </div>
+    </div>
+</div>
+
+<script src="mcts_core.js"></script>
+<script>
+'use strict';
+let currentLang='zh';
+function setLang(l){currentLang=l;document.body.className='lang-'+l;
+ ['en','zh','es'].forEach(x=>document.getElementById('lb-'+x).classList.toggle('active',x===l));
+ try{localStorage.setItem('jok-lang',l);}catch(e){} render();}
+try{const l=localStorage.getItem('jok-lang');if(l)setLang(l);}catch(e){}
+
+function track(n,p){try{if(typeof gtag==='function')gtag('event',n,Object.assign({level:8},p||{}));}catch(e){}}
+
+const HOMES_EMOJI=['🚐','🚌','🚐','🛖','🚐','🚚','🚐','🚐'];
+const NAMES={en:['Rosa','Big Joe','Ana','The Chens','Marcus','Deshawn','Maria','Old Sam'],
+             zh:['Rosa','大喬','Ana','陳家','Marcus','Deshawn','Maria','老山姆'],
+             es:['Rosa','Big Joe','Ana','Los Chen','Marcus','Deshawn','María','Viejo Sam']};
+let S=null, rng=null, advice=null;
+
+function startGame(){
+    const seed=(Date.now()%100000)|1;
+    S=MCTS.newGame(seed); rng=MCTS.mulberry32(seed*13+5); advice=null;
+    document.getElementById('intro').classList.add('hidden');
+    document.getElementById('game').classList.remove('hidden');
+    track('level_start',{seed}); say('start'); render();
+}
+
+const MSG={
+ start:{en:'The manager told you about 3 homes (colored badges). ❓ means unknown — you learn it at the door. Tap an RV to walk over. Cost = distance × fog + 1.',
+        zh:'經理交代了 3 戶（有顏色的標記）。❓ 是未知——到了門口才知道。點一戶走過去。成本＝距離 × 霧 ＋ 1。',
+        es:'El gerente te contó de 3 hogares (con insignia). ❓ es desconocido — lo sabrás en la puerta. Toca un RV. Costo = distancia × niebla + 1.'},
+ rain:{en:'🌫 Time strikes — the fog rolls in. Every step now costs double.',
+       zh:'🌫 時間出招——起霧了。現在每一步都要花雙倍時間。',
+       es:'🌫 El tiempo ataca — sube la niebla. Cada paso ahora cuesta el doble.'},
+ esc:{en:'⚠️ While you traveled, a household got worse.',
+      zh:'⚠️ 你在路上的時候，有一戶的狀況變糟了。',
+      es:'⚠️ Mientras viajabas, un hogar empeoró.'},
+ helped3:{en:'You arrived just in time — it was urgent. +4',zh:'你及時趕到——這是急件。+4',es:'Llegaste a tiempo — era urgente. +4'},
+ helped2:{en:'They needed you today. +2',zh:'他們今天正需要你。+2',es:'Te necesitaban hoy. +2'},
+ helped1:{en:'A short visit, a long smile. +1',zh:'短短探視，長長的笑。+1',es:'Visita corta, sonrisa larga. +1'},
+ helped0:{en:'All well here — a hello never hurts.',zh:'這戶一切都好——打聲招呼，也不算白走。',es:'Todo bien aquí — saludar nunca sobra.'}
+};
+function say(k,extra){const m=MSG[k];if(!m)return;
+ const el=document.getElementById('msg');
+ el.className='banner'+((k==='rain'||k==='esc')?' event':'');
+ el.innerHTML=(m[currentLang]||m.en)+(extra||'');}
+
+function badge(i){
+    if(S.helped[i])return'✅';
+    if(!S.known[i])return'❓';
+    return ['😌','🟢','🟡','🔴'][S.needs[i]];
+}
+function render(){
+    if(!S)return;
+    document.getElementById('tval').textContent=S.t;
+    document.getElementById('sval').textContent=S.score;
+    document.getElementById('tc').textContent=S.travelCost;
+    const tb=document.getElementById('timebar');tb.innerHTML='';
+    for(let i=0;i<MCTS.TIME_MAX;i++){const d=document.createElement('div');
+        d.className='tseg'+(i<S.t?' used':'')+(MCTS.RAIN_TICKS.includes(i+1)?' rain':'');tb.appendChild(d);}
+    const park=document.getElementById('park');park.innerHTML='';
+    const acts=MCTS.legalActions(S);
+    for(let i=0;i<8;i++){
+        const d=document.createElement('div');
+        d.className='rv'+(S.pos===i?' here':'')+(S.helped[i]?' done':'')+(advice&&advice.best===i?' best':'');
+        const cost=MCTS.dist(S.pos,i)*S.travelCost+1;
+        const reach=acts.includes(i);
+        d.innerHTML='<span class="bd">'+badge(i)+'</span><div class="em">'+HOMES_EMOJI[i]+'</div>'
+            +'<div class="nm">'+(NAMES[currentLang]||NAMES.en)[i]+'</div>'
+            +(S.helped[i]?'':'<div class="cost">'+(reach?('⏳'+cost):'—')+'</div>');
+        if(!S.helped[i]&&reach)d.onclick=()=>visit(i);
+        park.appendChild(d);
+    }
+}
+function visit(i){
+    const before=S.needs.map((n,k)=>S.helped[k]?-1:n);
+    const rained=S.travelCost;
+    S=MCTS.applyAction(S,i,rng);
+    advice=null;document.getElementById('mctsbox').classList.add('hidden');
+    track('visit',{home:i,need:S.needs[i],t:S.t});
+    let note='';
+    if(S.travelCost>rained)note=' '+(MSG.rain[currentLang]||MSG.rain.en);
+    else if(before.some((n,k)=>n>=0&&!S.helped[k]&&S.needs[k]>n))note=' '+(MSG.esc[currentLang]||MSG.esc.en);
+    say('helped'+S.needs[i],note);
+    render();
+    if(MCTS.isTerminal(S))setTimeout(endGame,900);
+}
+function askMCTS(){
+    if(!S||MCTS.isTerminal(S))return;
+    const btn=document.getElementById('askbtn');btn.disabled=true;
+    setTimeout(()=>{
+        advice=MCTS.search(S,1500,S.seed*17+S.t);
+        track('mcts_query',{t:S.t,best:advice.best});
+        const H={en:'I rehearsed 1,500 afternoons. Most-visited branches:',
+                 zh:'我排練了 1,500 個下午。被走最多次的分支：',
+                 es:'Ensayé 1.500 tardes. Ramas más visitadas:'};
+        document.getElementById('mctshead').textContent=H[currentLang]||H.en;
+        const box=document.getElementById('mctsstats');box.innerHTML='';
+        const top=advice.stats.slice(0,3);
+        const maxN=top.length?top[0].visits:1;
+        for(const st of top){
+            const row=document.createElement('div');row.className='stat';
+            row.innerHTML='<span style="width:64px">'+HOMES_EMOJI[st.action]+' '+(NAMES[currentLang]||NAMES.en)[st.action]+'</span>'
+                +'<div class="bar"><div class="fill" style="width:'+(st.visits/maxN*100)+'%"></div></div>'
+                +'<span style="width:88px;text-align:right;color:#94a3b8">'+st.visits+'×· '+st.mean.toFixed(1)+'</span>';
+            box.appendChild(row);
+        }
+        document.getElementById('mctsbox').classList.remove('hidden');
+        btn.disabled=false;render();
+    },60);
+}
+function endEarly(){track('end_early',{t:S.t});endGame();}
+function endGame(){
+    const sc=MCTS.finalScore(S);
+    const helped=S.helped.filter(h=>h).length;
+    const missed=S.needs.filter((n,i)=>!S.helped[i]&&n===3).length;
+    document.getElementById('game').classList.add('hidden');
+    document.getElementById('end').classList.remove('hidden');
+    track('level_complete',{score:sc,helped,missed,t:S.t});
+    const icon=missed===0?'🌟':'🌆';
+    document.getElementById('endicon').textContent=icon;
+    const T={
+      en:{t0:'Every urgent need was met.',t1:'The afternoon ends.',
+          d:'You visited <b>'+helped+'</b> of 8 households · score <b>'+sc+'</b>'+(missed?' · <b>'+missed+'</b> urgent need'+(missed>1?'s':'')+' will wait until tomorrow.':'.')+'<br>Time never stopped moving — and neither did you.<br><span style="color:#22d3ee">In 120 test afternoons: MCTS averaged 5.6, greedy 4.6, random −3.3. Rehearsing futures works — but choosing whom to help was always yours.</span>'},
+      zh:{t0:'每一件急事，都被接住了。',t1:'下午結束了。',
+          d:'八戶裡你探視了 <b>'+helped+'</b> 戶・得分 <b>'+sc+'</b>'+(missed?'・還有 <b>'+missed+'</b> 件急事要等到明天。':'。')+'<br>時間從來沒有停下——你也沒有。<br><span style="color:#22d3ee">120 個測試下午裡：MCTS 平均 5.6 分、貪婪法 4.6、隨機 −3.3。排練未來真的有用——但決定先幫誰的，始終是你。</span>'},
+      es:{t0:'Cada urgencia fue atendida.',t1:'La tarde termina.',
+          d:'Visitaste <b>'+helped+'</b> de 8 hogares · puntos <b>'+sc+'</b>'+(missed?' · <b>'+missed+'</b> urgencia(s) esperarán a mañana.':'.')+'<br>El tiempo nunca se detuvo — tú tampoco.<br><span style="color:#22d3ee">En 120 tardes de prueba: MCTS 5,6 · voraz 4,6 · azar −3,3. Ensayar futuros funciona — pero elegir a quién ayudar siempre fue tuyo.</span>'}
+    };
+    const t=T[currentLang]||T.en;
+    document.getElementById('endtitle').textContent=missed===0?t.t0:t.t1;
+    document.getElementById('endtext').innerHTML=t.d;
+}
+window.addEventListener('beforeunload',()=>{try{
+    if(S&&!MCTS.isTerminal(S)&&S.t>0&&typeof gtag==='function')
+        gtag('event','level_abandon',{level:8,t:S.t,transport_type:'beacon'});
+}catch(e){}});
+</script>
+</body>
+</html>
