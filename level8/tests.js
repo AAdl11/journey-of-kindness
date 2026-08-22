@@ -8,10 +8,10 @@
          node level8/tests.js invariants → Step 3 gate only
          node level8/tests.js minimax    → Step 4 gate only
          node level8/tests.js ab         → Step 5 gate only
+         node level8/tests.js mcts       → Step 6 gate only
 
-   Exit code 0 iff every assertion passes. The engine is RNG-free; the only
-   PRNG here is a fixed-seed mulberry32 used by the TEST HARNESS to walk A3
-   deterministically (identical results on every run).
+   Exit code 0 iff every assertion passes. The engine is RNG-free. All test
+   and MCTS randomness is explicitly seeded and reproducible.
    ═══════════════════════════════════════════════════════════════════════════ */
 'use strict';
 const E = require('./engine.js');
@@ -569,7 +569,7 @@ function suiteMinimax() {
     eq(rFrozen.value, 4, 'M6 runs on the frozen exported fixture');
     const src4 = fs.readFileSync(path.join(__dirname, 'search_core.js'), 'utf8');
     ok(!/Math\.random|Date\.now|new Date|document\.|window\.|localStorage/.test(src4),
-       'M6 search_core source static audit: RNG-free, clock-free, DOM-free');
+       'M6 search_core static audit: no unseeded RNG, clock, or DOM');
 }
 
 /* ═══════════════════ STEP 5 — ALPHA-BETA PRUNING ════════════════════════ */
@@ -708,7 +708,136 @@ function suiteAlphaBeta() {
     eq(SC.alphabeta(E.A1F).value, 4, 'AB4 runs against deep-frozen fixture');
     const src5 = fs.readFileSync(path.join(__dirname, 'search_core.js'), 'utf8');
     ok(!/Math\.random|Date\.now|new Date|document\.|window\.|localStorage/.test(src5),
-       'AB4 search core remains RNG-free, clock-free, DOM-free');
+       'AB4 search core remains free of unseeded RNG, clock, and DOM');
+}
+
+/* ═══════════════════ STEP 6 — ADVERSARIAL MCTS ═════════════════════════ */
+
+/* Calibrated once on the frozen seed set and fixture, per blueprint Step 6.
+   These are release thresholds, not claims that MCTS equals Minimax. */
+const MCTS_T_MATCH = 0.95;
+const MCTS_T_REGRET = 0.10;
+const MCTS_SEEDS = Array.from({ length: 20 }, (_, i) => i + 1);
+const MCTS_BUDGETS = [100, 500, 1500, 3000];
+
+function same(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
+function actionLabel(a) { return a.type === 'MOVE' ? 'MOVE ' + a.dir : a.type; }
+
+function exactRootActionValue(root, action) {
+    return SC.minimax(E.apply(root, action)).value;
+}
+
+function buildMctsTable() {
+    const root = E.initState('A1F');
+    const truth = SC.minimax(root);
+    return MCTS_BUDGETS.map(iters => {
+        const runs = MCTS_SEEDS.map(seed => {
+            const result = SC.mcts(root, iters, seed);
+            const exactValue = exactRootActionValue(root, result.action);
+            return {
+                seed,
+                action: result.action,
+                estimate: Number(result.value.toFixed(6)),
+                visits: result.rootActions.map(x => x.visits),
+                exactValue,
+                regret: truth.value - exactValue,
+            };
+        });
+        const matches = runs.filter(r => same(r.action, truth.action)).length;
+        const meanRegret = runs.reduce((sum, r) => sum + r.regret, 0) / runs.length;
+        return { iters, matches, matchRate: matches / runs.length, meanRegret, runs };
+    });
+}
+
+function suiteMcts() {
+    console.log('══ STEP 6 ADVERSARIAL MCTS GATE ══');
+
+    section('MC1 explicit MAX/MIN UCT convention');
+    const equalVisits = [{ visits: 10, mean: 3 }, { visits: 10, mean: 1 }];
+    eq(SC.selectUctIndex(equalVisits, 20, 'MAX', 0), 0,
+       'MC1 MAX selects larger MAX-perspective mean');
+    eq(SC.selectUctIndex(equalVisits, 20, 'MIN', 0), 1,
+       'MC1 MIN selects smaller MAX-perspective mean');
+    const underexplored = [{ visits: 100, mean: 0 }, { visits: 1, mean: 0 }];
+    eq(SC.selectUctIndex(underexplored, 101, 'MAX'), 1,
+       'MC1 MAX exploration favors underexplored child');
+    eq(SC.selectUctIndex(underexplored, 101, 'MIN'), 1,
+       'MC1 MIN exploration favors underexplored child');
+    const unvisited = [{ visits: 5, mean: 4 }, { visits: 0, mean: 0 }];
+    eq(SC.selectUctIndex(unvisited, 5, 'MAX'), 1,
+       'MC1 MAX expands unvisited child first');
+    eq(SC.selectUctIndex(unvisited, 5, 'MIN'), 1,
+       'MC1 MIN expands unvisited child first');
+    throws(() => SC.selectUctIndex(equalVisits, 20, 'CHANCE'),
+           'MC1 chance/unknown role rejected');
+
+    section('MC2 root visit-count choice + visualization statistics');
+    const sample = SC.mcts(E.A1F, 100, 1);
+    eq(sample.rootVisits, 100, 'MC2 root visit count equals iteration budget');
+    eq(sample.rootActions.map(x => x.action), E.legalMoves(E.A1F),
+       'MC2 root action statistics preserve canonical order');
+    eq(sample.rootActions.reduce((sum, x) => sum + x.visits, 0), 100,
+       'MC2 root child visits sum to iterations');
+    ok(sample.rootActions.every(x => x.visits > 0 && Number.isFinite(x.mean)),
+       'MC2 each root action exposes finite {visits, mean}');
+    const mostVisited = sample.rootActions.reduce((best, x) =>
+        x.visits > best.visits ? x : best, sample.rootActions[0]);
+    eq(sample.action, mostVisited.action, 'MC2 returned action is most visited root child');
+    const tie = SC.mcts(E.A1F, E.legalMoves(E.A1F).length, 7);
+    eq(tie.rootActions.map(x => x.visits), [1, 1, 1],
+       'MC2 one visit per unvisited root action before UCT reuse');
+    eq(tie.action, E.legalMoves(E.A1F)[0],
+       'MC2 visit-count tie uses canonical first action');
+    const one = SC.mcts(E.A1F, 1, 7);
+    eq(one.rootActions.length, E.legalMoves(E.A1F).length,
+       'MC2 statistics include every legal root action even before first visit');
+    eq(one.rootActions.filter(x => x.visits === 0 && x.mean === null).length, 2,
+       'MC2 unvisited root actions are explicit {visits:0, mean:null}');
+
+    section('MC3 frozen seed×budget table is byte-reproducible');
+    const table1 = buildMctsTable();
+    const table2 = buildMctsTable();
+    eq(JSON.stringify(table1), JSON.stringify(table2),
+       'MC3 same 20 seeds × 4 budgets reproduce byte-identically');
+    for (const row of table1) {
+        console.log('    iters=' + row.iters +
+                    ' match=' + row.matches + '/20' +
+                    ' meanRegret=' + row.meanRegret.toFixed(3) +
+                    ' actions=[' + row.runs.map(r => actionLabel(r.action)).join(', ') + ']');
+    }
+    ok(table1.every(row => row.runs.length === 20),
+       'MC3 full table reports all 20 seeds at every budget');
+
+    section('MC4 calibrated endpoint (3000 iterations; no monotonicity claim)');
+    const endpoint = table1.filter(row => row.iters === 3000)[0];
+    ok(endpoint.matchRate >= MCTS_T_MATCH,
+       'MC4 action-match-rate ' + endpoint.matchRate.toFixed(3) +
+       ' ≥ frozen T_match ' + MCTS_T_MATCH.toFixed(2));
+    ok(endpoint.meanRegret <= MCTS_T_REGRET,
+       'MC4 mean utility regret ' + endpoint.meanRegret.toFixed(3) +
+       ' ≤ frozen T_regret ' + MCTS_T_REGRET.toFixed(2));
+
+    section('MC5 determinism, purity, terminal/error contracts, static audit');
+    eq(JSON.stringify(SC.mcts(E.A1F, 500, 12)),
+       JSON.stringify(SC.mcts(E.A1F, 500, 12)),
+       'MC5 identical state/iters/seed returns byte-identical result');
+    ok(JSON.stringify(SC.mcts(E.A1F, 100, 1)) !==
+       JSON.stringify(SC.mcts(E.A1F, 100, 2)),
+       'MC5 different seeds produce independently sampled statistics');
+    const input = E.initState('A1F');
+    const before = JSON.stringify(input);
+    SC.mcts(input, 100, 9);
+    eq(JSON.stringify(input), before, 'MC5 MCTS does not mutate input');
+    eq(SC.mcts(craft(E.A1F, { t: 3 }), 100, 1),
+       { action: null, value: -3, iterations: 100, seed: 1,
+         rootVisits: 0, rootActions: [] },
+       'MC5 terminal-state return contract');
+    throws(() => SC.mcts(E.A1F, 0, 1), 'MC5 zero iterations rejected');
+    throws(() => SC.mcts(E.A1F, 1.5, 1), 'MC5 fractional iterations rejected');
+    throws(() => SC.mcts(E.A1F, 100, 1.5), 'MC5 fractional seed rejected');
+    const src6 = fs.readFileSync(path.join(__dirname, 'search_core.js'), 'utf8');
+    ok(!/Math\.random|Date\.now|new Date|document\.|window\.|localStorage|determinize/i.test(src6),
+       'MC5 no unseeded RNG, clock, DOM, storage, or determinization');
 }
 
 /* ═══════════════════ RUN ═══════════════════════════════════════════════ */
@@ -717,6 +846,7 @@ const SUITES = {
     invariants: suiteInvariants,
     minimax: suiteMinimax,
     ab: suiteAlphaBeta,
+    mcts: suiteMcts,
 };
 const VALID = Object.keys(SUITES).concat(['all']);
 const mode = (process.argv[2] || 'all').toLowerCase();

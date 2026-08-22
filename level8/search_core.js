@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    JOK Level 8 · The Tree of Many Futures — Search Core
-   Steps 4–5: Minimax ground truth + Alpha-Beta Pruning
+   Steps 4–6: Minimax + Alpha-Beta Pruning + adversarial MCTS
    Spec: docs/LEVEL8_ARCHITECTURE_BLUEPRINT.md (Approved 2026-08-22).
 
    Deterministic full-horizon search over the engine.js rules. No memoization,
@@ -209,6 +209,150 @@ function compareOrdering(state) {
     };
 }
 
-return Object.freeze({ minimax, alphabeta, compareOrdering });
+/* ── Step 6: two-player adversarial Monte Carlo Tree Search ───────────────
+   Every value is stored from MAX's perspective. Tree selection is therefore:
+     MAX node: maximize mean + C * sqrt(ln(parentVisits) / childVisits)
+     MIN node: minimize mean - C * sqrt(ln(parentVisits) / childVisits)
+   Both conventions favor underexplored children. Rules are deterministic;
+   the only randomness is the seeded PRNG used for expansion and rollouts. */
+function seededRandom(seed) {
+    let a = seed >>> 0;
+    return function () {
+        a |= 0;
+        a = (a + 0x6D2B79F5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+
+function uctScore(mean, parentVisits, childVisits, toMove, exploration) {
+    if (childVisits === 0)
+        return toMove === 'MAX' ? Infinity : -Infinity;
+    const bonus = exploration * Math.sqrt(Math.log(parentVisits) / childVisits);
+    return toMove === 'MAX' ? mean + bonus : mean - bonus;
+}
+
+/* Exposed because the same convention drives the Engineer View explanation.
+   stats entries must be canonical-order {visits, mean} records. */
+function selectUctIndex(stats, parentVisits, toMove, exploration) {
+    if (toMove !== 'MAX' && toMove !== 'MIN') throw new Error('Invalid UCT role');
+    const c = exploration === undefined ? Math.SQRT2 : exploration;
+    let best = 0;
+    let bestScore = uctScore(stats[0].mean, parentVisits, stats[0].visits, toMove, c);
+    for (let i = 1; i < stats.length; i++) {
+        const score = uctScore(stats[i].mean, parentVisits, stats[i].visits, toMove, c);
+        if ((toMove === 'MAX' && score > bestScore) ||
+            (toMove === 'MIN' && score < bestScore)) {
+            best = i;
+            bestScore = score;
+        }
+    }
+    return best;
+}
+
+function mcts(state, iters, seed) {
+    if (!Number.isInteger(iters) || iters <= 0)
+        throw new Error('mcts iters must be a positive integer');
+    if (!Number.isInteger(seed)) throw new Error('mcts seed must be an integer');
+    if (E.isTerminal(state)) {
+        return {
+            action: null, value: E.utility(state), iterations: iters,
+            seed, rootVisits: 0, rootActions: [],
+        };
+    }
+
+    const rng = seededRandom(seed);
+    const exploration = Math.SQRT2;
+
+    function makeNode(nodeState, parent, action, canonicalIndex) {
+        return {
+            state: nodeState,
+            parent,
+            action,
+            canonicalIndex,
+            visits: 0,
+            valueSum: 0,
+            children: [],
+            untried: E.legalMoves(nodeState).map((a, index) => ({ action: a, index })),
+        };
+    }
+
+    const rootLegal = E.legalMoves(state);
+    const root = makeNode(state, null, null, -1);
+
+    function expand(node) {
+        const pick = Math.floor(rng() * node.untried.length);
+        const item = node.untried.splice(pick, 1)[0];
+        const child = makeNode(E.apply(node.state, item.action), node,
+                               item.action, item.index);
+        node.children.push(child);
+        return child;
+    }
+
+    function select(node) {
+        const canonical = node.children.slice().sort((a, b) =>
+            a.canonicalIndex - b.canonicalIndex);
+        const stats = canonical.map(child => ({
+            visits: child.visits,
+            mean: child.valueSum / child.visits,
+        }));
+        return canonical[selectUctIndex(stats, node.visits, node.state.toMove,
+                                        exploration)];
+    }
+
+    function rollout(rolloutState) {
+        let current = rolloutState;
+        while (!E.isTerminal(current)) {
+            const legal = E.legalMoves(current);
+            const action = legal[Math.floor(rng() * legal.length)];
+            current = E.apply(current, action);
+        }
+        return E.utility(current);
+    }
+
+    for (let iteration = 0; iteration < iters; iteration++) {
+        let node = root;
+        while (!E.isTerminal(node.state) && node.untried.length === 0)
+            node = select(node);
+        if (!E.isTerminal(node.state) && node.untried.length > 0)
+            node = expand(node);
+        const reward = rollout(node.state);
+        while (node !== null) {
+            node.visits++;
+            node.valueSum += reward;
+            node = node.parent;
+        }
+    }
+
+    const byIndex = {};
+    for (const child of root.children) byIndex[child.canonicalIndex] = child;
+    const rootActions = rootLegal.map((action, index) => {
+        const child = byIndex[index];
+        return {
+            action,
+            visits: child ? child.visits : 0,
+            mean: child ? child.valueSum / child.visits : null,
+        };
+    });
+    let chosenIndex = 0;
+    for (let i = 1; i < rootActions.length; i++)
+        if (rootActions[i].visits > rootActions[chosenIndex].visits) chosenIndex = i;
+    const chosen = byIndex[chosenIndex];
+
+    return {
+        action: rootActions[chosenIndex].action,
+        value: chosen.valueSum / chosen.visits,
+        iterations: iters,
+        seed,
+        rootVisits: root.visits,
+        rootActions,
+    };
+}
+
+return Object.freeze({
+    minimax, alphabeta, compareOrdering,
+    mcts, uctScore, selectUctIndex,
+});
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = L8_SEARCH;
