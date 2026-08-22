@@ -6,6 +6,8 @@
    Run:  node level8/tests.js            → all suites
          node level8/tests.js unit       → Step 2 gate only
          node level8/tests.js invariants → Step 3 gate only
+         node level8/tests.js minimax    → Step 4 gate only
+         node level8/tests.js ab         → Step 5 gate only
 
    Exit code 0 iff every assertion passes. The engine is RNG-free; the only
    PRNG here is a fixed-seed mulberry32 used by the TEST HARNESS to walk A3
@@ -570,8 +572,152 @@ function suiteMinimax() {
        'M6 search_core source static audit: RNG-free, clock-free, DOM-free');
 }
 
+/* ═══════════════════ STEP 5 — ALPHA-BETA PRUNING ════════════════════════ */
+
+const AB_HAND_ORACLE = {
+    minimaxNodes: 122,
+    naturalNodes: 68,
+    bestFirstNodes: 62,
+    bestFirstOrderingProbes: 85,
+};
+
+function collectA1FReachable() {
+    const unique = new Map();
+    let occurrences = 0;
+    function walk(state) {
+        occurrences++;
+        const key = JSON.stringify(state);
+        if (!unique.has(key)) unique.set(key, state);
+        if (!E.isTerminal(state))
+            for (const action of E.legalMoves(state)) walk(E.apply(state, action));
+    }
+    walk(E.initState('A1F'));
+    return { states: Array.from(unique.values()), occurrences };
+}
+
+function suiteAlphaBeta() {
+    console.log('══ STEP 5 ALPHA-BETA GATE ══');
+
+    section('AB1 root equality + strict node reduction');
+    const exact = SC.minimax(E.initState('A1F'));
+    const natural = SC.alphabeta(E.initState('A1F'));
+    const best = SC.alphabeta(E.initState('A1F'), -Infinity, Infinity,
+                              { order: 'best-first' });
+    eq([natural.action, natural.value, natural.pv],
+       [exact.action, exact.value, exact.pv],
+       'AB1 natural order matches Minimax action/value/PV');
+    eq([best.action, best.value, best.pv],
+       [exact.action, exact.value, exact.pv],
+       'AB1 best-first matches Minimax action/value/PV');
+    eq([exact.nodes, natural.nodes, best.nodes],
+       [AB_HAND_ORACLE.minimaxNodes, AB_HAND_ORACLE.naturalNodes,
+        AB_HAND_ORACLE.bestFirstNodes],
+       'AB1 reproducible node counts: Minimax 122 / natural 68 / best-first 62');
+    ok(natural.nodes < exact.nodes, 'AB1 Alpha-Beta explores strictly fewer nodes than Minimax');
+    ok(best.nodes < natural.nodes, 'AB1 best-first explores strictly fewer nodes than natural order');
+    eq([natural.nodesExplored, best.nodesExplored], [natural.nodes, best.nodes],
+       'AB1 nodesExplored is the explicit teaching counter');
+    eq([natural.orderingProbes, best.orderingProbes],
+       [0, AB_HAND_ORACLE.bestFirstOrderingProbes],
+       'AB1 ordering work disclosed separately: 0 / 85 probes');
+    ok(natural.cutoffs > 0 && best.cutoffs > 0, 'AB1 both traversals perform real cutoffs');
+
+    section('AB2 exhaustive equality on every A1F-reachable position');
+    const reachable = collectA1FReachable();
+    console.log('    A1F reachable positions: ' + reachable.states.length +
+                ' unique across ' + reachable.occurrences + ' tree occurrences');
+    eq([reachable.states.length, reachable.occurrences], [45, 122],
+       'AB2 frozen reachable-position census = 45 unique / 122 occurrences');
+    for (let i = 0; i < reachable.states.length; i++) {
+        const state = reachable.states[i];
+        const mm = SC.minimax(state);
+        const abN = SC.alphabeta(state);
+        const abB = SC.alphabeta(state, -Infinity, Infinity, { order: 'best-first' });
+        eq([abN.action, abN.value], [mm.action, mm.value],
+           'AB2 natural action/value == Minimax at reachable state ' + i);
+        eq([abB.action, abB.value], [mm.action, mm.value],
+           'AB2 best-first action/value == Minimax at reachable state ' + i);
+        ok(abN.nodes <= mm.nodes && abB.nodes <= mm.nodes,
+           'AB2 neither Alpha-Beta traversal exceeds Minimax nodes at state ' + i);
+    }
+
+    section('AB3 ordering hook cannot alter canonical tie-break');
+    const reverseOrder = (_state, actions) => actions.slice().reverse();
+    const reversedRoot = SC.alphabeta(E.initState('A1F'), -Infinity, Infinity,
+                                      { orderActions: reverseOrder });
+    eq([reversedRoot.action, reversedRoot.value, reversedRoot.pv],
+       [exact.action, exact.value, exact.pv],
+       'AB3 fully reversed traversal still returns canonical Minimax result');
+    eq(reversedRoot.order, 'custom', 'AB3 custom ordering is identified in result');
+    for (let i = 0; i < reachable.states.length; i++) {
+        const state = reachable.states[i];
+        const mm = SC.minimax(state);
+        const reversed = SC.alphabeta(state, -Infinity, Infinity,
+                                      { orderActions: reverseOrder });
+        eq([reversed.action, reversed.value], [mm.action, mm.value],
+           'AB3 reversed-order action/value == Minimax at reachable state ' + i);
+    }
+    /* Twenty deterministic state/action permutations: this is a tie-safety
+       stress test, not RNG. The same seed always produces the same order. */
+    function fnv1a(text) {
+        let hash = 2166136261 >>> 0;
+        for (let i = 0; i < text.length; i++) {
+            hash ^= text.charCodeAt(i);
+            hash = Math.imul(hash, 16777619);
+        }
+        return hash >>> 0;
+    }
+    function seededOrder(seed) {
+        return (state, actions) => {
+            const prefix = seed + '|' + JSON.stringify(state) + '|';
+            return actions.slice().sort((a, b) =>
+                fnv1a(prefix + JSON.stringify(a)) - fnv1a(prefix + JSON.stringify(b)));
+        };
+    }
+    for (let seed = 1; seed <= 20; seed++) {
+        for (let i = 0; i < reachable.states.length; i++) {
+            const state = reachable.states[i];
+            const mm = SC.minimax(state);
+            const permuted = SC.alphabeta(state, -Infinity, Infinity,
+                                          { orderActions: seededOrder(seed) });
+            eq([permuted.action, permuted.value], [mm.action, mm.value],
+               'AB3 seeded order ' + seed + ' matches Minimax at state ' + i);
+        }
+    }
+    throws(() => SC.alphabeta(E.A1F, -Infinity, Infinity, { order: 'unknown' }),
+           'AB3 unknown built-in ordering rejected');
+    throws(() => SC.alphabeta(E.A1F, -Infinity, Infinity,
+                              { orderActions: (_s, actions) => actions.slice(1) }),
+           'AB3 ordering hook missing an action rejected');
+    throws(() => SC.alphabeta(E.A1F, -Infinity, Infinity,
+                              { orderActions: (_s, actions) => actions.map(() => actions[0]) }),
+           'AB3 ordering hook with duplicate actions rejected');
+
+    section('AB4 determinism, terminal contract, purity, static audit');
+    eq(SC.alphabeta(craft(E.A1F, { t: 3 })),
+       { action: null, value: -3, nodes: 1, nodesExplored: 1, pv: [],
+         cutoffs: 0, order: 'natural', orderingProbes: 0 },
+       'AB4 terminal state contract');
+    eq(JSON.stringify(SC.compareOrdering(E.A1F)),
+       JSON.stringify(SC.compareOrdering(E.A1F)),
+       'AB4 ordering comparison is byte-identical across runs');
+    const input = E.initState('A1F');
+    const before = JSON.stringify(input);
+    SC.alphabeta(input, -Infinity, Infinity, { order: 'best-first' });
+    eq(JSON.stringify(input), before, 'AB4 Alpha-Beta does not mutate input');
+    eq(SC.alphabeta(E.A1F).value, 4, 'AB4 runs against deep-frozen fixture');
+    const src5 = fs.readFileSync(path.join(__dirname, 'search_core.js'), 'utf8');
+    ok(!/Math\.random|Date\.now|new Date|document\.|window\.|localStorage/.test(src5),
+       'AB4 search core remains RNG-free, clock-free, DOM-free');
+}
+
 /* ═══════════════════ RUN ═══════════════════════════════════════════════ */
-const SUITES = { unit: suiteUnit, invariants: suiteInvariants, minimax: suiteMinimax };
+const SUITES = {
+    unit: suiteUnit,
+    invariants: suiteInvariants,
+    minimax: suiteMinimax,
+    ab: suiteAlphaBeta,
+};
 const VALID = Object.keys(SUITES).concat(['all']);
 const mode = (process.argv[2] || 'all').toLowerCase();
 if (VALID.indexOf(mode) === -1) {
