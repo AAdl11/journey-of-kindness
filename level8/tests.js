@@ -9,6 +9,8 @@
          node level8/tests.js minimax    → Step 4 gate only
          node level8/tests.js ab         → Step 5 gate only
          node level8/tests.js mcts       → Step 6 gate only
+         node level8/tests.js --convergence → Step 6 convergence table
+         node level8/tests.js --a3bench     → Step 7 A3 robustness gate
 
    Exit code 0 iff every assertion passes. The engine is RNG-free. All test
    and MCTS randomness is explicitly seeded and reproducible.
@@ -840,6 +842,197 @@ function suiteMcts() {
        'MC5 no unseeded RNG, clock, DOM, storage, or determinization');
 }
 
+/* ═══════════════════ STEP 7 — A3 ROBUSTNESS BENCHMARK ══════════════════
+   This is a reproducible adversarial benchmark, NOT an exact solve and NOT a
+   proof of optimality. Reference MAX uses adversarial MCTS at 1,500 iterations
+   with a fixed per-MAX-ply seed. The fixed MIN suite is:
+     1. fog-first: FOG → delay an unserved need-3 → ROAD_CLOSE → any delay.
+     2. urgent-delay-first: need-3 delay → FOG → ROAD_CLOSE → any delay.
+     3. greedy-min: minimize the documented one-ply cutoff score.
+     4. alpha-beta-min-d3: depth 3 (MIN→MAX→MIN), same cutoff score.
+   Canonical action order breaks every tie. The cutoff score is MAX-perspective:
+   terminal utility×1000; served reward×100; −300 per unserved need-3; plus
+   reachability within the remaining horizon (+700 for need-3, otherwise
+   reward×80, minus time cost); an unreachable need-3 adds −500. */
+const A3_MAX_ITERS = 1500;
+const A3_AB_DEPTH = 3;
+const A3_SEED_BASE = 20260822;
+
+function a3Distances(state) {
+    const q = [[state.pos[0], state.pos[1], 0]];
+    const seen = new Set([state.pos.join(',')]);
+    const distances = {};
+    for (let head = 0; head < q.length; head++) {
+        const r = q[head][0], c = q[head][1], d = q[head][2];
+        distances[r + ',' + c] = d;
+        const next = [[r - 1, c], [r, c + 1], [r + 1, c], [r, c - 1]];
+        for (const p of next) {
+            const nr = p[0], nc = p[1], key = nr + ',' + nc;
+            if (nr < 0 || nr >= state.n || nc < 0 || nc >= state.n) continue;
+            if (seen.has(key)) continue;
+            if (!E.edgeOpen(state, E.edgeKey([r, c], [nr, nc]))) continue;
+            seen.add(key);
+            q.push([nr, nc, d + 1]);
+        }
+    }
+    return distances;
+}
+
+function a3CutoffScore(state) {
+    if (E.isTerminal(state)) return E.utility(state) * 1000;
+    const remaining = state.T - state.t;
+    const distances = a3Distances(state);
+    let score = 0;
+    for (const h of state.households) {
+        const reward = h.need === 3 ? 4 : h.need === 2 ? 2 : 1;
+        if (h.served) {
+            score += reward * 100;
+            continue;
+        }
+        if (h.need === 3) score -= 300;
+        const distance = distances[h.pos.join(',')];
+        const cost = distance === undefined ? Infinity :
+            distance * E.moveCost(state) + E.serveCost(state, h);
+        if (cost <= remaining)
+            score += (h.need === 3 ? 700 : reward * 80) - cost;
+        else if (h.need === 3) score -= 500;
+    }
+    return score;
+}
+
+function a3DepthAlphaBeta(state, depth, alpha, beta) {
+    if (E.isTerminal(state))
+        return { action: null, value: E.utility(state) * 1000, nodes: 1 };
+    if (depth === 0)
+        return { action: null, value: a3CutoffScore(state), nodes: 1 };
+    const isMax = state.toMove === 'MAX';
+    let bestAction = null;
+    let bestValue = isMax ? -Infinity : Infinity;
+    let nodes = 1;
+    for (const action of E.legalMoves(state)) {
+        const child = a3DepthAlphaBeta(E.apply(state, action), depth - 1, alpha, beta);
+        nodes += child.nodes;
+        if ((isMax && child.value > bestValue) || (!isMax && child.value < bestValue)) {
+            bestAction = action;
+            bestValue = child.value;
+        }
+        if (isMax) alpha = Math.max(alpha, bestValue);
+        else beta = Math.min(beta, bestValue);
+        if (beta < alpha) break;       /* strict cutoff preserves canonical ties */
+    }
+    return { action: bestAction, value: bestValue, nodes };
+}
+
+function firstMinMove(state, type, predicate) {
+    return E.legalMoves(state).find(action =>
+        action.type === type && (!predicate || predicate(action)));
+}
+
+function fogFirstMin(state) {
+    return firstMinMove(state, 'FOG') ||
+        firstMinMove(state, 'SUPPLY_DELAY', a => a.house === 'H_A' || a.house === 'H_B') ||
+        firstMinMove(state, 'ROAD_CLOSE') ||
+        firstMinMove(state, 'SUPPLY_DELAY') ||
+        firstMinMove(state, 'PASS');
+}
+
+function urgentDelayFirstMin(state) {
+    return firstMinMove(state, 'SUPPLY_DELAY', a => a.house === 'H_A' || a.house === 'H_B') ||
+        firstMinMove(state, 'FOG') ||
+        firstMinMove(state, 'ROAD_CLOSE') ||
+        firstMinMove(state, 'SUPPLY_DELAY') ||
+        firstMinMove(state, 'PASS');
+}
+
+function greedyMin(state) {
+    let bestAction = null, bestValue = Infinity;
+    for (const action of E.legalMoves(state)) {
+        const value = a3CutoffScore(E.apply(state, action));
+        if (value < bestValue) {
+            bestAction = action;
+            bestValue = value;
+        }
+    }
+    return bestAction;
+}
+
+function alphaBetaMin(state, stats) {
+    const result = a3DepthAlphaBeta(state, A3_AB_DEPTH, -Infinity, Infinity);
+    stats.abNodes += result.nodes;
+    return result.action;
+}
+
+const A3_MIN_SUITE = Object.freeze([
+    { name: 'fog-first', choose: fogFirstMin },
+    { name: 'urgent-delay-first', choose: urgentDelayFirstMin },
+    { name: 'greedy-min', choose: greedyMin },
+    { name: 'alpha-beta-min-d3', choose: alphaBetaMin },
+]);
+
+function runA3BenchmarkCase(policy) {
+    let state = E.initState('A3');
+    let maxPly = 0;
+    const stats = { abNodes: 0 };
+    const trace = [];
+    while (!E.isTerminal(state)) {
+        let action;
+        if (state.toMove === 'MAX') {
+            const seed = A3_SEED_BASE + maxPly * 101;
+            action = SC.mcts(state, A3_MAX_ITERS, seed).action;
+            maxPly++;
+        } else {
+            action = policy.choose(state, stats);
+        }
+        trace.push({ role: state.toMove, action });
+        state = E.apply(state, action);  /* also asserts every chosen action is legal */
+    }
+    return {
+        policy: policy.name,
+        utility: E.utility(state),
+        t: state.t,
+        served: state.households.filter(h => h.served).map(h => h.id),
+        maxPlies: maxPly,
+        minSearchNodes: stats.abNodes,
+        trace,
+    };
+}
+
+function buildA3Benchmark() {
+    return A3_MIN_SUITE.map(runA3BenchmarkCase);
+}
+
+function suiteA3Benchmark() {
+    console.log('══ STEP 7 A3 ADVERSARIAL ROBUSTNESS BENCHMARK ══');
+    console.log('    benchmark only — not proof of solvability or optimality');
+
+    section('A3B1 fixed, documented policy suite and parameters');
+    eq(A3_MIN_SUITE.map(x => x.name),
+       ['fog-first', 'urgent-delay-first', 'greedy-min', 'alpha-beta-min-d3'],
+       'A3B1 exact MIN policy suite is frozen');
+    eq([A3_MAX_ITERS, A3_AB_DEPTH, A3_SEED_BASE], [1500, 3, 20260822],
+       'A3B1 MAX iterations, AB depth, and seed base are frozen');
+
+    section('A3B2 byte-reproducible benchmark table');
+    const table1 = buildA3Benchmark();
+    const table2 = buildA3Benchmark();
+    eq(JSON.stringify(table1), JSON.stringify(table2),
+       'A3B2 complete rerun is byte-identical');
+    for (const row of table1) {
+        console.log('    ' + row.policy + ': utility=' + row.utility +
+                    ' served=[' + row.served.join(',') + ']' +
+                    (row.minSearchNodes ? ' abNodes=' + row.minSearchNodes : ''));
+    }
+
+    section('A3B3 positive utility under every fixed adversarial policy');
+    for (const row of table1) {
+        ok(row.utility > 0, 'A3B3 ' + row.policy + ' retains positive utility');
+        ok(row.t <= 12 && row.maxPlies > 0, 'A3B3 ' + row.policy + ' terminates within horizon');
+        ok(row.served.length > 0, 'A3B3 ' + row.policy + ' serves at least one household');
+    }
+    const abRow = table1.find(row => row.policy === 'alpha-beta-min-d3');
+    ok(abRow.minSearchNodes > 0, 'A3B3 fixed-depth Alpha-Beta MIN performed real search');
+}
+
 /* ═══════════════════ RUN ═══════════════════════════════════════════════ */
 const SUITES = {
     unit: suiteUnit,
@@ -847,11 +1040,15 @@ const SUITES = {
     minimax: suiteMinimax,
     ab: suiteAlphaBeta,
     mcts: suiteMcts,
+    a3bench: suiteA3Benchmark,
 };
 const VALID = Object.keys(SUITES).concat(['all']);
-const mode = (process.argv[2] || 'all').toLowerCase();
+const requested = (process.argv[2] || 'all').toLowerCase();
+const mode = requested === '--convergence' ? 'mcts' :
+             requested === '--a3bench' ? 'a3bench' : requested;
 if (VALID.indexOf(mode) === -1) {
-    console.error('Unknown suite "' + process.argv[2] + '". Valid: ' + VALID.join(', '));
+    console.error('Unknown suite "' + process.argv[2] + '". Valid: ' +
+                  VALID.concat(['--convergence', '--a3bench']).join(', '));
     process.exit(2);
 }
 for (const name of Object.keys(SUITES))
