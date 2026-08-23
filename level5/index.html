@@ -403,7 +403,7 @@
 <div id="ataraxy-screen" class="screen bg-ataraxy flex-col items-center justify-center p-4">
     <div class="text-center fade-in" style="position: relative; z-index: 10;">
         <!-- 標題 - 白色文字 -->
-        <p class="text-3xl mb-4 font-bold text-white" style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);" data-en="Ataraxy Portico" data-zh="靜心之門">靜心之門</p>
+        <p class="text-3xl mb-4 font-bold text-white" style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);" data-en="Ataraxy Portico" data-zh="靜心之門" data-es="Portal de la Serenidad">靜心之門</p>
         
         <!-- 金色呼吸環 -->
         <div class="breath-ring mb-4 mx-auto">
@@ -411,7 +411,7 @@
         </div>
         
         <!-- 深呼吸提示 - 白色 -->
-        <p class="text-xl mb-5 font-medium text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);" data-en="Take 3 Deep Breaths" data-zh="深呼吸三次">深呼吸三次</p>
+        <p class="text-xl mb-5 font-medium text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);" data-en="Take 3 Deep Breaths" data-zh="深呼吸三次" data-es="Respira profundamente 3 veces">深呼吸三次</p>
         
         <!-- 靜思語卡片 - 空靈透明 -->
         <div class="jingsi-card mx-auto mb-5">
@@ -422,7 +422,7 @@
         
         <!-- 分數 - 白色文字 -->
         <div class="space-y-2 text-lg mb-6">
-            <p class="font-bold text-white text-xl" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">🎉 Level 5 Complete!</p>
+            <p class="font-bold text-white text-xl" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);" data-en="🎉 Level 5 Complete!" data-zh="🎉 第五關完成！" data-es="🎉 ¡Nivel 5 completado!">🎉 Level 5 Complete!</p>
             <p class="text-xl font-bold">
                 <span class="text-white" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">😊 <span id="final-good">0</span></span>
                 <span class="text-white mx-2" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">|</span>
@@ -433,9 +433,9 @@
         
         <!-- 導航按鈕 - 不同顏色 -->
         <div class="flex gap-4 justify-center flex-wrap">
-            <button onclick="goToMainMenu()" class="nav-btn-home">🏠 <span data-en="Home" data-zh="主頁">主頁</span></button>
-            <button onclick="location.reload()" class="nav-btn-replay">🔄 <span data-en="Replay" data-zh="重玩">重玩</span></button>
-            <button onclick="goToNextLevel()" class="nav-btn-next"><span data-en="Next Level" data-zh="下一關">下一關</span> →</button>
+            <button onclick="goToMainMenu()" class="nav-btn-home">🏠 <span data-en="Home" data-zh="主頁" data-es="Inicio">主頁</span></button>
+            <button onclick="location.reload()" class="nav-btn-replay">🔄 <span data-en="Replay" data-zh="重玩" data-es="Jugar de nuevo">重玩</span></button>
+            <button onclick="goToNextLevel()" class="nav-btn-next"><span data-en="Next Level" data-zh="下一關" data-es="Siguiente nivel">下一關</span> →</button>
         </div>
     </div>
 </div>
@@ -474,9 +474,13 @@ const characters = [
 
 function setLang(lang) {
     currentLang = lang;
-    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', (lang==='en'&&btn.textContent.trim()==='EN')||(lang==='zh'&&btn.textContent.trim()==='中文')));
-    document.querySelectorAll('[data-en][data-zh]').forEach(el => el.textContent = el.getAttribute('data-'+lang));
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', (lang==='en'&&btn.textContent.trim()==='EN')||(lang==='zh'&&btn.textContent.trim()==='中文')||(lang==='es'&&btn.textContent.trim()==='ES')));
+    document.querySelectorAll('[data-en][data-zh]').forEach(el => el.textContent = el.getAttribute('data-'+lang) || el.getAttribute('data-en'));
     if(document.getElementById('game-screen').classList.contains('active')) renderCharacters();
+}
+
+function localized(values) {
+    return values[currentLang] || values.en || values.zh;
 }
 
 function toggleMusic() {
@@ -518,9 +522,9 @@ function renderCharacters() {
     const g = document.getElementById('characters-grid');
     g.innerHTML = characters.map(c => `
         <div class="character-card ${state.selected.includes(c.id)?'selected':''}" id="char-${c.id}" onclick="selectCharacter('${c.id}')" onmouseenter="showBayesian('${c.id}')">
-            <img src="${c.avatar}" class="character-avatar mx-auto mb-2" alt="${c.name[currentLang]}">
-            <h3 class="font-bold text-gray-800 text-center text-sm">${c.name[currentLang]}</h3>
-            <p class="text-xs text-gray-500 text-center mb-2">${c.location[currentLang]}</p>
+            <img src="${c.avatar}" class="character-avatar mx-auto mb-2" alt="${localized(c.name)}">
+            <h3 class="font-bold text-gray-800 text-center text-sm">${localized(c.name)}</h3>
+            <p class="text-xs text-gray-500 text-center mb-2">${localized(c.location)}</p>
             <div class="mb-2">
                 <div class="prob-bar-container">
                     <div class="prob-bar-fill" style="width:${c.bayesian.probability}%"></div>
@@ -538,10 +542,10 @@ function getProbColor(p) { return p >= 70 ? '#ef4444' : p >= 40 ? '#f59e0b' : '#
 function showBayesian(id) {
     const c = characters.find(x => x.id === id);
     if(!c) return;
-    document.getElementById('bn-stress').textContent = c.bayesian.stress[currentLang];
-    document.getElementById('bn-connection').textContent = c.bayesian.connection[currentLang];
-    document.getElementById('bn-interaction').textContent = c.bayesian.interaction[currentLang];
-    document.getElementById('bn-behavior').textContent = c.bayesian.behavior[currentLang];
+    document.getElementById('bn-stress').textContent = localized(c.bayesian.stress);
+    document.getElementById('bn-connection').textContent = localized(c.bayesian.connection);
+    document.getElementById('bn-interaction').textContent = localized(c.bayesian.interaction);
+    document.getElementById('bn-behavior').textContent = localized(c.bayesian.behavior);
     const p = document.getElementById('bn-probability');
     p.textContent = c.bayesian.probability + '%';
     p.style.color = getProbColor(c.bayesian.probability);
@@ -602,9 +606,9 @@ function startVisit() {
     vs.style.backgroundRepeat = 'no-repeat';
     vs.style.backgroundColor = '#fef3c7';
     document.getElementById('visit-avatar').src = c.avatar;
-    document.getElementById('visit-name').textContent = c.name[currentLang];
-    document.getElementById('visit-location').textContent = c.location[currentLang];
-    document.getElementById('dialogue-text').textContent = c.dialogues[currentLang][0];
+    document.getElementById('visit-name').textContent = localized(c.name);
+    document.getElementById('visit-location').textContent = localized(c.location);
+    document.getElementById('dialogue-text').textContent = localized(c.dialogues)[0];
     state.dialogueIndex = 0;
     showScreen('visit-screen');
 }
@@ -613,8 +617,8 @@ function nextDialogue() {
     const id = state.selected[state.currentVisitIndex];
     const c = characters.find(x => x.id === id);
     state.dialogueIndex++;
-    if(state.dialogueIndex < c.dialogues[currentLang].length) {
-        document.getElementById('dialogue-text').textContent = c.dialogues[currentLang][state.dialogueIndex];
+    if(state.dialogueIndex < localized(c.dialogues).length) {
+        document.getElementById('dialogue-text').textContent = localized(c.dialogues)[state.dialogueIndex];
     } else {
         showResult(c);
     }
@@ -629,9 +633,9 @@ function showResult(c) {
     
     document.getElementById('result-card').className = 'result-card ' + c.truth + ' slide-up';
     document.getElementById('result-emoji').textContent = c.truth === 'surprise' ? '😮' : '🥹';
-    document.getElementById('result-title').textContent = c.resultTitle[currentLang];
-    document.getElementById('result-message').textContent = c.resultMessage[currentLang];
-    document.getElementById('result-insight').textContent = c.insight[currentLang];
+    document.getElementById('result-title').textContent = localized(c.resultTitle);
+    document.getElementById('result-message').textContent = localized(c.resultMessage);
+    document.getElementById('result-insight').textContent = localized(c.insight);
     document.getElementById('result-elo').textContent = '+' + elo + ' ELO';
     document.getElementById('result-overlay').style.display = 'flex';
     

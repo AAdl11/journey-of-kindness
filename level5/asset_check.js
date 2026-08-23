@@ -77,6 +77,8 @@ for (const ref of staticRefs) {
 }
 
 if (!html.includes('data-en="Ataraxy Portico"')) failures.push('canonical Ataraxy Portico label missing');
+if (!html.includes('data-es="Portal de la Serenidad"')) failures.push('Spanish Ataraxy Portico label missing');
+if (!html.includes("lang==='es'&&btn.textContent.trim()==='ES'")) failures.push('Spanish language button is not active in setLang');
 if (html.includes('Gate of Stillness')) failures.push('non-canonical literal translation remains: Gate of Stillness');
 
 if (failures.length) {
