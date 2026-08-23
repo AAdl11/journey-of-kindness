@@ -87,6 +87,8 @@ if (html.includes('../assets/images/L6_') || html.includes('../assets/images/L3_
 }
 if (html.includes('data:image')) failures.push('embedded image remains; visual assets must be independently auditable');
 if (!html.includes('data-en="Ataraxy Portico"')) failures.push('canonical Ataraxy Portico label missing');
+if (!html.includes('data-es="Portal de la Serenidad"')) failures.push('canonical Spanish Ataraxy Portico label missing');
+if (!html.includes('data-es="Respira profundamente 3 veces"')) failures.push('Spanish Ataraxy breathing prompt missing');
 if (html.includes('Gate of Stillness')) failures.push('non-canonical literal translation remains: Gate of Stillness');
 
 if (failures.length) {

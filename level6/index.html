@@ -1006,7 +1006,7 @@
             </div>
             
             <button class="btn-primary text-xl" onclick="goToScreen('screen-ataraxy'); celebrateConfetti();">
-                🙏 <span data-zh="進入靜心之門" data-en="Enter Ataraxy Portico">進入靜心之門</span>
+                🙏 <span data-zh="進入靜心之門" data-en="Enter Ataraxy Portico" data-es="Entrar al Portal de la Serenidad">進入靜心之門</span>
             </button>
         </div>
     </div>
@@ -1016,13 +1016,13 @@
 <div id="screen-ataraxy" class="screen" style="background: url('assets/images/l6_stillness_bg.webp') center/cover; background-color: #c4a7e7;">
     <div class="overlay" style="background: rgba(0,0,0,0.1);">
         <div class="text-center fade-in">
-            <h2 class="text-4xl font-bold text-white mb-8" style="text-shadow: 0 3px 20px rgba(0,0,0,0.4);" data-zh="靜心之門" data-en="Ataraxy Portico">靜心之門</h2>
+            <h2 class="text-4xl font-bold text-white mb-8" style="text-shadow: 0 3px 20px rgba(0,0,0,0.4);" data-zh="靜心之門" data-en="Ataraxy Portico" data-es="Portal de la Serenidad">靜心之門</h2>
             
             <div class="breath-ring mb-8 mx-auto">
                 <span id="breathCount" class="text-5xl font-bold text-white">3</span>
             </div>
             
-            <p class="text-2xl text-white mb-10" style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);" data-zh="深呼吸三次" data-en="Take 3 Deep Breaths">深呼吸三次</p>
+            <p class="text-2xl text-white mb-10" style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);" data-zh="深呼吸三次" data-en="Take 3 Deep Breaths" data-es="Respira profundamente 3 veces">深呼吸三次</p>
             
             <div class="card mb-8" style="max-width: 500px; background: rgba(255,255,255,0.75); backdrop-filter: blur(8px);">
                 <p class="text-3xl font-bold text-gray-800 mb-3">「欣賞他人，即是莊嚴自己。」</p>
@@ -1034,22 +1034,22 @@
             </div>
             
             <div class="text-center mb-8">
-                <p class="text-3xl font-bold text-white mb-2" style="text-shadow: 0 2px 10px rgba(0,0,0,0.4);">🎉 Level 6 Complete!</p>
+                <p class="text-3xl font-bold text-white mb-2" style="text-shadow: 0 2px 10px rgba(0,0,0,0.4);" data-zh="🎉 第六關完成！" data-en="🎉 Level 6 Complete!" data-es="🎉 ¡Nivel 6 completado!">🎉 第六關完成！</p>
                 <p class="text-4xl font-black text-yellow-300" style="text-shadow: 0 3px 15px rgba(0,0,0,0.4);">ELO: +50</p>
             </div>
             
             <div class="flex gap-4 justify-center flex-wrap">
                 <button class="bg-white/80 hover:bg-white text-gray-700 px-6 py-3 rounded-full font-bold transition-all shadow-lg" onclick="window.location.href='../index.html'">
-                    🏠 <span data-zh="回主頁" data-en="Home">回主頁</span>
+                    🏠 <span data-zh="回主頁" data-en="Home" data-es="Inicio">回主頁</span>
                 </button>
                 <button class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-full font-bold transition-all" onclick="window.location.href='../level5/index.html'">
-                    ⬅️ <span data-zh="上一關" data-en="Prev Level">上一關</span>
+                    ⬅️ <span data-zh="上一關" data-en="Prev Level" data-es="Nivel anterior">上一關</span>
                 </button>
                 <button class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full font-bold transition-all" onclick="location.reload()">
-                    🔄 <span data-zh="重玩" data-en="Replay">重玩</span>
+                    🔄 <span data-zh="重玩" data-en="Replay" data-es="Jugar de nuevo">重玩</span>
                 </button>
                 <button class="bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-full font-bold transition-all" onclick="window.location.href='../level7/index.html'">
-                    <span data-zh="下一關" data-en="Next Level">下一關</span> →
+                    <span data-zh="下一關" data-en="Next Level" data-es="Siguiente nivel">下一關</span> →
                 </button>
             </div>
         </div>
@@ -1083,6 +1083,14 @@ function setLang(lang) {
 
 // === 音樂控制 ===
 function playMusic(id) {
+    if (currentMusic === id) {
+        const current = document.getElementById(id);
+        if (musicPlaying && current && current.paused) {
+            current.volume = 0.4;
+            current.play().catch(() => {});
+        }
+        return;
+    }
     ['music-opening', 'music-game', 'music-bad', 'music-ataraxy'].forEach(m => {
         const audio = document.getElementById(m);
         if (audio) { audio.pause(); audio.currentTime = 0; }
@@ -1111,16 +1119,21 @@ function toggleMusic() {
     }
 }
 
+function musicForScreen(id) {
+    if (id === 'screen-opening') return 'music-opening';
+    if (['screen-judgment', 'screen-bad-ending', 'screen-objection', 'screen-investigation'].includes(id)) return 'music-bad';
+    if (id === 'screen-ataraxy') return 'music-ataraxy';
+    return 'music-game';
+}
+
 // === 畫面切換 ===
 function goToScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     
-    // 音樂邏輯
-    if (id === 'screen-opening') playMusic('music-opening');
-    else if (id === 'screen-bad-ending') playMusic('music-bad');
-    else if (id === 'screen-ataraxy') { playMusic('music-ataraxy'); startBreathing(); }
-    else playMusic('music-game');
+    // 每一幕依故事情緒切換音樂；同一幕群組內不重新從頭播放。
+    playMusic(musicForScreen(id));
+    if (id === 'screen-ataraxy') startBreathing();
     
     // 重置調查步驟
     if (id === 'screen-investigation') {
@@ -1203,7 +1216,9 @@ document.addEventListener('click', function initAudio() {
     if (!musicPlaying) {
         musicPlaying = true;
         document.getElementById('musicBtn').textContent = '🔊';
-        playMusic('music-opening');
+        // Inline click navigation runs first. Start the track selected by that
+        // destination instead of forcing the opening transition music again.
+        playMusic(currentMusic);
     }
 }, { once: true });
 </script>

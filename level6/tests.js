@@ -32,11 +32,23 @@ for (const [screen, image] of requiredMappings) {
 
 assert(html.includes('src="assets/images/l6_marcus_portrait.webp"'), 'Marcus portrait must appear in the applicant UI');
 assert(html.includes('Ataraxy Portico'), 'canonical player-facing English label must appear in Level 6');
+assert(html.includes('data-es="Portal de la Serenidad"'), 'Ataraxy Portico must have its canonical Spanish label');
+assert(html.includes('data-es="Respira profundamente 3 veces"'), 'Ataraxy breathing prompt must have Spanish');
+assert(html.includes('data-es="🎉 ¡Nivel 6 completado!"'), 'Level 6 completion message must have Spanish');
 assert(!html.includes('Gate of Stillness'), 'non-canonical literal translation must not appear in Level 6');
+
+assert(/function musicForScreen\(id\)[\s\S]*screen-opening'[\s\S]*music-opening/.test(html), 'raw-rice opening must map to the transition track');
+for (const screen of ['screen-judgment', 'screen-bad-ending', 'screen-objection', 'screen-investigation']) {
+  assert(html.includes(`'${screen}'`), `${screen} must be included in the system-judgment music act`);
+}
+assert(/\['screen-judgment', 'screen-bad-ending', 'screen-objection', 'screen-investigation'\]\.includes\(id\)\) return 'music-bad'/.test(html), 'system judgment act must map to bad-day music');
+assert(/id === 'screen-ataraxy'\) return 'music-ataraxy'/.test(html), 'Ataraxy Portico must map to its own music');
+assert(/playMusic\(musicForScreen\(id\)\)/.test(html), 'navigation must select music by story act');
+assert(/function initAudio\(\)[\s\S]*playMusic\(currentMusic\)/.test(html), 'first interaction must preserve the destination track');
 
 const inlineScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)]
   .map(match => match[1])
   .filter(source => source.trim());
 for (const source of inlineScripts) new vm.Script(source);
 
-console.log(`LEVEL 6 STORY TESTS PASSED — ${screenIds.size} screens, ${targets.length} transitions, correct image-to-scene mapping`);
+console.log(`LEVEL 6 STORY TESTS PASSED — ${screenIds.size} screens, ${targets.length} transitions, Spanish Ataraxy UI, four-act music mapping`);
