@@ -1,0 +1,24 @@
+{
+  "level": 4,
+  "algorithm": "Knowledge-Based Agent / Propositional Logic",
+  "recoveredFromGitHistory": "2026-08-22",
+  "mobileStandard": "../../level1/level1_STABLE_手機OK.html",
+  "policy": "These three images are the complete visual set referenced by every recorded Level 4 version. Replacing, renaming, or removing one requires Owner review and a manifest hash update.",
+  "images": [
+    {
+      "file": "rv_park_map.png",
+      "role": "main RV Park game background",
+      "sha256": "b025d804e1960c524db972be574e2a47f643472bad430b4685b9026eedfbc8a2"
+    },
+    {
+      "file": "family_found.webp",
+      "role": "family-found story image",
+      "sha256": "8ce656dacb86ee8d46bea0b99f31ba0fb2c4ad60950d7f9e7390d93bbaca452a"
+    },
+    {
+      "file": "serenity_gate.webp",
+      "role": "Gate of Serenity background",
+      "sha256": "9d82d19536aa8c75dc3e4e3877394de241eef9bd5b532b3bdbdee322cd3e367d"
+    }
+  ]
+}

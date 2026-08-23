@@ -12,7 +12,9 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Noto Sans TC', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+        * { font-family: 'Noto Sans TC', sans-serif; box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        html, body { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
+        button, .grid-cell, .lang-btn { touch-action: manipulation; }
         .mono { font-family: 'JetBrains Mono', monospace; }
         
         .screen { display: none; min-height: 100vh; position: relative; }
@@ -29,9 +31,20 @@
         
         /* Background with RV Park */
         .bg-rv-park {
-            background: url('../assets/images/rv_park_map.png') center center/cover no-repeat;
+            background: url('assets/images/rv_park_map.png') center center/cover no-repeat;
             background-color: #1e3a5f;
         }
+
+        .game-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
+            gap: 12px;
+            width: 100%;
+            max-width: 1350px;
+            margin: 0 auto;
+        }
+
+        .main-game { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
         
         /* Breathing animations for meditation */
         .breath-ring-large {
@@ -57,6 +70,7 @@
             display: grid;
             gap: 3px;
             padding: 10px;
+            width: min(100%, 450px);
             background: rgba(0, 0, 0, 0.5);
             border-radius: 16px;
             backdrop-filter: blur(8px);
@@ -77,6 +91,9 @@
         }
         
         .grid-cell:hover { transform: scale(1.03); border-color: rgba(255, 255, 255, 0.6); }
+        .grid-cell.move-target { border-color: #f8fafc; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.45); }
+        .grid-cell.clarity-target { border-color: #fbbf24; box-shadow: inset 0 0 0 2px rgba(251,191,36,0.7), 0 0 12px rgba(251,191,36,0.45); }
+        .grid-cell.query-target { border-color: #c084fc; box-shadow: inset 0 0 0 2px rgba(192,132,252,0.55); }
         .grid-cell.player { background: linear-gradient(135deg, #3b82f6, #2563eb); border-color: #60a5fa; box-shadow: 0 0 15px rgba(59, 130, 246, 0.6); }
         .grid-cell.visited { background: rgba(34, 197, 94, 0.55); border-color: rgba(34, 197, 94, 0.8); }
         .grid-cell.safe { background: rgba(59, 130, 246, 0.4); border-color: rgba(59, 130, 246, 0.7); }
@@ -154,37 +171,22 @@
         .ctrl-btn.ai-demo { background: linear-gradient(135deg, #fbbf24, #f59e0b); border-color: #fcd34d; color: #1f2937; }
         .ctrl-btn.new-world { background: linear-gradient(135deg, #8b5cf6, #a855f7); border-color: #c084fc; }
         .ctrl-btn.reset { background: rgba(239, 68, 68, 0.5); border-color: #ef4444; }
-        
-        /* Direction Pad - LARGE */
-        .dpad-container {
-            display: grid;
-            grid-template-columns: repeat(3, 55px);
-            grid-template-rows: repeat(3, 55px);
-            gap: 5px;
-            justify-content: center;
-            margin: 12px 0;
-        }
-        
-        .dpad-btn {
-            width: 55px;
-            height: 55px;
-            border-radius: 12px;
-            font-size: 24px;
-            cursor: pointer;
-            border: 3px solid rgba(59, 130, 246, 0.8);
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(99, 102, 241, 0.5));
+        .ctrl-btn.clarity-tool { background: linear-gradient(135deg, rgba(245,158,11,0.78), rgba(234,88,12,0.78)); border-color: #fbbf24; }
+        .ctrl-btn.mode-active { outline: 3px solid white; box-shadow: 0 0 18px rgba(255,255,255,0.55); }
+
+        .interaction-guide {
+            max-width: 620px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 8px 12px;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.15s;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.45;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 12px;
+            background: rgba(15,23,42,0.9);
         }
-        
-        .dpad-btn:hover { background: linear-gradient(135deg, rgba(59, 130, 246, 0.7), rgba(99, 102, 241, 0.7)); transform: scale(1.08); }
-        .dpad-btn:active { transform: scale(0.95); }
-        .dpad-btn.center { background: linear-gradient(135deg, rgba(34, 197, 94, 0.6), rgba(16, 185, 129, 0.6)); border-color: rgba(34, 197, 94, 0.9); font-size: 11px; font-weight: bold; }
-        .dpad-placeholder { visibility: hidden; }
         
         /* Stats Row - WHITE TEXT */
         .stats-row {
@@ -328,6 +330,55 @@
             color: #fbbf24;
             margin-top: 8px;
         }
+
+        @media (max-width: 1024px) {
+            .game-layout { grid-template-columns: minmax(0, 1fr); }
+            .side-panel { width: 100%; max-width: 620px; margin: 0 auto; max-height: none; overflow: visible; }
+        }
+
+        @media (max-width: 640px) {
+            /* Level 1 stable mobile contract: no large blur, no horizontal overflow, normal document flow. */
+            * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+            #game-screen { min-height: auto !important; padding: 44px 8px 32px !important; overflow-x: hidden; }
+            #game-screen.active { display: block !important; min-height: auto !important; }
+            .game-layout { display: block !important; width: 100%; }
+            .main-game { width: 100%; }
+            .lang-toggle { top: 6px; left: 50%; transform: translateX(-50%); padding: 2px; }
+            .lang-btn { padding: 4px 10px; font-size: 11px; }
+            .header-bar { padding: 8px; gap: 6px; flex-wrap: wrap; }
+            .header-bar > div:nth-child(2) { order: 3; flex: 1 0 100%; }
+            #mission-bar { flex-wrap: wrap; gap: 4px !important; padding: 4px !important; }
+            .stats-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
+            .stat-box { min-width: 0; padding: 6px 2px; }
+            .stat-label { font-size: 10px; }
+            .stat-value { font-size: 17px; }
+            .diff-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+            .diff-row > span { grid-column: 1 / -1; text-align: center; }
+            .diff-btn { min-width: 0; padding: 7px 4px; font-size: 12px; }
+            .game-grid { width: min(100%, 430px); padding: 6px; gap: 3px; }
+            .grid-cell { min-height: 0 !important; border-width: 1.5px; border-radius: 7px; }
+            .cell-content { font-size: clamp(1rem, 6vw, 1.45rem); }
+            .cell-percepts { font-size: 0.7rem; }
+            .interaction-guide { font-size: 12px; padding: 7px 9px; }
+            .controls-bar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 8px; }
+            .ctrl-btn { min-width: 0; width: 100%; justify-content: center; padding: 10px 6px; font-size: 12px; }
+            .ctrl-btn.clarity-tool { grid-column: 1 / -1; }
+            .side-panel { width: 100% !important; max-width: 100% !important; margin-top: 8px; padding: 8px; }
+            .info-box { padding: 8px; margin-bottom: 8px; }
+            .scroll-box { max-height: 130px; }
+            .family-img { width: min(100%, 260px); max-width: 100%; }
+        }
+
+        @media (orientation: landscape) and (max-height: 600px) {
+            * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+            #game-screen { min-height: auto !important; padding: 40px 8px 24px !important; overflow-x: hidden; }
+            #game-screen.active { display: block !important; min-height: auto !important; }
+            .game-layout { grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.85fr); align-items: start; }
+            .side-panel { max-height: none; overflow: visible; }
+            .game-grid { width: min(100%, 390px); }
+            .controls-bar { gap: 5px; padding: 6px; }
+            .ctrl-btn { padding: 8px 10px; font-size: 12px; }
+        }
     </style>
 </head>
 <body translate="no">
@@ -346,9 +397,9 @@
      SCREEN 1: GAME SCREEN
 ══════════════════════════════════════════════════════════════════════════ -->
 <div id="game-screen" class="screen active flex-col bg-rv-park" style="padding: 10px;">
-    <div style="display: grid; grid-template-columns: 1fr 280px; gap: 12px; max-width: 1350px; margin: 0 auto; width: 100%;">
+    <div class="game-layout">
         <!-- Main Game Area -->
-        <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="main-game">
             <!-- Header with Story -->
             <div class="header-bar">
                 <button onclick="goBack()" style="background:none;border:none;color:white;cursor:pointer;font-size:14px;">
@@ -397,6 +448,10 @@
                 <button class="diff-btn" id="tier-master" onclick="setTier('master')"><span data-en="Unassisted" data-zh="裸推理" data-es="Sin ayuda">裸推理</span></button>
                 <button class="diff-btn" id="diff-6" onclick="setDifficulty(6)"><span data-en="6×6 · Endurance" data-zh="6×6 · 耐力" data-es="6×6 · Resistencia">6×6 · 耐力</span></button>
             </div>
+
+            <div class="interaction-guide" id="interaction-guide" aria-live="polite">
+                <span data-en="Tap a highlighted adjacent cell to move." data-zh="直接點亮起的相鄰格移動。" data-es="Toca una casilla adyacente resaltada para moverte.">直接點亮起的相鄰格移動。</span>
+            </div>
             
             <!-- Game Grid Container -->
             <div style="flex:1;display:flex;align-items:center;justify-content:center;">
@@ -408,6 +463,9 @@
             
             <!-- Controls -->
             <div class="controls-bar">
+                <button class="ctrl-btn clarity-tool" onclick="toggleClarityTool()" id="clarity-btn" aria-pressed="false">
+                    💎 <span data-en="Clarity Treasure" data-zh="澄清寶物" data-es="Tesoro de claridad">澄清寶物</span> ×<span id="clarity-count">1</span>
+                </button>
                 <button class="ctrl-btn ai-demo" onclick="runAIDemo()" id="demo-btn">
                     🤖 <span data-en="AI Demo" data-zh="AI 演示" data-es="Demo de IA">AI 演示</span>
                 </button>
@@ -443,22 +501,15 @@
                 </div>
             </div>
             
-            <!-- Player Controls D-Pad -->
+            <!-- Touch-first interaction guide; keyboard remains available on desktop. -->
             <div class="info-box">
-                <div class="info-title" style="color:#3b82f6;">🎮 <span data-en="Your Control" data-zh="你的控制" data-es="Tus controles">你的控制</span></div>
-                <div style="font-size:11px;text-align:center;margin-bottom:6px;opacity:0.8;"><span data-en="WASD or Arrow Keys" data-zh="WASD 或 方向鍵" data-es="WASD o flechas">WASD 或 方向鍵</span></div>
-                <div class="dpad-container">
-                    <div class="dpad-placeholder"></div>
-                    <button class="dpad-btn" onclick="movePlayer(0,1)" id="btn-up">↑</button>
-                    <div class="dpad-placeholder"></div>
-                    <button class="dpad-btn" onclick="movePlayer(-1,0)" id="btn-left">←</button>
-                    <button class="dpad-btn center" onclick="shootArrow()" id="btn-shoot">DISPEL</button>
-                    <button class="dpad-btn" onclick="movePlayer(1,0)" id="btn-right">→</button>
-                    <div class="dpad-placeholder"></div>
-                    <button class="dpad-btn" onclick="movePlayer(0,-1)" id="btn-down">↓</button>
-                    <div class="dpad-placeholder"></div>
+                <div class="info-title" style="color:#3b82f6;">👆 <span data-en="Tap to Act" data-zh="直接點格行動" data-es="Toca para actuar">直接點格行動</span></div>
+                <div style="font-size:11px;line-height:1.7;opacity:0.9;">
+                    <div data-en="• Normal: tap an adjacent cell to move" data-zh="• 一般：點相鄰格移動" data-es="• Normal: toca una casilla adyacente para moverte">• 一般：點相鄰格移動</div>
+                    <div data-en="• Clarity Treasure: select it, then tap one adjacent cell" data-zh="• 澄清寶物：先選工具，再點一個相鄰格" data-es="• Tesoro de claridad: selecciónalo y toca una casilla adyacente">• 澄清寶物：先選工具，再點一個相鄰格</div>
+                    <div data-en="• Resolution: select it, then tap any cell to ask the KB" data-zh="• 消解法：先選模式，再點任一格詢問知識庫" data-es="• Resolución: selecciónala y toca cualquier casilla para consultar la BC">• 消解法：先選模式，再點任一格詢問知識庫</div>
+                    <div style="opacity:0.65;margin-top:4px;" data-en="Desktop also supports WASD / arrow keys." data-zh="電腦亦保留 WASD／鍵盤方向鍵。" data-es="En computadora también funcionan WASD y las flechas.">電腦亦保留 WASD／鍵盤方向鍵。</div>
                 </div>
-                <div style="font-size:10px;text-align:center;color:#fbbf24;"><span data-en="Press DISPEL (Space) to clear rumors!" data-zh="按 DISPEL (空格鍵) 澄清謠言!" data-es="¡Pulsa DISPEL (Espacio) para disipar rumores!">按 DISPEL (空格鍵) 澄清謠言!</span></div>
                 <div class="jingsi-note" style="margin-top:10px;padding:8px 10px;border-left:3px solid #fbbf24;background:rgba(251,191,36,0.08);border-radius:4px;font-size:10.5px;line-height:1.65;">
                     <div style="color:#fbbf24;" data-en="「Be clear and complete when you talk and listen. Do not pick one sentence here, and another one there, or you may intensely hurt someone by accident.」" data-zh="「聽話、說話要完整，不要只撿前一句、後一句，合起來剛剛好尖尖地刺進人心。」" data-es="「Sé claro y completo al hablar y al escuchar. No tomes una frase de aquí y otra de allá, o podrías herir profundamente a alguien sin querer.」">「聽話、說話要完整，不要只撿前一句、後一句，合起來剛剛好尖尖地刺進人心。」</div>
                     <div style="color:rgba(255,255,255,0.55);margin-top:3px;font-size:9.5px;">— <span data-en="Master Cheng Yen" data-zh="證嚴上人" data-es="Maestra Cheng Yen">證嚴上人</span></div>
@@ -515,7 +566,7 @@
      SCREEN 2: 靜心之門 / Gate of Serenity
 ══════════════════════════════════════════════════════════════════════════ -->
 <div id="ataraxy-screen" class="screen flex-col items-center py-2 px-4" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);">
-    <div class="absolute inset-0" style="background: url('../assets/images/靜心之門.png') center top/auto 100% no-repeat;"></div>
+    <div class="absolute inset-0" style="background: url('assets/images/serenity_gate.webp') center top/auto 100% no-repeat;"></div>
     <div class="absolute inset-0 bg-purple-900/5"></div>
     
     <div class="relative z-10 text-center">
@@ -692,6 +743,7 @@ function setLang(lang) {
     document.querySelectorAll('[data-en][data-zh]').forEach(el => {
         el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-en');
     });
+    updateInteractionUI();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -818,6 +870,7 @@ function getPercepts(x, y) {
 // Resolution 是反駁完備的（refutation-complete），可以。代價是最壞指數時間。
 // ═══════════════════════════════════════════════════════════════════════════
 let resolutionMode = false;
+let clarityMode = false;
 const RES_MAX_STEPS = 4000;
 
 const resNeg    = L => L.startsWith('-') ? L.slice(1) : '-' + L;
@@ -951,12 +1004,89 @@ const RT = {
 };
 const rt = () => RT[currentLang] || RT.en;
 
+const INTERACTION_TEXT = {
+  move: {
+    en: 'Tap a highlighted adjacent cell to move.',
+    zh: '直接點亮起的相鄰格移動。',
+    es: 'Toca una casilla adyacente resaltada para moverte.'
+  },
+  clarity: {
+    en: 'Clarity Treasure selected — tap one adjacent cell to test the rumor.',
+    zh: '已選澄清寶物——點一個相鄰格，驗證那裡是否為謠言源。',
+    es: 'Tesoro de claridad seleccionado: toca una casilla adyacente para comprobar el rumor.'
+  },
+  resolution: {
+    en: 'Resolution selected — tap any cell to ask whether the KB can prove it safe.',
+    zh: '已開啟消解法——點任一格，詢問知識庫能否證明安全。',
+    es: 'Resolución seleccionada: toca cualquier casilla para preguntar si la BC demuestra que es segura.'
+  }
+};
+
+function updateInteractionUI() {
+    const clarityBtn = document.getElementById('clarity-btn');
+    const resolutionBtn = document.getElementById('res-btn');
+    const guide = document.getElementById('interaction-guide');
+    const mode = clarityMode ? 'clarity' : (resolutionMode ? 'resolution' : 'move');
+    if (clarityBtn) {
+        clarityBtn.classList.toggle('mode-active', clarityMode);
+        clarityBtn.setAttribute('aria-pressed', String(clarityMode));
+        clarityBtn.disabled = !world.alive || world.escaped || world.arrows <= 0;
+    }
+    if (resolutionBtn) {
+        resolutionBtn.classList.toggle('mode-active', resolutionMode);
+        resolutionBtn.setAttribute('aria-pressed', String(resolutionMode));
+    }
+    if (guide) guide.textContent = INTERACTION_TEXT[mode][currentLang] || INTERACTION_TEXT[mode].en;
+}
+
+function resetInteractionModes() {
+    clarityMode = false;
+    resolutionMode = false;
+    updateInteractionUI();
+}
+
+function toggleClarityTool() {
+    if (!world.alive || world.escaped) return;
+    if (world.arrows <= 0) {
+        showStory('💭 ' + (currentLang === 'en' ? 'No Clarity Treasure remains.' : (currentLang === 'es' ? 'No queda ningún Tesoro de claridad.' : '澄清寶物已經用完了。')));
+        return;
+    }
+    clarityMode = !clarityMode;
+    if (clarityMode) resolutionMode = false;
+    updateInteractionUI();
+    renderGrid();
+}
+
 function toggleResolution() {
     resolutionMode = !resolutionMode;
-    const b = document.getElementById('res-btn');
-    if (b) b.style.background = resolutionMode ? 'rgba(139,92,246,0.55)' : '';
+    if (resolutionMode) clarityMode = false;
+    updateInteractionUI();
     showStory((resolutionMode ? '⚖️ ' : '') + (resolutionMode ? rt().on : rt().off));
     renderGrid();
+}
+
+function cellAction(x, y) {
+    if (!world.alive || world.escaped) return;
+    if (clarityMode) {
+        if (shootArrow(x, y)) clarityMode = false;
+        updateInteractionUI();
+        renderGrid();
+        return;
+    }
+    if (resolutionMode) {
+        cellQuery(x, y);
+        return;
+    }
+
+    const dx = x - world.agentPos.x;
+    const dy = y - world.agentPos.y;
+    if (Math.abs(dx) + Math.abs(dy) !== 1) {
+        showStory('👆 ' + (currentLang === 'en'
+            ? 'Tap one highlighted adjacent cell to move.'
+            : (currentLang === 'es' ? 'Toca una casilla adyacente resaltada para moverte.' : '請點亮起的相鄰格移動。')));
+        return;
+    }
+    movePlayer(dx, dy);
 }
 
 function cellQuery(x, y) {
@@ -1094,7 +1224,7 @@ function backwardChain(x, y) {
 function shootArrow(tx, ty) {
     if (world.arrows <= 0) {
         showStory('💭 ' + (currentLang === 'en' ? 'No clarity power left.' : (currentLang === 'es' ? 'Sin poder de aclaración.' : '澄清力已經用完了。')));
-        return;
+        return false;
     }
 
     const { x, y } = world.agentPos;
@@ -1110,13 +1240,13 @@ function shootArrow(tx, ty) {
                 : (currentLang === 'es'
                     ? 'La aclaración actúa sobre una casilla contigua. Colócate junto a una sola casilla sin explorar.'
                     : '澄清力作用在相鄰的一格。請移動到只剩一個未探索鄰格的位置。')));
-            return;
+            return false;
         }
     }
 
     if (Math.abs(target.x - x) + Math.abs(target.y - y) !== 1) {
         showStory('🧭 ' + (currentLang === 'en' ? 'Clarity reaches one adjacent cell only.' : (currentLang === 'es' ? 'La aclaración solo alcanza una casilla contigua.' : '澄清力只碰得到相鄰的一格。')));
-        return;
+        return false;
     }
 
     playArrowSound();
@@ -1153,6 +1283,7 @@ function shootArrow(tx, ty) {
 
     reinferSafety();
     updateDisplays();
+    return true;
 }
 
 // KB 變動後重跑前向鏈結
@@ -1296,7 +1427,7 @@ document.addEventListener('keydown', function(e) {
     else if (key === 's' || key === 'arrowdown') { e.preventDefault(); movePlayer(0, -1); }
     else if (key === 'a' || key === 'arrowleft') { e.preventDefault(); movePlayer(-1, 0); }
     else if (key === 'd' || key === 'arrowright') { e.preventDefault(); movePlayer(1, 0); }
-    else if (key === ' ') { e.preventDefault(); shootArrow(); }
+    else if (key === ' ') { e.preventDefault(); toggleClarityTool(); }
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1493,6 +1624,7 @@ function newRandomWorld() {
         elo: agent.elo
     };
 
+    resetInteractionModes();
     hideStory();
     document.getElementById('bc-display').textContent = '移動以觸發推理';
     // FIX-2 · 新地圖同樣先感知起點
@@ -1531,6 +1663,7 @@ function resetGame() {
     agent.kb = new Set();
     agent.steps = 0;
 
+    resetInteractionModes();
     hideStory();
     document.getElementById('bc-display').textContent = '移動以觸發推理';
     // FIX-2 · 起點先感知一次。少了這一步 KB 是空的，AI Demo 一啟動就宣告停步。
@@ -1551,6 +1684,7 @@ function updateDisplays() {
     document.getElementById('pos-display').textContent = `(${world.agentPos.x},${world.agentPos.y})`;
     document.getElementById('found-display').textContent = world.hasFamily ? '✅' : '❌';
     document.getElementById('arrows-display').textContent = world.arrows;
+    document.getElementById('clarity-count').textContent = world.arrows;
     document.getElementById('status-display').textContent = world.alive ? '🟢 Active' : '🔴 Dead';
     document.getElementById('status-display').style.color = world.alive ? '#4ade80' : '#ef4444';
     
@@ -1559,12 +1693,12 @@ function updateDisplays() {
     document.getElementById('kb-facts-display').innerHTML = facts.map(f => 
         `<div style="color:${f.includes('Safe') || f.includes('Dispelled') ? '#4ade80' : f.includes('Not') ? '#60a5fa' : '#fbbf24'};">${f}</div>`
     ).join('');
+    updateInteractionUI();
 }
 
 function renderGrid() {
     const grid = document.getElementById('game-grid');
-    const cellSize = Math.min(65, Math.floor(450 / GRID_SIZE));
-    grid.style.gridTemplateColumns = `repeat(${GRID_SIZE}, ${cellSize}px)`;
+    grid.style.gridTemplateColumns = `repeat(${GRID_SIZE}, minmax(0, 1fr))`;
     
     let html = '';
     
@@ -1585,6 +1719,11 @@ function renderGrid() {
             else if (isVisited) cls += ' visited';
             else if (isBCProved) cls += ' bc-proved';
             else if (isSafe) cls += ' safe';
+
+            const distance = Math.abs(world.agentPos.x - x) + Math.abs(world.agentPos.y - y);
+            if (!isAgent && clarityMode && distance === 1) cls += ' clarity-target';
+            else if (resolutionMode) cls += ' query-target';
+            else if (!isAgent && distance === 1) cls += ' move-target';
             
             // Reveal hazards when adjacent visited
             const adjacentVisited = getNeighbors(x, y).some(n => agent.visited.has(posKey(n.x, n.y)));
@@ -1616,10 +1755,10 @@ function renderGrid() {
             else if (world.hasFamily && x === 1 && y === 1) content = '🏡';
             else if (isBCProved) content = '✅';
             
-            html += `<div class="${cls}" style="min-height:${cellSize}px;${resolutionMode ? 'cursor:pointer;box-shadow:inset 0 0 0 1px rgba(139,92,246,.5);' : ''}" onclick="cellQuery(${x},${y})">
+            html += `<button type="button" class="${cls}" aria-label="(${x},${y})" onclick="cellAction(${x},${y})">
                 ${perceptHTML ? `<div class="cell-percepts">${perceptHTML}</div>` : ''}
                 <div class="cell-content">${content}</div>
-            </div>`;
+            </button>`;
         }
     }
     
@@ -1629,7 +1768,7 @@ function renderGrid() {
 function showStory(msg, showImg = false) {
     const box = document.getElementById('story-box');
     box.innerHTML = showImg ? 
-        `<img src="../assets/images/family_found.png" class="family-img"><div style="color:white;font-size:16px;">${msg}</div>` :
+        `<img src="assets/images/family_found.webp" class="family-img" alt=""><div style="color:white;font-size:16px;">${msg}</div>` :
         `<div style="color:white;font-size:16px;">${msg}</div>`;
     box.classList.add('show');
 }
