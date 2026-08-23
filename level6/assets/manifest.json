@@ -1,0 +1,55 @@
+{
+  "level": 6,
+  "algorithm": "First-Order Logic / Closed-World Assumption",
+  "ownerApproved": "2026-08-22",
+  "mobileStandard": "JOK Level 1 STABLE 手機OK behavior contract",
+  "policy": "These Owner-supplied WebP files are the complete Level 6 story set. The composed transit screenshot is reference-only; HTML overlays the narrative on the original raw-rice artwork.",
+  "images": [
+    {
+      "file": "l6_raw_rice_opening.webp",
+      "role": "2006 raw-rice opening and Level 5-to-6 story transition",
+      "sha256": "63e0708f29fc65f35ba9212496e77379605a1ef7a05bf59a9cc51fc4bb25ec3f"
+    },
+    {
+      "file": "l6_team_huddle.webp",
+      "role": "level introduction, applicant database, insight, and evidence scenes",
+      "sha256": "1322b150400753422c46b1fca8340b7c6dd8ae5f14f93ff448010681ff4d14c2"
+    },
+    {
+      "file": "l6_system_rejection.webp",
+      "role": "judgment, rejection, objection, and investigation scenes",
+      "sha256": "c7184681233290484b2295ab6f7ba9f73e0c71d3631462ba1507c9364fce9038"
+    },
+    {
+      "file": "l6_marcus_portrait.webp",
+      "role": "Marcus applicant portrait, detail portrait, and welcome scene",
+      "sha256": "441a1367f45b574b60fd12fab213a889db409c61bdde42ca4c1f0f91916b29a6"
+    },
+    {
+      "file": "l6_transformation.webp",
+      "role": "three-month transformation scene",
+      "sha256": "aa8c599faa81d8336017ffb3307017ed5d3f1d592fa5fb138faacda1470776c0"
+    },
+    {
+      "file": "l6_meeting_homeless.webp",
+      "role": "Marcus offers food and care",
+      "sha256": "708a8d3ce0da8633d12b17ace425c6f12b6eb107ad395de16b7e3f02359ae8ca"
+    },
+    {
+      "file": "l6_invitation_moment.webp",
+      "role": "invitation and cycle-of-kindness scene",
+      "sha256": "421f80e9b683956c93d73ecf94d68df77c5762958c2771fb28874c39f4756efc"
+    },
+    {
+      "file": "l6_stillness_bg.webp",
+      "role": "Ataraxy Portico background",
+      "sha256": "71ccc1bc962c81fbd93056eae61e3f3ac483715e9e15276e5f7975731f5717e6"
+    }
+  ],
+  "audio": [
+    { "file": "rice_incident.mp3", "role": "raw-rice opening music", "sha256": "af197f8e15804430d31598df85bc0bfcef0af17de17999f5499a30dbbd42828e" },
+    { "file": "funny-suspenseful-cartoon-style-music-336058.mp3", "role": "game background music", "sha256": "33c99d9d2e6aa59f791f6ecc7bd30dab2a47555e42c4ff0706e270c361b40127" },
+    { "file": "bad-day-137530.mp3", "role": "system rejection music", "sha256": "4287da11fc1dddec27becf223bb7272145d4a038ffa0092cdc20f7048d6b747b" },
+    { "file": "ataraxy-music.mp3", "role": "Ataraxy Portico music", "sha256": "06e0c0e390353a0f5ee7088cd4ecdae0278c8c6ca1076fc410d1a8bc8c2fa28b" }
+  ]
+}
