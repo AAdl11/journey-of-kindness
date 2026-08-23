@@ -563,14 +563,14 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════════════════
-     SCREEN 2: 靜心之門 / Gate of Serenity
+     SCREEN 2: 靜心之門 / Ataraxy Portico
 ══════════════════════════════════════════════════════════════════════════ -->
 <div id="ataraxy-screen" class="screen flex-col items-center py-2 px-4" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);">
     <div class="absolute inset-0" style="background: url('assets/images/serenity_gate.webp') center top/auto 100% no-repeat;"></div>
     <div class="absolute inset-0 bg-purple-900/5"></div>
     
     <div class="relative z-10 text-center">
-        <h2 class="text-3xl font-bold text-white" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 4px 20px rgba(0,0,0,0.7);" data-en="Gate of Serenity" data-zh="靜心之門" data-es="Puerta de la Serenidad">靜心之門</h2>
+        <h2 class="text-3xl font-bold text-white" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 4px 20px rgba(0,0,0,0.7);" data-en="Ataraxy Portico" data-zh="靜心之門" data-es="Portal de la Serenidad">靜心之門</h2>
     </div>
     
     <div class="relative z-10 flex flex-col items-center" style="margin-top: 10px;">
@@ -1371,7 +1371,7 @@ function movePlayer(dx, dy) {
         if(_s2){_s2.style.opacity='1';_s2.style.color='#fbbf24';}
         agent.elo += 30;
         playSuccessSound();
-        showStory('🏠 ' + (currentLang === 'en' ? 'Found the family! Now return to (1,1).' : '找到家庭！現在返回起點 (1,1)。'), true);
+        showStory('🏠 ' + (({ en: 'Found the family! Now return to (1,1).', zh: '找到家庭！現在返回起點 (1,1)。', es: 'Encontraste a la familia. Ahora regresa a (1,1).' })[currentLang] || 'Found the family! Now return to (1,1).'), true);
     }
     
     // Backward chaining
@@ -1406,7 +1406,9 @@ function movePlayer(dx, dy) {
         
         const statsMsg = currentLang === 'en' 
             ? `🎉 Mission Complete!\n\n📊 Stats:\n• Steps: ${agent.steps}\n• Safe cells: ${safeCount}\n• BC proved: ${bcCount}\n• KB facts: ${kbCount}\n• ELO bonus: +${bonus}`
-            : `🎉 任務完成！\n\n📊 統計:\n• 步數: ${agent.steps}\n• 安全格: ${safeCount}\n• BC證明: ${bcCount}\n• 知識庫: ${kbCount}\n• ELO 加分: +${bonus}`;
+            : (currentLang === 'es'
+            ? `🎉 ¡Misión cumplida!\n\n📊 Estadísticas:\n• Pasos: ${agent.steps}\n• Casillas seguras: ${safeCount}\n• Demostradas por BC: ${bcCount}\n• Hechos en la BC: ${kbCount}\n• Bono ELO: +${bonus}`
+            : `🎉 任務完成！\n\n📊 統計:\n• 步數: ${agent.steps}\n• 安全格: ${safeCount}\n• BC證明: ${bcCount}\n• 知識庫: ${kbCount}\n• ELO 加分: +${bonus}`);
         
         showStory(statsMsg);
         if (typeof confetti === 'function') confetti({ particleCount: 200, spread: 100 });

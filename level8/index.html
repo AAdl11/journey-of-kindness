@@ -1,277 +1,902 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Level 8: MCTS | Journey of Kindness 善的旅程</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google" content="notranslate">
+<title>善的旅程 Level 8: 萬千未來之樹 | The Tree of Many Futures</title>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKBPRQQQ1Y"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BKBPRQQQ1Y');</script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:system-ui,-apple-system,'Microsoft JhengHei',sans-serif;background:linear-gradient(180deg,#1a1a3e 0%,#2d2d5f 55%,#4a3f6b 100%);color:#fff;min-height:100vh;padding-bottom:40px}
-.text-zh,.text-es{display:none}
-body.lang-zh .text-en{display:none} body.lang-zh .text-zh{display:inline}
-body.lang-es .text-en{display:none} body.lang-es .text-es{display:inline}
-.lang-toggle{position:fixed;top:10px;left:10px;z-index:1000;display:flex;background:rgba(0,0,0,.6);border-radius:9999px;padding:3px;border:2px solid rgba(255,255,255,.3)}
-.lang-btn{background:none;border:none;color:#bbb;padding:5px 11px;border-radius:9999px;font-size:13px;cursor:pointer}
-.lang-btn.active{background:#fbbf24;color:#1a1a3e;font-weight:700}
-.home-btn{position:fixed;top:10px;right:10px;z-index:1000;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:10px;padding:5px 11px;font-size:15px;cursor:pointer}
-.wrap{max-width:520px;margin:0 auto;padding:56px 12px 0}
-h1{font-size:1.25rem;text-align:center;color:#fbbf24;text-shadow:0 2px 12px rgba(0,0,0,.6)}
-.sub{text-align:center;font-size:.8rem;color:#c4b5fd;margin-top:2px}
-.card{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:14px;margin-top:12px}
-.btn{display:inline-block;border:none;border-radius:11px;padding:11px 18px;font-size:.95rem;font-weight:700;cursor:pointer}
-.btn-p{background:linear-gradient(135deg,#f472b6,#a855f7);color:#fff}
-.btn-g{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.3)}
-.btn-ai{background:linear-gradient(135deg,#22d3ee,#3b82f6);color:#fff}
-/* 時間軸(對手) */
-.timebar{display:flex;gap:3px;margin-top:8px}
-.tseg{flex:1;height:12px;border-radius:3px;background:rgba(255,255,255,.16);position:relative}
-.tseg.used{background:#f472b6}
-.tseg.rain::after{content:'🌫';position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-size:11px}
-/* 八戶 */
-.park{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
-.rv{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.18);border-radius:12px;padding:9px 4px 7px;text-align:center;cursor:pointer;position:relative;transition:transform .12s}
-.rv:active{transform:scale(.94)}
-.rv .em{font-size:26px}
-.rv .nm{font-size:.62rem;color:#cbd5e1;margin-top:2px}
-.rv .bd{position:absolute;top:-7px;right:-5px;font-size:14px}
-.rv .cost{font-size:.6rem;color:#fbbf24}
-.rv.here{border-color:#fbbf24;box-shadow:0 0 14px rgba(251,191,36,.5)}
-.rv.done{opacity:.45;cursor:default}
-.rv.best{border-color:#22d3ee;box-shadow:0 0 14px rgba(34,211,238,.6)}
-/* MCTS 統計條 */
-.stat{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:.78rem}
-.stat .bar{flex:1;height:12px;background:rgba(255,255,255,.12);border-radius:6px;overflow:hidden}
-.stat .fill{height:100%;background:linear-gradient(90deg,#22d3ee,#3b82f6)}
-.banner{background:rgba(34,211,238,.13);border-left:3px solid #22d3ee;border-radius:8px;padding:9px 11px;font-size:.82rem;line-height:1.6;margin-top:10px}
-.event{background:rgba(244,114,182,.15);border-left:3px solid #f472b6}
-.hidden{display:none!important}
-.jingsi{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.35);border-radius:12px;padding:13px;margin-top:12px;text-align:center;line-height:1.7}
-.jingsi .q{color:#fbbf24;font-size:.92rem;font-weight:700}
-.jingsi .e{color:rgba(255,255,255,.85);font-size:.78rem;font-style:italic;margin-top:4px}
-.jingsi .s{color:rgba(255,255,255,.5);font-size:.7rem;margin-top:4px}
-details{margin-top:10px;font-size:.82rem;line-height:1.65}
-summary{cursor:pointer;color:#22d3ee;font-weight:700}
-.big{font-size:1.6rem;text-align:center;margin-top:6px}
+/* ═══ Base — follows the level1_STABLE_手機OK touch-first standard ═══ */
+* { font-family: 'Noto Sans TC', sans-serif; box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { overflow-x: hidden; -webkit-text-size-adjust: 100%; background: #0f172a; }
+button, .tile, .branch-head, .lang-btn { touch-action: manipulation; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+button { min-height: 44px; min-width: 44px; }
+
+.screen { display: none; min-height: 100vh; width: 100%; position: relative; }
+.screen.active { display: flex; flex-direction: column; align-items: center; }
+
+/* ═══ Semantic asset placeholders (Step 9 contract names; real art drops in
+       by filename with zero code change — see tryAsset()) ═══ */
+.bg-grove { background: linear-gradient(160deg, #14532d 0%, #166534 45%, #3f6212 100%); background-size: cover; background-position: center; }
+.bg-park { background: linear-gradient(160deg, #0c4a6e 0%, #155e75 45%, #365314 100%); background-size: cover; background-position: center; }
+.bg-intro { background: linear-gradient(180deg, #0f172a 0%, #1e293b 60%, #14532d 100%); background-size: cover; background-position: center; }
+.asset-loaded { background-size: cover !important; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulseGlow { 0%,100% { box-shadow: 0 0 12px rgba(251,191,36,.5);} 50% { box-shadow: 0 0 26px rgba(251,191,36,.9);} }
+@keyframes ghostStep { 0% { opacity: 0; transform: translate(0,0) scale(.9);} 30% { opacity: var(--ghost-op,.6);} 100% { opacity: 0; transform: translate(var(--gx,0), var(--gy,0)) scale(1);} }
+@keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);} 75%{transform:translateX(5px);} }
+.fade-in { animation: fadeIn .7s ease-out; }
+.fade-in-up { animation: fadeInUp .6s ease-out; }
+.shake { animation: shake .4s ease-in-out; }
+
+.card { background: rgba(255,255,255,.94); border-radius: 20px; padding: 22px; max-width: 560px; width: 100%; box-shadow: 0 18px 60px rgba(0,0,0,.4); }
+.card-dark { background: rgba(15,23,42,.92); border-radius: 20px; padding: 22px; max-width: 560px; width: 100%; color: #e2e8f0; box-shadow: 0 18px 60px rgba(0,0,0,.5); border: 1px solid rgba(148,163,184,.25); }
+
+.btn-primary { background: linear-gradient(135deg,#f59e0b,#f97316); color:#fff; padding: 14px 30px; border-radius: 40px; font-weight: 700; font-size: 1.05rem; border: none; cursor: pointer; box-shadow: 0 8px 30px rgba(245,158,11,.4); transition: transform .2s; }
+.btn-primary:active { transform: scale(.97); }
+.btn-secondary { background: rgba(255,255,255,.12); color: #e2e8f0; border: 2px solid rgba(148,163,184,.5); padding: 10px 20px; border-radius: 40px; font-weight: 700; cursor: pointer; }
+.btn-ghosty { background: linear-gradient(135deg,#6d28d9,#7c3aed); color:#fff; border:none; padding: 12px 24px; border-radius: 40px; font-weight:700; cursor:pointer; box-shadow: 0 8px 24px rgba(124,58,237,.45); }
+
+/* ═══ controls ═══ */
+.controls { position: fixed; top: 10px; right: 10px; z-index: 1200; display: flex; gap: 8px; align-items: center; }
+.home-btn { position: fixed; top: 10px; left: 10px; z-index: 1200; background: rgba(255,255,255,.92); border: none; border-radius: 40px; padding: 8px 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+.lang-toggle { display: flex; background: rgba(255,255,255,.94); border-radius: 40px; padding: 3px; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+.lang-btn { padding: 8px 12px; border-radius: 40px; border: none; cursor: pointer; font-weight: 700; background: transparent; color: #64748b; font-size: .85rem; }
+.lang-btn.active { background: linear-gradient(135deg,#f59e0b,#f97316); color: #fff; }
+
+/* ═══ HUD ═══ */
+.hud { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; margin: 8px 0 4px; }
+.hud-chip { background: rgba(15,23,42,.75); color: #fbbf24; border: 1px solid rgba(251,191,36,.4); border-radius: 30px; padding: 6px 14px; font-weight: 700; font-size: .9rem; }
+.narrator { min-height: 52px; max-width: 620px; width: calc(100% - 24px); background: rgba(15,23,42,.85); color: #f1f5f9; border-left: 4px solid #f59e0b; border-radius: 12px; padding: 10px 14px; margin: 6px auto; font-size: 1rem; line-height: 1.5; }
+
+/* ═══ Board ═══ */
+.board-wrap { position: relative; margin: 6px auto 10px; }
+.board { position: relative; display: grid; gap: 0; touch-action: manipulation; }
+.tile { position: relative; width: var(--tile); height: var(--tile); border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center; }
+.tile.dead { background: rgba(0,0,0,.45); }
+.tile.tap-target { background: rgba(251,191,36,.28); cursor: pointer; animation: pulseGlow 1.6s infinite; }
+.tile.tap-target::after { content: '👣'; position: absolute; font-size: calc(var(--tile) * .3); opacity: .9; }
+.house { position: absolute; inset: 6%; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,.10); }
+.house .glyph { font-size: calc(var(--tile) * .42); line-height: 1; }
+.need-badge { font-size: calc(var(--tile) * .2); font-weight: 900; color: #fff; background: #b91c1c; border-radius: 20px; padding: 0 7px; margin-top: 2px; border: 2px solid #fff; }
+.need-badge.n2 { background: #c2670a; }
+.need-badge.n1 { background: #15803d; }
+.house.served .glyph::after { content: '✅'; font-size: .55em; position: relative; top: -8px; }
+.house.delayed::before { content: '⏳'; position: absolute; top: 2px; right: 4px; font-size: calc(var(--tile) * .22); }
+.pawn { position: absolute; z-index: 30; width: var(--tile); height: var(--tile); display:flex; align-items:center; justify-content:center; font-size: calc(var(--tile) * .5); transition: left .3s ease, top .3s ease; pointer-events: none; filter: drop-shadow(0 3px 6px rgba(0,0,0,.6)); }
+.ghost { position: absolute; z-index: 25; width: var(--tile); height: var(--tile); display:flex; align-items:center; justify-content:center; font-size: calc(var(--tile) * .44); pointer-events: none; color: #c4b5fd; animation: ghostStep 1.5s ease-out infinite; }
+.edge-bar { position: absolute; z-index: 20; background: repeating-linear-gradient(45deg,#7f1d1d,#7f1d1d 6px,#fbbf24 6px,#fbbf24 12px); border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.5); }
+.edge-bar.pre { background: repeating-linear-gradient(45deg,#334155,#334155 6px,#64748b 6px,#64748b 12px); }
+.edge-bar.predictable { cursor: pointer; outline: 3px dashed #f87171; }
+.fog-veil { position: absolute; inset: 0; z-index: 40; background: rgba(203,213,225,.35); pointer-events: none; display: none; }
+.fog-veil.on { display: block; }
+.totem { display: flex; align-items: center; gap: 6px; background: rgba(30,41,59,.9); color: #cbd5e1; padding: 6px 12px; border-radius: 30px; border: 1px solid rgba(148,163,184,.4); font-size: .85rem; font-weight: 700; }
+.totem.acting { animation: pulseGlow 1s infinite; color: #f87171; }
+
+.action-bar { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 4px 8px 10px; }
+.predict-chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 6px 0; }
+
+/* ═══ Tree view ═══ */
+.tree-shell { width: calc(100% - 16px); max-width: 860px; margin: 8px auto; background: rgba(15,23,42,.92); border: 1px solid rgba(148,163,184,.3); border-radius: 16px; }
+.tree-scroll { overflow: auto; max-height: 52vh; border-radius: 16px; }
+.tree-svg-wrap { transform-origin: 0 0; }
+.tree-legend { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; color: #cbd5e1; font-size: .8rem; padding: 8px; }
+.legend-dot { display:inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 4px; vertical-align: -1px; }
+.zoom-bar { display: flex; gap: 8px; justify-content: center; padding: 6px; }
+.zoom-bar button { background: rgba(255,255,255,.12); color: #e2e8f0; border: 1px solid rgba(148,163,184,.4); border-radius: 10px; font-size: 1.1rem; font-weight: 700; }
+.branch-heads { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 8px 0; }
+.branch-head { background: rgba(255,255,255,.1); color: #fcd34d; border: 2px solid rgba(251,191,36,.5); padding: 10px 16px; border-radius: 14px; font-weight: 700; cursor: pointer; }
+.branch-head.picked { background: rgba(251,191,36,.3); }
+
+/* ═══ Engineer view (button-toggled panel) ═══ */
+.engineer { width: calc(100% - 16px); max-width: 620px; margin: 6px auto 90px; }
+.engineer-body { display: none; background: rgba(15,23,42,.92); color: #cbd5e1; border: 1px solid rgba(148,163,184,.3); border-radius: 14px; padding: 14px; font-size: .85rem; }
+.engineer-body.open { display: block; }
+.engineer-body table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+.engineer-body td, .engineer-body th { border-bottom: 1px solid rgba(148,163,184,.2); padding: 4px 6px; text-align: left; font-size: .8rem; }
+.iter-btns { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+.iter-btns button { border-radius: 10px; border: 1px solid rgba(148,163,184,.4); background: rgba(255,255,255,.08); color: #e2e8f0; font-size: .8rem; padding: 8px 10px; }
+.iter-btns button.active { background: #f59e0b; color: #111; font-weight: 800; }
+
+.overlay-panel { position: fixed; inset: 0; z-index: 1500; background: rgba(0,0,0,.78); display: none; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
+.overlay-panel.open { display: flex; }
+
+.bottom-nav { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 1100; display: flex; gap: 8px; background: rgba(15,23,42,.9); border: 1px solid rgba(148,163,184,.3); padding: 4px 12px; border-radius: 30px; }
+.bottom-nav button { background: transparent; border: none; color: #e2e8f0; font-weight: 700; cursor: pointer; font-size: .85rem; padding: 8px 10px; }
+
+/* ═══ Mobile portrait (390×844 baseline) — Android avoids large blur ═══ */
+@media (max-width: 640px), (orientation: landscape) and (max-height: 600px) {
+  * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+}
+@media (max-width: 640px) {
+  .screen { min-height: 100svh; }
+  .screen.active { display: block; padding: 58px 0 78px; }
+  .card, .card-dark { margin: 8px auto; max-width: calc(100% - 20px); padding: 16px; }
+  .controls { top: 8px; right: 8px; }
+  .home-btn { top: 8px; left: 8px; }
+  .narrator { font-size: .92rem; }
+  .tree-scroll { max-height: 46vh; }
+}
+/* ═══ Phone landscape ═══ */
+@media (orientation: landscape) and (max-height: 600px) {
+  .screen { min-height: 100svh; }
+  .screen.active { display: block; padding: 50px 0 66px; }
+  .card, .card-dark { margin: 8px auto; max-width: 640px; padding: 14px; }
+  .board-wrap { margin: 2px auto; }
+  .tree-scroll { max-height: 56vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
 </style>
 </head>
-<body class="lang-zh">
+<body>
 
-<div class="lang-toggle">
-    <button class="lang-btn" onclick="setLang('en')" id="lb-en">EN</button>
-    <button class="lang-btn active" onclick="setLang('zh')" id="lb-zh">中文</button>
-    <button class="lang-btn" onclick="setLang('es')" id="lb-es">ES</button>
-</div>
-<button class="home-btn" onclick="location.href='../index.html'">🏠</button>
-
-<div class="wrap">
-    <h1>🌳 Level 8 · Monte Carlo Tree Search</h1>
-    <p class="sub"><span class="text-en">Russell &amp; Norvig Ch. 5.4 — When you cannot see the future, rehearse it.</span><span class="text-zh">Russell &amp; Norvig 第 5.4 節——看不見未來，就排練未來。</span><span class="text-es">Russell &amp; Norvig Cap. 5.4 — Si no ves el futuro, ensáyalo.</span></p>
-
-    <!-- 開場 -->
-    <div class="card" id="intro">
-        <p style="font-size:.9rem;line-height:1.75">
-            <span class="text-en">🚐 Eight households live in the Hunters Point RV Park. The manager is away — he only told you about <b>three</b> of them. You have <b>one afternoon (12 slots)</b>. Needs escalate while you travel, and the fog rolls in twice. Your opponent is not a person. <b>Your opponent is time.</b></span>
-            <span class="text-zh">🚐 獵人角 RV Park 住著八戶人家。經理今天不在——他只交代得了其中<b>三戶</b>的狀況。你只有<b>一個下午（12 個時段）</b>。你在路上時，需求會升級；霧會漲兩次。你的對手不是任何人——<b>你的對手，是時間。</b></span>
-            <span class="text-es">🚐 Ocho familias viven en el RV Park de Hunters Point. El gerente no está — solo te contó de <b>tres</b>. Tienes <b>una tarde (12 turnos)</b>. Las necesidades escalan mientras viajas, y la niebla sube dos veces. Tu oponente no es una persona. <b>Tu oponente es el tiempo.</b></span>
-        </p>
-        <div class="banner" style="margin-top:10px">
-            <span class="text-en">🤖 Your companion AI cannot see the unknown households either — it <b>rehearses 1,500 possible afternoons</b> by sampling, then tells you what it found. You always have the last word.</span>
-            <span class="text-zh">🤖 同行的 AI 也看不見未知戶的狀況——它靠抽樣<b>排練 1,500 個可能的下午</b>，再把發現告訴你。最後一句話，永遠是你的。</span>
-            <span class="text-es">🤖 La IA tampoco ve los hogares desconocidos — <b>ensaya 1.500 tardes posibles</b> por muestreo y te cuenta lo que halló. La última palabra siempre es tuya.</span>
-        </div>
-        <div style="text-align:center;margin-top:12px">
-            <button class="btn btn-p" onclick="startGame()"><span class="text-en">Start the Afternoon →</span><span class="text-zh">開始這個下午 →</span><span class="text-es">Empezar la tarde →</span></button>
-        </div>
-    </div>
-
-    <!-- 遊戲 -->
-    <div class="card hidden" id="game">
-        <div style="display:flex;justify-content:space-between;font-size:.78rem;color:#cbd5e1">
-            <span>⏳ <span class="text-en">Time</span><span class="text-zh">時間</span><span class="text-es">Tiempo</span>: <b id="tval" style="color:#fbbf24">0</b>/12</span>
-            <span>💛 <span class="text-en">Score</span><span class="text-zh">分數</span><span class="text-es">Puntos</span>: <b id="sval" style="color:#f472b6">0</b></span>
-            <span>🚶 ×<b id="tc">1</b></span>
-        </div>
-        <div class="timebar" id="timebar"></div>
-        <div class="park" id="park"></div>
-        <div id="msg" class="banner" style="min-height:40px"></div>
-        <div style="display:flex;gap:8px;margin-top:10px;justify-content:center">
-            <button class="btn btn-ai" onclick="askMCTS()" id="askbtn">🤖 <span class="text-en">Rehearse futures</span><span class="text-zh">排練未來</span><span class="text-es">Ensayar futuros</span></button>
-            <button class="btn btn-g" onclick="endEarly()"><span class="text-en">End day</span><span class="text-zh">提早收工</span><span class="text-es">Terminar</span></button>
-        </div>
-        <div id="mctsbox" class="hidden" style="margin-top:10px">
-            <p style="font-size:.78rem;color:#22d3ee"><b id="mctshead"></b></p>
-            <div id="mctsstats"></div>
-            <p style="font-size:.7rem;color:rgba(255,255,255,.55);margin-top:6px">
-                <span class="text-en">Sampling, not prophecy — unknown homes are guessed by probability, never peeked at. Tap any RV to decide for yourself.</span>
-                <span class="text-zh">這是取樣，不是預知——未知戶用機率抽樣代替，絕不偷看真相。點任何一戶，由你自己決定。</span>
-                <span class="text-es">Muestreo, no profecía — los hogares desconocidos se estiman por probabilidad, nunca se espían. Toca un RV y decide tú.</span>
-            </p>
-        </div>
-        <details>
-            <summary><span class="text-en">🧠 What is MCTS doing?</span><span class="text-zh">🧠 MCTS 在做什麼？</span><span class="text-es">🧠 ¿Qué hace MCTS?</span></summary>
-            <p style="margin-top:6px;color:#cbd5e1">
-                <span class="text-en">Four steps, thousands of times: <b>Select</b> a promising branch (UCB1 balances trying the best vs. exploring the unsure) → <b>Expand</b> one new choice → <b>Simulate</b> a random rest-of-afternoon → <b>Back-propagate</b> the result up the tree. The branch visited most becomes the advice. Minimax plans against a thinking opponent; MCTS samples against an uncertain one — and time is exactly that.</span>
-                <span class="text-zh">四個步驟，重複上千次：<b>選擇</b>一條有希望的分支（UCB1 在「用已知最好的」與「探索不確定的」之間取捨）→ <b>擴展</b>一個新選項 → <b>模擬</b>隨機走完剩下的下午 → <b>回傳</b>結果更新整棵樹。被拜訪最多次的分支，就是它的建議。Minimax 對付會思考的對手；MCTS 對付不確定的對手——時間正是這種對手。</span>
-                <span class="text-es">Cuatro pasos, miles de veces: <b>Seleccionar</b> una rama prometedora (UCB1) → <b>Expandir</b> una opción nueva → <b>Simular</b> el resto de la tarde al azar → <b>Retropropagar</b> el resultado. La rama más visitada es el consejo. Minimax enfrenta a un oponente que piensa; MCTS, a uno incierto — y el tiempo es exactamente eso.</span>
-            </p>
-        </details>
-    </div>
-
-    <!-- 結局 -->
-    <div class="card hidden" id="end">
-        <p class="big" id="endicon">🌆</p>
-        <p style="text-align:center;font-weight:700;font-size:1.05rem;margin-top:4px" id="endtitle"></p>
-        <p style="text-align:center;font-size:.85rem;color:#cbd5e1;margin-top:6px;line-height:1.7" id="endtext"></p>
-        <div class="jingsi">
-            <p class="q">「難行能行，難捨能捨，難為能為，才能昇華自我的人格。」</p>
-            <p class="e">Continue even when it is hard to go on. Release even when it is hard to let go. Endure even when it is hard to bear. Those are how we build our character.</p>
-            <p class="s">— <span class="text-en">Master Cheng Yen</span><span class="text-zh">證嚴上人</span><span class="text-es">Maestra Cheng Yen</span></p>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap">
-            <button class="btn btn-p" onclick="location.reload()"><span class="text-en">↻ New afternoon</span><span class="text-zh">↻ 再來一個下午</span><span class="text-es">↻ Otra tarde</span></button>
-            <button class="btn btn-g" onclick="location.href='../outro.html'"><span class="text-en">🌳 Hope Tree</span><span class="text-zh">🌳 許願樹</span><span class="text-es">🌳 Árbol</span></button>
-            <button class="btn btn-g" onclick="location.href='../index.html'">🏠</button>
-        </div>
-    </div>
+<button class="home-btn" id="btn-home" onclick="goHome()" aria-label="home">🏠</button>
+<div class="controls">
+  <div class="lang-toggle" role="group" id="lang-toggle">
+    <button class="lang-btn active" data-lang="zh-Hant" onclick="setLang('zh-Hant')">中文</button><button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button><button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+  </div>
+  <button class="btn-secondary" id="btn-pause" onclick="togglePause()" style="min-width:44px" aria-label="pause">⏸</button>
 </div>
 
-<script src="mcts_core.js"></script>
+<!-- ═══ INTRO ═══ -->
+<div id="screen-intro" class="screen active bg-intro" data-asset="assets/images/l8_bg_grove.png" style="justify-content:center; padding: 70px 12px 90px;">
+  <div class="card-dark fade-in-up" style="text-align:center;">
+    <p class="mono" style="color:#64748b; font-size:.75rem; letter-spacing:2px;">HUNTERS POINT · LEVEL 8</p>
+    <h1 data-str="title" style="font-size:1.5rem; color:#fbbf24; margin:8px 0 2px;"></h1>
+    <p data-str="subtitle" class="mono" style="font-size:.8rem; color:#94a3b8; margin-bottom:14px;"></p>
+    <p data-str="introStory" style="text-align:left; margin-bottom:10px; line-height:1.6;"></p>
+    <p data-str="introEngine" style="text-align:left; margin-bottom:10px; line-height:1.6; color:#93c5fd;"></p>
+    <p data-str="introHow" style="text-align:left; margin-bottom:16px; line-height:1.6; color:#fcd34d;"></p>
+    <div style="display:flex; flex-direction:column; gap:6px; text-align:left; margin-bottom:16px; font-size:.9rem;">
+      <span>1️⃣ <b data-str="act1Name"></b> — <span data-str="act1Title"></span></span>
+      <span>2️⃣ <b data-str="act2Name"></b> — <span data-str="act2Title"></span></span>
+      <span>3️⃣ <b data-str="act3Name"></b> — <span data-str="act3Title"></span></span>
+    </div>
+    <button class="btn-primary" id="btn-start" onclick="startMission()" data-str="startMission"></button>
+    <p data-str="musicNone" style="font-size:.75rem; color:#64748b; margin-top:12px;"></p>
+  </div>
+</div>
+
+<!-- ═══ ACT BOARD (Acts 1 & 3) ═══ -->
+<div id="screen-act" class="screen bg-grove" style="padding: 58px 0 80px;">
+  <div class="hud">
+    <span class="hud-chip" id="hud-act"></span>
+    <span class="hud-chip" id="hud-time"></span>
+    <span class="hud-chip" id="hud-served"></span>
+    <span class="totem" id="totem" data-asset-totem="assets/images/l8_engine_totem_sheet.png"><span>⚙️</span><span data-str="engineTotem"></span></span>
+  </div>
+  <p class="narrator" id="narrator" role="status" aria-live="polite"></p>
+  <div class="board-wrap" id="board-wrap">
+    <div class="board" id="board" data-asset-volunteer="assets/images/l8_volunteer_sheet.png" data-asset-house="assets/images/l8_house_marker_sheet.png" data-asset-ghost="assets/images/l8_ghost_volunteer_sheet.png" data-asset-roadblock="assets/images/l8_roadblock.png" data-asset-badges="assets/images/l8_need_badges.png"></div>
+    <div class="fog-veil" id="fog-veil" data-asset="assets/images/l8_fog_overlay.png"></div>
+  </div>
+  <div class="predict-chips" id="predict-chips"></div>
+  <div class="action-bar" id="action-bar"></div>
+</div>
+
+<!-- ═══ TREE VIEW (Act 1 reveal + Act 2 pruning) ═══ -->
+<div id="screen-tree" class="screen bg-intro" style="padding: 58px 0 80px;">
+  <div class="hud"><span class="hud-chip" id="tree-hud-act"></span><span class="hud-chip mono" id="tree-counter"></span></div>
+  <p class="narrator" id="tree-narrator" role="status" aria-live="polite"></p>
+  <div class="branch-heads" id="branch-heads"></div>
+  <div class="tree-shell" data-asset-node="assets/images/l8_tree_node_sheet.png">
+    <div class="tree-scroll" id="tree-scroll" tabindex="0">
+      <div class="tree-svg-wrap" id="tree-svg-wrap"></div>
+    </div>
+    <div class="zoom-bar">
+      <button onclick="treeZoom(1.25)" aria-label="zoom in">+</button>
+      <button onclick="treeZoom(0.8)" aria-label="zoom out">−</button>
+      <button class="mono" id="btn-skip-anim" onclick="skipReveal()" data-str="skipAnim" style="font-size:.75rem;"></button>
+    </div>
+    <div class="tree-legend">
+      <span><span class="legend-dot" style="background:#fbbf24;"></span><span data-str="treeLegendPv"></span></span>
+      <span><span class="legend-dot" style="background:#38bdf8;"></span><span data-str="treeLegendMax"></span></span>
+      <span><span class="legend-dot" style="background:#94a3b8;"></span><span data-str="treeLegendMin"></span></span>
+    </div>
+  </div>
+  <div class="action-bar" id="tree-actions"></div>
+</div>
+
+<!-- ═══ FINISH ═══ -->
+<div id="screen-finish" class="screen bg-park" data-asset="assets/images/l8_bg_park.png" style="justify-content:center; padding: 70px 12px 90px;">
+  <div class="card fade-in-up" style="text-align:center;">
+    <h2 data-str="finishTitle" style="color:#b45309; font-size:1.5rem; margin-bottom:10px;"></h2>
+    <p data-str="finishBody" style="text-align:left; line-height:1.7; color:#374151; margin-bottom:12px;"></p>
+    <p data-str="finishQuoteNote" style="font-style:italic; color:#6b7280; margin-bottom:16px;"></p>
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn-secondary" style="color:#334155; border-color:#94a3b8;" onclick="goHome()" data-str="home"></button>
+      <button class="btn-secondary" style="color:#334155; border-color:#94a3b8;" onclick="location.reload()" data-str="replay"></button>
+      <button class="btn-secondary" style="color:#334155; border-color:#94a3b8;" onclick="window.location.href='../level7/index.html'" data-str="prevLevel"></button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Result overlay ═══ -->
+<div class="overlay-panel" id="result-overlay">
+  <div class="card-dark fade-in-up" style="text-align:center;">
+    <h2 id="result-title" style="color:#fbbf24; font-size:1.35rem; margin-bottom:10px;"></h2>
+    <p id="result-body" style="line-height:1.65; text-align:left; margin-bottom:16px;"></p>
+    <div id="result-actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;"></div>
+  </div>
+</div>
+
+<!-- ═══ Pause overlay ═══ -->
+<div class="overlay-panel" id="pause-overlay">
+  <div class="card-dark" style="text-align:center;">
+    <p style="font-size:2.2rem; margin-bottom:10px;">⏸</p>
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn-primary" onclick="togglePause()" data-str="resume"></button>
+      <button class="btn-secondary" onclick="restartAct()" data-str="restartAct"></button>
+      <button class="btn-secondary" onclick="goHome()" data-str="home"></button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Engineer view (collapsed by default) ═══ -->
+<div class="engineer" id="engineer">
+  <button class="btn-secondary" style="width:100%;" id="btn-engineer" onclick="toggleEngineer()"><span data-str="engineerView"></span></button>
+  <div class="engineer-body" id="engineer-body">
+    <p><b data-str="engineerIters"></b></p>
+    <div class="iter-btns" id="iter-btns"></div>
+    <p><span data-str="engineerSeed"></span>: <span class="mono" id="eng-seed"></span></p>
+    <p class="mono" id="eng-counts" style="margin:6px 0;"></p>
+    <p data-str="engineerNote" style="color:#94a3b8;"></p>
+    <p><b data-str="engineerTable"></b></p>
+    <table id="eng-table"><tbody></tbody></table>
+  </div>
+</div>
+
+<div class="bottom-nav" id="bottom-nav" style="display:none;">
+  <button onclick="restartAct()" data-str="restartAct"></button>
+</div>
+
+<script src="engine.js"></script>
+<script src="search_core.js"></script>
+<script src="strings.js"></script>
 <script>
 'use strict';
-let currentLang='zh';
-function setLang(l){currentLang=l;document.body.className='lang-'+l;
- ['en','zh','es'].forEach(x=>document.getElementById('lb-'+x).classList.toggle('active',x===l));
- try{localStorage.setItem('jok-lang',l);}catch(e){} render();}
-try{const l=localStorage.getItem('jok-lang');if(l)setLang(l);}catch(e){}
+/* ═══════════════════════════════════════════════════════════════════════════
+   Level 8 UI — three-act adversarial search, per the approved blueprint.
+   Rules & search live ONLY in engine.js / search_core.js. This file renders,
+   narrates, and records learning evidence. No display text is defined here —
+   everything player-visible comes from strings.js (L8_STRINGS).
+   ═══════════════════════════════════════════════════════════════════════════ */
+const ENGINE = L8_ENGINE, SEARCH = L8_SEARCH, STR = L8_STRINGS;
+const TEST_MODE = /[?&]uitest=1/.test(location.search);
+const REDUCED = TEST_MODE || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const MCTS_SEED_BASE = 20260823;         /* deterministic; per-decision seed = base + ply */
+const ITER_CHOICES = [100, 500, 1500, 3000];
 
-function track(n,p){try{if(typeof gtag==='function')gtag('event',n,Object.assign({level:8},p||{}));}catch(e){}}
+let lang = 'zh-Hant';
+let phase = 'intro';                      /* intro → act1 → act1-tree → act2 → act3 → finish */
+let G = null;                             /* current engine state */
+let ply = 0;
+let mctsIters = TEST_MODE ? 100 : 500;
+let started = false, finished = false;
+let pendingPredict = null;                /* set while awaiting the Act-1 prediction */
+let lastMcts = null;                      /* latest rehearsal, for follow-tracking + Engineer table */
+let treeData = null;                      /* built A1F tree (shared by acts 1 & 2) */
+let abViz = null;                         /* alpha-beta visualization walk */
+let revealTimer = null;
+let prunePick = null;
+let treeScale = 1;
 
-const HOMES_EMOJI=['🚐','🚌','🚐','🛖','🚐','🚚','🚐','🚐'];
-const NAMES={en:['Rosa','Big Joe','Ana','The Chens','Marcus','Deshawn','Maria','Old Sam'],
-             zh:['Rosa','大喬','Ana','陳家','Marcus','Deshawn','Maria','老山姆'],
-             es:['Rosa','Big Joe','Ana','Los Chen','Marcus','Deshawn','María','Viejo Sam']};
-let S=null, rng=null, advice=null;
-
-function startGame(){
-    const seed=(Date.now()%100000)|1;
-    S=MCTS.newGame(seed); rng=MCTS.mulberry32(seed*13+5); advice=null;
-    document.getElementById('intro').classList.add('hidden');
-    document.getElementById('game').classList.remove('hidden');
-    track('level_start',{seed}); say('start'); render();
+/* ── i18n ──────────────────────────────────────────────────────────────── */
+function t(key) { return (STR[lang] && STR[lang][key]) || STR.en[key] || key; }
+function fmt(key) { let s = t(key); for (let i = 1; i < arguments.length; i++) s = s.split('{' + (i - 1) + '}').join(arguments[i]); return s; }
+function setLang(next) {
+  lang = next;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === next));
+  document.querySelectorAll('[data-str]').forEach(el => { el.textContent = t(el.dataset.str); });
+  document.getElementById('board').setAttribute('aria-label', t('a11yBoard'));
+  document.getElementById('tree-scroll').setAttribute('aria-label', t('a11yTree'));
+  if (G) renderHud();
 }
 
-const MSG={
- start:{en:'The manager told you about 3 homes (colored badges). ❓ means unknown — you learn it at the door. Tap an RV to walk over. Cost = distance × fog + 1.',
-        zh:'經理交代了 3 戶（有顏色的標記）。❓ 是未知——到了門口才知道。點一戶走過去。成本＝距離 × 霧 ＋ 1。',
-        es:'El gerente te contó de 3 hogares (con insignia). ❓ es desconocido — lo sabrás en la puerta. Toca un RV. Costo = distancia × niebla + 1.'},
- rain:{en:'🌫 Time strikes — the fog rolls in. Every step now costs double.',
-       zh:'🌫 時間出招——起霧了。現在每一步都要花雙倍時間。',
-       es:'🌫 El tiempo ataca — sube la niebla. Cada paso ahora cuesta el doble.'},
- esc:{en:'⚠️ While you traveled, a household got worse.',
-      zh:'⚠️ 你在路上的時候，有一戶的狀況變糟了。',
-      es:'⚠️ Mientras viajabas, un hogar empeoró.'},
- helped3:{en:'You arrived just in time — it was urgent. +4',zh:'你及時趕到——這是急件。+4',es:'Llegaste a tiempo — era urgente. +4'},
- helped2:{en:'They needed you today. +2',zh:'他們今天正需要你。+2',es:'Te necesitaban hoy. +2'},
- helped1:{en:'A short visit, a long smile. +1',zh:'短短探視，長長的笑。+1',es:'Visita corta, sonrisa larga. +1'},
- helped0:{en:'All well here — a hello never hurts.',zh:'這戶一切都好——打聲招呼，也不算白走。',es:'Todo bien aquí — saludar nunca sobra.'}
-};
-function say(k,extra){const m=MSG[k];if(!m)return;
- const el=document.getElementById('msg');
- el.className='banner'+((k==='rain'||k==='esc')?' event':'');
- el.innerHTML=(m[currentLang]||m.en)+(extra||'');}
-
-function badge(i){
-    if(S.helped[i])return'✅';
-    if(!S.known[i])return'❓';
-    return ['😌','🟢','🟡','🔴'][S.needs[i]];
+/* ── analytics (Step 11) — instrumentation for a planned usability
+      evaluation; stub-safe; never presented as research validation ──────── */
+function track(name, params) {
+  try { if (typeof gtag === 'function') gtag('event', name, Object.assign({ level: 8 }, params || {})); } catch (e) {}
 }
-function render(){
-    if(!S)return;
-    document.getElementById('tval').textContent=S.t;
-    document.getElementById('sval').textContent=S.score;
-    document.getElementById('tc').textContent=S.travelCost;
-    const tb=document.getElementById('timebar');tb.innerHTML='';
-    for(let i=0;i<MCTS.TIME_MAX;i++){const d=document.createElement('div');
-        d.className='tseg'+(i<S.t?' used':'')+(MCTS.RAIN_TICKS.includes(i+1)?' rain':'');tb.appendChild(d);}
-    const park=document.getElementById('park');park.innerHTML='';
-    const acts=MCTS.legalActions(S);
-    for(let i=0;i<8;i++){
-        const d=document.createElement('div');
-        d.className='rv'+(S.pos===i?' here':'')+(S.helped[i]?' done':'')+(advice&&advice.best===i?' best':'');
-        const cost=MCTS.dist(S.pos,i)*S.travelCost+1;
-        const reach=acts.includes(i);
-        d.innerHTML='<span class="bd">'+badge(i)+'</span><div class="em">'+HOMES_EMOJI[i]+'</div>'
-            +'<div class="nm">'+(NAMES[currentLang]||NAMES.en)[i]+'</div>'
-            +(S.helped[i]?'':'<div class="cost">'+(reach?('⏳'+cost):'—')+'</div>');
-        if(!S.helped[i]&&reach)d.onclick=()=>visit(i);
-        park.appendChild(d);
+function saveProgress(patch) {
+  try {
+    const p = JSON.parse(localStorage.getItem('jok_progress') || '{}');
+    p.l8 = Object.assign(p.l8 || {}, patch);
+    localStorage.setItem('jok_progress', JSON.stringify(p));
+  } catch (e) {}
+}
+
+/* ── asset loader: real art (Step 9 contract filenames) replaces the
+      semantic placeholders automatically once the files exist ───────────── */
+function tryAsset(el) {
+  if (!el || !el.dataset.asset) return;
+  const src = el.dataset.asset;
+  const img = new Image();
+  img.onload = () => { el.style.backgroundImage = "url('" + src + "')"; el.classList.add('asset-loaded'); };
+  img.src = src;
+}
+
+/* ── screens ───────────────────────────────────────────────────────────── */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function narrate(msg) { document.getElementById('narrator').textContent = msg; }
+function goHome() { window.location.href = '../index.html'; }
+function togglePause() { document.getElementById('pause-overlay').classList.toggle('open'); }
+function toggleEngineer() { document.getElementById('engineer-body').classList.toggle('open'); }
+
+/* ── mission flow ──────────────────────────────────────────────────────── */
+function startMission() {
+  started = true;
+  track('level_start', {});
+  saveProgress({ startedAt: Date.now() });
+  startAct1();
+}
+function restartAct() {
+  document.getElementById('pause-overlay').classList.remove('open');
+  if (phase === 'act1' || phase === 'act1-tree') startAct1();
+  else if (phase === 'act2') startAct2();
+  else if (phase === 'act3') startAct3();
+  else showScreen('screen-intro');
+}
+
+function startAct1() {
+  phase = 'act1'; ply = 0; lastMcts = null;
+  G = ENGINE.initState('A1F');
+  const scr = document.getElementById('screen-act');
+  scr.classList.remove('bg-park'); scr.classList.add('bg-grove');
+  scr.dataset.asset = 'assets/images/l8_bg_grove.png';
+  tryAsset(scr);
+  showScreen('screen-act');
+  document.getElementById('bottom-nav').style.display = 'flex';
+  renderBoard(); renderHud();
+  narrate(t('act1Brief'));
+  beginMaxTurn();
+}
+
+function startAct3() {
+  phase = 'act3'; ply = 0; lastMcts = null;
+  G = ENGINE.initState('A3');
+  const scr = document.getElementById('screen-act');
+  scr.classList.remove('bg-grove'); scr.classList.add('bg-park');
+  scr.dataset.asset = 'assets/images/l8_bg_park.png';
+  tryAsset(scr);
+  showScreen('screen-act');
+  renderBoard(); renderHud();
+  narrate(t('act3Brief'));
+  beginMaxTurn();
+}
+
+/* ── board rendering ───────────────────────────────────────────────────── */
+function tileSize() {
+  const n = G.n;
+  const w = Math.min(document.documentElement.clientWidth - 28, 560);
+  const h = Math.floor(window.innerHeight * (window.innerHeight < 620 ? 0.5 : 0.44));
+  return Math.max(44, Math.floor(Math.min(w / n, h / n)));
+}
+function edgeParts(key) { const p = key.split('|'); return [p[0].split(',').map(Number), p[1].split(',').map(Number)]; }
+
+function renderBoard() {
+  const n = G.n, size = tileSize();
+  const board = document.getElementById('board');
+  board.style.setProperty('--tile', size + 'px');
+  board.style.gridTemplateColumns = 'repeat(' + n + ', ' + size + 'px)';
+  board.innerHTML = '';
+  const deadA1F = { '0,0': 1, '1,0': 1, '2,0': 1, '2,1': 1 };
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) {
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+    tile.id = 'tile-' + r + '-' + c;
+    if (G.act === 'A1F' && deadA1F[r + ',' + c]) tile.classList.add('dead');
+    const hh = ENGINE.householdAt(G, r, c);
+    if (hh) {
+      const house = document.createElement('div');
+      house.className = 'house' + (hh.served ? ' served' : '') + (hh.delay > 0 ? ' delayed' : '');
+      house.setAttribute('aria-label', fmt('householdFmt', hh.id) + ' · ' + fmt('needBadgeFmt', hh.need));
+      house.innerHTML = '<span class="glyph">🏠</span><span class="need-badge n' + hh.need + '">' + hh.need + '</span>';
+      house.title = hh.delay > 0 ? t('delayActive') : '';
+      tile.appendChild(house);
     }
+    tile.addEventListener('click', () => onTileTap(r, c));
+    board.appendChild(tile);
+  }
+  /* closed edges */
+  const bars = [];
+  G.preClosed.forEach(k => bars.push([k, true]));
+  Object.keys(G.closedTemp).forEach(k => bars.push([k, false]));
+  for (const pair of bars) {
+    const key = pair[0], pre = pair[1];
+    const bar = document.createElement('div');
+    bar.className = 'edge-bar' + (pre ? ' pre' : '');
+    bar.dataset.edge = key;
+    positionEdgeBar(bar, key, size);
+    if (!pre) bar.title = t('roadClosedTile');
+    board.appendChild(bar);
+  }
+  /* pawn */
+  const pawn = document.createElement('div');
+  pawn.className = 'pawn'; pawn.id = 'pawn';
+  pawn.textContent = '🙋';
+  pawn.setAttribute('aria-label', t('volunteer'));
+  pawn.style.left = (G.pos[1] * size) + 'px';
+  pawn.style.top = (G.pos[0] * size) + 'px';
+  board.appendChild(pawn);
+  document.getElementById('fog-veil').classList.toggle('on', G.fog > 0);
 }
-function visit(i){
-    const before=S.needs.map((n,k)=>S.helped[k]?-1:n);
-    const rained=S.travelCost;
-    S=MCTS.applyAction(S,i,rng);
-    advice=null;document.getElementById('mctsbox').classList.add('hidden');
-    track('visit',{home:i,need:S.needs[i],t:S.t});
-    let note='';
-    if(S.travelCost>rained)note=' '+(MSG.rain[currentLang]||MSG.rain.en);
-    else if(before.some((n,k)=>n>=0&&!S.helped[k]&&S.needs[k]>n))note=' '+(MSG.esc[currentLang]||MSG.esc.en);
-    say('helped'+S.needs[i],note);
-    render();
-    if(MCTS.isTerminal(S))setTimeout(endGame,900);
+function positionEdgeBar(bar, key, size) {
+  const ep = edgeParts(key), a = ep[0], b = ep[1];
+  const th = Math.max(8, Math.floor(size * .14));
+  if (a[0] === b[0]) {   /* horizontally adjacent tiles → vertical bar */
+    bar.style.width = th + 'px'; bar.style.height = Math.floor(size * .8) + 'px';
+    bar.style.left = (Math.max(a[1], b[1]) * size - th / 2) + 'px';
+    bar.style.top = (a[0] * size + size * .1) + 'px';
+  } else {               /* vertically adjacent tiles → horizontal bar */
+    bar.style.height = th + 'px'; bar.style.width = Math.floor(size * .8) + 'px';
+    bar.style.top = (Math.max(a[0], b[0]) * size - th / 2) + 'px';
+    bar.style.left = (a[1] * size + size * .1) + 'px';
+  }
 }
-function askMCTS(){
-    if(!S||MCTS.isTerminal(S))return;
-    const btn=document.getElementById('askbtn');btn.disabled=true;
-    setTimeout(()=>{
-        advice=MCTS.search(S,1500,S.seed*17+S.t);
-        track('mcts_query',{t:S.t,best:advice.best});
-        const H={en:'I rehearsed 1,500 afternoons. Most-visited branches:',
-                 zh:'我排練了 1,500 個下午。被走最多次的分支：',
-                 es:'Ensayé 1.500 tardes. Ramas más visitadas:'};
-        document.getElementById('mctshead').textContent=H[currentLang]||H.en;
-        const box=document.getElementById('mctsstats');box.innerHTML='';
-        const top=advice.stats.slice(0,3);
-        const maxN=top.length?top[0].visits:1;
-        for(const st of top){
-            const row=document.createElement('div');row.className='stat';
-            row.innerHTML='<span style="width:64px">'+HOMES_EMOJI[st.action]+' '+(NAMES[currentLang]||NAMES.en)[st.action]+'</span>'
-                +'<div class="bar"><div class="fill" style="width:'+(st.visits/maxN*100)+'%"></div></div>'
-                +'<span style="width:88px;text-align:right;color:#94a3b8">'+st.visits+'×· '+st.mean.toFixed(1)+'</span>';
-            box.appendChild(row);
-        }
-        document.getElementById('mctsbox').classList.remove('hidden');
-        btn.disabled=false;render();
-    },60);
+
+function renderHud() {
+  const actKey = phase === 'act3' ? 'act3Name' : phase === 'act2' ? 'act2Name' : 'act1Name';
+  document.getElementById('hud-act').textContent = t(actKey);
+  document.getElementById('hud-time').textContent = fmt('timeFmt', G.t, G.T);
+  const served = G.households.filter(h => h.served).length;
+  document.getElementById('hud-served').textContent = fmt('servedFmt', served, G.households.length);
+  document.getElementById('fog-veil').classList.toggle('on', G.fog > 0);
 }
-function endEarly(){track('end_early',{t:S.t});endGame();}
-function endGame(){
-    const sc=MCTS.finalScore(S);
-    const helped=S.helped.filter(h=>h).length;
-    const missed=S.needs.filter((n,i)=>!S.helped[i]&&n===3).length;
-    document.getElementById('game').classList.add('hidden');
-    document.getElementById('end').classList.remove('hidden');
-    track('level_complete',{score:sc,helped,missed,t:S.t});
-    const icon=missed===0?'🌟':'🌆';
-    document.getElementById('endicon').textContent=icon;
-    const T={
-      en:{t0:'Every urgent need was met.',t1:'The afternoon ends.',
-          d:'You visited <b>'+helped+'</b> of 8 households · score <b>'+sc+'</b>'+(missed?' · <b>'+missed+'</b> urgent need'+(missed>1?'s':'')+' will wait until tomorrow.':'.')+'<br>Time never stopped moving — and neither did you.<br><span style="color:#22d3ee">In 120 test afternoons: MCTS averaged 5.6, greedy 4.6, random −3.3. Rehearsing futures works — but choosing whom to help was always yours.</span>'},
-      zh:{t0:'每一件急事，都被接住了。',t1:'下午結束了。',
-          d:'八戶裡你探視了 <b>'+helped+'</b> 戶・得分 <b>'+sc+'</b>'+(missed?'・還有 <b>'+missed+'</b> 件急事要等到明天。':'。')+'<br>時間從來沒有停下——你也沒有。<br><span style="color:#22d3ee">120 個測試下午裡：MCTS 平均 5.6 分、貪婪法 4.6、隨機 −3.3。排練未來真的有用——但決定先幫誰的，始終是你。</span>'},
-      es:{t0:'Cada urgencia fue atendida.',t1:'La tarde termina.',
-          d:'Visitaste <b>'+helped+'</b> de 8 hogares · puntos <b>'+sc+'</b>'+(missed?' · <b>'+missed+'</b> urgencia(s) esperarán a mañana.':'.')+'<br>El tiempo nunca se detuvo — tú tampoco.<br><span style="color:#22d3ee">En 120 tardes de prueba: MCTS 5,6 · voraz 4,6 · azar −3,3. Ensayar futuros funciona — pero elegir a quién ayudar siempre fue tuyo.</span>'}
+
+/* ── MAX turn ──────────────────────────────────────────────────────────── */
+function beginMaxTurn() {
+  if (ENGINE.isTerminal(G)) return onTerminal();
+  renderBoard(); renderHud();
+  const legal = ENGINE.legalMoves(G);
+  const moves = legal.filter(a => a.type === 'MOVE');
+  const canServe = legal.some(a => a.type === 'SERVE');
+  const dirVec = { N: [-1, 0], E: [0, 1], S: [1, 0], W: [0, -1] };
+  for (const mv of moves) {
+    const d = dirVec[mv.dir];
+    const el = document.getElementById('tile-' + (G.pos[0] + d[0]) + '-' + (G.pos[1] + d[1]));
+    if (el) { el.classList.add('tap-target'); el.dataset.dir = mv.dir; }
+  }
+  const bar = document.getElementById('action-bar');
+  bar.innerHTML = '';
+  if (canServe) {
+    const b = document.createElement('button');
+    b.className = 'btn-primary'; b.id = 'btn-serve';
+    b.textContent = t('serveHere');
+    b.onclick = () => playerAction({ type: 'SERVE' });
+    bar.appendChild(b);
+  }
+  const w = document.createElement('button');
+  w.className = 'btn-secondary'; w.id = 'btn-wait';
+  w.textContent = t('wait');
+  w.onclick = () => playerAction({ type: 'WAIT' });
+  bar.appendChild(w);
+  narrate(moves.length === 0 && canServe ? t('urgentRule') : (G.fog > 0 ? t('fogActive') : t('yourTurn')));
+  if (phase === 'act3') rehearse();          /* the act's core teaching loop */
+}
+function onTileTap(r, c) {
+  if (pendingPredict) return;
+  const el = document.getElementById('tile-' + r + '-' + c);
+  if (!el) return;
+  if (!el.classList.contains('tap-target')) { el.classList.add('shake'); setTimeout(() => el.classList.remove('shake'), 400); return; }
+  playerAction({ type: 'MOVE', dir: el.dataset.dir });
+}
+function playerAction(action) {
+  if (pendingPredict) return;
+  if (phase === 'act3' && lastMcts) {
+    const best = lastMcts.rootActions.reduce((a, b) => (b.visits > a.visits ? b : a));
+    track('l8_rehearsal_follow', {
+      followed: JSON.stringify(best.action) === JSON.stringify(action),
+      bestVisits: best.visits, iters: lastMcts.iterations, ply: ply,
+    });
+    lastMcts = null;
+  }
+  clearGhosts();
+  G = ENGINE.apply(G, action);
+  ply++;
+  renderBoard(); renderHud();
+  if (ENGINE.isTerminal(G)) return onTerminal();
+  beginMinTurn();
+}
+
+/* ── MIN turn ──────────────────────────────────────────────────────────── */
+function beginMinTurn() {
+  document.getElementById('action-bar').innerHTML = '';
+  document.getElementById('totem').classList.add('acting');
+  const legal = ENGINE.legalMoves(G);
+  const nonPass = legal.filter(a => a.type !== 'PASS');
+  if (phase === 'act1' && nonPass.length > 0) return askPrediction(legal);
+  engineReply();
+}
+function askPrediction(legal) {
+  narrate(t('predictPrompt'));
+  pendingPredict = { options: legal };
+  const size = tileSize();
+  legal.filter(a => a.type === 'ROAD_CLOSE').forEach(a => {
+    const m = document.createElement('div');
+    m.className = 'edge-bar predictable'; m.id = 'predict-edge';
+    m.style.background = 'rgba(248,113,113,.35)';
+    positionEdgeBar(m, a.edge, size);
+    m.setAttribute('role', 'button');
+    m.setAttribute('aria-label', t('predictEdge'));
+    m.addEventListener('click', () => resolvePrediction({ type: 'ROAD_CLOSE', edge: a.edge }));
+    document.getElementById('board').appendChild(m);
+  });
+  const chips = document.getElementById('predict-chips');
+  chips.innerHTML = '';
+  const rc = legal.find(a => a.type === 'ROAD_CLOSE');
+  if (rc) {
+    const edgeChip = document.createElement('button');
+    edgeChip.className = 'btn-secondary'; edgeChip.id = 'chip-edge';
+    edgeChip.textContent = '🚧 ' + t('predictEdge');
+    edgeChip.onclick = () => resolvePrediction({ type: 'ROAD_CLOSE', edge: rc.edge });
+    chips.appendChild(edgeChip);
+  }
+  const passChip = document.createElement('button');
+  passChip.className = 'btn-secondary'; passChip.id = 'chip-pass';
+  passChip.textContent = '⏭ ' + t('predictPass');
+  passChip.onclick = () => resolvePrediction({ type: 'PASS' });
+  chips.appendChild(passChip);
+}
+function resolvePrediction(predicted) {
+  pendingPredict = null;
+  document.getElementById('predict-chips').innerHTML = '';
+  const pm = document.getElementById('predict-edge'); if (pm) pm.remove();
+  engineReply(predicted);
+}
+function engineReply(predicted) {
+  narrate(t('engineTurn'));
+  setTimeout(() => {
+    const action = phase === 'act1'
+      ? SEARCH.minimax(G).action
+      : SEARCH.mcts(G, mctsIters, MCTS_SEED_BASE + ply).action;
+    if (predicted !== undefined) {
+      const match = JSON.stringify(predicted) === JSON.stringify(action);
+      track('l8_predict_engine', { predicted: predicted.type, actual: action.type, match: match, ply: ply });
+      narrate(fmt(match ? 'predictHitFmt' : 'predictMissFmt', engineMoveName(action)));
+    } else {
+      narrate(fmt('engineDidFmt', engineMoveName(action)));
+    }
+    G = ENGINE.apply(G, action);
+    ply++;
+    document.getElementById('totem').classList.remove('acting');
+    renderBoard(); renderHud();
+    setTimeout(() => beginMaxTurn(), predicted !== undefined && !REDUCED ? 1200 : 120);
+  }, REDUCED ? 20 : 600);
+}
+function engineMoveName(a) {
+  return t({ ROAD_CLOSE: 'engineMoveRoad', SUPPLY_DELAY: 'engineMoveDelay', FOG: 'engineMoveFog', PASS: 'engineMovePass' }[a.type]);
+}
+
+/* ── terminal ──────────────────────────────────────────────────────────── */
+function onTerminal() {
+  const u = ENGINE.utility(G);
+  document.getElementById('action-bar').innerHTML = '';
+  clearGhosts();
+  if (phase === 'act1') {
+    const win = u > 0;
+    openResult(win ? t('act1WinTitle') : t('act1LoseTitle'),
+      (win ? t('act1WinBody') : t('act1LoseBody')) + ' · ' + fmt('utilityFmt', u),
+      [[t('seeTree'), function () { closeResult(); showAct1Tree(); }, 'btn-primary'],
+       [t('tryAgain'), function () { closeResult(); startAct1(); }, 'btn-secondary']]);
+  } else {
+    finished = true;
+    track('level_complete', { utility: u, iters: mctsIters });
+    saveProgress({ completed: true, utility: u, completedAt: Date.now() });
+    openResult(u > 0 ? t('act3WinTitle') : t('act3EndTitle'),
+      fmt('act3WinBodyFmt', u),
+      [[t('finishTitle'), function () { closeResult(); showScreen('screen-finish'); tryAsset(document.getElementById('screen-finish')); }, 'btn-primary'],
+       [t('tryAgain'), function () { closeResult(); startAct3(); }, 'btn-secondary']]);
+  }
+}
+function openResult(title, body, actions) {
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-body').textContent = body;
+  const bar = document.getElementById('result-actions');
+  bar.innerHTML = '';
+  actions.forEach(function (item, i) {
+    const b = document.createElement('button');
+    b.className = item[2]; b.textContent = item[0]; b.onclick = item[1];
+    b.id = 'result-btn-' + i;
+    bar.appendChild(b);
+  });
+  document.getElementById('result-overlay').classList.add('open');
+}
+function closeResult() { document.getElementById('result-overlay').classList.remove('open'); }
+
+/* ── Act 1 tree reveal ─────────────────────────────────────────────────── */
+function buildTree() {
+  if (treeData) return treeData;
+  const root = { state: ENGINE.initState('A1F'), action: null, children: [], depth: 0 };
+  let count = 0;
+  (function grow(node) {
+    count++;
+    if (ENGINE.isTerminal(node.state)) { node.leaf = true; return; }
+    for (const a of ENGINE.legalMoves(node.state)) {
+      const child = { state: ENGINE.apply(node.state, a), action: a, children: [], depth: node.depth + 1 };
+      node.children.push(child);
+      grow(child);
+    }
+  })(root);
+  let leafX = 0;
+  (function place(node) {
+    if (!node.children.length) { node.x = leafX++; return; }
+    node.children.forEach(place);
+    node.x = (node.children[0].x + node.children[node.children.length - 1].x) / 2;
+  })(root);
+  const mm = SEARCH.minimax(root.state);
+  let cur = root; cur.pv = true;
+  for (const a of mm.pv) {
+    cur = cur.children.find(ch => JSON.stringify(ch.action) === JSON.stringify(a));
+    if (!cur) break;
+    cur.pv = true;
+  }
+  treeData = { root: root, count: count, leaves: leafX, mm: mm };
+  return treeData;
+}
+function actionGlyph(a) {
+  if (!a) return '🌳';
+  if (a.type === 'MOVE') return { N: '↑', E: '→', S: '↓', W: '←' }[a.dir];
+  return { SERVE: '🍚', WAIT: '⏸', ROAD_CLOSE: '🚧', SUPPLY_DELAY: '⏳', FOG: '🌫', PASS: '⏭' }[a.type];
+}
+function treeZoom(f) {
+  treeScale = Math.max(.4, Math.min(2.5, treeScale * f));
+  document.getElementById('tree-svg-wrap').style.transform = 'scale(' + treeScale + ')';
+  document.getElementById('tree-svg-wrap').style.width = 'fit-content';
+}
+function renderTreeSvg(marks) {
+  const td = buildTree();
+  const DX = 26, DY = 66, R = 9, PADX = 20, PADY = 26;
+  const W = td.leaves * DX + PADX * 2, H = 6 * DY + PADY * 2;
+  const parts = [];
+  (function draw(node, parent) {
+    const x = PADX + node.x * DX, y = PADY + node.depth * DY;
+    node._px = x; node._py = y;
+    if (parent) {
+      const cls = node.pv && parent.pv ? 'stroke="#fbbf24" stroke-width="3.5"' : 'stroke="rgba(148,163,184,.5)" stroke-width="1"';
+      parts.push('<line x1="' + parent._px + '" y1="' + parent._py + '" x2="' + x + '" y2="' + y + '" ' + cls + '/>');
+    }
+    node.children.forEach(ch => draw(ch, node));
+    const isMax = node.state.toMove === 'MAX' || node.leaf;
+    const mark = marks && marks.get(node);
+    let fill = node.leaf ? '#475569' : (isMax ? '#38bdf8' : '#94a3b8');
+    let extra = '';
+    if (node.pv) { fill = '#fbbf24'; extra = ' stroke="#fff7ed" stroke-width="2"'; }
+    if (mark === 'pruned') { fill = '#1e293b'; extra = ' opacity=".4"'; }
+    parts.push('<circle cx="' + x + '" cy="' + y + '" r="' + R + '" fill="' + fill + '"' + extra + '/>');
+    if (mark === 'cut') parts.push('<text x="' + (x + 9) + '" y="' + (y - 9) + '" font-size="13">✂️</text>');
+    if (node.action) parts.push('<text x="' + x + '" y="' + (y + 3.5) + '" font-size="9" text-anchor="middle" fill="#0f172a" font-weight="700">' + actionGlyph(node.action) + '</text>');
+  })(td.root, null);
+  document.getElementById('tree-svg-wrap').innerHTML =
+    '<svg id="tree-svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="img">' + parts.join('') + '</svg>';
+}
+function showAct1Tree() {
+  phase = 'act1-tree';
+  const td = buildTree();
+  showScreen('screen-tree');
+  document.getElementById('tree-hud-act').textContent = t('act1Name');
+  document.getElementById('branch-heads').innerHTML = '';
+  document.getElementById('tree-counter').textContent = td.count + ' 🌳';
+  document.getElementById('tree-narrator').textContent = fmt('treeCaptionFmt', td.count);
+  renderTreeSvg(null);
+  const bar = document.getElementById('tree-actions');
+  bar.innerHTML = '';
+  const b = document.createElement('button');
+  b.className = 'btn-primary'; b.id = 'btn-to-act2';
+  b.textContent = t('toAct2');
+  b.onclick = startAct2;
+  bar.appendChild(b);
+}
+
+/* ── Act 2: alpha-beta pruning on the same tree ────────────────────────── */
+function computeAbViz() {
+  if (abViz) return abViz;
+  const td = buildTree();
+  const order = [], marks = new Map();
+  let explored = 0;
+  (function visit(node, alpha, beta) {
+    explored++; order.push(node);
+    if (node.leaf) return ENGINE.utility(node.state);
+    const isMax = node.state.toMove === 'MAX';
+    let best = null;
+    for (let i = 0; i < node.children.length; i++) {
+      const v = visit(node.children[i], alpha, beta);
+      if (best === null || (isMax ? v > best : v < best)) best = v;
+      if (isMax) alpha = Math.max(alpha, best); else beta = Math.min(beta, best);
+      if (beta < alpha) {                     /* mirrors search_core: strict cutoff */
+        for (let j = i + 1; j < node.children.length; j++)
+          (function markAll(x) { marks.set(x, 'pruned'); x.children.forEach(markAll); })(node.children[j]);
+        marks.set(node, 'cut');
+        break;
+      }
+    }
+    return best;
+  })(td.root, -Infinity, Infinity);
+  const natural = SEARCH.alphabeta(ENGINE.initState('A1F'), -Infinity, Infinity, { order: 'natural' });
+  const bestFirst = SEARCH.alphabeta(ENGINE.initState('A1F'), -Infinity, Infinity, { order: 'best-first' });
+  abViz = { order: order, marks: marks, explored: explored, natural: natural, bestFirst: bestFirst };
+  return abViz;
+}
+function startAct2() {
+  phase = 'act2';
+  const td = buildTree();
+  showScreen('screen-tree');
+  document.getElementById('tree-hud-act').textContent = t('act2Name');
+  document.getElementById('tree-narrator').textContent = t('act2Brief') + ' ' + t('prunePrompt');
+  document.getElementById('tree-counter').textContent = fmt('exploredFmt', 0);
+  renderTreeSvg(null);
+  prunePick = null;
+  const heads = document.getElementById('branch-heads');
+  heads.innerHTML = '';
+  td.root.children.forEach(function (child, i) {
+    const b = document.createElement('button');
+    b.className = 'branch-head'; b.id = 'branch-' + i;
+    b.textContent = actionGlyph(child.action) + ' ' + (child.action.type === 'MOVE' ? child.action.dir : child.action.type);
+    b.onclick = function () {
+      prunePick = i;
+      heads.querySelectorAll('.branch-head').forEach((x, j) => x.classList.toggle('picked', j === i));
+      runAct2Reveal();
     };
-    const t=T[currentLang]||T.en;
-    document.getElementById('endtitle').textContent=missed===0?t.t0:t.t1;
-    document.getElementById('endtext').innerHTML=t.d;
+    heads.appendChild(b);
+  });
+  document.getElementById('tree-actions').innerHTML = '';
 }
-window.addEventListener('beforeunload',()=>{try{
-    if(S&&!MCTS.isTerminal(S)&&S.t>0&&typeof gtag==='function')
-        gtag('event','level_abandon',{level:8,t:S.t,transport_type:'beacon'});
-}catch(e){}});
+function runAct2Reveal() {
+  const viz = computeAbViz();
+  const td = buildTree();
+  const picked = td.root.children[prunePick];
+  let wasPruned = false;
+  (function scan(x) { if (viz.marks.get(x) === 'pruned') wasPruned = true; x.children.forEach(scan); })(picked);
+  track('l8_prune_predict', { edge: actionGlyph(picked.action) + (picked.action.dir || picked.action.type), wasPruned: wasPruned });
+  document.getElementById('branch-heads').innerHTML = '';
+  document.getElementById('tree-narrator').textContent = wasPruned ? t('pruneHit') : t('pruneMiss');
+  const counterEl = document.getElementById('tree-counter');
+  const finish = function () {
+    renderTreeSvg(viz.marks);
+    counterEl.textContent = fmt('exploredFmt', viz.natural.nodesExplored) + ' · ' + fmt('prunedFmt', td.count - viz.explored, td.count);
+    showOrderingToggle();
+  };
+  if (REDUCED) { finish(); return; }
+  let i = 0;
+  revealTimer = setInterval(function () {
+    i = Math.min(i + 4, viz.order.length);
+    counterEl.textContent = fmt('exploredFmt', i);
+    if (i >= viz.order.length) { clearInterval(revealTimer); revealTimer = null; finish(); }
+  }, 60);
+}
+function skipReveal() {
+  if (revealTimer) { clearInterval(revealTimer); revealTimer = null; }
+  if (phase === 'act2' && prunePick !== null) {
+    const viz = computeAbViz(), td = buildTree();
+    renderTreeSvg(viz.marks);
+    document.getElementById('tree-counter').textContent = fmt('exploredFmt', viz.natural.nodesExplored) + ' · ' + fmt('prunedFmt', td.count - viz.explored, td.count);
+    showOrderingToggle();
+  }
+}
+function showOrderingToggle() {
+  const viz = computeAbViz();
+  const bar = document.getElementById('tree-actions');
+  if (document.getElementById('btn-to-act3')) return;
+  bar.innerHTML = '';
+  const lesson = document.createElement('p');
+  lesson.className = 'narrator'; lesson.id = 'ordering-lesson';
+  lesson.textContent = fmt('orderLessonFmt', viz.natural.nodesExplored, viz.bestFirst.nodesExplored);
+  const tg = document.createElement('button');
+  tg.className = 'btn-secondary'; tg.id = 'btn-order-toggle';
+  let mode = 'natural';
+  const label = function () { return t('orderToggle') + ': ' + (mode === 'natural' ? t('orderNatural') : t('orderBest')) + ' · ' + fmt('exploredFmt', (mode === 'natural' ? viz.natural : viz.bestFirst).nodesExplored); };
+  tg.textContent = label();
+  tg.onclick = function () { mode = mode === 'natural' ? 'best' : 'natural'; tg.textContent = label(); };
+  const next = document.createElement('button');
+  next.className = 'btn-primary'; next.id = 'btn-to-act3';
+  next.textContent = t('toAct3');
+  next.onclick = startAct3;
+  bar.appendChild(lesson); bar.appendChild(tg); bar.appendChild(next);
+  updateEngineerCounts();
+}
+
+/* ── Act 3 ghost rehearsals ────────────────────────────────────────────── */
+function clearGhosts() { document.querySelectorAll('.ghost').forEach(g => g.remove()); }
+function rehearse() {
+  if (ENGINE.isTerminal(G) || G.toMove !== 'MAX') return;
+  narrate(fmt('rehearsingFmt', mctsIters));
+  setTimeout(function () {
+    lastMcts = SEARCH.mcts(G, mctsIters, MCTS_SEED_BASE + ply);
+    drawGhosts(lastMcts);
+    updateEngineerTable(lastMcts);
+    const best = lastMcts.rootActions.reduce((a, b) => (b.visits > a.visits ? b : a));
+    narrate(fmt('ghostLessonFmt', best.visits) + ' — ' + t('chooseOwn'));
+    const bar = document.getElementById('action-bar');
+    if (!document.getElementById('btn-follow')) {
+      const f = document.createElement('button');
+      f.className = 'btn-ghosty'; f.id = 'btn-follow';
+      f.textContent = t('followBest');
+      f.onclick = function () { playerAction(best.action); };
+      bar.insertBefore(f, bar.firstChild);
+    }
+  }, REDUCED ? 10 : 350);
+}
+function drawGhosts(result) {
+  clearGhosts();
+  const size = tileSize();
+  const maxV = Math.max.apply(null, result.rootActions.map(a => a.visits).concat([1]));
+  const board = document.getElementById('board');
+  const dirVec = { N: [-1, 0], E: [0, 1], S: [1, 0], W: [0, -1] };
+  result.rootActions.forEach(function (ra, i) {
+    if (!ra.visits) return;
+    const op = 0.2 + 0.7 * (ra.visits / maxV);
+    const g = document.createElement('div');
+    g.className = 'ghost';
+    g.textContent = '👻';
+    g.style.setProperty('--ghost-op', op.toFixed(2));
+    let tr = G.pos[0], tc = G.pos[1];
+    if (ra.action.type === 'MOVE') {
+      const d = dirVec[ra.action.dir];
+      tr += d[0]; tc += d[1];
+      g.style.setProperty('--gx', (d[1] * size * .8) + 'px');
+      g.style.setProperty('--gy', (d[0] * size * .8) + 'px');
+    }
+    g.style.left = (G.pos[1] * size) + 'px';
+    g.style.top = (G.pos[0] * size) + 'px';
+    g.style.animationDelay = (i * .12) + 's';
+    if (REDUCED) { g.style.animation = 'none'; g.style.opacity = op.toFixed(2); g.style.left = (tc * size) + 'px'; g.style.top = (tr * size) + 'px'; }
+    board.appendChild(g);
+  });
+}
+
+/* ── Engineer view ─────────────────────────────────────────────────────── */
+function initEngineer() {
+  const holder = document.getElementById('iter-btns');
+  ITER_CHOICES.forEach(function (n) {
+    const b = document.createElement('button');
+    b.textContent = n; b.dataset.iters = n;
+    if (n === mctsIters) b.className = 'active';
+    b.onclick = function () {
+      mctsIters = n;
+      holder.querySelectorAll('button').forEach(x => x.classList.toggle('active', +x.dataset.iters === n));
+    };
+    holder.appendChild(b);
+  });
+  document.getElementById('eng-seed').textContent = MCTS_SEED_BASE + ' + ply';
+  updateEngineerCounts();
+}
+function updateEngineerCounts() {
+  const td = treeData, viz = abViz;
+  document.getElementById('eng-counts').textContent =
+    fmt('engineerCounts', td ? td.count : '—', viz ? viz.natural.nodesExplored : '—', viz ? viz.bestFirst.nodesExplored : '—');
+}
+function updateEngineerTable(result) {
+  const tb = document.querySelector('#eng-table tbody');
+  tb.innerHTML = '';
+  result.rootActions.slice().sort((a, b) => b.visits - a.visits).slice(0, 8).forEach(function (ra) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td class="mono">' + actionGlyph(ra.action) + ' ' + (ra.action.dir || ra.action.type) + '</td><td>' + ra.visits + '</td><td>' + (ra.mean === null ? '—' : ra.mean.toFixed(2)) + '</td>';
+    tb.appendChild(tr);
+  });
+  updateEngineerCounts();
+}
+
+/* ── boot ──────────────────────────────────────────────────────────────── */
+window.addEventListener('beforeunload', function () {
+  if (started && !finished) track('level_abandon', { phase: phase, ply: ply });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  setLang('zh-Hant');
+  initEngineer();
+  document.querySelectorAll('[data-asset]').forEach(tryAsset);
+});
 </script>
 </body>
 </html>

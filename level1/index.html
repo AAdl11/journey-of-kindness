@@ -388,7 +388,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════════════════
-     SCREEN 3: 靜心之門 / Gate of Serenity
+     SCREEN 3: 靜心之門 / Ataraxy Portico
 ══════════════════════════════════════════════════════════════════════════ -->
 <div id="ataraxy-screen" class="screen flex-col items-center py-2 px-4" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);">
     <div class="absolute inset-0" style="background: url('靜心之門.png') center top/auto 100% no-repeat;"></div>
@@ -396,7 +396,7 @@
     
     <!-- Top section with title -->
     <div class="relative z-10 text-center">
-        <h2 class="text-3xl font-bold text-white" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 4px 20px rgba(0,0,0,0.7);" data-en="Ataraxy Portico" data-zh="靜心之門" data-es="Portal de Serenidad">靜心之門</h2>
+        <h2 class="text-3xl font-bold text-white" style="text-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 4px 20px rgba(0,0,0,0.7);" data-en="Ataraxy Portico" data-zh="靜心之門" data-es="Portal de la Serenidad">靜心之門</h2>
     </div>
     
     <!-- Breath ring area with countdown -->
@@ -549,10 +549,10 @@ function toggleVideoMute() {
     const btn = document.getElementById('video-mute-btn');
     if (video.muted) {
         video.muted = false;
-        btn.innerHTML = '🔊 <span data-en="Sound" data-zh="聲音" data-es="Sonido">' + (currentLang === 'en' ? 'Sound' : '聲音') + '</span>';
+        btn.innerHTML = '🔊 <span data-en="Sound" data-zh="聲音" data-es="Sonido">' + (({ en: 'Sound', zh: '聲音', es: 'Sonido' })[currentLang] || 'Sound') + '</span>';
     } else {
         video.muted = true;
-        btn.innerHTML = '🔇 <span data-en="Sound" data-zh="聲音" data-es="Sonido">' + (currentLang === 'en' ? 'Sound' : '聲音') + '</span>';
+        btn.innerHTML = '🔇 <span data-en="Sound" data-zh="聲音" data-es="Sonido">' + (({ en: 'Sound', zh: '聲音', es: 'Sonido' })[currentLang] || 'Sound') + '</span>';
     }
 }
 
@@ -1352,7 +1352,7 @@ function showChallengeResult() {
     storyArea.innerHTML = '<div class="text-center faceslap">'
         + '<p class="fs-big">'+icon+' '+title+'</p>'
         + '<div class="fs-row '+tone+'" style="max-width:480px">'+aiLine+'</div>'
-        + '<div class="fs-row fs-ai" style="max-width:420px">'+ (currentLang==='zh'?'你':'You')+': '+steps+' · AI: '+best+'</div>'
+        + '<div class="fs-row fs-ai" style="max-width:420px">'+ (({ zh: '你', en: 'You', es: 'Tú' })[currentLang] || 'You')+': '+steps+' · AI: '+best+'</div>'
         + (saved ? renderStars(steps, saved) : '')
         + (saved ? teaRewardHTML() : '')
         + (saved && steps <= best ? renderLadder() : '<p class="text-yellow-300 text-sm mt-2">↻ '+t.retry+'</p>')

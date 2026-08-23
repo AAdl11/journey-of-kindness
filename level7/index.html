@@ -1147,7 +1147,7 @@
                 document.getElementById('cardC').classList.add('visible');
                 document.getElementById('thirdHint').style.display = 'none';
                 playSwitchSound();
-                document.getElementById('aiMessage').textContent = currentLang === 'en' ? '⚡ NEW VARIABLE DETECTED!' : '⚡ 檢測到新變數！';
+                document.getElementById('aiMessage').textContent = ({ en: '⚡ NEW VARIABLE DETECTED!', zh: '⚡ 檢測到新變數！', es: '⚡ ¡NUEVA VARIABLE DETECTADA!' })[currentLang] || '⚡ NEW VARIABLE DETECTED!';
             }
         }
         
@@ -1222,7 +1222,7 @@
                     clearInterval(typeInterval);
                     terminalBox.classList.remove('typing-glow');
                     if (playerChoice === 'C') {
-                        const lastLine = currentLang === 'en' ? '✨ COMPASSION VARIABLE UNLOCKED ∞ ✨' : '✨ 慈悲變數已解鎖 ∞ ✨';
+                        const lastLine = ({ en: '✨ COMPASSION VARIABLE UNLOCKED ∞ ✨', zh: '✨ 慈悲變數已解鎖 ∞ ✨', es: '✨ VARIABLE COMPASIÓN DESBLOQUEADA ∞ ✨' })[currentLang] || '✨ COMPASSION VARIABLE UNLOCKED ∞ ✨';
                         output.innerHTML = output.innerHTML.replace(lastLine, '<span class="compassion-unlocked">' + lastLine + '</span>');
                     }
                     output.innerHTML += '<span class="cursor"></span>';
@@ -1283,13 +1283,15 @@
         function shareResult() {
             const text = currentLang === 'en' 
                 ? "I just trained AI to choose compassion over calculation! 🚂✨ Can you find the Third Way? #ThirdWayAI2025 #JourneyOfKindness"
-                : "我剛教會 AI 選擇慈悲而非計算！🚂✨ 你能找到第三條路嗎？#ThirdWayAI2025 #善的旅程";
+                : (currentLang === 'es'
+                ? "¡Acabo de enseñarle a la IA a elegir la compasión sobre el cálculo! 🚂✨ ¿Puedes encontrar la Tercera Vía? #ThirdWayAI2025 #JourneyOfKindness"
+                : "我剛教會 AI 選擇慈悲而非計算！🚂✨ 你能找到第三條路嗎？#ThirdWayAI2025 #善的旅程");
             
             if (navigator.share) {
                 navigator.share({ title: 'Journey of Kindness - Level 7', text: text }).catch(e => {});
             } else {
                 navigator.clipboard.writeText(text).then(() => {
-                    alert(currentLang === 'en' ? '📋 Copied to clipboard!' : '📋 已複製到剪貼板！');
+                    alert(({ en: '📋 Copied to clipboard!', zh: '📋 已複製到剪貼板！', es: '📋 ¡Copiado al portapapeles!' })[currentLang] || '📋 Copied to clipboard!');
                 }).catch(e => { alert(text); });
             }
         }

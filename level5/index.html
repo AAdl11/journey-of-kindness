@@ -282,33 +282,33 @@
         <h1 class="text-3xl md:text-4xl font-bold mb-3">
             <span class="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">Level 5: Bayesian Network</span>
         </h1>
-        <p class="text-xl text-gray-700 mb-1" data-en="Circle of Care" data-zh="心的循環">心的循環</p>
+        <p class="text-xl text-gray-700 mb-1" data-en="Circle of Care" data-zh="心的循環" data-es="Círculo de cuidado">心的循環</p>
         <p class="text-sm text-gray-500 mb-5">Bayview-Hunters Point Community</p>
         
         <div class="bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl p-5 mb-5 text-left border border-pink-200">
             <div class="flex items-center gap-3 mb-3">
                 <span class="text-4xl heartbeat">💗</span>
                 <div>
-                    <p class="font-bold text-pink-600 text-lg" data-en="Who Needs Care Today?" data-zh="今天誰需要被關心？">今天誰需要被關心？</p>
-                    <p class="text-gray-600" data-en="Use Bayesian reasoning to find out" data-zh="用貝氏推理找出答案">用貝氏推理找出答案</p>
+                    <p class="font-bold text-pink-600 text-lg" data-en="Who Needs Care Today?" data-zh="今天誰需要被關心？" data-es="¿Quién necesita cuidado hoy?">今天誰需要被關心？</p>
+                    <p class="text-gray-600" data-en="Use Bayesian reasoning to find out" data-zh="用貝氏推理找出答案" data-es="Descúbrelo con razonamiento bayesiano">用貝氏推理找出答案</p>
                 </div>
             </div>
             <div class="space-y-2 text-gray-700">
-                <p>🔮 <span data-en="Observe evidence & update probabilities" data-zh="觀察證據，更新機率">觀察證據，更新機率</span></p>
-                <p>🚪 <span data-en="Choose who to visit (limited time!)" data-zh="選擇要拜訪誰（時間有限！）">選擇要拜訪誰（時間有限！）</span></p>
-                <p>💡 <span data-en="Sometimes data lies... trust your heart" data-zh="有時數據會騙人... 相信你的心">有時數據會騙人... 相信你的心</span></p>
+                <p>🔮 <span data-en="Observe evidence & update probabilities" data-zh="觀察證據，更新機率" data-es="Observa la evidencia y actualiza las probabilidades">觀察證據，更新機率</span></p>
+                <p>🚪 <span data-en="Choose who to visit (limited time!)" data-zh="選擇要拜訪誰（時間有限！）" data-es="Elige a quién visitar (¡el tiempo es limitado!)">選擇要拜訪誰（時間有限！）</span></p>
+                <p>💡 <span data-en="Sometimes data lies... trust your heart" data-zh="有時數據會騙人... 相信你的心" data-es="A veces los datos engañan... confía en tu corazón">有時數據會騙人... 相信你的心</span></p>
             </div>
         </div>
         
         <div class="bg-yellow-50 rounded-lg p-4 mb-5 border border-yellow-200">
-            <p class="text-gray-700"><span class="font-bold text-yellow-600">⭐ ELO</span> - <span data-en="Good decisions earn points!" data-zh="做對決策得分！">做對決策得分！</span></p>
+            <p class="text-gray-700"><span class="font-bold text-yellow-600">⭐ ELO</span> - <span data-en="Good decisions earn points!" data-zh="做對決策得分！" data-es="¡Las buenas decisiones dan puntos!">做對決策得分！</span></p>
         </div>
         
-        <button onclick="startGame()" class="btn-primary text-xl px-12 py-4 pulse-glow">🌟 <span data-en="Start" data-zh="開始遊戲">開始遊戲</span></button>
+        <button onclick="startGame()" class="btn-primary text-xl px-12 py-4 pulse-glow">🌟 <span data-en="Start" data-zh="開始遊戲" data-es="Comenzar">開始遊戲</span></button>
     </div>
     <div class="nav-buttons">
-        <button class="nav-btn" onclick="goToMainMenu()">🏠 <span data-en="Main Menu" data-zh="主選單">主選單</span></button>
-        <button class="nav-btn" onclick="goToPrevLevel()">⬅️ <span data-en="Prev Level" data-zh="上一關">上一關</span></button>
+        <button class="nav-btn" onclick="goToMainMenu()">🏠 <span data-en="Main Menu" data-zh="主選單" data-es="Menú principal">主選單</span></button>
+        <button class="nav-btn" onclick="goToPrevLevel()">⬅️ <span data-en="Prev Level" data-zh="上一關" data-es="Nivel anterior">上一關</span></button>
     </div>
 </div>
 
@@ -316,8 +316,8 @@
 <div id="game-screen" class="screen bg-map flex-col">
     <div class="glass-card mx-4 mt-4 p-3 flex justify-between items-center">
         <div class="flex items-center gap-4">
-            <span class="font-bold text-lg text-pink-600">💗 <span data-en="Community Care" data-zh="社區關懷">社區關懷</span></span>
-            <span class="text-gray-500"><span data-en="Round" data-zh="回合">回合</span> <span id="round-display" class="text-purple-600 font-bold">1</span>/3</span>
+            <span class="font-bold text-lg text-pink-600">💗 <span data-en="Community Care" data-zh="社區關懷" data-es="Cuidado comunitario">社區關懷</span></span>
+            <span class="text-gray-500"><span data-en="Round" data-zh="回合" data-es="Ronda">回合</span> <span id="round-display" class="text-purple-600 font-bold">1</span>/3</span>
         </div>
         <div class="flex items-center gap-4">
             <div class="elo-badge">⭐ <span id="elo-display">1500</span></div>
@@ -328,37 +328,37 @@
     <div class="game-layout mx-4 mt-4">
         <div class="game-section">
             <div class="dialogue-box-clear mb-4">
-                <p class="text-lg text-gray-700" data-en="You are a Bayview community volunteer. This afternoon you can visit 2 neighbors. Based on Bayesian Network analysis, who needs the most care?" data-zh="你是 Bayview 社區的關懷志工。今天下午你有時間拜訪 2 位鄰居。根據貝氏網路的分析，誰最需要被關心呢？">你是 Bayview 社區的關懷志工。今天下午你有時間拜訪 <strong>2 位</strong>鄰居。根據貝氏網路的分析，誰最需要被關心呢？</p>
+                <p class="text-lg text-gray-700" data-en="You are a Bayview community volunteer. This afternoon you can visit 2 neighbors. Based on Bayesian Network analysis, who needs the most care?" data-zh="你是 Bayview 社區的關懷志工。今天下午你有時間拜訪 2 位鄰居。根據貝氏網路的分析，誰最需要被關心呢？" data-es="Eres voluntario de cuidado de la comunidad de Bayview. Esta tarde puedes visitar a 2 vecinos. Según el análisis de la red bayesiana, ¿quién necesita más cuidado?">你是 Bayview 社區的關懷志工。今天下午你有時間拜訪 <strong>2 位</strong>鄰居。根據貝氏網路的分析，誰最需要被關心呢？</p>
             </div>
             <div class="grid grid-cols-5 gap-3 mb-4" id="characters-grid"></div>
             <div class="glass-card p-4 text-center">
-                <p class="text-gray-600 mb-3 text-lg"><span data-en="Selected:" data-zh="已選擇：">已選擇：</span><span id="selected-count" class="font-bold text-pink-600 text-xl">0</span>/3</p>
+                <p class="text-gray-600 mb-3 text-lg"><span data-en="Selected:" data-zh="已選擇：" data-es="Seleccionados: ">已選擇：</span><span id="selected-count" class="font-bold text-pink-600 text-xl">0</span>/3</p>
                 <div class="flex gap-3 justify-center mb-3">
-                    <button onclick="clearSelection()" class="nav-btn-home px-4 py-2 text-sm">🔄 <span data-en="Clear" data-zh="重選">重選</span></button>
-                    <button id="visit-btn" onclick="confirmVisit()" class="btn-primary" disabled>🚪 <span data-en="Visit Selected" data-zh="拜訪選中的鄰居">拜訪選中的鄰居</span></button>
+                    <button onclick="clearSelection()" class="nav-btn-home px-4 py-2 text-sm">🔄 <span data-en="Clear" data-zh="重選" data-es="Borrar">重選</span></button>
+                    <button id="visit-btn" onclick="confirmVisit()" class="btn-primary" disabled>🚪 <span data-en="Visit Selected" data-zh="拜訪選中的鄰居" data-es="Visitar seleccionados">拜訪選中的鄰居</span></button>
                 </div>
-                <p class="text-sm text-gray-500" data-en="Or click 'Override' on someone the data says is fine" data-zh="或對「數據顯示沒事」的人按 Override">或對「數據顯示沒事」的人按 Override</p>
+                <p class="text-sm text-gray-500" data-en="Or click 'Override' on someone the data says is fine" data-zh="或對「數據顯示沒事」的人按 Override" data-es="O pulsa «Override» en alguien que según los datos está bien">或對「數據顯示沒事」的人按 Override</p>
             </div>
         </div>
         
         <div class="math-section">
-            <h3 class="font-bold text-purple-600 text-xl mb-4">🔮 <span data-en="Bayesian Analysis" data-zh="貝氏網路分析">貝氏網路分析</span></h3>
+            <h3 class="font-bold text-purple-600 text-xl mb-4">🔮 <span data-en="Bayesian Analysis" data-zh="貝氏網路分析" data-es="Análisis bayesiano">貝氏網路分析</span></h3>
             <div class="bg-white rounded-xl p-4 mb-4 border-2 border-purple-200">
-                <p class="text-sm text-gray-500 mb-2" data-en="Tap or hover to see details:" data-zh="點選角色即可查看：">點選角色即可查看：</p>
+                <p class="text-sm text-gray-500 mb-2" data-en="Tap or hover to see details:" data-zh="點選角色即可查看：" data-es="Toca un personaje para ver detalles:">點選角色即可查看：</p>
                 <div class="space-y-3">
-                    <div class="flex justify-between"><span class="text-gray-600" data-en="Life Stress" data-zh="生活壓力">生活壓力</span><span class="font-bold text-pink-600" id="bn-stress">-</span></div>
-                    <div class="flex justify-between"><span class="text-gray-600" data-en="Connection" data-zh="社區連結">社區連結</span><span class="font-bold text-purple-600" id="bn-connection">-</span></div>
-                    <div class="flex justify-between"><span class="text-gray-600" data-en="Interaction" data-zh="最近互動">最近互動</span><span class="font-bold text-blue-600" id="bn-interaction">-</span></div>
-                    <div class="flex justify-between"><span class="text-gray-600" data-en="Behavior" data-zh="外顯行為">外顯行為</span><span class="font-bold text-yellow-600" id="bn-behavior">-</span></div>
+                    <div class="flex justify-between"><span class="text-gray-600" data-en="Life Stress" data-zh="生活壓力" data-es="Estrés de vida">生活壓力</span><span class="font-bold text-pink-600" id="bn-stress">-</span></div>
+                    <div class="flex justify-between"><span class="text-gray-600" data-en="Connection" data-zh="社區連結" data-es="Conexión comunitaria">社區連結</span><span class="font-bold text-purple-600" id="bn-connection">-</span></div>
+                    <div class="flex justify-between"><span class="text-gray-600" data-en="Interaction" data-zh="最近互動" data-es="Interacción reciente">最近互動</span><span class="font-bold text-blue-600" id="bn-interaction">-</span></div>
+                    <div class="flex justify-between"><span class="text-gray-600" data-en="Behavior" data-zh="外顯行為" data-es="Comportamiento">外顯行為</span><span class="font-bold text-yellow-600" id="bn-behavior">-</span></div>
                 </div>
             </div>
             <div class="bg-gradient-to-r from-green-50 via-yellow-50 to-red-50 rounded-xl p-4 mb-4 border-2 border-orange-200">
-                <p class="text-center text-gray-600 mb-2" data-en="Need Care Probability" data-zh="需關懷機率">需關懷機率</p>
+                <p class="text-center text-gray-600 mb-2" data-en="Need Care Probability" data-zh="需關懷機率" data-es="Probabilidad de necesitar cuidado">需關懷機率</p>
                 <p class="text-center text-4xl font-bold" id="bn-probability" style="color: #22c55e;">-</p>
             </div>
             <div class="bg-purple-50 rounded-xl p-4 border border-purple-200">
                 <p class="text-sm text-purple-700 font-mono mb-2">P(NeedsCare | Evidence)</p>
-                <p class="text-xs text-gray-500 italic" data-en="Some evidence is invisible to algorithms..." data-zh="有些證據是算法看不見的...">有些證據是算法看不見的...</p>
+                <p class="text-xs text-gray-500 italic" data-en="Some evidence is invisible to algorithms..." data-zh="有些證據是算法看不見的..." data-es="Alguna evidencia es invisible para los algoritmos...">有些證據是算法看不見的...</p>
             </div>
         </div>
     </div>
@@ -380,8 +380,8 @@
                 <p id="dialogue-text" class="dialogue-text"></p>
             </div>
             <div class="mt-6 text-center flex gap-3 justify-center">
-                <button onclick="goBackToSelect()" class="nav-btn-home">⬅️ <span data-en="Back" data-zh="返回">返回</span></button>
-                <button onclick="nextDialogue()" class="btn-primary text-lg"><span data-en="Continue" data-zh="繼續">繼續</span> →</button>
+                <button onclick="goBackToSelect()" class="nav-btn-home">⬅️ <span data-en="Back" data-zh="返回" data-es="Volver">返回</span></button>
+                <button onclick="nextDialogue()" class="btn-primary text-lg"><span data-en="Continue" data-zh="繼續" data-es="Continuar">繼續</span> →</button>
             </div>
         </div>
     </div>
@@ -395,7 +395,7 @@
         <p id="result-message" class="text-lg text-gray-600 mb-4"></p>
         <div class="bg-purple-50 rounded-lg p-4 mb-4 border-2 border-purple-200"><p id="result-insight" class="text-purple-700 text-sm"></p></div>
         <p id="result-elo" class="text-2xl font-bold text-orange-500 mb-4">+30 ELO</p>
-        <button onclick="nextRound()" class="btn-primary text-lg"><span data-en="Continue" data-zh="繼續">繼續</span> →</button>
+        <button onclick="nextRound()" class="btn-primary text-lg"><span data-en="Continue" data-zh="繼續" data-es="Continuar">繼續</span> →</button>
     </div>
 </div>
 
@@ -450,26 +450,26 @@ let musicPlaying = false;
 let state = { elo: 1500, eloEarned: 0, round: 1, maxRounds: 3, goodCount: 0, sadCount: 0, selected: [], currentVisitIndex: 0, dialogueIndex: 0 };
 
 const characters = [
-    { id: 'johnson', name: { en: 'Mr. Johnson', zh: 'Johnson 先生' }, avatar: 'assets/images/P1_MrJonson.png', location: { en: 'Park Bench', zh: '公園長椅' }, scene: 'assets/images/p6_公園長椅場景_cleaned.png', scenePosition: '70% center',
-      bayesian: { stress: { en: 'Low', zh: '低' }, connection: { en: 'High', zh: '高' }, interaction: { en: 'Daily', zh: '每天' }, behavior: { en: 'Normal', zh: '正常' }, probability: 15 },
-      truth: 'surprise', dialogues: { zh: ['（Johnson 先生坐在長椅上，看著遠方）', '「啊，是你啊。坐吧。」', '「我每天都來這裡... 其實是因為家裡太安靜了。」', '「老伴上個月走了，我不想讓人擔心，所以每天假裝很好。」', '「謝謝你過來。其實... 我很需要有人說說話。」'], en: ['(Mr. Johnson sits on the bench, gazing into the distance)', '"Oh, it\'s you. Have a seat."', '"I come here every day... actually because home is too quiet."', '"My wife passed last month. I pretend I\'m fine."', '"Thank you for coming. I really needed someone to talk to."'] },
-      resultTitle: { en: 'Hidden Grief', zh: '隱藏的悲傷' }, resultMessage: { en: 'Data can\'t see a broken heart.', zh: '數據看不見破碎的心。' }, insight: { en: 'P(NeedsCare|Evidence) was LOW. But some evidence is invisible.', zh: 'P(需要關懷|證據) 很低。但有些證據是看不見的。' } },
-    { id: 'maria', name: { en: 'Maria', zh: 'Maria' }, avatar: 'assets/images/P2_Maria.png', location: { en: 'Apartment', zh: '公寓門口' }, scene: 'assets/images/p_7_公寓門口場景.png', scenePosition: '28% center',
-      bayesian: { stress: { en: 'High', zh: '高' }, connection: { en: 'Low', zh: '低' }, interaction: { en: 'Rare', zh: '很少' }, behavior: { en: 'Rushing', zh: '匆忙' }, probability: 85 },
-      truth: 'touching', dialogues: { zh: ['（Maria 抱著兩袋菜，匆匆忙忙）', '「我沒事！真的！」', '（你幫她提了一袋菜）', '「...謝謝。」', '「其實我剛找到新工作了。事情在好轉。」', '「謝謝你關心。」'], en: ['(Maria holds two grocery bags, rushing)', '"I\'m fine! Really!"', '(You help carry her bags)', '"...Thank you."', '"Actually, I just got a new job. Things are looking up."', '"Thank you for caring."'] },
-      resultTitle: { en: 'Things Are Looking Up', zh: '事情在好轉' }, resultMessage: { en: 'She was already on her way up.', zh: '她已經在好轉的路上。' }, insight: { en: 'High probability ≠ intervention always needed.', zh: '高機率 ≠ 一定要介入。' } },
-    { id: 'tane', name: { en: 'Tane', zh: 'Tane' }, avatar: 'assets/images/p3_Tane.png', location: { en: 'Basketball Court', zh: '籃球場' }, scene: 'assets/images/p8_籃球場場景_cleaned.png', scenePosition: '24% center',
-      bayesian: { stress: { en: 'Medium', zh: '中' }, connection: { en: 'Low', zh: '低' }, interaction: { en: 'Rare', zh: '很少' }, behavior: { en: 'Withdrawn', zh: '退縮' }, probability: 65 },
-      truth: 'surprise', dialogues: { zh: ['（Tane 一個人坐在球場邊）', '「...」', '「你是社區的志工？」', '「...其實我每週都偷偷去幫 Johnson 先生倒垃圾。」', '「我想幫忙，怎麼正式加入你們？」'], en: ['(Tane sits alone by the court)', '"..."', '"You\'re a community volunteer?"', '"Actually, I secretly help Mr. Johnson every week."', '"I want to help. How can I join?"'] },
-      resultTitle: { en: 'A Hidden Helper', zh: '隱藏的幫手' }, resultMessage: { en: 'You found someone who wanted TO help!', zh: '你找到了想要幫助別人的人！' }, insight: { en: 'He was already caring for others!', zh: '他已經在關心別人了！' } },
-    { id: 'chen', name: { en: 'Mrs. Chen', zh: '陳奶奶' }, avatar: 'assets/images/p4_陳奶奶.png', location: { en: 'Garden', zh: '社區菜園' }, scene: 'assets/images/p9_社區菜園場景_cleaned.png', scenePosition: '66% center',
-      bayesian: { stress: { en: 'Low', zh: '低' }, connection: { en: 'High', zh: '高' }, interaction: { en: 'Daily', zh: '每天' }, behavior: { en: 'Happy', zh: '開心' }, probability: 10 },
-      truth: 'touching', dialogues: { zh: ['（陳奶奶在菜園裡澆水，笑瞇瞇的）', '「來來來！吃青菜！」', '「沒事沒事！我很好！」', '（她突然安靜下來）', '「...其實我每天來這裡，是因為想念台灣的家。」', '「這些菜，是我媽媽教我種的。」', '「謝謝你聽我說。很久沒人跟我聊天了。」'], en: ['(Mrs. Chen waters plants, smiling)', '"Come! Eat vegetables!"', '"I\'m fine!"', '(She suddenly goes quiet)', '"I come here because I miss Taiwan."', '"My mother taught me to grow these."', '"Thank you for listening."'] },
-      resultTitle: { en: 'Hidden Loneliness', zh: '隱藏的寂寞' }, resultMessage: { en: 'Beneath the smile was a longing.', zh: '笑容下是思念。' }, insight: { en: 'Outward behavior ≠ inner state.', zh: '外顯行為 ≠ 內心狀態。' } },
-    { id: 'devon', name: { en: 'Devon', zh: 'Devon' }, avatar: 'assets/images/p5_Devon.png', location: { en: 'Moving Truck', zh: '搬家卡車旁' }, scene: 'assets/images/p10_搬家場景_cleaned.png', scenePosition: '70% center',
-      bayesian: { stress: { en: 'High', zh: '高' }, connection: { en: 'None', zh: '無' }, interaction: { en: 'New', zh: '新來的' }, behavior: { en: 'Busy', zh: '忙碌' }, probability: 75 },
-      truth: 'touching', dialogues: { zh: ['（Devon 搬著箱子，滿頭大汗）', '「嘿！需要幫忙嗎？」', '「真的可以嗎？」', '（你幫他搬了幾個箱子）', '「謝謝！我們剛搬來。」', '「這個社區感覺很溫暖。謝謝你！」'], en: ['(Devon carries boxes, sweating)', '"Hey! Need help?"', '"Really?"', '(You help with boxes)', '"Thanks! We just moved here."', '"This community feels warm. Thank you!"'] },
-      resultTitle: { en: 'Welcome Home', zh: '歡迎回家' }, resultMessage: { en: 'You were the first to offer.', zh: '你是第一個伸出手的人。' }, insight: { en: 'This time the data was correct!', zh: '這次數據是對的！' } }
+    { id: 'johnson', name: { en: 'Mr. Johnson', zh: 'Johnson 先生', es: 'Sr. Johnson' }, avatar: 'assets/images/P1_MrJonson.png', location: { en: 'Park Bench', zh: '公園長椅', es: 'Banco del parque' }, scene: 'assets/images/p6_公園長椅場景_cleaned.png', scenePosition: '70% center',
+      bayesian: { stress: { en: 'Low', zh: '低', es: 'Bajo' }, connection: { en: 'High', zh: '高', es: 'Alta' }, interaction: { en: 'Daily', zh: '每天', es: 'Diaria' }, behavior: { en: 'Normal', zh: '正常', es: 'Normal' }, probability: 15 },
+      truth: 'surprise', dialogues: { zh: ['（Johnson 先生坐在長椅上，看著遠方）', '「啊，是你啊。坐吧。」', '「我每天都來這裡... 其實是因為家裡太安靜了。」', '「老伴上個月走了，我不想讓人擔心，所以每天假裝很好。」', '「謝謝你過來。其實... 我很需要有人說說話。」'], en: ['(Mr. Johnson sits on the bench, gazing into the distance)', '"Oh, it\'s you. Have a seat."', '"I come here every day... actually because home is too quiet."', '"My wife passed last month. I pretend I\'m fine."', '"Thank you for coming. I really needed someone to talk to."'], es: ['(El Sr. Johnson está sentado en el banco, mirando a lo lejos)', '«Ah, eres tú. Siéntate.»', '«Vengo aquí todos los días... en realidad porque la casa está demasiado silenciosa.»', '«Mi esposa falleció el mes pasado. Finjo estar bien.»', '«Gracias por venir. De verdad necesitaba hablar con alguien.»'] },
+      resultTitle: { en: 'Hidden Grief', zh: '隱藏的悲傷', es: 'Dolor oculto' }, resultMessage: { en: 'Data can\'t see a broken heart.', zh: '數據看不見破碎的心。', es: 'Los datos no ven un corazón roto.' }, insight: { en: 'P(NeedsCare|Evidence) was LOW. But some evidence is invisible.', zh: 'P(需要關懷|證據) 很低。但有些證據是看不見的。', es: 'P(NecesitaCuidado|Evidencia) era BAJA. Pero hay evidencia invisible.' } },
+    { id: 'maria', name: { en: 'Maria', zh: 'Maria', es: 'Maria' }, avatar: 'assets/images/P2_Maria.png', location: { en: 'Apartment', zh: '公寓門口', es: 'Apartamento' }, scene: 'assets/images/p_7_公寓門口場景.png', scenePosition: '28% center',
+      bayesian: { stress: { en: 'High', zh: '高', es: 'Alto' }, connection: { en: 'Low', zh: '低', es: 'Baja' }, interaction: { en: 'Rare', zh: '很少', es: 'Rara' }, behavior: { en: 'Rushing', zh: '匆忙', es: 'Apurada' }, probability: 85 },
+      truth: 'touching', dialogues: { zh: ['（Maria 抱著兩袋菜，匆匆忙忙）', '「我沒事！真的！」', '（你幫她提了一袋菜）', '「...謝謝。」', '「其實我剛找到新工作了。事情在好轉。」', '「謝謝你關心。」'], en: ['(Maria holds two grocery bags, rushing)', '"I\'m fine! Really!"', '(You help carry her bags)', '"...Thank you."', '"Actually, I just got a new job. Things are looking up."', '"Thank you for caring."'], es: ['(Maria lleva dos bolsas del mercado, con prisa)', '«¡Estoy bien! ¡De verdad!»', '(La ayudas con una bolsa)', '«...Gracias.»', '«Acabo de conseguir un nuevo trabajo. Las cosas van mejorando.»', '«Gracias por preocuparte.»'] },
+      resultTitle: { en: 'Things Are Looking Up', zh: '事情在好轉', es: 'Las cosas van mejorando' }, resultMessage: { en: 'She was already on her way up.', zh: '她已經在好轉的路上。', es: 'Ella ya iba camino a mejorar.' }, insight: { en: 'High probability ≠ intervention always needed.', zh: '高機率 ≠ 一定要介入。', es: 'Probabilidad alta ≠ intervención siempre necesaria.' } },
+    { id: 'tane', name: { en: 'Tane', zh: 'Tane', es: 'Tane' }, avatar: 'assets/images/p3_Tane.png', location: { en: 'Basketball Court', zh: '籃球場', es: 'Cancha de baloncesto' }, scene: 'assets/images/p8_籃球場場景_cleaned.png', scenePosition: '24% center',
+      bayesian: { stress: { en: 'Medium', zh: '中', es: 'Medio' }, connection: { en: 'Low', zh: '低', es: 'Baja' }, interaction: { en: 'Rare', zh: '很少', es: 'Rara' }, behavior: { en: 'Withdrawn', zh: '退縮', es: 'Retraído' }, probability: 65 },
+      truth: 'surprise', dialogues: { zh: ['（Tane 一個人坐在球場邊）', '「...」', '「你是社區的志工？」', '「...其實我每週都偷偷去幫 Johnson 先生倒垃圾。」', '「我想幫忙，怎麼正式加入你們？」'], en: ['(Tane sits alone by the court)', '"..."', '"You\'re a community volunteer?"', '"Actually, I secretly help Mr. Johnson every week."', '"I want to help. How can I join?"'], es: ['(Tane está sentado solo junto a la cancha)', '«...»', '«¿Eres voluntario de la comunidad?»', '«...Cada semana ayudo en secreto al Sr. Johnson con la basura.»', '«Quiero ayudar. ¿Cómo puedo unirme?»'] },
+      resultTitle: { en: 'A Hidden Helper', zh: '隱藏的幫手', es: 'Un ayudante oculto' }, resultMessage: { en: 'You found someone who wanted TO help!', zh: '你找到了想要幫助別人的人！', es: '¡Encontraste a alguien que quería AYUDAR!' }, insight: { en: 'He was already caring for others!', zh: '他已經在關心別人了！', es: '¡Él ya estaba cuidando de otros!' } },
+    { id: 'chen', name: { en: 'Mrs. Chen', zh: '陳奶奶', es: 'Sra. Chen' }, avatar: 'assets/images/p4_陳奶奶.png', location: { en: 'Garden', zh: '社區菜園', es: 'Huerto comunitario' }, scene: 'assets/images/p9_社區菜園場景_cleaned.png', scenePosition: '66% center',
+      bayesian: { stress: { en: 'Low', zh: '低', es: 'Bajo' }, connection: { en: 'High', zh: '高', es: 'Alta' }, interaction: { en: 'Daily', zh: '每天', es: 'Diaria' }, behavior: { en: 'Happy', zh: '開心', es: 'Feliz' }, probability: 10 },
+      truth: 'touching', dialogues: { zh: ['（陳奶奶在菜園裡澆水，笑瞇瞇的）', '「來來來！吃青菜！」', '「沒事沒事！我很好！」', '（她突然安靜下來）', '「...其實我每天來這裡，是因為想念台灣的家。」', '「這些菜，是我媽媽教我種的。」', '「謝謝你聽我說。很久沒人跟我聊天了。」'], en: ['(Mrs. Chen waters plants, smiling)', '"Come! Eat vegetables!"', '"I\'m fine!"', '(She suddenly goes quiet)', '"I come here because I miss Taiwan."', '"My mother taught me to grow these."', '"Thank you for listening."'], es: ['(La Sra. Chen riega el huerto, sonriendo)', '«¡Ven, ven! ¡Come verduras!»', '«¡Estoy bien!»', '(De pronto se queda callada)', '«Vengo aquí porque extraño Taiwán.»', '«Estas verduras me las enseñó a cultivar mi madre.»', '«Gracias por escucharme.»'] },
+      resultTitle: { en: 'Hidden Loneliness', zh: '隱藏的寂寞', es: 'Soledad oculta' }, resultMessage: { en: 'Beneath the smile was a longing.', zh: '笑容下是思念。', es: 'Bajo la sonrisa había nostalgia.' }, insight: { en: 'Outward behavior ≠ inner state.', zh: '外顯行為 ≠ 內心狀態。', es: 'Comportamiento externo ≠ estado interior.' } },
+    { id: 'devon', name: { en: 'Devon', zh: 'Devon', es: 'Devon' }, avatar: 'assets/images/p5_Devon.png', location: { en: 'Moving Truck', zh: '搬家卡車旁', es: 'Camión de mudanza' }, scene: 'assets/images/p10_搬家場景_cleaned.png', scenePosition: '70% center',
+      bayesian: { stress: { en: 'High', zh: '高', es: 'Alto' }, connection: { en: 'None', zh: '無', es: 'Ninguna' }, interaction: { en: 'New', zh: '新來的', es: 'Recién llegado' }, behavior: { en: 'Busy', zh: '忙碌', es: 'Ocupado' }, probability: 75 },
+      truth: 'touching', dialogues: { zh: ['（Devon 搬著箱子，滿頭大汗）', '「嘿！需要幫忙嗎？」', '「真的可以嗎？」', '（你幫他搬了幾個箱子）', '「謝謝！我們剛搬來。」', '「這個社區感覺很溫暖。謝謝你！」'], en: ['(Devon carries boxes, sweating)', '"Hey! Need help?"', '"Really?"', '(You help with boxes)', '"Thanks! We just moved here."', '"This community feels warm. Thank you!"'], es: ['(Devon carga cajas, sudando)', '«¡Hola! ¿Necesitas ayuda?»', '«¿En serio?»', '(Lo ayudas con unas cajas)', '«¡Gracias! Acabamos de mudarnos.»', '«Esta comunidad se siente cálida. ¡Gracias!»'] },
+      resultTitle: { en: 'Welcome Home', zh: '歡迎回家', es: 'Bienvenido a casa' }, resultMessage: { en: 'You were the first to offer.', zh: '你是第一個伸出手的人。', es: 'Fuiste el primero en ofrecerte.' }, insight: { en: 'This time the data was correct!', zh: '這次數據是對的！', es: '¡Esta vez los datos acertaron!' } }
 ];
 
 function setLang(lang) {
