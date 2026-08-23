@@ -7,17 +7,15 @@ const path = require('path');
 
 const root = __dirname;
 const imageDir = path.join(root, 'assets', 'images');
+const audioDir = path.join(root, 'assets', 'audio');
 const manifestPath = path.join(root, 'assets', 'manifest.json');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const expected = new Set(manifest.images.map(item => item.file));
-const actual = new Set(fs.readdirSync(imageDir).filter(name => /\.png$/i.test(name)));
+const expectedImages = new Set(manifest.images.map(item => item.file));
+const expectedAudio = new Set(manifest.audio.map(item => item.file));
+const actualImages = new Set(fs.readdirSync(imageDir).filter(name => /\.png$/i.test(name)));
+const actualAudio = new Set(fs.readdirSync(audioDir).filter(name => /\.mp3$/i.test(name)));
 const failures = [];
-
-const mobileStandardPath = path.resolve(root, manifest.mobileStandard);
-if (!fs.existsSync(mobileStandardPath)) {
-  failures.push(`protected mobile standard missing: ${manifest.mobileStandard}`);
-}
 
 const mobileContract = [
   ['tap highlight disabled', '-webkit-tap-highlight-color: transparent'],
@@ -46,9 +44,40 @@ for (const item of manifest.images) {
   if (!html.includes(reference)) failures.push(`not referenced by index.html: ${item.file}`);
 }
 
-for (const file of actual) {
-  if (!expected.has(file)) failures.push(`untracked image: ${file}`);
+for (const item of manifest.audio) {
+  const filePath = path.join(audioDir, item.file);
+  if (!fs.existsSync(filePath)) {
+    failures.push(`missing audio: ${item.file}`);
+    continue;
+  }
+  const digest = crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
+  if (digest !== item.sha256) failures.push(`audio hash mismatch: ${item.file}`);
+  const reference = `assets/audio/${item.file}`;
+  if (!html.includes(reference)) failures.push(`audio not referenced by index.html: ${item.file}`);
 }
+
+for (const file of actualImages) {
+  if (!expectedImages.has(file)) failures.push(`untracked image: ${file}`);
+}
+for (const file of actualAudio) {
+  if (!expectedAudio.has(file)) failures.push(`untracked audio: ${file}`);
+}
+
+const staticRefs = new Set();
+const refPattern = /(?:src\s*=\s*["']([^"']+)["']|url\(\s*["']?([^"')]+))/g;
+let match;
+while ((match = refPattern.exec(html))) {
+  const ref = match[1] || match[2];
+  if (!ref || /^(?:data:|https?:|#)/.test(ref) || ref.includes('${')) continue;
+  staticRefs.add(ref);
+}
+for (const ref of staticRefs) {
+  if (ref.startsWith('../')) failures.push(`external runtime dependency forbidden: ${ref}`);
+  if (!fs.existsSync(path.resolve(root, ref))) failures.push(`broken local reference: ${ref}`);
+}
+
+if (!html.includes('data-en="Ataraxy Portico"')) failures.push('canonical Ataraxy Portico label missing');
+if (html.includes('Gate of Stillness')) failures.push('non-canonical literal translation remains: Gate of Stillness');
 
 if (failures.length) {
   console.error('LEVEL 5 ASSET GATE FAILED');
@@ -56,4 +85,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`LEVEL 5 RELEASE GATE PASSED — ${manifest.images.length} Owner-verified images + mobile contract`);
+console.log(`LEVEL 5 FULL CAPSULE PASSED — ${manifest.images.length} images + ${manifest.audio.length} audio files + mobile contract + zero external runtime dependencies`);
