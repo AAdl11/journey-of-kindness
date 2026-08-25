@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Google Analytics (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKBPRQQQ1Y"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BKBPRQQQ1Y');</script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){window.dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BKBPRQQQ1Y');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
     <title>善的旅程 Level 2: Propositional Logic | Happy Campus</title>
@@ -1092,6 +1092,7 @@ const state = {
 // CEREMONY
 // ═══════════════════════════════════════════════════════════════════════════
 function startGame() {
+    if (typeof jokAnalytics !== 'undefined') jokAnalytics.start('ceremony');
     startMusic(); // Play happy music!
     state.phase = 'ceremony';
     state.ceremonyIndex = 0;
@@ -1417,6 +1418,7 @@ function nextStudent() {
 // COMPLETE & NAVIGATION
 // ═══════════════════════════════════════════════════════════════════════════
 function completeLevel() {
+    if (typeof jokAnalytics !== 'undefined') jokAnalytics.complete('ataraxy', { score: state.happyCount, elo: state.eloEarned });
     document.getElementById('bg-music').pause();
     musicPlaying = false;
     const med = document.getElementById('meditation-music');
@@ -1498,6 +1500,23 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🐯 Level 2 Ready!');
     console.log('🎵 Music: happy_campus.mp3');
 });
+</script>
+
+<script>
+window.jokAnalytics = (function(level) {
+    let started = false, completed = false, startedAt = 0, lastStage = 'landing', attempt = 0;
+    const send = (name, params) => {
+        try { if (typeof gtag === 'function') gtag('event', name, Object.assign({ level, attempt, ui_language: currentLang || 'unknown' }, params || {})); } catch (e) {}
+    };
+    const elapsed = () => startedAt ? Math.max(0, Math.round((Date.now() - startedAt) / 1000)) : 0;
+    return {
+        start(stage) { lastStage = stage || lastStage; if (!started || completed) { started = true; completed = false; startedAt = Date.now(); attempt++; send('level_start', { stage: lastStage }); } },
+        complete(stage, params) { this.start(stage); lastStage = stage || lastStage; if (!completed) { completed = true; send('level_complete', Object.assign({ stage: lastStage, elapsed_seconds: elapsed() }, params || {})); } },
+        event(name, params) { send(name, params); },
+        abandon() { if (started && !completed) send('level_abandon', { stage: lastStage, elapsed_seconds: elapsed(), transport_type: 'beacon' }); }
+    };
+})(2);
+if (typeof window.addEventListener === 'function') window.addEventListener('pagehide', () => jokAnalytics.abandon());
 </script>
 
 </body>

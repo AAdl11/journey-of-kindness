@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Google Analytics (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKBPRQQQ1Y"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BKBPRQQQ1Y');</script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){window.dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BKBPRQQQ1Y');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
     <title>善的旅程 Level 3: MDP | Sister Maya 的故事</title>
@@ -683,6 +683,7 @@ function showScreen(screenId) {
 }
 
 function startGame() {
+    if (typeof jokAnalytics !== 'undefined') jokAnalytics.start('journey');
     currentStage = 0;
     gameStats = { week: 1, joy: 0, impact: 0, elo: 1200 };
     selectedAction = null;
@@ -921,6 +922,7 @@ function updateValueDisplay() {
 // MEDITATION GATE - 深呼吸/吐氣 循環
 // ═══════════════════════════════════════════════════════════════════════════
 function openMeditationGate() {
+    if (typeof jokAnalytics !== 'undefined') jokAnalytics.complete('ataraxy', { week: gameStats.week, joy: gameStats.joy, impact: gameStats.impact });
     showScreen('meditation-screen');
     switchToMeditationMusic();
     
@@ -1013,6 +1015,23 @@ document.addEventListener('DOMContentLoaded', () => {
     updateMusicButtons();
     console.log('Level 3 MDP - Sister Maya\'s Journey loaded!');
 });
+</script>
+
+<script>
+window.jokAnalytics = (function(level) {
+    let started = false, completed = false, startedAt = 0, lastStage = 'landing', attempt = 0;
+    const send = (name, params) => {
+        try { if (typeof gtag === 'function') gtag('event', name, Object.assign({ level, attempt, ui_language: currentLang || 'unknown' }, params || {})); } catch (e) {}
+    };
+    const elapsed = () => startedAt ? Math.max(0, Math.round((Date.now() - startedAt) / 1000)) : 0;
+    return {
+        start(stage) { lastStage = stage || lastStage; if (!started || completed) { started = true; completed = false; startedAt = Date.now(); attempt++; send('level_start', { stage: lastStage }); } },
+        complete(stage, params) { this.start(stage); lastStage = stage || lastStage; if (!completed) { completed = true; send('level_complete', Object.assign({ stage: lastStage, elapsed_seconds: elapsed() }, params || {})); } },
+        event(name, params) { send(name, params); },
+        abandon() { if (started && !completed) send('level_abandon', { stage: lastStage, elapsed_seconds: elapsed(), transport_type: 'beacon' }); }
+    };
+})(3);
+if (typeof window.addEventListener === 'function') window.addEventListener('pagehide', () => jokAnalytics.abandon());
 </script>
 
 </body>

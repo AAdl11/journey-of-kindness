@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Google Analytics (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKBPRQQQ1Y"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BKBPRQQQ1Y');</script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){window.dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BKBPRQQQ1Y');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
     <title>善的旅程 Level 4: KB-Agent | Hunters Point RV Park</title>
@@ -558,6 +558,27 @@
                     • Propositional Logic 命題邏輯
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mission complete choice: the player decides what happens after one rescue. -->
+<div id="completion-menu" role="dialog" aria-modal="true" aria-labelledby="completion-title"
+     style="display:none;position:fixed;inset:0;z-index:8500;background:rgba(3,7,18,.82);align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
+    <div style="width:min(620px,100%);max-height:92vh;overflow-y:auto;background:linear-gradient(145deg,#172554,#312e81);border:2px solid rgba(251,191,36,.75);border-radius:20px;padding:22px;color:white;box-shadow:0 24px 80px rgba(0,0,0,.55);">
+        <h2 id="completion-title" style="font-size:1.6rem;font-weight:800;text-align:center;color:#fde68a;margin-bottom:8px;"
+            data-en="🎉 Rescue complete — what next?" data-zh="🎉 救援完成——接下來做什麼？" data-es="🎉 Rescate completo — ¿qué sigue?">🎉 救援完成——接下來做什麼？</h2>
+        <p style="text-align:center;color:#dbeafe;line-height:1.6;margin-bottom:14px;"
+           data-en="You decide when to enter Ataraxy Portico. Try the same world, watch the AI, generate a new world, or take the 6×6 endurance challenge."
+           data-zh="由你決定何時進入靜心之門。可以重玩同一世界、觀看 AI 演示、產生新世界，或挑戰 6×6 耐力關。"
+           data-es="Tú decides cuándo entrar al Portal de la Serenidad. Repite el mismo mundo, observa la IA, genera uno nuevo o prueba el desafío 6×6.">由你決定何時進入靜心之門。可以重玩同一世界、觀看 AI 演示、產生新世界，或挑戰 6×6 耐力關。</p>
+        <div id="completion-stats" style="background:rgba(15,23,42,.72);border-radius:12px;padding:12px 16px;line-height:1.65;margin-bottom:16px;text-align:center;"></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+            <button class="btn btn-secondary" onclick="choosePostMission('reset')" data-en="🔄 Reset same world" data-zh="🔄 重置同一世界" data-es="🔄 Reiniciar el mismo mundo">🔄 重置同一世界</button>
+            <button class="btn btn-secondary" onclick="choosePostMission('ai_demo')" data-en="🤖 Watch AI demo" data-zh="🤖 觀看 AI 演示" data-es="🤖 Ver demo de IA">🤖 觀看 AI 演示</button>
+            <button class="btn btn-secondary" onclick="choosePostMission('new_world')" data-en="🎲 New world" data-zh="🎲 新世界" data-es="🎲 Mundo nuevo">🎲 新世界</button>
+            <button class="btn btn-secondary" onclick="choosePostMission('endurance')" data-en="🧭 6×6 endurance" data-zh="🧭 6×6 耐力挑戰" data-es="🧭 Resistencia 6×6">🧭 6×6 耐力挑戰</button>
+            <button class="btn btn-primary" style="grid-column:1/-1;" onclick="choosePostMission('ataraxy')" data-en="🙏 Enter Ataraxy Portico" data-zh="🙏 進入靜心之門" data-es="🙏 Entrar al Portal de la Serenidad">🙏 進入靜心之門</button>
         </div>
     </div>
 </div>
@@ -1412,7 +1433,7 @@ function movePlayer(dx, dy) {
         
         showStory(statsMsg);
         if (typeof confetti === 'function') confetti({ particleCount: 200, spread: 100 });
-        setTimeout(() => openMeditationGate(), 3500);
+        showCompletionMenu({ steps: agent.steps, safe: safeCount, bc: bcCount, kb: kbCount, bonus });
     }
     
     updateDisplays();
@@ -1595,6 +1616,7 @@ function generateWorld() {
 }
 
 function newRandomWorld() {
+    track('level_start', { source: 'new_world', tier: TIER, grid: GRID_SIZE });
     track('world_new', { tier: TIER, grid: GRID_SIZE });
     progressSave(L => { L.attempts++; L.lastTier = TIER; });
     var _s1=document.getElementById('m-stage1'),_s2=document.getElementById('m-stage2');
@@ -1650,6 +1672,7 @@ function setDifficulty(size) {
 }
 
 function resetGame() {
+    track('level_start', { source: 'reset', tier: TIER, grid: GRID_SIZE });
     stopAIDemo();
     world.agentPos = { x: 1, y: 1 };
     world.alive = true;
@@ -1782,6 +1805,37 @@ function hideStory() {
 // ═══════════════════════════════════════════════════════════════════════════
 // MEDITATION GATE
 // ═══════════════════════════════════════════════════════════════════════════
+function showCompletionMenu(stats) {
+    const labels = {
+        en: `Steps: ${stats.steps} · Safe cells: ${stats.safe} · BC proved: ${stats.bc} · KB facts: ${stats.kb} · ELO: +${stats.bonus}`,
+        zh: `步數：${stats.steps} · 安全格：${stats.safe} · BC 證明：${stats.bc} · 知識庫：${stats.kb} · ELO：+${stats.bonus}`,
+        es: `Pasos: ${stats.steps} · Casillas seguras: ${stats.safe} · Pruebas BC: ${stats.bc} · Hechos BC: ${stats.kb} · ELO: +${stats.bonus}`
+    };
+    document.getElementById('completion-stats').textContent = labels[currentLang] || labels.en;
+    document.getElementById('completion-menu').style.display = 'flex';
+}
+
+function closeCompletionMenu() {
+    document.getElementById('completion-menu').style.display = 'none';
+}
+
+function choosePostMission(choice) {
+    track('post_complete_choice', { choice, tier: TIER, grid: GRID_SIZE });
+    closeCompletionMenu();
+    if (choice === 'reset') {
+        resetGame();
+    } else if (choice === 'ai_demo') {
+        newRandomWorld();
+        runAIDemo();
+    } else if (choice === 'new_world') {
+        newRandomWorld();
+    } else if (choice === 'endurance') {
+        setDifficulty(6);
+    } else if (choice === 'ataraxy') {
+        openMeditationGate();
+    }
+}
+
 function openMeditationGate() {
     stopGameMusic();
     startMeditationMusic();
@@ -1829,7 +1883,6 @@ function goBack() {
 // INIT
 // ═══════════════════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-    track('level_start', {});
     newRandomWorld();
     console.log('Level 4 KB-Agent Final Version loaded!');
     console.log('Use WASD/Arrows to move, SPACE to shoot');

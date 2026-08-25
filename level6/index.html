@@ -2,6 +2,9 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKBPRQQQ1Y"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){window.dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BKBPRQQQ1Y');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Journey of Kindness | Level 6: FOL 法庭 - 一念之間</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1134,6 +1137,7 @@ function musicForScreen(id) {
 // Keep the player in the raw-rice story while its dedicated narrative track plays;
 // only the separate "25 Years Later" action advances into the FOL game music.
 function startOpeningStory() {
+    if (typeof jokAnalytics !== 'undefined') jokAnalytics.start('raw_rice_story');
     musicPlaying = true;
     document.getElementById('musicBtn').textContent = '🔊';
     playMusic('music-opening');
@@ -1143,6 +1147,7 @@ function startOpeningStory() {
 
 // === 畫面切換 ===
 function goToScreen(id) {
+    if (id === 'screen-ataraxy' && typeof jokAnalytics !== 'undefined') jokAnalytics.complete('ataraxy', { investigation_steps: investigationStep });
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     
@@ -1227,6 +1232,23 @@ document.addEventListener('DOMContentLoaded', () => {
     setLang('zh');
 });
 
+</script>
+
+<script>
+window.jokAnalytics = (function(level) {
+    let started = false, completed = false, startedAt = 0, lastStage = 'landing', attempt = 0;
+    const send = (name, params) => {
+        try { if (typeof gtag === 'function') gtag('event', name, Object.assign({ level, attempt, ui_language: currentLang || 'unknown' }, params || {})); } catch (e) {}
+    };
+    const elapsed = () => startedAt ? Math.max(0, Math.round((Date.now() - startedAt) / 1000)) : 0;
+    return {
+        start(stage) { lastStage = stage || lastStage; if (!started || completed) { started = true; completed = false; startedAt = Date.now(); attempt++; send('level_start', { stage: lastStage }); } },
+        complete(stage, params) { this.start(stage); lastStage = stage || lastStage; if (!completed) { completed = true; send('level_complete', Object.assign({ stage: lastStage, elapsed_seconds: elapsed() }, params || {})); } },
+        event(name, params) { send(name, params); },
+        abandon() { if (started && !completed) send('level_abandon', { stage: lastStage, elapsed_seconds: elapsed(), transport_type: 'beacon' }); }
+    };
+})(6);
+if (typeof window.addEventListener === 'function') window.addEventListener('pagehide', () => jokAnalytics.abandon());
 </script>
 
 </body>

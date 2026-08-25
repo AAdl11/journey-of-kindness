@@ -122,5 +122,12 @@ assert.strictEqual(run('agent.steps'), 0, 'Resolution query must not move the pl
 
 assert(!html.includes('dpad-container'), 'direction pad must remain removed');
 assert(html.includes('id="clarity-btn"'), 'Clarity Treasure must remain in the toolbar');
+assert(html.includes('id="completion-menu"'), 'mission completion must open a player-choice dialog');
+assert(!/setTimeout\s*\(\s*\(\)\s*=>\s*openMeditationGate\(\)/.test(html),
+  'mission completion must never auto-jump to Ataraxy Portico');
+for (const choice of ['reset', 'ai_demo', 'new_world', 'endurance', 'ataraxy']) {
+  assert(html.includes(`choosePostMission('${choice}')`), `completion choice missing: ${choice}`);
+}
+assert(html.includes("track('post_complete_choice'"), 'post-completion player choice must be tracked');
 
-console.log('LEVEL 4 INTERACTION TESTS PASSED — tap movement, Clarity Treasure target, Resolution query, no D-pad');
+console.log('LEVEL 4 INTERACTION TESTS PASSED — tap movement, completion choice dialog, Clarity Treasure, Resolution query, no D-pad');

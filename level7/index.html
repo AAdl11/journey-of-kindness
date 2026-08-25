@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Google Analytics (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BKBPRQQQ1Y"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BKBPRQQQ1Y');</script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){window.dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-BKBPRQQQ1Y');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Level 7: The Trolley Dilemma | AI Alignment &amp; Safety</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1049,6 +1049,7 @@
         };
         
         function startStory() {
+            if (typeof jokAnalytics !== 'undefined') jokAnalytics.start('story');
             initAudio();
             // 用戶已點擊，可以播放音樂
             playBackgroundMusic();
@@ -1238,6 +1239,7 @@
         }
         
         function showEnding() {
+            if (typeof jokAnalytics !== 'undefined') jokAnalytics.complete('ending', { choice: playerChoice || 'unknown' });
             const screens = { A: 'ending-a-screen', B: 'ending-b-screen', C: 'ending-c-screen' };
             const bgs = { A: 'url("L7_ending_A.png")', B: 'url("L7_ending_B.png")', C: 'url("L7_ending_C.png")' };
             document.getElementById(screens[playerChoice]).style.backgroundImage = bgs[playerChoice];
@@ -1438,6 +1440,22 @@ function completeJourney() {
     if (typeof stopBackgroundMusic === 'function') stopBackgroundMusic();
     window.location.href = '../outro.html';
 }
+</script>
+<script>
+window.jokAnalytics = (function(level) {
+    let started = false, completed = false, startedAt = 0, lastStage = 'landing', attempt = 0;
+    const send = (name, params) => {
+        try { if (typeof gtag === 'function') gtag('event', name, Object.assign({ level, attempt, ui_language: currentLang || 'unknown' }, params || {})); } catch (e) {}
+    };
+    const elapsed = () => startedAt ? Math.max(0, Math.round((Date.now() - startedAt) / 1000)) : 0;
+    return {
+        start(stage) { lastStage = stage || lastStage; if (!started || completed) { started = true; completed = false; startedAt = Date.now(); attempt++; send('level_start', { stage: lastStage }); } },
+        complete(stage, params) { this.start(stage); lastStage = stage || lastStage; if (!completed) { completed = true; send('level_complete', Object.assign({ stage: lastStage, elapsed_seconds: elapsed() }, params || {})); } },
+        event(name, params) { send(name, params); },
+        abandon() { if (started && !completed) send('level_abandon', { stage: lastStage, elapsed_seconds: elapsed(), transport_type: 'beacon' }); }
+    };
+})(7);
+if (typeof window.addEventListener === 'function') window.addEventListener('pagehide', () => jokAnalytics.abandon());
 </script>
 </body>
 </html>
