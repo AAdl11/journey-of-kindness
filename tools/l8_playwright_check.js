@@ -124,6 +124,7 @@ async function playthrough(browser, viewport, label) {
     await page.waitForSelector('#tile-2-2', { timeout: 5000 });
     await noOverflow(page, label + ' act3 board');
     let sawGhost = false;
+    let sawGhostArt = false;
     for (let turn = 0; turn < 30; turn++) {
         const done = await page.$('#result-overlay.open');
         if (done) break;
@@ -134,16 +135,22 @@ async function playthrough(browser, viewport, label) {
             if (finished) break;
             throw e;
         }
-        if (!sawGhost) sawGhost = (await page.$$eval('.ghost', els => els.length)) > 0;
+        /* Sample the rehearsal ghosts while they are still on screen: the very
+           next click runs playerAction(), which calls clearGhosts(). */
+        const ghostNow = await page.evaluate(() => {
+            const ghosts = document.querySelectorAll('.ghost');
+            return {
+                present: ghosts.length > 0,
+                backgroundImage: ghosts.length ? getComputedStyle(ghosts[0]).backgroundImage : '',
+            };
+        });
+        if (ghostNow.present) sawGhost = true;
+        if (ghostNow.backgroundImage.includes('l8_ghost_volunteer_sheet.png')) sawGhostArt = true;
         await page.click('#btn-follow');
         await page.waitForTimeout(250);
     }
     ok(sawGhost, label + ': ghost volunteers rehearsed routes');
-    const ghostArt = await page.evaluate(() => {
-        const ghost = document.querySelector('.ghost');
-        return ghost ? getComputedStyle(ghost).backgroundImage : '';
-    });
-    ok(ghostArt.includes('l8_ghost_volunteer_sheet.png'), label + ': rendered art l8_ghost_volunteer_sheet.png');
+    ok(sawGhostArt, label + ': rendered art l8_ghost_volunteer_sheet.png');
     await page.waitForSelector('#result-overlay.open', { timeout: 30000 });
     ok(true, label + ': Act 3 reached terminal');
     await page.click('#result-btn-0');
