@@ -7,6 +7,7 @@
      · no horizontal clipping on any screen
      · complete scripted playthrough: Act 1 predict → tree, Act 2 prune +
        ordering toggle, Act 3 ghost rehearsals → finish
+     · all ten approved art assets are rendered by their intended scene hooks
      · touch targets ≥ 44 px, Spanish selection never blank
 
    Run:  node tools/l8_playwright_check.js       (exit 0 = pass)
@@ -58,11 +59,29 @@ async function playthrough(browser, viewport, label) {
     await page.click('#btn-start');
     await page.waitForSelector('#tile-1-2.tap-target', { timeout: 5000 });
     await noOverflow(page, label + ' act1 board');
+    const act1Art = await page.evaluate(() => ({
+        bg: getComputedStyle(document.getElementById('screen-act')).backgroundImage,
+        pawn: getComputedStyle(document.getElementById('pawn')).backgroundImage,
+        house: getComputedStyle(document.querySelector('.house-art')).backgroundImage,
+        badge: getComputedStyle(document.querySelector('.need-badge')).backgroundImage,
+        totem: getComputedStyle(document.querySelector('.totem-art')).backgroundImage,
+        fog: getComputedStyle(document.getElementById('fog-veil')).backgroundImage,
+    }));
+    for (const [hook, file] of Object.entries({
+        bg: 'l8_bg_grove.png', pawn: 'l8_volunteer_sheet.png',
+        house: 'l8_house_marker_sheet.png', badge: 'l8_need_badges.png',
+        totem: 'l8_engine_totem_sheet.png', fog: 'l8_fog_overlay.png',
+    })) ok(act1Art[hook].includes(file), label + ': rendered art ' + file);
     await page.click('#tile-1-2');                       /* MOVE E */
     await page.waitForSelector('#chip-pass', { timeout: 5000 });
     ok(true, label + ': Act 1 prediction prompt appeared');
     await page.click('#chip-edge');                      /* predict the road-cut */
     await page.waitForSelector('#tile-0-2.tap-target', { timeout: 8000 });
+    const roadArt = await page.evaluate(() => {
+        const bar = document.querySelector('.edge-bar:not(.predictable)');
+        return bar ? getComputedStyle(bar).backgroundImage : '';
+    });
+    ok(roadArt.includes('l8_roadblock.png'), label + ': rendered art l8_roadblock.png');
     await page.click('#tile-0-2');                       /* MOVE N onto H_A */
     await page.waitForSelector('#btn-serve', { timeout: 8000 });
     const wrongTapShrugged = await page.evaluate(() => {
@@ -79,6 +98,9 @@ async function playthrough(browser, viewport, label) {
     await page.waitForSelector('#tree-svg', { timeout: 8000 });
     const circles = await page.$$eval('#tree-svg circle', els => els.length);
     ok(circles === 122, label + ': complete tree renders all 122 nodes (' + circles + ')');
+    const nodeArt = await page.$$eval('#tree-svg image', els =>
+        els.some(el => (el.getAttribute('href') || '').includes('l8_tree_node_sheet.png')));
+    ok(nodeArt, label + ': rendered art l8_tree_node_sheet.png');
     await noOverflow(page, label + ' tree view');
 
     /* ── Act 2: prune prediction + reveal + ordering toggle ── */
@@ -117,11 +139,18 @@ async function playthrough(browser, viewport, label) {
         await page.waitForTimeout(250);
     }
     ok(sawGhost, label + ': ghost volunteers rehearsed routes');
+    const ghostArt = await page.evaluate(() => {
+        const ghost = document.querySelector('.ghost');
+        return ghost ? getComputedStyle(ghost).backgroundImage : '';
+    });
+    ok(ghostArt.includes('l8_ghost_volunteer_sheet.png'), label + ': rendered art l8_ghost_volunteer_sheet.png');
     await page.waitForSelector('#result-overlay.open', { timeout: 30000 });
     ok(true, label + ': Act 3 reached terminal');
     await page.click('#result-btn-0');
     await page.waitForSelector('#screen-finish.active', { timeout: 5000 });
     ok(true, label + ': finish screen reached — all three acts playable');
+    const finishBg = await page.evaluate(() => getComputedStyle(document.getElementById('screen-finish')).backgroundImage);
+    ok(finishBg.includes('l8_bg_park.png'), label + ': rendered art l8_bg_park.png');
     await noOverflow(page, label + ' finish');
 
     ok(errors.length === 0, label + ': zero runtime JS errors' + (errors.length ? ' — ' + errors.slice(0, 3).join(' | ') : ''));

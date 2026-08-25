@@ -8,7 +8,7 @@
    · index.html uses engine.js + search_core.js only (no mcts_core, no V0)
    · no hard-coded display text outside strings.js; no <detail-s> teaching;
      no button-grid play; touch-first mobile contract present
-   · Step 9 semantic asset contract wired; Step 11 events wired
+   · Step 9 approved assets present and used; homepage unlock present
    · the numbers the UI shows are exactly the verified backend numbers
    · the three-act decision loop the UI drives terminates (headless replay)
 
@@ -87,7 +87,7 @@ for (const [label, needle] of [
 ok(!/class="dpad"|id="dpad"|D-pad/i.test(html), 'no D-pad — tap-to-move only');
 
 /* ── S4: Step 9 semantic asset contract wired ───────────────────────────── */
-section('S4 asset contract (placeholders wired by blueprint filename)');
+section('S4 approved art contract and homepage unlock');
 for (const name of ['l8_bg_grove.png', 'l8_bg_park.png', 'l8_volunteer_sheet.png',
     'l8_ghost_volunteer_sheet.png', 'l8_engine_totem_sheet.png', 'l8_house_marker_sheet.png',
     'l8_need_badges.png', 'l8_roadblock.png', 'l8_fog_overlay.png', 'l8_tree_node_sheet.png'])
@@ -96,7 +96,14 @@ const missing = ['l8_bg_grove.png', 'l8_bg_park.png', 'l8_volunteer_sheet.png',
     'l8_ghost_volunteer_sheet.png', 'l8_engine_totem_sheet.png', 'l8_house_marker_sheet.png',
     'l8_need_badges.png', 'l8_roadblock.png', 'l8_fog_overlay.png', 'l8_tree_node_sheet.png']
     .filter(n => !fs.existsSync(path.join(__dirname, 'assets', 'images', n)));
-console.log('  approved final art still missing (' + missing.length + '/10): release blocker until delivered');
+ok(missing.length === 0, 'approved final art present (10/10)' + (missing.length ? ': missing ' + missing.join(', ') : ''));
+for (const hook of ['house-art', 'l8_volunteer_sheet.png', 'l8_ghost_volunteer_sheet.png',
+    'l8_engine_totem_sheet.png', 'l8_roadblock.png', 'l8_fog_overlay.png',
+    'l8_tree_node_sheet.png']) ok(html.includes(hook), 'runtime art hook: ' + hook);
+const homeHtml = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+const l8Card = (homeHtml.match(/<!-- Level 8 -->[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/) || [''])[0];
+ok(/level-card l8" onclick="goToLevel\(8\)"/.test(l8Card), 'homepage Level 8 card links to playable level');
+ok(!/coming-soon|Coming Soon|即將推出|Próximamente/.test(l8Card), 'homepage Level 8 card is unlocked in all languages');
 
 /* ── S5: Step 11 learning-evidence events ───────────────────────────────── */
 section('S5 learning-evidence events');

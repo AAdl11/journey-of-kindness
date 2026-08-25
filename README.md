@@ -50,7 +50,7 @@ The mapping preserves the design intent — scarce resources, hidden danger, rea
 | 5 | **Bayesian Networks** | Ch. 12–13 · Probabilistic Reasoning | Understanding what keeps volunteers engaged |
 | 6 | **First-Order Logic** | Ch. 8–9 · First-Order Logic & Inference | Matching the right people to the right tasks |
 | 7 | **AI Alignment & Safety** | Ch. 27.3 · The Ethics of AI | An aligned AI treats human choices as evidence, not commands |
-| 8 | **Minimax · Alpha-Beta · MCTS** — *coming soon* | Ch. 5 · Adversarial Search and Games | Adversarial search: when the other side is also thinking |
+| 8 | **Minimax · Alpha-Beta · MCTS** — *The Tree of Many Futures* | Ch. 5 · Adversarial Search and Games | Three search methods for one time-limited community mission |
 
 All levels are grounded in Russell & Norvig, *Artificial Intelligence: A Modern Approach* (4th ed., Pearson 2021).
 

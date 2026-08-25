@@ -112,7 +112,7 @@ All backgrounds are **new art produced by Codex** (Owner decision); the existing
 | Filename | Purpose | Sheet size (frames × frame size, left→right order) | BG | Anchor/collision | Acts |
 |---|---|---|---|---|---|
 | `l8_bg_grove.png` | Act 1/2 backdrop (small grove corner of park; new art) | 1 × 1080×1620 portrait | full | none | 1,2 |
-| `l8_bg_park.png` | Act 3 backdrop (wider RV park; new art, reference-only note above) | 1 × 1080×1620 portrait | full | none | 3 |
+| `l8_bg_park.png` | Act 3 backdrop (Owner-approved wider RV park master; responsive center-cover, never stretched) | 1 × 1672×941 landscape | full | none | 3 |
 | `l8_volunteer_sheet.png` | MAX pawn | **1536×256** = 6 × 256×256: `idle, walk1, walk2, walk3, walk4, serve` | transparent | feet-center; 96px tile | all |
 | `l8_ghost_volunteer_sheet.png` | MCTS rehearsal copies | **512×256** = 2 × 256×256: `walk1, walk2` (50 % opacity baked) | transparent | feet-center | 3 |
 | `l8_engine_totem_sheet.png` | Labeled MIN adversary | **384×192** = 2 × 192×192: `idle, active` | transparent | center | all |
@@ -126,7 +126,7 @@ All backgrounds are **new art produced by Codex** (Owner decision); the existing
 
 **Step 11 — Learning-evidence events.** *Goal:* evidence from play, not quizzes. *Files:* `index.html` (GA4 wrapper). *Events:* `l8_predict_engine {predicted, actual, match}` (Act 1 prediction), `l8_prune_predict {edge, wasPruned}` (Act 2 tap-before-reveal), `l8_rehearsal_follow {followed, bestVisits}` (Act 3 follow-or-override), plus `level_start/complete/abandon`. *Claim discipline:* GA4 is instrumentation for a **planned usability evaluation** — never described as research validation. *Test gate:* events fire in stub playthrough with correct payloads. *Stop:* none.
 
-**Step 12 — Release & GitHub gates.** *Goal:* controlled ship. *Sequence:* (1) `tests.js` green in CI-style local run; (2) Owner plays all acts on phone; (3) Codex visual QA; (4) upload `level8/` + `docs/`; (5) homepage unlock is a **separate, Owner-triggered commit**; (6) only then alignment edits elsewhere. *Future alignment work (listed, not done here):* README L8 row → three-act wording; `level7` ending → one hand-off line (values → search); homepage card copy. *Stop:* any gate fails → Coming Soon stays.
+**Step 12 — Release & GitHub gates.** *Goal:* controlled ship. *Sequence:* (1) `tests.js` green in CI-style local run; (2) all approved art present and wired; (3) Codex visual QA; (4) Owner explicitly authorizes the homepage unlock and uploads the held release; (5) Owner plays all acts on the deployed phone build and can immediately relock if a human-only issue appears. The Owner authorized the held Level 8 homepage unlock on 2026-08-25 so the deployed phone playthrough can occur. *Future alignment work:* `level7` ending → one hand-off line (values → search). *Stop:* any machine gate fails before upload → Coming Soon stays.
 
 ## 6. Future roadmap (out of V1 scope)
 Partial observability with ISMCTS/belief states (Advanced Mode); weighted terrain; coin-unlock progression; empirical learning study design after usability evaluation.
