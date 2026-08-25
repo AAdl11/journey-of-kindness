@@ -47,9 +47,9 @@
     }
   ],
   "audio": [
-    { "file": "rice_incident.mp3", "role": "raw-rice opening music", "sha256": "af197f8e15804430d31598df85bc0bfcef0af17de17999f5499a30dbbd42828e" },
-    { "file": "funny-suspenseful-cartoon-style-music-336058.mp3", "role": "game background music", "sha256": "33c99d9d2e6aa59f791f6ecc7bd30dab2a47555e42c4ff0706e270c361b40127" },
-    { "file": "bad-day-137530.mp3", "role": "system rejection music", "sha256": "4287da11fc1dddec27becf223bb7272145d4a038ffa0092cdc20f7048d6b747b" },
+    { "file": "rice_incident.mp3", "role": "raw-rice narrative only; non-looping and never used as gameplay background", "sha256": "af197f8e15804430d31598df85bc0bfcef0af17de17999f5499a30dbbd42828e" },
+    { "file": "funny-suspenseful-cartoon-style-music-336058.mp3", "role": "FOL Court, applicant review, objection, and investigation gameplay", "sha256": "33c99d9d2e6aa59f791f6ecc7bd30dab2a47555e42c4ff0706e270c361b40127" },
+    { "file": "bad-day-137530.mp3", "role": "system misjudgment and bad-ending tension", "sha256": "4287da11fc1dddec27becf223bb7272145d4a038ffa0092cdc20f7048d6b747b" },
     { "file": "ataraxy-music.mp3", "role": "Ataraxy Portico music", "sha256": "06e0c0e390353a0f5ee7088cd4ecdae0278c8c6ca1076fc410d1a8bc8c2fa28b" }
   ]
 }

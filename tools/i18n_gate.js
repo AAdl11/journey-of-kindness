@@ -23,6 +23,38 @@ function ok(cond, msg) { checks++; if (!cond) { failures.push(msg); console.log(
 function read(rel) { return fs.readFileSync(path.join(ROOT, rel), 'utf8'); }
 function stripComments(html) { return html.replace(/<!--[\s\S]*?-->/g, ''); }
 
+/* Player text that never received data-* attributes used to be invisible to
+   this gate. Require every visible Level 6 text node to be either trilingual
+   or explicitly marked as a stable proper name, score, or FOL expression. */
+function findUnmarkedVisibleText(source) {
+    const body = (source.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i) || [,''])[1]
+        .replace(/<!--([\s\S]*?)-->/g, '')
+        .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '');
+    const tokenRe = /<\/?[a-zA-Z][^<>"']*(?:"[^"]*"[^<>"']*|'[^']*'[^<>"']*)*>|[^<]+/g;
+    const voidTags = new Set(['area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr']);
+    const stack = [], gaps = [];
+    for (const token of body.match(tokenRe) || []) {
+        if (!token.startsWith('<')) {
+            const text = token.replace(/\s+/g, ' ').trim();
+            if (text && /[A-Za-z\u3400-\u9fff]/.test(text) && !stack.some(item => item.marked)) gaps.push(text);
+            continue;
+        }
+        const end = token.match(/^<\/([a-zA-Z0-9-]+)/);
+        if (end) {
+            for (let i = stack.length - 1; i >= 0; i--) {
+                if (stack[i].tag === end[1].toLowerCase()) { stack.length = i; break; }
+            }
+            continue;
+        }
+        const start = token.match(/^<([a-zA-Z0-9-]+)/);
+        if (!start) continue;
+        const tag = start[1].toLowerCase();
+        const marked = /\bdata-es="[^"]+"/.test(token) || /\bdata-i18n-static="[^"]+"/.test(token);
+        if (!voidTags.has(tag) && !/\/>$/.test(token)) stack.push({ tag, marked });
+    }
+    return gaps;
+}
+
 /* HTML tag scanner that respects quoted '>' inside attribute values */
 const TAG_RE = /<[a-zA-Z][^<>"']*(?:"[^"]*"[^<>"']*|'[^']*'[^<>"']*)*>/g;
 
@@ -45,6 +77,20 @@ for (const lvl of ATTR_LEVELS) {
     }
     ok(missing === 0, lvl + ': ' + missing + ' of ' + pairs + ' translatable elements lack Spanish');
     console.log('  ' + lvl + ': ' + pairs + ' translatable elements, all trilingual: ' + (missing === 0 ? 'YES' : 'NO'));
+}
+
+/* ── 1b. Level 6 raw-text and dynamic-engine coverage ──────────────────── */
+{
+    const html = read('level6/index.html');
+    const gaps = findUnmarkedVisibleText(html);
+    ok(gaps.length === 0, 'level6: ' + gaps.length + ' visible text nodes bypass localization: ' + gaps.slice(0, 5).join(' | '));
+    ok(/es:\s*\{\s*query:\s*'Consulta',\s*result:\s*'Resultado',\s*analysis:\s*'Análisis',\s*hypothesis:\s*'Hipótesis'\s*\}/.test(html),
+       'level6: dynamic FOL engine labels lack complete Spanish');
+    for (const phrase of ['Aprovecha el tiempo y valora el espacio.',
+            'Apreciar a los demás es dignificarnos a nosotros mismos.',
+            'Maestra Cheng Yen, Aforismos Jing Si']) {
+        ok(html.includes(phrase), 'level6: missing Spanish reflective text: ' + phrase);
+    }
 }
 
 /* ── 2. canonical Ataraxy naming present in every level ─────────────────── */

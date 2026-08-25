@@ -384,8 +384,8 @@
 <div class="controls">
     <button class="ctrl-btn" onclick="toggleMusic()" id="musicBtn">🔇</button>
     <div class="lang-toggle">
-        <button class="lang-btn active" onclick="setLang('zh')">中文</button><button class="lang-btn" onclick="setLang('es')">ES</button>
-        <button class="lang-btn" onclick="setLang('en')">EN</button>
+        <button class="lang-btn active" data-i18n-static="language-code" onclick="setLang('zh')">中文</button><button class="lang-btn" data-i18n-static="language-code" onclick="setLang('es')">ES</button>
+        <button class="lang-btn" data-i18n-static="language-code" onclick="setLang('en')">EN</button>
     </div>
 </div>
 
@@ -393,7 +393,7 @@
 <div id="screen-opening" class="screen active" style="background: url('assets/images/l6_raw_rice_opening.webp') center/cover; background-color: #0a0a0a;">
     <div class="overlay" style="background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.1), rgba(0,0,0,0.4));">
         <div class="text-center fade-in" style="max-width: 600px;">
-            <p class="text-gray-300 tracking-widest text-sm mb-3" style="text-shadow: 0 2px 8px rgba(0,0,0,0.8);">SAN FRANCISCO • BAYVIEW-HUNTERS POINT</p>
+            <p class="text-gray-300 tracking-widest text-sm mb-3" data-i18n-static="place-name" style="text-shadow: 0 2px 8px rgba(0,0,0,0.8);">SAN FRANCISCO • BAYVIEW-HUNTERS POINT</p>
             <h1 class="text-8xl font-black text-white mb-8" style="text-shadow: 0 6px 40px rgba(0,0,0,0.9);">2006</h1>
             
             <div class="mb-8" style="background: rgba(0,0,0,0.35); backdrop-filter: blur(5px); border-radius: 24px; padding: 28px;">
@@ -413,7 +413,11 @@
             
             <p class="text-amber-400 text-2xl font-bold mb-10" style="text-shadow: 0 2px 15px rgba(0,0,0,0.8);" data-zh="直到有人決定走進來。" data-en="Until someone decided to walk in." data-es="Hasta que alguien decidió entrar.">直到有人決定走進來。</p>
             
-            <button class="btn-primary glow text-xl" onclick="goToScreen('screen-intro')">
+            <button id="openingStartBtn" class="btn-primary glow text-xl" onclick="startOpeningStory()">
+                ▶ <span data-zh="開始故事" data-en="Start Story" data-es="Comenzar la historia">開始故事</span>
+            </button>
+
+            <button id="openingContinueBtn" class="btn-primary glow text-xl" style="display: none;" onclick="goToScreen('screen-intro')">
                 <span data-zh="25 年後..." data-en="25 Years Later..." data-es="25 años después...">25 年後...</span> →
             </button>
         </div>
@@ -424,19 +428,17 @@
 <div id="screen-intro" class="screen" style="background: url('assets/images/l6_team_huddle.webp') center/cover; background-color: #60a5fa;">
     <div class="overlay" style="background: rgba(255,255,255,0.5);">
         <div class="card fade-in-up text-center">
-            <div class="inline-block bg-blue-100 text-blue-700 px-6 py-2 rounded-full text-sm font-bold mb-4">
-                LEVEL 6
-            </div>
+            <div class="inline-block bg-blue-100 text-blue-700 px-6 py-2 rounded-full text-sm font-bold mb-4" data-zh="第六關" data-en="LEVEL 6" data-es="NIVEL 6">第六關</div>
             
-            <h1 class="text-4xl font-black mb-2" style="color: #f59e0b;">First-Order Logic</h1>
+            <h1 class="text-4xl font-black mb-2" style="color: #f59e0b;" data-zh="一階邏輯" data-en="First-Order Logic" data-es="Lógica de primer orden">一階邏輯</h1>
             <p class="text-2xl text-gray-700 mb-2" data-zh="FOL 法庭：一念之間" data-en="FOL Court: A Single Thought" data-es="Corte FOL: Un solo pensamiento">FOL 法庭：一念之間</p>
-            <p class="text-gray-500 text-sm mb-6">Environmental Vanguards × Tzu Chi × SF Public Works</p>
+            <p class="text-gray-500 text-sm mb-6" data-i18n-static="organization-names">Environmental Vanguards × Tzu Chi × SF Public Works</p>
             
             <!-- FOL 概念框 -->
             <div class="bg-gradient-to-br from-indigo-900 to-purple-900 rounded-2xl p-5 mb-6 text-left text-white">
-                <p class="text-purple-300 text-sm mb-2">🧠 <span data-zh="今天你要學習" data-en="Today you'll learn" data-es="Hoy aprenderás">今天你要學習</span>：First-Order Logic</p>
+                <p class="text-purple-300 text-sm mb-2" data-zh="🧠 今天你要學習：一階邏輯" data-en="🧠 Today you'll learn: First-Order Logic" data-es="🧠 Hoy aprenderás: Lógica de primer orden">🧠 今天你要學習：一階邏輯</p>
                 <div class="bg-black/40 rounded-xl p-4 font-mono text-center mb-3">
-                    <span class="text-cyan-300">∀x: Eligible(x) ← Registered(x) ∧ Completed(x)</span>
+                    <span class="text-cyan-300" data-i18n-static="fol-expression">∀x: Eligible(x) ← Registered(x) ∧ Completed(x)</span>
                 </div>
                 <p class="text-sm text-gray-300" data-zh="「如果 [已註冊] 且 [完成培訓]，則 [符合資格]」" data-en="'If [Registered] AND [Completed], then [Eligible]'" data-es="«Si [Registrado] Y [Completado], entonces [Elegible]»">
                     「如果 [已註冊] 且 [完成培訓]，則 [符合資格]」
@@ -462,7 +464,7 @@
 <div id="screen-applicants" class="screen" style="background: url('assets/images/l6_team_huddle.webp') center/cover; background-color: #60a5fa;">
     <div class="overlay" style="background: rgba(0,0,0,0.35);">
         <div class="text-center mb-6 fade-in">
-            <p class="text-blue-300 text-sm tracking-widest mb-2">FOL COURT • APPLICANT DATABASE</p>
+            <p class="text-blue-300 text-sm tracking-widest mb-2" data-zh="FOL 法庭 • 申請者資料庫" data-en="FOL COURT • APPLICANT DATABASE" data-es="CORTE FOL • BASE DE DATOS DE SOLICITANTES">FOL 法庭 • 申請者資料庫</p>
             <h2 class="text-3xl font-bold text-white mb-2" data-zh="📋 申請者資料庫" data-en="📋 Applicant Database" data-es="📋 Base de datos de solicitantes">📋 申請者資料庫</h2>
             <p class="text-gray-400" data-zh="系統已根據 FOL 規則做出判斷" data-en="System has made judgments based on FOL rules" data-es="El sistema ya juzgó según las reglas FOL">系統已根據 FOL 規則做出判斷</p>
         </div>
@@ -474,7 +476,7 @@
                     <div class="w-20 h-20 rounded-full bg-gradient-to-br from-pink-300 to-pink-500 flex items-center justify-center text-3xl shadow-lg flex-shrink-0">👧</div>
                     <div class="flex-1 min-w-0">
                         <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-xl">Lily Chen</h3>
+                            <h3 class="font-bold text-xl" data-i18n-static="person-name">Lily Chen</h3>
                             <span class="bg-green-100 text-green-700 px-4 py-1 rounded-full font-bold">95%</span>
                         </div>
                         <div class="score-bar mb-2"><div class="score-fill score-high" style="width: 95%"></div></div>
@@ -489,7 +491,7 @@
                     <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-300 to-blue-500 flex items-center justify-center text-3xl shadow-lg flex-shrink-0">👦</div>
                     <div class="flex-1 min-w-0">
                         <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-xl">DeShawn Brown</h3>
+                            <h3 class="font-bold text-xl" data-i18n-static="person-name">DeShawn Brown</h3>
                             <span class="bg-amber-100 text-amber-700 px-4 py-1 rounded-full font-bold">45%</span>
                         </div>
                         <div class="score-bar mb-2"><div class="score-fill score-mid" style="width: 45%"></div></div>
@@ -504,7 +506,7 @@
                     <div class="w-20 h-20 rounded-full bg-gradient-to-br from-amber-300 to-orange-500 shadow-lg flex-shrink-0 overflow-hidden"><img class="character-portrait" src="assets/images/l6_marcus_portrait.webp" alt="Marcus Williams"></div>
                     <div class="flex-1 min-w-0">
                         <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-xl">Marcus Williams</h3>
+                            <h3 class="font-bold text-xl" data-i18n-static="person-name">Marcus Williams</h3>
                             <span class="bg-red-100 text-red-700 px-4 py-1 rounded-full font-bold">12%</span>
                         </div>
                         <div class="score-bar mb-2"><div class="score-fill score-low" style="width: 12%"></div></div>
@@ -526,16 +528,16 @@
         <div class="card fade-in-up" style="max-width: 520px;">
             <div class="text-center mb-5">
                 <div class="w-28 h-28 rounded-full bg-gradient-to-br from-pink-300 to-pink-500 flex items-center justify-center text-5xl mx-auto mb-3 shadow-xl">👧</div>
-                <h2 class="text-2xl font-bold">Lily Chen</h2>
+                <h2 class="text-2xl font-bold" data-i18n-static="person-name">Lily Chen</h2>
                 <p class="text-green-600 font-bold text-lg">95% — <span data-zh="系統強烈推薦" data-en="Highly Recommended" data-es="Muy recomendada por el sistema">系統強烈推薦</span></p>
             </div>
             
             <!-- FOL 查詢 -->
             <div class="court-terminal mb-5" style="border-color: #22c55e;">
-                <p class="text-green-400 text-sm mb-3 mono">// FOL Query: Lily Chen</p>
-                <div class="fol-line fol-true"><span class="text-green-400">Registered(Lily) = TRUE ✓</span></div>
-                <div class="fol-line fol-true"><span class="text-green-400">RecordFound(Lily) = TRUE ✓</span></div>
-                <div class="fol-line fol-true"><span class="text-green-400 font-bold">∴ Eligible(Lily) = TRUE ✓</span></div>
+                <p class="text-green-400 text-sm mb-3 mono" data-zh="// FOL 查詢：Lily Chen" data-en="// FOL Query: Lily Chen" data-es="// Consulta FOL: Lily Chen">// FOL 查詢：Lily Chen</p>
+                <div class="fol-line fol-true"><span class="text-green-400" data-i18n-static="fol-expression">Registered(Lily) = TRUE ✓</span></div>
+                <div class="fol-line fol-true"><span class="text-green-400" data-i18n-static="fol-expression">RecordFound(Lily) = TRUE ✓</span></div>
+                <div class="fol-line fol-true"><span class="text-green-400 font-bold" data-i18n-static="fol-expression">∴ Eligible(Lily) = TRUE ✓</span></div>
             </div>
             
             <!-- 真實心聲 -->
@@ -570,17 +572,17 @@
         <div class="card fade-in-up" style="max-width: 520px;">
             <div class="text-center mb-5">
                 <div class="w-28 h-28 rounded-full bg-gradient-to-br from-blue-300 to-blue-500 flex items-center justify-center text-5xl mx-auto mb-3 shadow-xl">👦</div>
-                <h2 class="text-2xl font-bold">DeShawn Brown</h2>
+                <h2 class="text-2xl font-bold" data-i18n-static="person-name">DeShawn Brown</h2>
                 <p class="text-amber-600 font-bold text-lg">45% — <span data-zh="待定審核" data-en="Pending Review" data-es="Revisión pendiente">待定審核</span></p>
             </div>
             
             <!-- FOL 查詢 -->
             <div class="court-terminal mb-5" style="border-color: #f59e0b;">
-                <p class="text-amber-400 text-sm mb-3 mono">// FOL Query: DeShawn Brown</p>
-                <div class="fol-line fol-true"><span class="text-green-400">Registered(DeShawn) = TRUE ✓</span></div>
-                <div class="fol-line fol-true"><span class="text-green-400">RecordFound(DeShawn) = TRUE ✓</span></div>
-                <div class="fol-line fol-unknown"><span class="text-amber-400">MotivationScore(DeShawn) = LOW ⚠️</span></div>
-                <div class="fol-line fol-true"><span class="text-amber-400 font-bold">∴ Eligible(DeShawn) = PENDING</span></div>
+                <p class="text-amber-400 text-sm mb-3 mono" data-zh="// FOL 查詢：DeShawn Brown" data-en="// FOL Query: DeShawn Brown" data-es="// Consulta FOL: DeShawn Brown">// FOL 查詢：DeShawn Brown</p>
+                <div class="fol-line fol-true"><span class="text-green-400" data-i18n-static="fol-expression">Registered(DeShawn) = TRUE ✓</span></div>
+                <div class="fol-line fol-true"><span class="text-green-400" data-i18n-static="fol-expression">RecordFound(DeShawn) = TRUE ✓</span></div>
+                <div class="fol-line fol-unknown"><span class="text-amber-400" data-i18n-static="fol-expression">MotivationScore(DeShawn) = LOW ⚠️</span></div>
+                <div class="fol-line fol-true"><span class="text-amber-400 font-bold" data-i18n-static="fol-expression">∴ Eligible(DeShawn) = PENDING</span></div>
             </div>
             
             <!-- 真實心聲 -->
@@ -619,16 +621,16 @@
         <div class="card fade-in-up" style="max-width: 520px;">
             <div class="text-center mb-5">
                 <div class="w-28 h-28 rounded-full bg-gradient-to-br from-amber-300 to-orange-500 mx-auto mb-3 shadow-xl overflow-hidden"><img class="character-portrait" src="assets/images/l6_marcus_portrait.webp" alt="Marcus Williams"></div>
-                <h2 class="text-2xl font-bold">Marcus Williams</h2>
+                <h2 class="text-2xl font-bold" data-i18n-static="person-name">Marcus Williams</h2>
                 <p class="text-red-600 font-bold text-lg">12% — <span data-zh="系統判定：不符資格" data-en="System: INELIGIBLE" data-es="Sistema: NO ELEGIBLE">系統判定：不符資格</span></p>
             </div>
             
             <!-- FOL 查詢 -->
             <div class="court-terminal mb-5" style="border-color: #ef4444;">
-                <p class="text-red-400 text-sm mb-3 mono">// FOL Query: Marcus Williams</p>
-                <div class="fol-line fol-true"><span class="text-green-400">Registered(Marcus) = TRUE ✓</span></div>
-                <div class="fol-line fol-false"><span class="text-red-400">RecordFound(Marcus) = FALSE ✗</span></div>
-                <div class="fol-line fol-false"><span class="text-red-400 font-bold">∴ Eligible(Marcus) = FALSE ✗</span></div>
+                <p class="text-red-400 text-sm mb-3 mono" data-zh="// FOL 查詢：Marcus Williams" data-en="// FOL Query: Marcus Williams" data-es="// Consulta FOL: Marcus Williams">// FOL 查詢：Marcus Williams</p>
+                <div class="fol-line fol-true"><span class="text-green-400" data-i18n-static="fol-expression">Registered(Marcus) = TRUE ✓</span></div>
+                <div class="fol-line fol-false"><span class="text-red-400" data-i18n-static="fol-expression">RecordFound(Marcus) = FALSE ✗</span></div>
+                <div class="fol-line fol-false"><span class="text-red-400 font-bold" data-i18n-static="fol-expression">∴ Eligible(Marcus) = FALSE ✗</span></div>
             </div>
             
             <!-- 真實心聲 -->
@@ -670,13 +672,13 @@
     <div class="overlay" style="background: rgba(0,0,0,0.4);">
         <div class="card-dark fade-in shake" style="max-width: 600px;">
             <div class="text-center mb-6">
-                <p class="text-red-400 text-sm tracking-widest mb-2">⚠️ SYSTEM JUDGMENT</p>
+                <p class="text-red-400 text-sm tracking-widest mb-2" data-zh="⚠️ 系統判決" data-en="⚠️ SYSTEM JUDGMENT" data-es="⚠️ JUICIO DEL SISTEMA">⚠️ 系統判決</p>
                 <h2 class="text-2xl font-bold text-white" data-zh="系統判決結果" data-en="System Judgment Result" data-es="Resultado del juicio del sistema">系統判決結果</h2>
             </div>
             
             <!-- 判決結果 -->
             <div class="court-terminal mb-6" style="border-color: #ef4444;">
-                <p class="text-gray-400 text-sm mb-3">// Final Eligibility Check</p>
+                <p class="text-gray-400 text-sm mb-3" data-zh="// 最終資格檢查" data-en="// Final Eligibility Check" data-es="// Verificación final de elegibilidad">// 最終資格檢查</p>
                 <div class="fol-line fol-true"><span class="text-green-400" data-zh="Eligible(Lily) = TRUE ✓ → 錄取" data-en="Eligible(Lily) = TRUE ✓ → ADMITTED" data-es="Eligible(Lily) = TRUE ✓ → ADMITIDA">Eligible(Lily) = TRUE ✓ → 錄取</span></div>
                 <div class="fol-line fol-unknown"><span class="text-amber-400" data-zh="Eligible(DeShawn) = PENDING → 待定" data-en="Eligible(DeShawn) = PENDING → ON HOLD" data-es="Eligible(DeShawn) = PENDING → EN ESPERA">Eligible(DeShawn) = PENDING → 待定</span></div>
                 <div class="fol-line fol-false"><span class="text-red-400 font-bold" data-zh="Eligible(Marcus) = FALSE ✗ → 拒絕" data-en="Eligible(Marcus) = FALSE ✗ → REJECTED" data-es="Eligible(Marcus) = FALSE ✗ → RECHAZADO">Eligible(Marcus) = FALSE ✗ → 拒絕</span></div>
@@ -687,7 +689,7 @@
                 <div class="flex items-start gap-4">
                     <div class="text-4xl">😢</div>
                     <div>
-                        <p class="text-white font-bold mb-2">Marcus:</p>
+                        <p class="text-white font-bold mb-2" data-i18n-static="person-name">Marcus:</p>
                         <p class="text-gray-300 italic text-lg" data-zh="「可是... 我有去上課啊。我記得我簽到了。為什麼系統說我沒有？」" data-en="'But... I did attend. I remember signing in. Why does the system say I didn't?'" data-es="«Pero... yo sí asistí. Recuerdo haber firmado. ¿Por qué el sistema dice que no?»">
                             「可是... 我有去上課啊。我記得我簽到了。為什麼系統說我沒有？」
                         </p>
@@ -736,8 +738,7 @@
             <p class="text-amber-400 text-2xl font-bold mb-8" data-zh="會不會不一樣。" data-en="Would things have been different?" data-es="¿Habría sido diferente?">會不會不一樣。</p>
             
             <div class="bg-white/10 rounded-xl p-5 mb-8">
-                <p class="text-2xl font-bold text-white">「把握時間，珍惜空間」</p>
-                <p class="text-gray-400 text-sm mt-1">Seize the moment, cherish the opportunity.</p>
+                <p class="text-2xl font-bold text-white" data-zh="「把握時間，珍惜空間」" data-en="Seize the moment, cherish the opportunity." data-es="Aprovecha el tiempo y valora el espacio.">「把握時間，珍惜空間」</p>
             </div>
             
             <button class="btn-primary" onclick="goToScreen('screen-judgment')">
@@ -782,7 +783,7 @@
     <div class="overlay" style="background: rgba(0,0,0,0.5);">
         <div class="card-dark fade-in" style="max-width: 650px;">
             <div class="text-center mb-6">
-                <p class="text-blue-400 text-sm tracking-widest mb-2">FOL INVESTIGATION</p>
+                <p class="text-blue-400 text-sm tracking-widest mb-2" data-zh="FOL 調查" data-en="FOL INVESTIGATION" data-es="INVESTIGACIÓN FOL">FOL 調查</p>
                 <h2 class="text-2xl font-bold text-white" data-zh="🔍 邏輯推理調查" data-en="🔍 Logical Reasoning Investigation" data-es="🔍 Investigación de razonamiento lógico">🔍 邏輯推理調查</h2>
             </div>
             
@@ -798,7 +799,7 @@
             <div class="court-terminal mb-6" id="investigation-terminal">
                 <p class="text-blue-300 text-sm mb-3">// <span data-zh="系統規則" data-en="System Rule" data-es="Regla del sistema">系統規則</span></p>
                 <div class="fol-line fol-rule mb-4">
-                    <span class="text-cyan-300">∀x: Eligible(x) ← Registered(x) ∧ RecordFound(x)</span>
+                    <span class="text-cyan-300" data-i18n-static="fol-expression">∀x: Eligible(x) ← Registered(x) ∧ RecordFound(x)</span>
                 </div>
                 
                 <p class="text-gray-500 text-sm mb-3">// <span data-zh="點擊下方按鈕執行查詢" data-en="Click buttons below to run queries" data-es="Toca los botones para ejecutar consultas">點擊下方按鈕執行查詢</span></p>
@@ -809,16 +810,16 @@
             <!-- 調查按鈕 -->
             <div class="space-y-3" id="investigation-buttons">
                 <button class="btn-step w-full" id="btn-step1" onclick="runInvestigationStep(1)">
-                    Step 1: <span data-zh="查詢 Registered(Marcus)" data-en="Query Registered(Marcus)" data-es="Consultar Registered(Marcus)">查詢 Registered(Marcus)</span>
+                    <span data-zh="步驟 1：查詢 Registered(Marcus)" data-en="Step 1: Query Registered(Marcus)" data-es="Paso 1: Consultar Registered(Marcus)">步驟 1：查詢 Registered(Marcus)</span>
                 </button>
                 <button class="btn-step w-full" id="btn-step2" onclick="runInvestigationStep(2)" disabled>
-                    Step 2: <span data-zh="查詢 RecordFound(Marcus)" data-en="Query RecordFound(Marcus)" data-es="Consultar RecordFound(Marcus)">查詢 RecordFound(Marcus)</span>
+                    <span data-zh="步驟 2：查詢 RecordFound(Marcus)" data-en="Step 2: Query RecordFound(Marcus)" data-es="Paso 2: Consultar RecordFound(Marcus)">步驟 2：查詢 RecordFound(Marcus)</span>
                 </button>
                 <button class="btn-step w-full" id="btn-step3" onclick="runInvestigationStep(3)" disabled>
-                    Step 3: <span data-zh="分析：為什麼 RecordFound = FALSE？" data-en="Analyze: Why RecordFound = FALSE?" data-es="Analizar: ¿por qué RecordFound = FALSE?">分析：為什麼 RecordFound = FALSE？</span>
+                    <span data-zh="步驟 3：分析為什麼 RecordFound = FALSE？" data-en="Step 3: Analyze why RecordFound = FALSE" data-es="Paso 3: Analizar por qué RecordFound = FALSE">步驟 3：分析為什麼 RecordFound = FALSE？</span>
                 </button>
                 <button class="btn-step w-full" id="btn-step4" onclick="runInvestigationStep(4)" disabled>
-                    Step 4: <span data-zh="搜尋替代證據源" data-en="Search Alternative Evidence" data-es="Buscar evidencia alternativa">搜尋替代證據源</span>
+                    <span data-zh="步驟 4：搜尋替代證據源" data-en="Step 4: Search Alternative Evidence" data-es="Paso 4: Buscar evidencia alternativa">步驟 4：搜尋替代證據源</span>
                 </button>
             </div>
         </div>
@@ -833,7 +834,7 @@
             <h2 class="text-3xl font-bold text-purple-700 mb-4" data-zh="關鍵洞見！" data-en="Key Insight!" data-es="¡Idea clave!">關鍵洞見！</h2>
             
             <div class="bg-purple-100 rounded-xl p-6 mb-6">
-                <p class="text-2xl font-bold text-purple-800 mb-4 font-mono">
+                <p class="text-2xl font-bold text-purple-800 mb-4 font-mono" data-i18n-static="fol-expression">
                     ¬RecordEntered(x) ≠ ¬Completed(x)
                 </p>
                 <p class="text-xl text-purple-700" data-zh="「沒有紀錄」不等於「沒有完成」！" data-en="'No record' does NOT equal 'did not complete'!" data-es="¡«Sin registro» NO significa «no completado»!">
@@ -842,7 +843,7 @@
             </div>
             
             <div class="bg-amber-50 border-l-4 border-amber-500 rounded-r-xl p-5 mb-6 text-left">
-                <p class="font-bold text-amber-700 mb-2">🎓 <span data-zh="這就是 FOL 的陷阱" data-en="This is the FOL trap" data-es="Esta es la trampa de FOL">這就是 FOL 的陷阱</span>：Closed World Assumption</p>
+                <p class="font-bold text-amber-700 mb-2" data-zh="🎓 這就是 FOL 的陷阱：封閉世界假設" data-en="🎓 This is the FOL trap: Closed World Assumption" data-es="🎓 Esta es la trampa de FOL: Suposición de mundo cerrado">🎓 這就是 FOL 的陷阱：封閉世界假設</p>
                 <p class="text-gray-700" data-zh="系統假設「如果我不知道，就是不存在」。但現實世界中，證據可能存在於系統之外！" data-en="The system assumes 'if I don't know it, it doesn't exist'. But in reality, evidence may exist outside the system!" data-es="El sistema asume: «si no lo sé, no existe». ¡Pero en el mundo real, la evidencia puede estar fuera del sistema!">
                     系統假設「如果我不知道，就是不存在」。但現實世界中，證據可能存在於系統之外！
                 </p>
@@ -870,11 +871,11 @@
             
             <!-- 簽到表 -->
             <div class="bg-amber-50 border-4 border-amber-400 rounded-xl p-6 mb-6 shadow-lg">
-                <p class="text-sm text-gray-500 mb-3">ORIENTATION SIGN-IN SHEET • 2024-11-15</p>
+                <p class="text-sm text-gray-500 mb-3" data-zh="培訓簽到表 • 2024-11-15" data-en="ORIENTATION SIGN-IN SHEET • 2024-11-15" data-es="HOJA DE ASISTENCIA A LA ORIENTACIÓN • 2024-11-15">培訓簽到表 • 2024-11-15</p>
                 <div class="bg-white rounded-lg p-4 border-2 border-dashed border-amber-300">
-                    <p class="text-xl font-bold text-green-600 mb-1">✓ Marcus Williams</p>
+                    <p class="text-xl font-bold text-green-600 mb-1" data-i18n-static="person-name">✓ Marcus Williams</p>
                     <p class="text-gray-600" data-zh="Orientation 培訓 — 已簽名" data-en="Orientation Training — SIGNED" data-es="Capacitación de orientación — FIRMADO">Orientation 培訓 — 已簽名</p>
-                    <p class="text-gray-500 text-sm mt-2 italic">Signature: Marcus W.</p>
+                    <p class="text-gray-500 text-sm mt-2 italic" data-zh="簽名：Marcus W." data-en="Signature: Marcus W." data-es="Firma: Marcus W.">簽名：Marcus W.</p>
                 </div>
             </div>
             
@@ -885,8 +886,8 @@
             <!-- 更新系統 -->
             <div class="court-terminal mb-6" style="border-color: #22c55e;">
                 <p class="text-green-400 text-sm mb-3">// <span data-zh="知識庫更新" data-en="Knowledge Base Update" data-es="Actualización de la base de conocimiento">知識庫更新</span></p>
-                <div class="fol-line fol-true"><span class="text-green-400">RecordFound(Marcus) ← TRUE ✓</span></div>
-                <div class="fol-line fol-true"><span class="text-green-400 font-bold">∴ Eligible(Marcus) = TRUE ✓</span></div>
+                <div class="fol-line fol-true"><span class="text-green-400" data-i18n-static="fol-expression">RecordFound(Marcus) ← TRUE ✓</span></div>
+                <div class="fol-line fol-true"><span class="text-green-400 font-bold" data-i18n-static="fol-expression">∴ Eligible(Marcus) = TRUE ✓</span></div>
             </div>
             
             <button class="btn-primary text-xl" onclick="goToScreen('screen-welcome'); celebrateConfetti();">
@@ -900,7 +901,7 @@
 <div id="screen-welcome" class="screen" style="background: url('assets/images/l6_marcus_portrait.webp') center/cover; background-color: #f59e0b;">
     <div class="overlay welcome-overlay" style="background: linear-gradient(to bottom right, rgba(0,0,0,0), rgba(0,0,0,0.3));">
         <div class="card fade-in text-center" style="max-width: 380px; background: rgba(255,255,255,0.8); backdrop-filter: blur(8px); padding: 20px;">
-            <h2 class="text-2xl font-bold text-gray-800 mb-1">Marcus Williams</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-1" data-i18n-static="person-name">Marcus Williams</h2>
             <p class="text-amber-600 font-bold mb-3" data-zh="環保先鋒隊 — 正式成員" data-en="Environmental Vanguard — Official Member" data-es="Vanguardia Ambiental — Miembro oficial">環保先鋒隊 — 正式成員</p>
             
             <div class="bg-white/70 rounded-xl p-3 mb-3 shadow-lg">
@@ -913,7 +914,7 @@
             </div>
             
             <div class="bg-gradient-to-r from-amber-200/80 to-orange-200/80 rounded-xl p-3 mb-3 border-2 border-amber-400">
-                <span class="font-bold text-xl text-amber-800">+50 ELO</span>
+                <span class="font-bold text-xl text-amber-800" data-i18n-static="score">+50 ELO</span>
                 <br><span class="text-sm text-amber-700" data-zh="你看見了演算法看不見的" data-en="You saw beyond what the algorithm could see" data-es="Viste lo que el algoritmo no podía ver">你看見了演算法看不見的</span>
             </div>
             
@@ -1025,17 +1026,15 @@
             <p class="text-2xl text-white mb-10" style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);" data-zh="深呼吸三次" data-en="Take 3 Deep Breaths" data-es="Respira profundamente 3 veces">深呼吸三次</p>
             
             <div class="card mb-8" style="max-width: 500px; background: rgba(255,255,255,0.75); backdrop-filter: blur(8px);">
-                <p class="text-3xl font-bold text-gray-800 mb-3">「欣賞他人，即是莊嚴自己。」</p>
-                <p class="text-gray-500">To appreciate others is to dignify ourselves.</p>
+                <p class="text-3xl font-bold text-gray-800 mb-3" data-zh="「欣賞他人，即是莊嚴自己。」" data-en="To appreciate others is to dignify ourselves." data-es="Apreciar a los demás es dignificarnos a nosotros mismos.">「欣賞他人，即是莊嚴自己。」</p>
                 <div class="border-t border-gray-200 my-4"></div>
-                <p class="text-2xl font-bold text-amber-600">「做事，一定要秉持『誠』與『正』的原則；而待人，則要用『寬』與『柔』的態度。」</p>
-                <p class="text-gray-500">Be honest and truthful in everything you do. Be gentle and forgiving in your relationships with others.</p>
-                <p class="text-gray-400 text-sm mt-4">— 證嚴法師 靜思語</p>
+                <p class="text-2xl font-bold text-amber-600" data-zh="「做事，一定要秉持『誠』與『正』的原則；而待人，則要用『寬』與『柔』的態度。」" data-en="Be honest and truthful in everything you do. Be gentle and forgiving in your relationships with others." data-es="Sé honesto y recto en todo lo que hagas. Trata a los demás con tolerancia y gentileza.">「做事，一定要秉持『誠』與『正』的原則；而待人，則要用『寬』與『柔』的態度。」</p>
+                <p class="text-gray-400 text-sm mt-4" data-zh="— 證嚴法師 靜思語" data-en="— Master Cheng Yen, Jing Si Aphorisms" data-es="— Maestra Cheng Yen, Aforismos Jing Si">— 證嚴法師 靜思語</p>
             </div>
             
             <div class="text-center mb-8">
                 <p class="text-3xl font-bold text-white mb-2" style="text-shadow: 0 2px 10px rgba(0,0,0,0.4);" data-zh="🎉 第六關完成！" data-en="🎉 Level 6 Complete!" data-es="🎉 ¡Nivel 6 completado!">🎉 第六關完成！</p>
-                <p class="text-4xl font-black text-yellow-300" style="text-shadow: 0 3px 15px rgba(0,0,0,0.4);">ELO: +50</p>
+                <p class="text-4xl font-black text-yellow-300" data-i18n-static="score" style="text-shadow: 0 3px 15px rgba(0,0,0,0.4);">ELO: +50</p>
             </div>
             
             <div class="flex gap-4 justify-center flex-wrap">
@@ -1057,7 +1056,7 @@
 </div>
 
 <!-- 音樂 -->
-<audio id="music-opening" loop src="assets/audio/rice_incident.mp3"></audio>
+<audio id="music-opening" src="assets/audio/rice_incident.mp3"></audio>
 <audio id="music-game" loop src="assets/audio/funny-suspenseful-cartoon-style-music-336058.mp3"></audio>
 <audio id="music-bad" loop src="assets/audio/bad-day-137530.mp3"></audio>
 <audio id="music-ataraxy" loop src="assets/audio/ataraxy-music.mp3"></audio>
@@ -1068,6 +1067,11 @@ let currentLang = 'zh';
 let musicPlaying = false;
 let currentMusic = 'music-opening';
 let investigationStep = 0;
+const engineText = {
+    zh: { query: '查詢', result: '結果', analysis: '分析', hypothesis: '假設' },
+    en: { query: 'Query', result: 'Result', analysis: 'Analysis', hypothesis: 'Hypothesis' },
+    es: { query: 'Consulta', result: 'Resultado', analysis: 'Análisis', hypothesis: 'Hipótesis' }
+};
 
 // === 語言切換 ===
 function setLang(lang) {
@@ -1121,9 +1125,20 @@ function toggleMusic() {
 
 function musicForScreen(id) {
     if (id === 'screen-opening') return 'music-opening';
-    if (['screen-judgment', 'screen-bad-ending', 'screen-objection', 'screen-investigation'].includes(id)) return 'music-bad';
+    if (['screen-judgment', 'screen-bad-ending'].includes(id)) return 'music-bad';
     if (id === 'screen-ataraxy') return 'music-ataraxy';
     return 'music-game';
+}
+
+// Mobile browsers require a direct user gesture before sound can begin.
+// Keep the player in the raw-rice story while its dedicated narrative track plays;
+// only the separate "25 Years Later" action advances into the FOL game music.
+function startOpeningStory() {
+    musicPlaying = true;
+    document.getElementById('musicBtn').textContent = '🔊';
+    playMusic('music-opening');
+    document.getElementById('openingStartBtn').style.display = 'none';
+    document.getElementById('openingContinueBtn').style.display = 'inline-flex';
 }
 
 // === 畫面切換 ===
@@ -1166,14 +1181,15 @@ function runInvestigationStep(step) {
     }
     
     // 顯示結果
+    const ui = engineText[currentLang];
     const resultHTML = {
-        1: `<div class="fol-line fol-true slide-in-left"><span class="text-green-400">Query: Registered(Marcus)</span><br><span class="text-green-400 font-bold">Result: TRUE ✓</span><br><span class="text-gray-500 text-sm">${({ zh: '// Marcus 確實有註冊', en: '// Marcus is registered', es: '// Marcus sí está registrado' })[currentLang]}</span></div>`,
+        1: `<div class="fol-line fol-true slide-in-left"><span class="text-green-400">${ui.query}: Registered(Marcus)</span><br><span class="text-green-400 font-bold">${ui.result}: TRUE ✓</span><br><span class="text-gray-500 text-sm">${({ zh: '// Marcus 確實有註冊', en: '// Marcus is registered', es: '// Marcus sí está registrado' })[currentLang]}</span></div>`,
         
-        2: `<div class="fol-line fol-false slide-in-left"><span class="text-red-400">Query: RecordFound(Marcus)</span><br><span class="text-red-400 font-bold">Result: FALSE ✗</span><br><span class="text-gray-500 text-sm">${({ zh: '// 系統找不到培訓紀錄', en: '// System cannot find training record', es: '// El sistema no encuentra el registro de capacitación' })[currentLang]}</span></div>`,
+        2: `<div class="fol-line fol-false slide-in-left"><span class="text-red-400">${ui.query}: RecordFound(Marcus)</span><br><span class="text-red-400 font-bold">${ui.result}: FALSE ✗</span><br><span class="text-gray-500 text-sm">${({ zh: '// 系統找不到培訓紀錄', en: '// System cannot find training record', es: '// El sistema no encuentra el registro de capacitación' })[currentLang]}</span></div>`,
         
-        3: `<div class="fol-line fol-insight slide-in-left"><span class="text-pink-400">🤔 Analysis:</span><br><span class="text-white">${({ zh: 'RecordFound 查詢的是「已輸入系統」的資料...', en: 'RecordFound queries data "entered into system"...', es: 'RecordFound consulta datos «ya ingresados al sistema»...' })[currentLang]}</span><br><span class="text-pink-300">${({ zh: '但如果紙本還沒輸入呢？', en: 'But what if paper forms haven\'t been entered?', es: '¿Y si los formularios en papel aún no se han ingresado?' })[currentLang]}</span></div>`,
+        3: `<div class="fol-line fol-insight slide-in-left"><span class="text-pink-400">🤔 ${ui.analysis}:</span><br><span class="text-white">${({ zh: 'RecordFound 查詢的是「已輸入系統」的資料...', en: 'RecordFound queries data "entered into system"...', es: 'RecordFound consulta datos «ya ingresados al sistema»...' })[currentLang]}</span><br><span class="text-pink-300">${({ zh: '但如果紙本還沒輸入呢？', en: 'But what if paper forms haven\'t been entered?', es: '¿Y si los formularios en papel aún no se han ingresado?' })[currentLang]}</span></div>`,
         
-        4: `<div class="fol-line fol-unknown slide-in-left"><span class="text-amber-400">💡 Hypothesis:</span><br><span class="text-white">${({ zh: '可能存在「系統外證據」！', en: 'There may be "evidence outside the system"!', es: '¡Puede existir «evidencia fuera del sistema»!' })[currentLang]}</span><br><span class="text-amber-300 font-bold">¬RecordEntered ≠ ¬Completed</span></div>`
+        4: `<div class="fol-line fol-unknown slide-in-left"><span class="text-amber-400">💡 ${ui.hypothesis}:</span><br><span class="text-white">${({ zh: '可能存在「系統外證據」！', en: 'There may be "evidence outside the system"!', es: '¡Puede existir «evidencia fuera del sistema»!' })[currentLang]}</span><br><span class="text-amber-300 font-bold">¬RecordEntered ≠ ¬Completed</span></div>`
     };
     
     results.innerHTML += resultHTML[step];
@@ -1211,16 +1227,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setLang('zh');
 });
 
-// === 首次互動啟動音樂 ===
-document.addEventListener('click', function initAudio() {
-    if (!musicPlaying) {
-        musicPlaying = true;
-        document.getElementById('musicBtn').textContent = '🔊';
-        // Inline click navigation runs first. Start the track selected by that
-        // destination instead of forcing the opening transition music again.
-        playMusic(currentMusic);
-    }
-}, { once: true });
 </script>
 
 </body>
