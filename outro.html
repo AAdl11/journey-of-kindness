@@ -197,10 +197,12 @@
         }
         
         .qr-card {
+            display: block;
             background: linear-gradient(135deg, #ffffff, #f0f0f0);
             border-radius: 16px;
             padding: 1rem;
             text-align: center;
+            text-decoration: none;
             transition: all 0.3s;
         }
         
@@ -220,6 +222,22 @@
         .qr-card-icon { font-size: 1.3rem; margin-bottom: 0.3rem; }
         .qr-card-title { font-size: 0.9rem; font-weight: 700; color: #1a237e; }
         .qr-card-subtitle { font-size: 0.75rem; color: #666; }
+        .passport-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            margin-top: 0.65rem;
+            padding: 0.55rem 0.8rem;
+            border-radius: 999px;
+            color: #fff;
+            background: linear-gradient(135deg, #123f46, #1d6970);
+            box-shadow: 0 5px 14px rgba(18,63,70,.24);
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-decoration: none;
+        }
+        .passport-link:hover, .passport-link:focus-visible { background: #0f353b; }
         
         .qr-facebook { border-top: 4px solid #1877f2; }
         .qr-instagram { border-top: 4px solid #e4405f; }
@@ -325,8 +343,8 @@
             </div>
             
             <div class="survey-cta">
-                <h3 data-zh="📝 請幫我填寫問卷！" data-en="📝 Please fill out the survey!">📝 Please fill out the survey!</h3>
-                <p data-zh="您的意見對我的研究非常重要，只需 2 分鐘！" data-en="Your feedback is very important for my research, only 2 minutes!">Your feedback is very important for my research, only 2 minutes!</p>
+                <h3 data-zh="📝 幫我改進善的旅程" data-en="📝 Help improve Journey of Kindness" data-es="📝 Ayúdame a mejorar Journey of Kindness">📝 Help improve Journey of Kindness</h3>
+                <p data-zh="約 30 秒，可略過；用你熟悉的語言留下演算法足跡。" data-en="About 30 seconds and optional. Leave an algorithm footprint in your language." data-es="Toma unos 30 segundos y es opcional. Deja una huella algorítmica en tu idioma.">About 30 seconds and optional. Leave an algorithm footprint in your language.</p>
             </div>
             
             <h2 class="qr-title" data-zh="📱 掃描 QR Code" data-en="📱 Scan QR Code">📱 Scan QR Code</h2>
@@ -347,9 +365,10 @@
                 
                 <div class="qr-card qr-survey">
                     <div class="qr-card-icon">📝</div>
-                    <img src="assets/images/qr_survey.png" alt="Survey QR Code">
-                    <div class="qr-card-title" data-zh="問卷調查" data-en="Survey">Survey</div>
-                    <div class="qr-card-subtitle" data-zh="分享意見" data-en="Share feedback">Share feedback</div>
+                    <img src="assets/images/qr_survey.png" alt="Kindness Algorithm Passport QR Code">
+                    <div class="qr-card-title" data-zh="善的演算法護照" data-en="Kindness Algorithm Passport" data-es="Pasaporte de Algoritmos de Bondad">Kindness Algorithm Passport</div>
+                    <div class="qr-card-subtitle" data-zh="掃描 QR Code，或直接點擊下方按鈕" data-en="Scan the QR code or use the button below" data-es="Escanea el código QR o usa el botón de abajo">Scan the QR code or use the button below</div>
+                    <a id="passport-feedback-link" class="passport-link" href="feedback/?source=outro&amp;lang=en" target="_blank" rel="noopener noreferrer" data-zh="直接開啟問卷" data-en="Open survey directly" data-es="Abrir encuesta directamente">Open survey directly</a>
                 </div>
             </div>
             
@@ -413,11 +432,14 @@
         function setLang(lang) {
             currentLang = lang;
             document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.includes(lang === 'zh' ? '中文' : 'EN'));
+                const label = btn.textContent.trim();
+                btn.classList.toggle('active', (lang === 'zh' && label === '中文') || (lang === 'en' && label === 'EN') || (lang === 'es' && label === 'ES'));
             });
             document.querySelectorAll('[data-zh][data-en]').forEach(el => {
-                el.textContent = el.getAttribute(`data-${lang}`);
+                el.textContent = el.getAttribute(`data-${lang}`) || el.getAttribute('data-en');
             });
+            const feedbackLink = document.getElementById('passport-feedback-link');
+            if (feedbackLink) feedbackLink.href = `feedback/?source=outro&lang=${lang}`;
             localStorage.setItem('jok-lang', lang);
         }
         
