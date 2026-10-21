@@ -1,0 +1,30 @@
+{
+  "protectedFunctions": [
+    "gameState",
+    "MAP_NORMAL",
+    "MAP_MASTER",
+    "aiLines",
+    "subtitleContent",
+    "updateSubtitle",
+    "actCold",
+    "handoffToPlayer",
+    "getStars",
+    "loadBestStars",
+    "saveBestStars",
+    "renderStars",
+    "showChallengeResult",
+    "showFaceSlap",
+    "showStory",
+    "makeChoice",
+    "showGarciaReveal",
+    "playFootstep",
+    "playRescueSound",
+    "playVictorySound",
+    "startBreathingAnimation"
+  ],
+  "mediaPaths": "unchanged",
+  "gaLifecycle": "byte-identical",
+  "normalAndMasterPaths": "exact match",
+  "recorderSnapshots": "exact match",
+  "staticTextAndQuotes": "exact match, excluding added hint button"
+}

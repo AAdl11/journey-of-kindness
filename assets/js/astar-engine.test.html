@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A* engine: five tests</title>
+<style>body{font-family:system-ui;margin:1rem;font-size:clamp(14px,3vw,18px)}.pass{color:#146c2e}.fail{color:#b00020}li{margin:.5rem 0}</style>
+<h1>A* engine tests</h1><ol id="results"></ol><p id="summary"></p>
+<script src="astar-engine.js"></script>
+<script>
+'use strict';
+const {createGrid, astarSteps} = AStarEngine;
+const k = p => p.x+','+p.y;
+function assert(ok, message) { if (!ok) throw new Error(message); }
+function bfs(grid) {
+    const q = [{...grid.start, d:0}], seen = new Set([k(grid.start)]), walls = new Set(grid.walls.map(k));
+    for (let i=0;i<q.length;i++) {
+        const p=q[i]; if(k(p)===k(grid.goal)) return p.d;
+        for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+            const n={x:p.x+dx,y:p.y+dy,d:p.d+1}, id=k(n);
+            if(n.x<0||n.y<0||n.x>=grid.cols||n.y>=grid.rows||walls.has(id)||seen.has(id)) continue;
+            seen.add(id);q.push(n);
+        }
+    }
+    return null;
+}
+function check(grid, expected) {
+    const before=JSON.stringify(grid), result=astarSteps(grid);
+    const steps=Array.isArray(result)?result:result.steps;
+    const path=Array.isArray(result)?steps[steps.length-1].path:result.path;
+    assert(JSON.stringify(grid)===before,'Input mutated');
+    assert(JSON.stringify(result)===JSON.stringify(astarSteps(grid)),'Not deterministic');
+    assert((path?path.length-1:null)===expected,'Distance differs from independent BFS/expected');
+    const walls=new Set(grid.walls.map(k));
+    if(path) {
+        assert(k(path[0])===k(grid.start)&&k(path[path.length-1])===k(grid.goal),'Bad endpoints');
+        path.forEach((p,i)=>assert(!walls.has(k(p))&&(!i||Math.abs(p.x-path[i-1].x)+Math.abs(p.y-path[i-1].y)===1),'Invalid path edge'));
+    } else assert(!steps.length||steps[steps.length-1].open.length===0,'Frontier not exhausted');
+    steps.forEach((s,i)=>{
+        assert(s.current&&s.cameFrom&&Array.isArray(s.open)&&Array.isArray(s.closed),'Missing snapshot fields');
+        const closed=new Set(s.closed.map(k));
+        assert(closed.has(k(s.current)),'Current missing from closed');
+        for(const p of s.open) {
+            assert(!closed.has(k(p))&&!walls.has(k(p)),'Invalid frontier');
+            let g=0,cur=p,seen=new Set();
+            while(s.cameFrom[k(cur)]) { assert(!seen.has(k(cur)),'Parent cycle');seen.add(k(cur));cur=s.cameFrom[k(cur)];g++; }
+            assert(k(cur)===k(grid.start),'Parent chain misses start');
+            assert(p.f===g+Math.abs(p.x-grid.goal.x)+Math.abs(p.y-grid.goal.y),'Incorrect f');
+        }
+        if(i) assert(s.closed!==steps[i-1].closed&&s.cameFrom!==steps[i-1].cameFrom,'Shared snapshots');
+    });
+}
+const tests=[
+ ['Straight line',()=>check(createGrid({cols:5,rows:1,start:{x:0,y:0},goal:{x:4,y:0}}),4)],
+ ['Wall detour',()=>check(createGrid({cols:5,rows:3,start:{x:0,y:0},goal:{x:4,y:0},walls:[{x:2,y:0},{x:2,y:1}]}),8)],
+ ['Unreachable',()=>check(createGrid({cols:3,rows:3,start:{x:0,y:0},goal:{x:2,y:2},walls:[{x:1,y:0},{x:1,y:1},{x:1,y:2}]}),null)],
+ ['Start equals goal',()=>check(createGrid({cols:1,rows:1,start:{x:0,y:0},goal:{x:0,y:0}}),0)],
+ ['10×10 seeded random walls (50 maps, BFS oracle)',()=>{
+    let seed=20261021; const random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
+    for(let n=0;n<50;n++){
+        const walls=[];for(let y=0;y<10;y++)for(let x=0;x<10;x++)if((x||y)&&(x!==9||y!==9)&&random()<.3)walls.push({x,y});
+        const grid=createGrid({cols:10,rows:10,walls,start:{x:0,y:0},goal:{x:9,y:9}});check(grid,bfs(grid));
+    }
+ }]
+];
+let passed=0;
+for(const [name,test] of tests){const li=document.createElement('li');try{test();li.textContent='PASS — '+name;li.className='pass';passed++;}catch(e){li.textContent='FAIL — '+name+': '+e.message;li.className='fail';}document.getElementById('results').appendChild(li);}
+document.getElementById('summary').textContent=passed+'/5 PASS';
+window.testResults={passed,total:5};
+</script></html>

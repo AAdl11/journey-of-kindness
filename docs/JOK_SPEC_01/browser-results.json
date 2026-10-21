@@ -1,0 +1,186 @@
+{
+  "checks": [
+    "Five engine cases in browser, including 50 seeded BFS comparisons",
+    "Standalone 12x12 at 390px no horizontal overflow or grid clipping",
+    "Standalone controls, wall toggle, half-delay restart, exhausted frontier callback, endpoint protection, disposal, vibration",
+    "12x12 playback at 350ms, no observed >50ms main-thread task",
+    "L1 initial 390px no horizontal overflow or grid clipping",
+    "Spanish button and persisted jok-lang restored on reload",
+    "First waypoint hint, click lock, no game-state/score mutation, one l1_hint_astar event",
+    "L1 hint 390px no horizontal overflow or grid clipping",
+    "After Garcia: hint goes from current position to goal only",
+    "Normal challenge completed through actual cell clicks; beststars=3",
+    "L1 completed 390px no horizontal overflow or grid clipping",
+    "Completion screen and existing level_complete event",
+    "Master challenge original 16-step solution and beststars preservation",
+    "Reset cancels hint timers and restores control",
+    "Existing three-act demonstration hands control back to player",
+    "L1 en 390px no horizontal overflow or grid clipping",
+    "L1 zh 390px no horizontal overflow or grid clipping",
+    "L1 es 390px no horizontal overflow or grid clipping",
+    "L1 landscape 844x390 no horizontal overflow or grid clipping",
+    "L1 desktop no horizontal overflow or grid clipping",
+    "Storage unavailable: language and game continue",
+    "No uncaught page JavaScript errors"
+  ],
+  "metrics": {
+    "browser": "153.0.8010.0",
+    "Standalone 12x12 at 390px": {
+      "viewport": 390,
+      "document": 390,
+      "grid": {
+        "x": 12,
+        "y": 130.125,
+        "width": 366,
+        "height": 366,
+        "top": 130.125,
+        "right": 378,
+        "bottom": 496.125,
+        "left": 12
+      },
+      "gridScroll": 366
+    },
+    "rendererState": {
+      "paused": true,
+      "stepped": true,
+      "reset": true,
+      "blocked": true,
+      "recovered": true,
+      "restart": true,
+      "interval": 40.20000000006985,
+      "startClear": true,
+      "goalClear": true,
+      "doneOnce": true,
+      "destroyed": true,
+      "noPaths": 1,
+      "vibrate": true
+    },
+    "playback12x12": {
+      "elapsed": 15845.099999999977,
+      "longTasks": [],
+      "moves": 22,
+      "cells": 144
+    },
+    "L1 initial 390px": {
+      "viewport": 390,
+      "document": 390,
+      "grid": {
+        "x": 8,
+        "y": 175.640625,
+        "width": 374,
+        "height": 282.96875,
+        "top": 175.640625,
+        "right": 382,
+        "bottom": 458.609375,
+        "left": 8
+      },
+      "gridScroll": 374
+    },
+    "L1 hint 390px": {
+      "viewport": 390,
+      "document": 390,
+      "grid": {
+        "x": 8,
+        "y": 173.1875,
+        "width": 374,
+        "height": 282.96875,
+        "top": 173.1875,
+        "right": 382,
+        "bottom": 456.15625,
+        "left": 8
+      },
+      "gridScroll": 374
+    },
+    "L1 completed 390px": {
+      "viewport": 390,
+      "document": 390,
+      "grid": {
+        "x": 8,
+        "y": 186.1875,
+        "width": 374,
+        "height": 282.96875,
+        "top": 186.1875,
+        "right": 382,
+        "bottom": 469.15625,
+        "left": 8
+      },
+      "gridScroll": 374
+    },
+    "L1 en 390px": {
+      "viewport": 390,
+      "document": 390,
+      "grid": {
+        "x": 8,
+        "y": 186.1875,
+        "width": 374,
+        "height": 282.96875,
+        "top": 186.1875,
+        "right": 382,
+        "bottom": 469.15625,
+        "left": 8
+      },
+      "gridScroll": 374
+    },
+    "L1 zh 390px": {
+      "viewport": 390,
+      "document": 390,
+      "grid": {
+        "x": 8,
+        "y": 175.640625,
+        "width": 374,
+        "height": 282.96875,
+        "top": 175.640625,
+        "right": 382,
+        "bottom": 458.609375,
+        "left": 8
+      },
+      "gridScroll": 374
+    },
+    "L1 es 390px": {
+      "viewport": 390,
+      "document": 390,
+      "grid": {
+        "x": 8,
+        "y": 175.640625,
+        "width": 374,
+        "height": 282.96875,
+        "top": 175.640625,
+        "right": 382,
+        "bottom": 458.609375,
+        "left": 8
+      },
+      "gridScroll": 374
+    },
+    "L1 landscape 844x390": {
+      "viewport": 844,
+      "document": 844,
+      "grid": {
+        "x": 132,
+        "y": 137.203125,
+        "width": 580,
+        "height": 440,
+        "top": 137.203125,
+        "right": 712,
+        "bottom": 577.203125,
+        "left": 132
+      },
+      "gridScroll": 580
+    },
+    "L1 desktop": {
+      "viewport": 1280,
+      "document": 1280,
+      "grid": {
+        "x": 381.765625,
+        "y": 59.765625,
+        "width": 500.625,
+        "height": 380.46875,
+        "top": 59.765625,
+        "right": 882.390625,
+        "bottom": 440.234375,
+        "left": 381.765625
+      },
+      "gridScroll": 501
+    }
+  },
+  "errors": []
+}

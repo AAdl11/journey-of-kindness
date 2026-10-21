@@ -270,6 +270,8 @@
             25% { transform: translateX(-5px); }
             75% { transform: translateX(5px); }
         }
+        .astar-think-btn { touch-action: manipulation; font-size: clamp(.8rem, 3.2vw, .95rem); width: 100%; }
+        .astar-think-btn:disabled { opacity: .5; }
     </style>
 </head>
 <body class="text-white min-h-screen" translate="no">
@@ -357,6 +359,7 @@
                 </div>
                 
                 <h3 class="text-sm font-bold text-center border-b border-white/20 pb-1">📐 A* Algorithm</h3>
+                <button id="astar-think-btn" class="btn btn-secondary astar-think-btn" onclick="watchAStar()"><span data-en="See how AI thinks" data-zh="看 AI 怎麼想" data-es="Mira cómo piensa la IA">看 AI 怎麼想</span></button>
                 <div class="formula-box">
                     <p class="text-xs text-yellow-400 font-bold mb-1">Russell & Norvig Ch. 3.5.2</p>
                     <p class="mono text-base text-center mb-1">f(n) = g(n) + h(n)</p>
@@ -427,13 +430,17 @@
     </div>
 </div>
 
+<script src="../assets/js/astar-engine.js"></script>
+<script src="../assets/js/astar-renderer.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════════════════════
 // LANGUAGE
 // ═══════════════════════════════════════════════════════════════════════════
 let currentLang = 'zh';
 function setLang(lang) {
+    if (!['en', 'zh', 'es'].includes(lang)) return;
     currentLang = lang;
+    try { localStorage.setItem('jok-lang', lang); } catch (_) {}
     document.getElementById('lang-en').classList.toggle('active', lang === 'en');
     document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
     document.getElementById('lang-es').classList.toggle('active', lang === 'es');
@@ -676,32 +683,13 @@ function isObstacle(x, y) { return gameState.obstacles.some(o => o.x === x && o.
 function isValidMove(x, y) { return x >= 0 && x < gameState.gridWidth && y >= 0 && y < gameState.gridHeight && !isObstacle(x, y); }
 function isAdjacent(x, y) { const dx = Math.abs(x - gameState.player.x), dy = Math.abs(y - gameState.player.y); return (dx === 1 && dy === 0) || (dx === 0 && dy === 1); }
 
+function levelGrid(start = {x: 0, y: 0}, goal = gameState.goal, tieBreak = 'deeper') {
+    return AStarEngine.createGrid({ cols: gameState.gridWidth, rows: gameState.gridHeight,
+        walls: gameState.obstacles, start, goal, tieBreak });
+}
 function computeAStarPath() {
-    const start = {x: 0, y: 0}, goal = gameState.goal;
-    const openSet = [start], cameFrom = {}, gScore = {}, fScore = {};
-    const key = (p) => p.x + ',' + p.y;
-    gScore[key(start)] = 0; fScore[key(start)] = manhattan(start, goal);
-    
-    while (openSet.length > 0) {
-        openSet.sort((a, b) => fScore[key(a)] - fScore[key(b)]);
-        const current = openSet.shift();
-        if (current.x === goal.x && current.y === goal.y) {
-            const path = [current]; let c = current;
-            while (cameFrom[key(c)]) { c = cameFrom[key(c)]; path.unshift(c); }
-            return path;
-        }
-        [{x: current.x+1, y: current.y}, {x: current.x-1, y: current.y}, {x: current.x, y: current.y+1}, {x: current.x, y: current.y-1}]
-            .filter(n => isValidMove(n.x, n.y)).forEach(neighbor => {
-                const tentativeG = gScore[key(current)] + 1;
-                if (gScore[key(neighbor)] === undefined || tentativeG < gScore[key(neighbor)]) {
-                    cameFrom[key(neighbor)] = current;
-                    gScore[key(neighbor)] = tentativeG;
-                    fScore[key(neighbor)] = tentativeG + manhattan(neighbor, goal);
-                    if (!openSet.some(n => n.x === neighbor.x && n.y === neighbor.y)) openSet.push(neighbor);
-                }
-            });
-    }
-    return [];
+    const result = AStarEngine.astarSteps(levelGrid({x: 0, y: 0}, gameState.goal, 'fifo'));
+    return Array.isArray(result) ? result[result.length - 1].path : [];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -713,38 +701,15 @@ const searchViz = { active: false, steps: [], idx: -1, phase: 'search' };
 
 // 單段 A* 記錄(from → to),leg 標記是第幾段,用來組合字幕
 function recordLeg(from, to, leg, closedStart) {
-    const key = (p) => p.x + ',' + p.y;
-    const openSet = [from], cameFrom = {}, gScore = {}, fScore = {};
-    gScore[key(from)] = 0; fScore[key(from)] = manhattan(from, to);
-    const closed = [], steps = [];
-    const snapOpen = () => openSet.map(p => ({x: p.x, y: p.y, f: fScore[key(p)] + closedStart}));
-    
-    while (openSet.length > 0) {
-        openSet.sort((a, b) => (fScore[key(a)] - fScore[key(b)]) || (gScore[key(b)] - gScore[key(a)]));
-        const current = openSet.shift();
-        const g = gScore[key(current)] + closedStart, h = manhattan(current, to), f = g + h;
-        closed.push({x: current.x, y: current.y});
-        
-        if (current.x === to.x && current.y === to.y) {
-            steps.push({ type: (leg === 1 ? 'reachGarcia' : 'goal'), leg, cur: {x: current.x, y: current.y}, g, h, f, open: snapOpen(), closed: closed.map(c => ({...c})) });
-            const path = [current]; let c = current;
-            while (cameFrom[key(c)]) { c = cameFrom[key(c)]; path.unshift(c); }
-            return { steps, path };
-        }
-        [{x: current.x+1, y: current.y}, {x: current.x-1, y: current.y}, {x: current.x, y: current.y+1}, {x: current.x, y: current.y-1}]
-            .filter(n => isValidMove(n.x, n.y) && !closed.some(c => c.x === n.x && c.y === n.y))
-            .forEach(neighbor => {
-                const tentativeG = gScore[key(current)] + 1;
-                if (gScore[key(neighbor)] === undefined || tentativeG < gScore[key(neighbor)]) {
-                    cameFrom[key(neighbor)] = current;
-                    gScore[key(neighbor)] = tentativeG;
-                    fScore[key(neighbor)] = tentativeG + manhattan(neighbor, to);
-                    if (!openSet.some(n => n.x === neighbor.x && n.y === neighbor.y)) openSet.push(neighbor);
-                }
-            });
-        steps.push({ type: 'expand', leg, cur: {x: current.x, y: current.y}, g, h, f, open: snapOpen(), closed: closed.map(c => ({...c})) });
-    }
-    return { steps, path: [from] };
+    const result = AStarEngine.astarSteps(levelGrid(from, to));
+    const snapshots = Array.isArray(result) ? result : result.steps;
+    return {
+        steps: snapshots.map(st => ({ ...st,
+            type: st.path ? (leg === 1 ? 'reachGarcia' : 'goal') : 'expand', leg,
+            cur: st.current, g: st.g + closedStart, h: st.h, f: st.f + closedStart,
+            open: st.open.map(p => ({ ...p, f: p.f + closedStart })) })),
+        path: Array.isArray(result) ? result[result.length - 1].path : []
+    };
 }
 
 function recordAStarSearch() {
@@ -936,20 +901,23 @@ function startCinematic() {
 // 第一幕:自動演思考之光(崇拜)
 function actWorship() {
     if (!cinematic.active) return;
-    if (searchViz.idx === 1) setSub(L(aiLines.think), '🧠');
-    if (searchViz.idx < searchViz.steps.length - 1) {
-        searchViz.idx++;
-        playFootstep();
-        renderGrid();
-        cinematic.timer = setTimeout(actWorship, 200);
-    } else {
-        setSub(L(aiLines.done), '🧠 ' + searchViz.steps.length + '/' + searchViz.steps.length);
-        searchViz.phase = 'walk';
-        gameState.aiPathIndex = 0;
-        gameState.player = {x: 0, y: 0};
-        renderGrid();
-        cinematic.timer = setTimeout(actCold, 1400);
-    }
+    mountLevelRenderer(levelGrid(), {
+        onStep(st, index) {
+            if (!cinematic.active) return;
+            searchViz.idx = index + 1; // index 0 in the legacy list is its introduction snapshot.
+            if (searchViz.idx === 1) setSub(L(aiLines.think), '🧠');
+            updateStats();
+        },
+        onDone() {
+            if (!cinematic.active) return;
+            setSub(L(aiLines.done), '🧠 ' + searchViz.steps.length + '/' + searchViz.steps.length);
+            searchViz.phase = 'walk';
+            gameState.aiPathIndex = 0;
+            gameState.player = {x: 0, y: 0};
+            renderGrid();
+            cinematic.timer = setTimeout(actCold, 1400);
+        }
+    }).setSpeed(350).play();
 }
 
 // 第二幕:冷血走直達路,經過阿嬤家不停(冷血)
@@ -1000,6 +968,8 @@ function handoffToPlayer() {
 }
 
 function stopCinematic() {
+    cancelAStarHint();
+    if (gridRenderer) gridRenderer.pause();
     if (cinematic.timer) { clearTimeout(cinematic.timer); cinematic.timer = null; }
     cinematic.active = false;
 }
@@ -1038,6 +1008,7 @@ function aiStepBack() {
 }
 
 function switchToPlayer() { 
+    cancelAStarHint();
     if (cinematic.active || searchViz.active) { exitDemo(); return; }
     gameState.mode = 'player'; 
     gameState.aiAutoRunning = false; 
@@ -1127,68 +1098,128 @@ function updateDisplay() {
 // ═══════════════════════════════════════════════════════════════════════════
 // RENDERING
 // ═══════════════════════════════════════════════════════════════════════════
+let gridRenderer = null, gridSignature = '';
+const hintPlayback = { active: false, path: null };
+function mapSignature() {
+    return JSON.stringify([gameState.gridWidth, gameState.gridHeight, gameState.obstacles]);
+}
+function mountLevelRenderer(grid, hooks = {}) {
+    gridSignature = mapSignature();
+    gridRenderer = mountAStar(document.getElementById('astar-grid'), grid, {
+        hostLayout: true,
+        sound: () => soundEnabled,
+        renderCell: renderLevelCell,
+        onCellClick(x, y) {
+            if (hintPlayback.active) return;
+            hintPlayback.path = null;
+            movePlayer(x, y);
+        },
+        ...hooks
+    });
+    return gridRenderer;
+}
+function cancelAStarHint() {
+    hintPlayback.active = false;
+    hintPlayback.path = null;
+    if (gridRenderer) gridRenderer.pause();
+    document.getElementById('astar-think-btn').disabled = false;
+}
+function watchAStar() {
+    if (hintPlayback.active) return;
+    const board = document.getElementById('astar-grid');
+    const bounds = board.getBoundingClientRect();
+    if (bounds.top < 0 || bounds.bottom > window.innerHeight) board.scrollIntoView({block: 'center'});
+    if (cinematic.active || gameState.mode === 'ai' || !gameState.challengeMode) {
+        startCinematic();
+        return;
+    }
+    // A single waypoint hint never moves the player or touches scoring/story flags.
+    const target = gameState.savedGarcia ? gameState.goal : gameState.garcia;
+    hintPlayback.active = true;
+    hintPlayback.path = null;
+    document.getElementById('astar-think-btn').disabled = true;
+    if (gameState.challengeMode && typeof jokAnalytics !== 'undefined') {
+        jokAnalytics.event('l1_hint_astar');
+    }
+    const finish = path => {
+        hintPlayback.active = false;
+        hintPlayback.path = path || null;
+        document.getElementById('astar-think-btn').disabled = false;
+        renderGrid();
+    };
+    mountLevelRenderer(levelGrid(gameState.player, target), {
+        onStep(st) {
+            document.getElementById('g-value').textContent = st.g;
+            document.getElementById('h-value').textContent = st.h;
+            document.getElementById('f-value').textContent = st.f;
+            document.getElementById('explored-list').textContent = st.closed.map(c => '(' + c.x + ',' + c.y + ')').join(' ');
+        },
+        onDone: finish,
+        onNoPath: () => finish(null)
+    }).setSpeed(350).play();
+}
 function renderGrid() {
-    const grid = document.getElementById('astar-grid');
+    if (!gridRenderer || gridSignature !== mapSignature()) mountLevelRenderer(levelGrid());
+    if (hintPlayback.active) { gridRenderer.refresh(); return; }
     const inSearch = searchViz.active && searchViz.phase === 'search' && searchViz.idx >= 0;
-    // 思考階段不能先漏出答案路徑;等 walk 階段才顯示
+    const snapshot = inSearch ? searchViz.steps[searchViz.idx] : null;
+    gridRenderer.redraw(snapshot && { ...snapshot, current: snapshot.cur }, hintPlayback.path || []);
+    updateStats();
+}
+function renderLevelCell(cell, {x, y}, frame) {
+    const inSearch = !!frame.snapshot;
     const showAiPath = gameState.mode === 'ai' && !inSearch;
     const aiPathSet = new Set(gameState.aiPath.map(p => p.x + ',' + p.y));
-    
     let openMap = null, closedSet = null, curKey = null;
     if (inSearch) {
-        const st = searchViz.steps[searchViz.idx];
+        const st = frame.snapshot;
         openMap = new Map(st.open.map(o => [o.x + ',' + o.y, o.f]));
         closedSet = new Set(st.closed.map(c => c.x + ',' + c.y));
-        curKey = st.cur.x + ',' + st.cur.y;
+        const current = st.current || st.cur;
+        curKey = current.x + ',' + current.y;
+    }
+    const k = x + ',' + y;
+    const isPlayer = gameState.player.x === x && gameState.player.y === y;
+    const isGoal = gameState.goal.x === x && gameState.goal.y === y;
+    const isGarcia = gameState.garcia.x === x && gameState.garcia.y === y;
+    const isObs = isObstacle(x, y);
+    const isVisited = gameState.visited.some(v => v.x === x && v.y === y);
+    const isAdj = isAdjacent(x, y) && !isObs && gameState.mode === 'player';
+    const isOnAiPath = aiPathSet.has(k) && showAiPath;
+    
+    let cellClass = 'astar-cell', content = '';
+    
+    if (inSearch) {
+        // 思考階段:青色脈動=正在看,紫=看過,黃框=候選(顯示各自真實的 f)
+        if (isGoal) { cellClass += ' goal'; content = '🏠'; }
+        else if (isGarcia) { cellClass += ' garcia'; content = '👵'; }
+        else if (isObs) { cellClass += ' obstacle'; content = '🏢'; }
+        if (isPlayer && k !== curKey) { content = '🚚'; }
+        if (k === curKey) { cellClass += ' search-current'; if (!isGoal && !isGarcia) content = '🤖'; }
+        else if (closedSet.has(k)) { cellClass += ' search-closed'; }
+        else if (openMap.has(k)) { cellClass += ' search-open'; }
+        const showF = openMap.has(k) && !isGoal && !isGarcia && k !== curKey;
+        cell.innerHTML = '<span>' + content + '</span>' + (showF ? '<span class="f-search mono">' + openMap.get(k) + '</span>' : '');
+        cell.className = cellClass;
+        return;
     }
     
-    let html = '';
-    for (let y = 0; y < gameState.gridHeight; y++) {
-        for (let x = 0; x < gameState.gridWidth; x++) {
-            const k = x + ',' + y;
-            const isPlayer = gameState.player.x === x && gameState.player.y === y;
-            const isGoal = gameState.goal.x === x && gameState.goal.y === y;
-            const isGarcia = gameState.garcia.x === x && gameState.garcia.y === y;
-            const isObs = isObstacle(x, y);
-            const isVisited = gameState.visited.some(v => v.x === x && v.y === y);
-            const isAdj = isAdjacent(x, y) && !isObs && gameState.mode === 'player';
-            const isOnAiPath = aiPathSet.has(k) && showAiPath;
-            
-            let cellClass = 'astar-cell', content = '';
-            
-            if (inSearch) {
-                // 思考階段:青色脈動=正在看,紫=看過,黃框=候選(顯示各自真實的 f)
-                if (isGoal) { cellClass += ' goal'; content = '🏠'; }
-                else if (isGarcia) { cellClass += ' garcia'; content = '👵'; }
-                else if (isObs) { cellClass += ' obstacle'; content = '🏢'; }
-                if (isPlayer && k !== curKey) { content = '🚚'; }
-                if (k === curKey) { cellClass += ' search-current'; if (!isGoal && !isGarcia) content = '🤖'; }
-                else if (closedSet.has(k)) { cellClass += ' search-closed'; }
-                else if (openMap.has(k)) { cellClass += ' search-open'; }
-                const showF = openMap.has(k) && !isGoal && !isGarcia && k !== curKey;
-                html += '<div class="' + cellClass + '"><span>' + content + '</span>' + (showF ? '<span class="f-search mono">' + openMap.get(k) + '</span>' : '') + '</div>';
-                continue;
-            }
-            
-            if (isPlayer) { cellClass += gameState.mode === 'ai' ? ' ai-current' : ' player'; content = gameState.mode === 'ai' ? '🚚' : '🚚'; }
-            else if (isGoal) { cellClass += ' goal'; content = '🏠'; }
-            else if (isGarcia) {
-                cellClass += ' garcia';
-                content = '👵';
-                if (gameState.garciaDimmed) cellClass += ' garcia-dim';
-                if (gameState.garciaHint) { cellClass += ' garcia-hint'; content = '⚠️'; }
-            }
-            else if (isObs) { cellClass += ' obstacle'; content = '🏢'; }
-            else if (isOnAiPath) { cellClass += ' ai-path'; }
-            else if (isVisited) { cellClass += ' visited'; content = '·'; }
-            else if (isAdj) { cellClass += ' adjacent'; }
-            
-            const f = getF(x, y);
-            html += '<div class="' + cellClass + '" onclick="movePlayer(' + x + ',' + y + ')"><span>' + content + '</span>' + (!isPlayer&&!isGoal&&!isGarcia&&!isObs ? '<span class="f-score mono">' + f + '</span>' : '') + '</div>';
-        }
+    if (isPlayer) { cellClass += gameState.mode === 'ai' ? ' ai-current' : ' player'; content = gameState.mode === 'ai' ? '🚚' : '🚚'; }
+    else if (isGoal) { cellClass += ' goal'; content = '🏠'; }
+    else if (isGarcia) {
+        cellClass += ' garcia';
+        content = '👵';
+        if (gameState.garciaDimmed) cellClass += ' garcia-dim';
+        if (gameState.garciaHint) { cellClass += ' garcia-hint'; content = '⚠️'; }
     }
-    grid.innerHTML = html;
-    updateStats();
+    else if (isObs) { cellClass += ' obstacle'; content = '🏢'; }
+    else if (isOnAiPath) { cellClass += ' ai-path'; }
+    else if (isVisited) { cellClass += ' visited'; content = '·'; }
+    else if (isAdj) { cellClass += ' adjacent'; }
+    
+    const f = getF(x, y);
+    cell.innerHTML = '<span>' + content + '</span>' + (!isPlayer&&!isGoal&&!isGarcia&&!isObs ? '<span class="f-score mono">' + f + '</span>' : '');
+    cell.className = cellClass;
 }
 
 function updateStats() {
@@ -1220,6 +1251,8 @@ function updateStats() {
 // PLAYER MOVEMENT
 // ═══════════════════════════════════════════════════════════════════════════
 function movePlayer(x, y) {
+    if (hintPlayback.active) return;
+    hintPlayback.path = null;
     if (gameState.mode !== 'player' || !isAdjacent(x, y) || !isValidMove(x, y)) return;
     if (gameState.madeChoice === 'follow' && x === gameState.garcia.x && y === gameState.garcia.y) return;
     
@@ -1573,6 +1606,7 @@ function resetLevel() {
 }
 
 function completeLevel() {
+    cancelAStarHint();
     if (typeof jokAnalytics !== 'undefined') jokAnalytics.complete('ataraxy', { steps: gameState.steps });
     // Stop game music for meditation
     const bgMusic = document.getElementById('bg-music');
@@ -1646,6 +1680,10 @@ function continueJourney() {
 // ═══════════════════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Game initialized');
+    try {
+        const savedLang = localStorage.getItem('jok-lang');
+        if (['en', 'zh', 'es'].includes(savedLang)) setLang(savedLang);
+    } catch (_) {}
     
     // 初始化遊戲
     gameState.aiPath = computeAStarPath();

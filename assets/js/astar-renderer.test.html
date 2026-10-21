@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A* renderer standalone 12×12 check</title>
+<style>
+body{margin:12px;background:#e9edf2;color:#152334;font-family:system-ui;font-size:clamp(13px,3vw,18px)}
+h1{font-size:clamp(18px,5vw,24px)}button,input{touch-action:manipulation;font:inherit}button{min-height:44px;margin:3px;padding:6px 10px}
+#controls{display:flex;flex-wrap:wrap;margin:12px 0}#board{--astar-cell-size:40px;--astar-frontier:#62752f;--astar-path:#71ba8a}#status{min-height:1.5em}
+</style>
+<h1>A* independent renderer · 12×12</h1>
+<p>Click a cell to add/remove a wall. Endpoints stay walkable. Replay after an edit uses half the selected delay.</p>
+<div id="board"></div><p id="status" aria-live="polite">Ready</p>
+<div id="controls"><button onclick="demo.play()">Play</button><button onclick="demo.pause()">Pause</button><button onclick="demo.step()">Step</button><button onclick="demo.reset();statusEl.textContent='Ready'">Reset</button></div>
+<label>Delay <input type="range" min="20" max="700" value="350" oninput="demo.setSpeed(Number(this.value))"> ms</label>
+<script src="astar-engine.js"></script><script src="astar-renderer.js"></script>
+<script>
+const statusEl=document.getElementById('status');
+const demo=mountAStar(document.getElementById('board'),AStarEngine.createGrid({cols:12,rows:12,start:{x:0,y:0},goal:{x:11,y:11},walls:[{x:5,y:0},{x:5,y:1},{x:5,y:2},{x:5,y:3},{x:5,y:4}]}),{
+ editable:true,onStep:(st,i)=>statusEl.textContent='Step '+(i+1)+' · f='+st.f,
+ onDone:path=>statusEl.textContent='Done · '+(path.length-1)+' moves',
+ onNoPath:()=>statusEl.textContent='No path. Click a wall to remove it.'
+});
+</script></html>

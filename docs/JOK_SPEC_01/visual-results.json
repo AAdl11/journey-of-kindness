@@ -1,0 +1,97 @@
+{
+  "checks": [
+    "Final fonts zh 390px no horizontal overflow or grid clipping",
+    "Final fonts en 390px no horizontal overflow or grid clipping",
+    "Final fonts es 390px no horizontal overflow or grid clipping",
+    "Existing board geometry identical to original in all three languages with CJK/emoji fonts",
+    "Pre-existing skip and arrow-key behavior reproduced identically; retained outside this specification",
+    "Board has no geometry change during or after hint playback",
+    "Two independent containers; options override color and cell size; caller grid unmodified",
+    "Both standalone test pages open directly as local files",
+    "Final visual pass: no JavaScript errors"
+  ],
+  "metrics": {
+    "Final fonts zh 390px": {
+      "viewport": 390,
+      "document": 390,
+      "grid": {
+        "x": 8,
+        "y": 186.1875,
+        "width": 374,
+        "height": 282.96875,
+        "top": 186.1875,
+        "right": 382,
+        "bottom": 469.15625,
+        "left": 8
+      },
+      "gridScroll": 374
+    },
+    "Final fonts en 390px": {
+      "viewport": 390,
+      "document": 390,
+      "grid": {
+        "x": 8,
+        "y": 186.1875,
+        "width": 374,
+        "height": 282.96875,
+        "top": 186.1875,
+        "right": 382,
+        "bottom": 469.15625,
+        "left": 8
+      },
+      "gridScroll": 374
+    },
+    "Final fonts es 390px": {
+      "viewport": 390,
+      "document": 390,
+      "grid": {
+        "x": 8,
+        "y": 175.640625,
+        "width": 374,
+        "height": 282.96875,
+        "top": 175.640625,
+        "right": 382,
+        "bottom": 458.609375,
+        "left": 8
+      },
+      "gridScroll": 374
+    },
+    "preexisting": [
+      {
+        "skip": {
+          "mode": "ai",
+          "cinematic": false,
+          "search": true
+        },
+        "arrows": {
+          "player": {
+            "x": 1,
+            "y": 0
+          },
+          "steps": 1
+        }
+      },
+      {
+        "skip": {
+          "mode": "ai",
+          "cinematic": false,
+          "search": true
+        },
+        "arrows": {
+          "player": {
+            "x": 1,
+            "y": 0
+          },
+          "steps": 1
+        }
+      }
+    ],
+    "styleOverrides": {
+      "untouched": true,
+      "color": "rgb(34, 68, 102)",
+      "width": 30,
+      "immutable": true
+    }
+  },
+  "errors": []
+}
