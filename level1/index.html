@@ -1136,7 +1136,8 @@ function watchAStar() {
     const board = document.getElementById('astar-grid');
     const bounds = board.getBoundingClientRect();
     if (bounds.top < 0 || bounds.bottom > window.innerHeight) board.scrollIntoView({block: 'center'});
-    if (cinematic.active || gameState.mode === 'ai' || !gameState.challengeMode) {
+    // 01c: 只要是玩家在操作（示範後的交棒段或正式挑戰）都給提示；只有 AI 演示中或尚未開始才重播示範
+    if (cinematic.active || gameState.mode !== 'player') {
         startCinematic();
         return;
     }
