@@ -1,0 +1,64 @@
+{
+  "kind": "In-memory DOM and source assertions; NOT browser rendering",
+  "checks": [
+    {
+      "name": "baseline bytes and shared engine/renderer unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "GA initialization preserved byte-for-byte in script elements",
+      "status": "PASS"
+    },
+    {
+      "name": "removed quotes/social links and no autoplay attributes",
+      "status": "PASS"
+    },
+    {
+      "name": "all eight original SVGs inlined verbatim",
+      "status": "PASS"
+    },
+    {
+      "name": "three-language groups complete; LPC confined to two prescribed groups",
+      "status": "PASS"
+    },
+    {
+      "name": "one door_seen; visible CTA; no media play; search starts at 2000ms",
+      "status": "PASS"
+    },
+    {
+      "name": "roadblock restarts from original start; event after replay; toast displayed",
+      "status": "PASS"
+    },
+    {
+      "name": "credits after interaction; second shared-engine map; CTA event",
+      "status": "PASS"
+    },
+    {
+      "name": "idle visitor transitions at 15000ms without a roadblock",
+      "status": "PASS"
+    },
+    {
+      "name": "rapid edits retained; no-path preserves walls and permits removal before transition",
+      "status": "PASS"
+    },
+    {
+      "name": "all saved languages restored; only L1/L4/L8 checked; progress data not rewritten",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed/unavailable storage does not break the page",
+      "status": "PASS"
+    },
+    {
+      "name": "mini grid loops at 200ms while visible and pauses off screen without media",
+      "status": "PASS"
+    },
+    {
+      "name": "video source/play only after explicit footer click; close unloads it",
+      "status": "PASS"
+    }
+  ],
+  "browserRendering": "BLOCKED by browser security policy; 390px overflow unverified",
+  "realPhones": "NOT TESTED",
+  "gaDebugView": "NOT TESTED"
+}
