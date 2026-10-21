@@ -997,7 +997,14 @@ function exitDemo() {
 
 function aiStepForward() {
     // 演戲進行中按 ⏩ = 直接跳到我的回合(skip)
-    if (cinematic.active) { stopCinematic(); handoffToPlayer(); return; }
+    if (cinematic.active) {
+        // 01b: 先清計時器與提示，但保留 cinematic.active，讓 handoffToPlayer 不會提前返回
+        cancelAStarHint();
+        if (gridRenderer) gridRenderer.pause();
+        if (cinematic.timer) { clearTimeout(cinematic.timer); cinematic.timer = null; }
+        handoffToPlayer();
+        return;
+    }
     // 沒在演 → 啟動整齣戲
     startCinematic();
 }
@@ -1697,21 +1704,22 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!document.getElementById('game-screen').classList.contains('active')) return;
         
         switch(e.key) {
+            // 01b: movePlayer 接受絕對座標，方向鍵改為目前位置加位移
             case 'ArrowUp':
                 e.preventDefault();
-                movePlayer(0, -1);
+                movePlayer(gameState.player.x, gameState.player.y - 1);
                 break;
             case 'ArrowDown':
                 e.preventDefault();
-                movePlayer(0, 1);
+                movePlayer(gameState.player.x, gameState.player.y + 1);
                 break;
             case 'ArrowLeft':
                 e.preventDefault();
-                movePlayer(-1, 0);
+                movePlayer(gameState.player.x - 1, gameState.player.y);
                 break;
             case 'ArrowRight':
                 e.preventDefault();
-                movePlayer(1, 0);
+                movePlayer(gameState.player.x + 1, gameState.player.y);
                 break;
         }
     });

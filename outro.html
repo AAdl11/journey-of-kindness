@@ -191,7 +191,7 @@
         
         .qr-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: minmax(0, 420px); justify-content: center;
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
@@ -238,9 +238,6 @@
             text-decoration: none;
         }
         .passport-link:hover, .passport-link:focus-visible { background: #0f353b; }
-        
-        .qr-facebook { border-top: 4px solid #1877f2; }
-        .qr-instagram { border-top: 4px solid #e4405f; }
         .qr-survey { border-top: 4px solid #34a853; }
         
         /* 按鈕 */
@@ -349,19 +346,6 @@
             
             <h2 class="qr-title" data-zh="📱 掃描 QR Code" data-en="📱 Scan QR Code">📱 Scan QR Code</h2>
             <div class="qr-grid">
-                <div class="qr-card qr-facebook">
-                    <div class="qr-card-icon">📘</div>
-                    <img src="assets/images/qr_facebook.jpg" alt="Facebook QR Code">
-                    <div class="qr-card-title">Facebook</div>
-                    <div class="qr-card-subtitle" data-zh="追蹤專頁" data-en="Follow page">Follow page</div>
-                </div>
-                
-                <div class="qr-card qr-instagram">
-                    <div class="qr-card-icon">📸</div>
-                    <img src="assets/images/qr_instagram.png" alt="Instagram QR Code">
-                    <div class="qr-card-title">Instagram</div>
-                    <div class="qr-card-subtitle" data-zh="追蹤動態" data-en="Follow updates">Follow updates</div>
-                </div>
                 
                 <div class="qr-card qr-survey">
                     <div class="qr-card-icon">📝</div>
