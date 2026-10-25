@@ -1,0 +1,691 @@
+{
+  "checks": [
+    {
+      "name": "engine browser page 8/8 PASS",
+      "status": "PASS"
+    },
+    {
+      "name": "fresh state starts the preserved demo",
+      "status": "PASS"
+    },
+    {
+      "name": "390 demo horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "third act retains Grandma reveal and tea image",
+      "status": "PASS"
+    },
+    {
+      "name": "demo does not award coins",
+      "status": "PASS"
+    },
+    {
+      "name": "only Break is unlocked",
+      "status": "PASS"
+    },
+    {
+      "name": "locked cards explain the prerequisite",
+      "status": "PASS"
+    },
+    {
+      "name": "390 menu horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "blocked path does not award a coin",
+      "status": "PASS"
+    },
+    {
+      "name": "no-path feedback visible",
+      "status": "PASS"
+    },
+    {
+      "name": "Break earns exactly one coin",
+      "status": "PASS"
+    },
+    {
+      "name": "390 Break horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "Predict keeps reachable Break walls",
+      "status": "PASS"
+    },
+    {
+      "name": "shared g/h/f panel is visible",
+      "status": "PASS"
+    },
+    {
+      "name": "Predict accepts 9/10 with an error, no penalty",
+      "status": "PASS"
+    },
+    {
+      "name": "equal-f alternative accepted in this run",
+      "status": "PASS"
+    },
+    {
+      "name": "390 Predict horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "Race optimal panel follows daily benchmark",
+      "status": "PASS"
+    },
+    {
+      "name": "Race keeps reachable Break walls",
+      "status": "PASS"
+    },
+    {
+      "name": "existing hint leaves position and score unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "Race earns third coin",
+      "status": "PASS"
+    },
+    {
+      "name": "Race writes best stars in original format",
+      "status": "PASS"
+    },
+    {
+      "name": "Race scorecard is fixed 300x190",
+      "status": "PASS"
+    },
+    {
+      "name": "repeat moves after finish cannot duplicate results",
+      "status": "PASS"
+    },
+    {
+      "name": "390 Race result horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "Race leads to original portico",
+      "status": "PASS"
+    },
+    {
+      "name": "portico en has one attribution",
+      "status": "PASS"
+    },
+    {
+      "name": "English portico second line is original Chinese",
+      "status": "PASS"
+    },
+    {
+      "name": "portico zh has one attribution",
+      "status": "PASS"
+    },
+    {
+      "name": "portico es has one attribution",
+      "status": "PASS"
+    },
+    {
+      "name": "390 Portico horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "replay returns to menu and stops meditation",
+      "status": "PASS"
+    },
+    {
+      "name": "Tune entry repairs to a solvable map",
+      "status": "PASS"
+    },
+    {
+      "name": "Tune earns fourth coin and the only master badge",
+      "status": "PASS"
+    },
+    {
+      "name": "390 Tune horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "master badge appears in menu after Tune",
+      "status": "PASS"
+    },
+    {
+      "name": "new menu en translation complete",
+      "status": "PASS"
+    },
+    {
+      "name": "new menu zh translation complete",
+      "status": "PASS"
+    },
+    {
+      "name": "new menu es translation complete",
+      "status": "PASS"
+    },
+    {
+      "name": "reload skips demo and preserves completed modes",
+      "status": "PASS"
+    },
+    {
+      "name": "repeating Break does not mint coins",
+      "status": "PASS"
+    },
+    {
+      "name": "other progress remains unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "new telemetry carries legacy context",
+      "status": "PASS"
+    },
+    {
+      "name": "all required mode and award events emitted",
+      "status": "PASS"
+    },
+    {
+      "name": "only four first-pass coin events",
+      "status": "PASS"
+    },
+    {
+      "name": "failed Predict offers immediate retry",
+      "status": "PASS"
+    },
+    {
+      "name": "failed Predict retry keeps the same map",
+      "status": "PASS"
+    },
+    {
+      "name": "failed/retried Predict cannot mint coins",
+      "status": "PASS"
+    },
+    {
+      "name": "360 menu horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "360 break horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "360 predict horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "360 race horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "360 tune horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "390 menu horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "390 break horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "390 predict horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "390 race horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "390 tune horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "412 menu horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "412 break horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "412 predict horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "412 race horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "412 tune horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "844 menu horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "844 break horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "844 predict horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "844 race horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "844 tune horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "1280 menu horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "1280 break horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "1280 predict horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "1280 race horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "1280 tune horizontal fit",
+      "status": "PASS"
+    },
+    {
+      "name": "no uncaught page errors",
+      "status": "PASS"
+    }
+  ],
+  "layouts": [
+    {
+      "name": "390 demo",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "name": "390 menu",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "name": "390 Break",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "name": "390 Predict",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "name": "390 Race result",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "name": "390 Portico",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "name": "390 Tune",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "name": "360 menu",
+      "width": 360,
+      "scroll": 360,
+      "overflow": []
+    },
+    {
+      "name": "360 break",
+      "width": 360,
+      "scroll": 360,
+      "overflow": []
+    },
+    {
+      "name": "360 predict",
+      "width": 360,
+      "scroll": 360,
+      "overflow": []
+    },
+    {
+      "name": "360 race",
+      "width": 360,
+      "scroll": 360,
+      "overflow": []
+    },
+    {
+      "name": "360 tune",
+      "width": 360,
+      "scroll": 360,
+      "overflow": []
+    },
+    {
+      "name": "390 menu",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "name": "390 break",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "name": "390 predict",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "name": "390 race",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "name": "390 tune",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "name": "412 menu",
+      "width": 412,
+      "scroll": 412,
+      "overflow": []
+    },
+    {
+      "name": "412 break",
+      "width": 412,
+      "scroll": 412,
+      "overflow": []
+    },
+    {
+      "name": "412 predict",
+      "width": 412,
+      "scroll": 412,
+      "overflow": []
+    },
+    {
+      "name": "412 race",
+      "width": 412,
+      "scroll": 412,
+      "overflow": []
+    },
+    {
+      "name": "412 tune",
+      "width": 412,
+      "scroll": 412,
+      "overflow": []
+    },
+    {
+      "name": "844 menu",
+      "width": 844,
+      "scroll": 844,
+      "overflow": []
+    },
+    {
+      "name": "844 break",
+      "width": 844,
+      "scroll": 844,
+      "overflow": []
+    },
+    {
+      "name": "844 predict",
+      "width": 844,
+      "scroll": 844,
+      "overflow": []
+    },
+    {
+      "name": "844 race",
+      "width": 844,
+      "scroll": 844,
+      "overflow": []
+    },
+    {
+      "name": "844 tune",
+      "width": 844,
+      "scroll": 844,
+      "overflow": []
+    },
+    {
+      "name": "1280 menu",
+      "width": 1280,
+      "scroll": 1280,
+      "overflow": []
+    },
+    {
+      "name": "1280 break",
+      "width": 1280,
+      "scroll": 1280,
+      "overflow": []
+    },
+    {
+      "name": "1280 predict",
+      "width": 1280,
+      "scroll": 1280,
+      "overflow": []
+    },
+    {
+      "name": "1280 race",
+      "width": 1280,
+      "scroll": 1280,
+      "overflow": []
+    },
+    {
+      "name": "1280 tune",
+      "width": 1280,
+      "scroll": 1280,
+      "overflow": []
+    }
+  ],
+  "errors": [],
+  "testAssets": {
+    "tailwind": true,
+    "fonts": true
+  },
+  "events": [
+    {
+      "name": "level_start",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "zh",
+        "stage": "demo"
+      }
+    },
+    {
+      "name": "l1_mode_enter",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "zh",
+        "mode": "break"
+      }
+    },
+    {
+      "name": "l1_break_pass",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "zh",
+        "extra_steps": 6,
+        "walls_used": 3
+      }
+    },
+    {
+      "name": "l1_coin",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "zh",
+        "coins_total": 1
+      }
+    },
+    {
+      "name": "l1_mode_enter",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "zh",
+        "mode": "predict"
+      }
+    },
+    {
+      "name": "l1_predict_pass",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "zh",
+        "correct": 9,
+        "total": 10
+      }
+    },
+    {
+      "name": "l1_coin",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "zh",
+        "coins_total": 2
+      }
+    },
+    {
+      "name": "l1_mode_enter",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "zh",
+        "mode": "race"
+      }
+    },
+    {
+      "name": "l1_hint_astar",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "zh"
+      }
+    },
+    {
+      "name": "l1_race_pass",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "zh",
+        "player_steps": 20,
+        "astar_steps": 20
+      }
+    },
+    {
+      "name": "l1_coin",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "zh",
+        "coins_total": 3
+      }
+    },
+    {
+      "name": "level_complete",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "zh",
+        "stage": "ataraxy",
+        "elapsed_seconds": 23,
+        "steps": 20
+      }
+    },
+    {
+      "name": "feedback_prompt_view",
+      "params": {
+        "level": 1,
+        "ui_language": "zh",
+        "survey_version": "kindness_passport_2026_08"
+      }
+    },
+    {
+      "name": "level_start",
+      "params": {
+        "level": 1,
+        "attempt": 2,
+        "ui_language": "es",
+        "stage": "dojo"
+      }
+    },
+    {
+      "name": "l1_mode_enter",
+      "params": {
+        "level": 1,
+        "attempt": 2,
+        "ui_language": "es",
+        "mode": "tune"
+      }
+    },
+    {
+      "name": "l1_tune_pass",
+      "params": {
+        "level": 1,
+        "attempt": 2,
+        "ui_language": "es",
+        "w": 1.5,
+        "explored": 18,
+        "baseline_explored": 26
+      }
+    },
+    {
+      "name": "l1_coin",
+      "params": {
+        "level": 1,
+        "attempt": 2,
+        "ui_language": "es",
+        "coins_total": 4
+      }
+    },
+    {
+      "name": "level_start",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "es",
+        "stage": "dojo"
+      }
+    },
+    {
+      "name": "l1_mode_enter",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "es",
+        "mode": "break"
+      }
+    },
+    {
+      "name": "l1_break_pass",
+      "params": {
+        "level": 1,
+        "attempt": 1,
+        "ui_language": "es",
+        "extra_steps": 6,
+        "walls_used": 3
+      }
+    }
+  ],
+  "summary": {
+    "passed": 74,
+    "total": 74
+  }
+}

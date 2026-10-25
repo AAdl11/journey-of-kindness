@@ -1,0 +1,17 @@
+{
+  "CHANGELOG_SPEC03.md": "153103e404cb4bd8a21f3fcb7a2266b81f5795d755a1b2c74346892d29a33cab",
+  "level1/index.html": "c4ed57eaa6a9b37f7598d62b080dc71127646a6d3ad9fe566f99a97471a4db16",
+  "assets/js/astar-engine.js": "eb0cf3e75ca4099199bc43049c1749099340ba02b461ed5f774dbab6e6d020c2",
+  "assets/js/astar-engine.test.html": "99351849e945d60aae33f8b1f940c537f91abd9dcf1763be08c410b059b7d4ae",
+  "assets/js/ASTAR_API.md": "793071adf05c8b70db4dd1d19caa34b15700567eaf8cbcc1c45c6fd31d9522f8",
+  "assets/js/l1-dojo-core.js": "605a5f1d7b7a65132f80d65767fed4f7ba520691492bf38e48fe987a2650847f",
+  "assets/js/l1-dojo.js": "9b7a905333fa042bcddd21bae558dbdf8278c7ddcc57771844c3efa4ddf42c60",
+  "assets/js/l1-dojo.css": "607eca0b03f91f04f808ac2482e1861f3430ada8731366c792d13fb0f956aefa",
+  "tests/l1-dojo-core.test.cjs": "cef0c2d70d93b369de7cfbeddeb9404b0c88bb3f286db4e15ed59694e7dc53c6",
+  "tests/l1-dojo-browser.test.cjs": "13984312a9b03e9251785799db8128b3dd7ea5ebabb1064990da2817d8e935dc",
+  "tests/l1-dojo-invariants.py": "e82a892276e9dfd6f76396b853e75667dbea7b3570ee92d91ddb4338e0b6e321",
+  "docs/JOK_SPEC_03/MOBILE_ACCEPTANCE.md": "29221d8b48efc6845baeba1bae2df3e6f3b9bad81c43f18a5f9877922b7c5a64",
+  "docs/JOK_SPEC_03/core-results.json": "c796a2103627893f8450f2818c59cd37163f9e9291401acffea82fcc79d36e9b",
+  "docs/JOK_SPEC_03/browser-results.json": "8e87f8a2dd3352e0d03a4d00d2865a692c676b414f1dff9d2a04e3d1434867a2",
+  "docs/JOK_SPEC_03/invariants-results.json": "a1d9b5584b14ef4e34c3b9973df0513b7b8337e4f5d5c9bd679c8f12da1d6638"
+}

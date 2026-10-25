@@ -10,7 +10,7 @@
     const copy = p => ({ x: p.x, y: p.y });
     const manhattan = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 
-    function createGrid({ cols, rows, walls = [], start, goal, tieBreak = 'deeper' }) {
+    function createGrid({ cols, rows, walls = [], start, goal, tieBreak = 'deeper', w = 1 }) {
         if (!Number.isInteger(cols) || !Number.isInteger(rows) || cols < 1 || rows < 1) {
             throw new RangeError('cols and rows must be positive integers');
         }
@@ -20,8 +20,9 @@
             throw new RangeError('All coordinates must be integer cells inside the grid');
         }
         if (!['deeper', 'fifo'].includes(tieBreak)) throw new TypeError('Unknown tieBreak');
+        if (!Number.isFinite(w) || w < 0) throw new RangeError('w must be finite and nonnegative');
         return { cols, rows, walls: Array.from(new Map(walls.map(p => [key(p), copy(p)])).values()),
-            start: copy(start), goal: copy(goal), tieBreak };
+            start: copy(start), goal: copy(goal), tieBreak, w };
     }
 
     // Success: array of independent snapshots; last snapshot has path.
@@ -33,7 +34,7 @@
         if (walls.has(key(start)) || walls.has(key(goal))) return { steps, path: null };
         const openSet = [start], cameFrom = {}, gScore = {}, fScore = {};
         gScore[key(start)] = 0;
-        fScore[key(start)] = manhattan(start, goal);
+        fScore[key(start)] = grid.w * manhattan(start, goal);
         while (openSet.length) {
             // Preserve recorder's larger-g tie break; fifo preserves the old path-only routine.
             openSet.sort((a, b) => (fScore[key(a)] - fScore[key(b)])
@@ -52,7 +53,7 @@
                         if (gScore[nk] === undefined || g < gScore[nk]) {
                             cameFrom[nk] = copy(current);
                             gScore[nk] = g;
-                            fScore[nk] = g + manhattan(n, goal);
+                            fScore[nk] = g + grid.w * manhattan(n, goal);
                             if (!openSet.some(p => key(p) === nk)) openSet.push(n);
                         }
                     });

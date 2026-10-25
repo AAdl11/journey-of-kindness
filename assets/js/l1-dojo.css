@@ -1,0 +1,64 @@
+/* Scoped dojo UI; normal document scrolling is deliberate. */
+[hidden]{display:none!important}
+.dojo-shell{width:min(100%,680px);margin:0 auto;padding:68px 14px 24px;color:#f8fafc;box-sizing:border-box}
+.dojo-panel{padding:16px;border:1px solid #718977;border-radius:20px;background:rgba(15,35,31,.96);box-shadow:0 12px 32px #0004;min-width:0}
+.dojo-eyebrow{font-size:12px;letter-spacing:.12em;color:#c6d7be;margin:0 0 4px}
+.dojo-title{font-size:26px;line-height:1.2;margin:5px 0 12px;font-weight:800}
+.dojo-top,.dojo-actions,.dojo-metrics{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.dojo-coins{background:#f9d987;color:#30240b;padding:6px 12px;border-radius:30px;font-weight:800}
+.dojo-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}
+.dojo-card{appearance:none;text-align:left;min-width:0;padding:14px 12px;border:1px solid #90b499;border-radius:15px;background:#24443b;color:#fff;cursor:pointer;font:inherit;touch-action:manipulation}
+.dojo-card[data-locked="true"]{background:#283832;border-color:#677970;color:#d9e1db}
+.dojo-card[data-passed="true"]{border-color:#f5d16e}
+.dojo-card strong{display:block;font-size:19px;margin:7px 0}
+.dojo-card small{display:block;line-height:1.6}
+.dojo-btn{font:inherit;min-height:44px;border:1px solid #a9bbaf;border-radius:11px;padding:9px 13px;background:#35594a;color:#fff;cursor:pointer;touch-action:manipulation}
+.dojo-btn.primary{background:#f5d16e;border-color:#f5d16e;color:#24352a;font-weight:750}
+.dojo-btn:focus-visible,.dojo-card:focus-visible{outline:3px solid #fbce65;outline-offset:3px}
+.dojo-help,.dojo-status{font-size:14px;line-height:1.65;margin:12px 0;overflow-wrap:anywhere}
+.dojo-status{color:#ffe0a2;min-height:1.6em}
+.dojo-mode-title{font-size:22px;margin:10px 0 6px;font-weight:800}
+.dojo-metrics{justify-content:flex-start;margin:10px 0;font-size:14px}
+.dojo-metrics span{padding:6px 9px;background:#28483d;border-radius:8px}
+#dojoboard{margin:12px auto;--astar-width:580px;--astar-cell-size:66px;--astar-font-size:23px;--astar-board:#152a24;--astar-cell:#345548;--astar-wall:#52564f;--astar-border:#72897a;--astar-score-size:11px}
+#dojoboard .jok-astar-cell{position:relative;cursor:pointer}
+#dojoboard .dojo-f{position:absolute;bottom:1px;right:2px;z-index:2;font-size:11px;line-height:1.15;background:#10251fe8;padding:1px 2px;border-radius:2px;color:#ffe6a8}
+#dojoboard .dojo-player-wall{outline:2px solid #f2c35e;outline-offset:-3px}
+#dojoboard .dojo-correct{background:#16a34a!important}
+#dojoboard .dojo-flash{animation:dojo-answer .3s linear 3}
+@keyframes dojo-answer{50%{background:#f4a444;color:#10251f}}
+.dojo-success{padding:14px;margin:12px 0;background:#2b5945;border:1px solid #d4c15c;border-radius:14px;line-height:1.6}
+.dojo-success h3{font-size:19px;font-weight:800;margin:0 0 10px}
+.dojo-range{width:100%;min-height:44px;accent-color:#f5d16e;touch-action:pan-y}
+.dojo-weight-labels{display:flex;justify-content:space-between;gap:6px;font-size:12px}
+.dojo-hint{font-size:14px;line-height:1.6;border-top:1px solid #6f8677;padding-top:10px;margin-top:14px}
+.dojo-hint summary{cursor:pointer;min-height:36px}
+.dojo-note{font-size:12px;line-height:1.5;color:#c6d7be}
+.dojo-demo-tools{padding:8px 0;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+body[data-dojo-view="menu"] #game-screen,body[data-dojo-view="break"] #game-screen,body[data-dojo-view="predict"] #game-screen,body[data-dojo-view="tune"] #game-screen{display:none!important}
+body[data-dojo-view="demo"] .scoreboard,body[data-dojo-view="race"] .scoreboard{display:none!important}
+body[data-dojo-view="race"] .controls-bar>button:nth-child(-n+4){display:none!important}
+body[data-dojo-view="race"] .game-header{padding-right:100px}
+body[data-dojo-view="race"] .game-header>.text-center{min-width:0;font-size:12px}
+body[data-dojo-view="race"] .elo-badge{display:none}
+#dojo-race-compare{position:fixed;right:8px;top:50px;z-index:9400;background:#142f27f5;border:1px solid #ebcc78;border-radius:10px;padding:7px 10px;font-size:13px;line-height:1.5;color:#ffe6a8;max-width:48vw}
+#dojo-race-card{width:300px;height:190px;max-width:100%;margin:14px auto;padding:18px;border:2px solid #f5d16e;border-radius:16px;background:#183d30;color:#fff;display:flex;flex-direction:column;justify-content:center;gap:10px;box-sizing:border-box;text-align:center}
+#dojo-race-card strong{font-size:22px;line-height:1.4}
+#dojo-race-card small{font-size:13px}
+.dojo-race-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:10px 0}
+@media(max-width:600px){
+ .dojo-shell{padding:60px 10px 20px}.dojo-panel{padding:13px}.dojo-title{font-size:24px}
+ .dojo-cards{gap:8px}.dojo-card{padding:12px 10px}.dojo-card strong{font-size:18px}
+ #dojoboard{--astar-font-size:20px;--astar-gap:3px;--astar-padding:4px}
+ body[data-dojo-view="demo"] .game-layout,body[data-dojo-view="race"] .game-layout{display:flex!important;flex-direction:column;min-width:0}
+ body[data-dojo-view="demo"] .game-layout>div,body[data-dojo-view="race"] .game-layout>div{width:100%;min-width:0}
+ body[data-dojo-view="demo"] .game-header,body[data-dojo-view="race"] .game-header{margin-top:52px;flex-wrap:wrap;gap:4px}
+ body[data-dojo-view="race"] .game-header{padding-right:0}
+ .side-panel,.ai-subtitle,.game-layout{backdrop-filter:none!important}
+ .controls-bar{flex-wrap:wrap}.grid-wrap{width:100%;min-width:0}
+}
+@media(prefers-reduced-motion:reduce){#dojoboard .dojo-flash{animation:none;outline:3px solid #f4a444}}
+
+.dojo-panelstats>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:10px 0}
+.dojo-panelstats .stat-card:last-child{display:none}
+.dojo-panelstats .stat-card{background:#28483d;border-radius:8px;padding:6px;text-align:center}

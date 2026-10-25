@@ -1,0 +1,9104 @@
+{
+  "baseCommit": "6f2fa87",
+  "results": [
+    {
+      "name": "w=0 explores most; w=1 shortest; tuning witness preserves shortest length",
+      "status": "PASS"
+    },
+    {
+      "name": "w=3 can return a longer route, checked against independent BFS",
+      "status": "PASS"
+    },
+    {
+      "name": "fixed fallback satisfies all three gates with executable witnesses",
+      "status": "PASS"
+    },
+    {
+      "name": "100 consecutive date seeds: deterministic, <=50 attempts, three gates or validated fallback",
+      "status": "PASS"
+    },
+    {
+      "name": "coins, locks, no duplicate awards, master only after tune",
+      "status": "PASS"
+    },
+    {
+      "name": "merge progress preserves unrelated levels and fields; blocked/malformed storage is safe",
+      "status": "PASS"
+    },
+    {
+      "name": "wall repair: nearest-cell relocation, blocked route removal, tuning checked only when requested",
+      "status": "PASS"
+    },
+    {
+      "name": "every new UI string has complete English, Traditional Chinese and Spanish entries",
+      "status": "PASS"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "total": 8,
+    "dateSeeds": 100,
+    "fallbackCount": 2,
+    "uniqueMaps": 62
+  },
+  "fallback": {
+    "walls": [
+      {
+        "x": 3,
+        "y": 3
+      },
+      {
+        "x": 4,
+        "y": 0
+      },
+      {
+        "x": 7,
+        "y": 1
+      },
+      {
+        "x": 5,
+        "y": 5
+      },
+      {
+        "x": 3,
+        "y": 1
+      },
+      {
+        "x": 4,
+        "y": 5
+      },
+      {
+        "x": 3,
+        "y": 2
+      },
+      {
+        "x": 5,
+        "y": 4
+      },
+      {
+        "x": 6,
+        "y": 1
+      },
+      {
+        "x": 1,
+        "y": 2
+      }
+    ],
+    "proof": {
+      "ok": true,
+      "viaGarcia": 14,
+      "baseline": {
+        "explored": 27,
+        "length": 14
+      },
+      "tune": [
+        {
+          "w": 1.5,
+          "explored": 18,
+          "length": 14
+        },
+        {
+          "w": 2,
+          "explored": 18,
+          "length": 14
+        },
+        {
+          "w": 2.5,
+          "explored": 18,
+          "length": 14
+        },
+        {
+          "w": 3,
+          "explored": 18,
+          "length": 14
+        }
+      ],
+      "breakWalls": [
+        {
+          "x": 2,
+          "y": 4
+        },
+        {
+          "x": 0,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 4
+        }
+      ]
+    }
+  },
+  "weightedCounterexample": {
+    "walls": [
+      {
+        "x": 7,
+        "y": 3
+      },
+      {
+        "x": 2,
+        "y": 0
+      },
+      {
+        "x": 6,
+        "y": 4
+      },
+      {
+        "x": 2,
+        "y": 3
+      },
+      {
+        "x": 2,
+        "y": 2
+      },
+      {
+        "x": 1,
+        "y": 0
+      },
+      {
+        "x": 2,
+        "y": 1
+      },
+      {
+        "x": 3,
+        "y": 1
+      },
+      {
+        "x": 1,
+        "y": 4
+      },
+      {
+        "x": 3,
+        "y": 4
+      }
+    ],
+    "optimal": 12,
+    "weighted": 14,
+    "w0": 20,
+    "w1": 16,
+    "w3": 15
+  },
+  "dates": [
+    {
+      "seed": "2026-01-01",
+      "attempts": 12,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 29,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 20,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 20,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 20,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 20,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-02",
+      "attempts": 8,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-03",
+      "attempts": 12,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-04",
+      "attempts": 32,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-05",
+      "attempts": 3,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 5
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-06",
+      "attempts": 9,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 2,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 25,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 17,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-07",
+      "attempts": 23,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-08",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-09",
+      "attempts": 6,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-10",
+      "attempts": 29,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-11",
+      "attempts": 8,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 6,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-12",
+      "attempts": 50,
+      "fallback": true,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-13",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 17,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-14",
+      "attempts": 9,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 7,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-15",
+      "attempts": 3,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-16",
+      "attempts": 26,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 6,
+          "y": 3
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 30,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 21,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 21,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 21,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 3
+          },
+          {
+            "x": 1,
+            "y": 4
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-17",
+      "attempts": 21,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-18",
+      "attempts": 33,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-19",
+      "attempts": 20,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-20",
+      "attempts": 27,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 17,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-21",
+      "attempts": 33,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-22",
+      "attempts": 23,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-23",
+      "attempts": 6,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 3
+        },
+        {
+          "x": 1,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 30,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 21,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 21,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 21,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 3
+          },
+          {
+            "x": 0,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-24",
+      "attempts": 8,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-25",
+      "attempts": 3,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 6,
+            "y": 3
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-26",
+      "attempts": 5,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-27",
+      "attempts": 9,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-28",
+      "attempts": 12,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 16,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-29",
+      "attempts": 11,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 5
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-30",
+      "attempts": 5,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 7,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-01-31",
+      "attempts": 9,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-01",
+      "attempts": 33,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 0,
+          "y": 5
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 6,
+            "y": 3
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-02",
+      "attempts": 17,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-03",
+      "attempts": 26,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-04",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 29,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 20,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 20,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 20,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 20,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-05",
+      "attempts": 12,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 0,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 6,
+            "y": 3
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-06",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-07",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-08",
+      "attempts": 20,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 7,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-09",
+      "attempts": 5,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-10",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-11",
+      "attempts": 12,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-12",
+      "attempts": 18,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-13",
+      "attempts": 9,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 2,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 17,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 6,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-14",
+      "attempts": 27,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-15",
+      "attempts": 29,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-16",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 5
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-17",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 5
+        },
+        {
+          "x": 2,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 6,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-18",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-19",
+      "attempts": 11,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-20",
+      "attempts": 33,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-21",
+      "attempts": 9,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 3
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-22",
+      "attempts": 8,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 16,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 3
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-23",
+      "attempts": 11,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-24",
+      "attempts": 14,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 4
+        },
+        {
+          "x": 6,
+          "y": 5
+        },
+        {
+          "x": 2,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 17,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-25",
+      "attempts": 15,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-26",
+      "attempts": 35,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-27",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-02-28",
+      "attempts": 8,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 0,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 6,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-01",
+      "attempts": 6,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-02",
+      "attempts": 24,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-03",
+      "attempts": 3,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 5
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 17,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-04",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 6,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-05",
+      "attempts": 30,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-06",
+      "attempts": 26,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 2,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 25,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 17,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-07",
+      "attempts": 8,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 3
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 16,
+        "baseline": {
+          "explored": 30,
+          "length": 16
+        },
+        "tune": [
+          {
+            "w": 3,
+            "explored": 21,
+            "length": 16
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-08",
+      "attempts": 36,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-09",
+      "attempts": 18,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-10",
+      "attempts": 20,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-11",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-12",
+      "attempts": 26,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-13",
+      "attempts": 3,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-14",
+      "attempts": 6,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 5
+        },
+        {
+          "x": 2,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 17,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-15",
+      "attempts": 35,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 5
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-16",
+      "attempts": 14,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-17",
+      "attempts": 5,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 17,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-18",
+      "attempts": 6,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-19",
+      "attempts": 38,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-20",
+      "attempts": 50,
+      "fallback": true,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-21",
+      "attempts": 18,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 6,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-22",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-23",
+      "attempts": 30,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-24",
+      "attempts": 29,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 16,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-25",
+      "attempts": 2,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 3
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 1
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-26",
+      "attempts": 15,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 5
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-27",
+      "attempts": 3,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 7,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-28",
+      "attempts": 5,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-29",
+      "attempts": 26,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 1
+        },
+        {
+          "x": 7,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-30",
+      "attempts": 20,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 5
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-03-31",
+      "attempts": 5,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 1,
+          "y": 3
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 2
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-04-01",
+      "attempts": 20,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 1,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-04-02",
+      "attempts": 27,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 5
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-04-03",
+      "attempts": 30,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 4
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-04-04",
+      "attempts": 9,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 26,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 17,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 17,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-04-05",
+      "attempts": 3,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 3
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-04-06",
+      "attempts": 21,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 5
+        },
+        {
+          "x": 5,
+          "y": 2
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 29,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 20,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 20,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 20,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 20,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 6,
+            "y": 3
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-04-07",
+      "attempts": 29,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 27,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 18,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 18,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-04-08",
+      "attempts": 18,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-04-09",
+      "attempts": 3,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 0
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    },
+    {
+      "seed": "2026-04-10",
+      "attempts": 21,
+      "fallback": false,
+      "walls": [
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 0
+        },
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 7,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 5
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 1
+        }
+      ],
+      "proof": {
+        "ok": true,
+        "viaGarcia": 14,
+        "baseline": {
+          "explored": 28,
+          "length": 14
+        },
+        "tune": [
+          {
+            "w": 1.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 2.5,
+            "explored": 19,
+            "length": 14
+          },
+          {
+            "w": 3,
+            "explored": 19,
+            "length": 14
+          }
+        ],
+        "breakWalls": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      },
+      "breakExtra": 6
+    }
+  ]
+}

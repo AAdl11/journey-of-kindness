@@ -71,3 +71,11 @@ const view = mountAStar(document.getElementById('search-board'), grid, {
 【已查證】CSS 變數（來源：渲染器內的局部樣式）：尺寸有 `--astar-cell-size`、`--astar-width`、`--astar-gap`、`--astar-padding`、`--astar-radius`、`--astar-cell-radius`、`--astar-font-size`、`--astar-score-size`；顏色有 `--astar-board`、`--astar-cell`、`--astar-border`、`--astar-text`、`--astar-wall`、`--astar-frontier`、`--astar-frontier-border`、`--astar-closed`、`--astar-current`、`--astar-path`、`--astar-path-glow`。設在容器上即可；`--astar-cols` 由實際地圖欄數設定。
 
 【已查證】既有關卡另用 `redraw(snapshot,path)` 與 `refresh()` 重畫故事圖示；這些方法不推進搜尋、不播放音效、不觸發完成回呼。聲音與震動不支援時會靜默略過。來源：渲染器原始碼。
+
+## 規格 03：可選權重（相容擴充）
+
+【已查證｜來源：`astar-engine.js`、`astar-engine.test.html`】`createGrid` 新增可選 `w`，預設為 `1`，計分為 `f = g + w·h`；接受有限、非負數字。呼叫端未傳 `w` 時，排序、同分規則與快照維持原行為。`mountAStar` 會沿用 grid 的權重，不需新增渲染介面。
+
+【已查證｜來源：`astar-engine.test.html` 的固定反例與 BFS oracle】測試頁包含 `w=0/1/3` 案例及滑桿。該反例的最短路為 12 步，`w=3` 會走 14 步。`w=0` 按已走距離探索，找到終點即停止；有限 `w=3` 仍是加權 A*，畫面的 Greedy 標籤表示強烈偏向目標，並非移除 g 的純貪婪搜尋。
+
+【已查證｜來源：`l1-dojo-core.js`】道場的 E 定義為搜尋展開的快照數，包含起點和終點；L 定義為路徑邊數（`path.length - 1`）。日圖、破解驗證、競速雙段路線與調參掃描全部呼叫共用引擎。

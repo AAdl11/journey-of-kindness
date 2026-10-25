@@ -273,6 +273,7 @@
         .astar-think-btn { touch-action: manipulation; font-size: clamp(.8rem, 3.2vw, .95rem); width: 100%; }
         .astar-think-btn:disabled { opacity: .5; }
     </style>
+    <link rel="stylesheet" href="../assets/js/l1-dojo.css">
 </head>
 <body class="text-white min-h-screen" translate="no">
 
@@ -284,7 +285,7 @@
 </div>
 
 <!-- Home button - always visible on every screen -->
-<button onclick="window.location.href='../index.html'" title="Home 主頁"
+<button onclick="leavePorticoHome()" title="Home 主頁"
         style="position:fixed;top:10px;right:10px;z-index:9500;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.35);color:#fff;border-radius:10px;padding:5px 11px;font-size:15px;cursor:pointer;backdrop-filter:blur(4px);">🏠</button>
 
 <!-- Audio elements -->
@@ -322,7 +323,6 @@
                         <span class="sc-icon">✨</span>
                         <div class="sc-body"><p class="sc-label" data-en="Best" data-zh="最優" data-es="Mejor">最優</p><p class="sc-value mono">12</p></div>
                     </div>
-                </div>
                 </div>
                 
                 <div class="grid-wrap flex-1 flex flex-col items-center justify-center">
@@ -419,14 +419,18 @@
     <div class="relative z-10 flex flex-col items-center" style="margin-bottom: 18%;">
         <div class="jingsi-card fade-in breathing-card">
             <p class="text-lg font-bold text-yellow-300 mb-1" data-en="「To willingly undergo hardships for the sake of others is compassion」" data-zh="「不辭勞苦的付出，便是『慈悲』」" data-es="「Soportar de buen grado las dificultades por el bien de los demás es compasión」">「不辭勞苦的付出，便是『慈悲』」</p>
-            <p class="text-sm text-white/90">To willingly undergo hardships for the sake of others is compassion.</p>
-            <p class="text-xs text-purple-200 mt-2">— <span data-en="Master Cheng Yen" data-zh="證嚴上人" data-es="Maestra Cheng Yen">證嚴上人</span> Master Cheng Yen</p>
+            <p class="text-sm text-white/90" data-en="不辭勞苦的付出，便是『慈悲』" data-zh="To willingly undergo hardships for the sake of others is compassion." data-es="不辭勞苦的付出，便是『慈悲』">To willingly undergo hardships for the sake of others is compassion.</p>
+            <p class="text-xs text-purple-200 mt-2">— <span data-en="Master Cheng Yen" data-zh="證嚴上人" data-es="Maestra Cheng Yen">證嚴上人</span></p>
         </div>
     </div>
     
     <!-- Button at stairs area -->
     <div class="relative z-10" style="margin-bottom: 8%;">
         <button id="continue-btn" onclick="continueJourney()" class="btn btn-primary text-base px-6 py-2" style="box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);"><span data-en="Continue Journey" data-zh="繼續旅程" data-es="Continuar Viaje">繼續旅程</span> →</button>
+        <div class="dojo-race-actions">
+            <button class="btn btn-secondary" onclick="replayDojo()"><span data-en="Play Again" data-zh="再玩一次" data-es="Jugar de nuevo">再玩一次</span></button>
+            <button class="btn btn-secondary" onclick="leavePorticoHome()"><span data-en="Home" data-zh="回首頁" data-es="Inicio">回首頁</span></button>
+        </div>
     </div>
 </div>
 
@@ -632,6 +636,7 @@ function goToGame() {
 }
 
 function showMenu() { 
+    if (window.L1Dojo) { L1Dojo.menu(); return; }
     // 停止背景音樂
     const bgMusic = document.getElementById('bg-music');
     bgMusic.pause();
@@ -811,6 +816,7 @@ function playAiDemo() {
 
 // ── 頂部「你」卡入口:進入中階挑戰(自己規劃路徑,破 AI 數據)──
 function enterChallenge(hard) {
+    if (window.L1Dojo && !L1Dojo.isRaceStarting()) { L1Dojo.enter('race'); return; }
     stopCinematic();
     searchViz.active = false;
     applyMap(!!hard);   // 大師換難地圖,中階用原圖
@@ -875,6 +881,7 @@ function setSub(text, prog) {
 }
 
 function startCinematic() {
+    if (window.L1Dojo) L1Dojo.prepareDemo();
     stopCinematic();
     const rec = recordAStarSearch();
     gameState.mode = 'ai';
@@ -1259,6 +1266,7 @@ function updateStats() {
 // PLAYER MOVEMENT
 // ═══════════════════════════════════════════════════════════════════════════
 function movePlayer(x, y) {
+    if (gameState.challengeMode && gameState.reachedGoal) return;
     if (hintPlayback.active) return;
     hintPlayback.path = null;
     if (gameState.mode !== 'player' || !isAdjacent(x, y) || !isValidMove(x, y)) return;
@@ -1309,7 +1317,7 @@ function showHardFail() {
 // ⭐ 星星獎勵:扣回 A* —— 越貼近「跟著最小 f 走」的最優路徑,星星越多
 function getStars(steps, saved) {
     if (!saved) return 0;
-    const best = gameState.hardMode ? MAP_MASTER.saveOptimal : 12;
+    const best = gameState.raceOptimal ?? (gameState.hardMode ? MAP_MASTER.saveOptimal : 12);
     if (steps <= best) return 3;
     if (steps <= best + 2) return 2;
     return 1;
@@ -1343,7 +1351,7 @@ function showChallengeResult() {
     const storyArea = document.getElementById('story-area');
     storyArea.classList.remove('hidden');
     document.getElementById('ai-subtitle').classList.add('hidden');
-    const steps = gameState.steps, saved = gameState.savedGarcia, best = gameState.hardMode ? MAP_MASTER.saveOptimal : 12;
+    const steps = gameState.steps, saved = gameState.savedGarcia, best = gameState.raceOptimal ?? (gameState.hardMode ? MAP_MASTER.saveOptimal : 12);
     let icon, title, aiLine, tone;
     const T = {
         zh: {
@@ -1416,36 +1424,7 @@ function teaRewardHTML() {
 
 // 🪜 三階晉升梯子:先看戲(已完成)→ 遞出往上爬的階梯
 function renderLadder() {
-    const T = {
-        zh: {
-            invite: '你剛走完第一階。想知道 AI 是「怎麼算」出 12 步的嗎?上面還有兩階在等你。',
-            t1: '我先看看', t1d: '看懂故事,感受善念', done: '✓ 已完成',
-            t2: '我想我會了', t2d: '自己規劃路徑,看你幾步逼近 AI',
-            t3: '大師挑戰', t3d: '救她的路全圖只有一條:16 步,油料 16,零容錯',
-            soon: '即將開放', go: '▶ 開始'
-        },
-        en: {
-            invite: 'You finished the first rung. Want to see HOW the AI computed 12 steps? Two rungs await above.',
-            t1: 'Just show me', t1d: 'Follow the story, feel the kindness', done: '✓ Done',
-            t2: 'I think I got it', t2d: 'Plan your own path, match the AI',
-            t3: 'Master challenge', t3d: 'Only ONE saving route exists: 16 steps, 16 fuel, zero margin',
-            soon: 'Coming', go: '▶ Start'
-        },
-        es: {
-            invite: 'Terminaste el primer nivel. ¿Quieres ver CÓMO la IA calculó 12 pasos? Dos niveles te esperan.',
-            t1: 'Solo muéstrame', t1d: 'Sigue la historia, siente la bondad', done: '✓ Hecho',
-            t2: 'Creo que ya sé', t2d: 'Planea tu ruta, iguala a la IA',
-            t3: 'Reto maestro', t3d: 'Solo existe UNA ruta que la salva: 16 pasos, 16 de combustible, sin margen',
-            soon: 'Pronto', go: '▶ Iniciar'
-        }
-    };
-    const t = T[currentLang] || T.en;
-    return '<div class="ladder">'
-        + '<p class="ladder-invite">🪜 '+t.invite+'</p>'
-        + '<div class="rung rung-done"><span class="rung-badge">🌱</span><div class="rung-body"><span class="rung-title">'+t.t1+'</span><span class="rung-desc">'+t.t1d+'</span></div><span class="rung-state done">'+t.done+'</span></div>'
-        + '<div class="rung rung-next clickable" onclick="enterChallenge()" role="button"><span class="rung-badge">🔍</span><div class="rung-body"><span class="rung-title">'+t.t2+'</span><span class="rung-desc">'+t.t2d+'</span></div><span class="rung-state go">'+t.go+'</span></div>'
-        + '<div class="rung rung-top clickable" onclick="enterChallenge(true)" role="button"><span class="rung-badge">⚡</span><div class="rung-body"><span class="rung-title">'+t.t3+'</span><span class="rung-desc">'+t.t3d+'</span></div><span class="rung-state go2">'+t.go+'</span></div>'
-        + '</div>';
+    return '<div class="dojo-race-actions"><button class="dojo-btn primary" onclick="L1Dojo.finishDemo()"><span data-en="Enter the dojo" data-zh="進入道場" data-es="Entrar al dojo">' + ({en:'Enter the dojo',zh:'進入道場',es:'Entrar al dojo'})[currentLang] + '</span></button></div>';
 }
 
 // 🎬 第三幕:打臉結算(同樣步數,AI 冷血 vs 你救人)
@@ -1580,6 +1559,7 @@ function makeChoice(choice) {
 // LEVEL COMPLETION
 // ═══════════════════════════════════════════════════════════════════════════
 function resetLevel() {
+    if (window.L1Dojo && L1Dojo.resetActive()) return;
     gameState.player = {x:0, y:0};
     gameState.visited = [{x:0, y:0}];
     gameState.steps = 0;
@@ -1614,6 +1594,8 @@ function resetLevel() {
 }
 
 function completeLevel() {
+    if (window.L1Dojo && !L1Dojo.canEnterPortico()) return;
+    if (window.L1Dojo) L1Dojo.beforePortico();
     cancelAStarHint();
     if (typeof jokAnalytics !== 'undefined') jokAnalytics.complete('ataraxy', { steps: gameState.steps });
     // Stop game music for meditation
@@ -1634,6 +1616,7 @@ function completeLevel() {
 }
 
 function startBreathingAnimation() {
+    const breathEpoch = window.L1Dojo ? L1Dojo.breathEpoch() : 0;
     const counter = document.getElementById('breath-counter');
     const breathTexts = {
         inhale: { en: 'Inhale...', zh: '深呼吸...', es: 'Inhala...' },
@@ -1645,6 +1628,7 @@ function startBreathingAnimation() {
     const totalCycles = 3;
     
     function breathCycle() {
+        if (window.L1Dojo && breathEpoch !== L1Dojo.breathEpoch()) return;
         if (cycle >= totalCycles) {
             counter.textContent = breathTexts.done;
             counter.style.fontSize = '4rem';
@@ -1660,6 +1644,7 @@ function startBreathingAnimation() {
         counter.style.fontSize = '2rem';
         
         setTimeout(() => {
+            if (window.L1Dojo && breathEpoch !== L1Dojo.breathEpoch()) return;
             // 吐氣 4秒
             counter.textContent = breathTexts.exhale[currentLang] || breathTexts.exhale.en;
             
@@ -1746,5 +1731,7 @@ window.jokAnalytics = (function(level) {
 if (typeof window.addEventListener === 'function') window.addEventListener('pagehide', () => jokAnalytics.abandon());
 </script>
 
+<script src="../assets/js/l1-dojo-core.js"></script>
+<script src="../assets/js/l1-dojo.js"></script>
 </body>
 </html>

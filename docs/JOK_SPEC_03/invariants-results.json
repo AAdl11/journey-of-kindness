@@ -1,0 +1,37 @@
+{
+  "baseline": "6f2fa87",
+  "checks": {
+    "subtitleContent": true,
+    "updateSubtitle": true,
+    "actCold": true,
+    "handoffToPlayer": true,
+    "showFaceSlap": true,
+    "showGarciaReveal": true,
+    "showStory": true,
+    "makeChoice": true,
+    "teaRewardHTML": true,
+    "renderStars": true,
+    "loadBestStars": true,
+    "saveBestStars": true,
+    "playFootstep": true,
+    "playRescueSound": true,
+    "playVictorySound": true,
+    "aiLines": true,
+    "MAP_NORMAL": true,
+    "MAP_MASTER": true,
+    "getStars story text unchanged": true,
+    "showChallengeResult story text unchanged": true,
+    "GA4 lifecycle byte-identical": true,
+    "existing hint event byte-identical": true,
+    "media paths unchanged": true,
+    "stable mobile reference untouched": true,
+    "homepage, other levels and outro untouched": true
+  },
+  "authorizedExceptions": [
+    "01d portico quote-card language tags and single attribution",
+    "01d replay/home buttons with music stop",
+    "old rung-menu replaced",
+    "stars and race result optimal benchmark use daily map",
+    "timer invalidation on leaving the portico"
+  ]
+}
