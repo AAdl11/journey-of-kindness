@@ -91,7 +91,7 @@
         const passed=Object.fromEntries(MODES.map(m=>[m,raw.passed?.[m]===true]));
         // Completion flags are authoritative, so corrupt coin counts cannot unlock modes.
         return {...raw,coins:MODES.filter(m=>passed[m]).length,passed,master:passed.tune&&raw.master===true,
-            seenDemo:raw.seenDemo===true,walls:(Array.isArray(raw.walls)?raw.walls:[]).filter(valid).slice(0,3).map(copy),
+            seenDemo:raw.seenDemo===true,breakDemoSeen:raw.breakDemoSeen===true,walls:(Array.isArray(raw.walls)?raw.walls:[]).filter(valid).slice(0,3).map(copy),
             wallsSeed:typeof raw.wallsSeed==='string'?raw.wallsSeed:'',
             bestRace:raw.bestRace&&Number.isInteger(raw.bestRace.player)&&raw.bestRace.player>=0&&Number.isInteger(raw.bestRace.astar)&&raw.bestRace.astar>=0?{player:raw.bestRace.player,astar:raw.bestRace.astar}:null};
     }

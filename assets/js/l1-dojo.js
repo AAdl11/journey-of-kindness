@@ -17,6 +17,12 @@ const TEXT={
  demo:['Watch the demo again','再看一次示範','Volver a ver la demostración'],menu:['Dojo menu','道場選單','Menú del dojo'],
  enterDojo:['Enter the dojo','進入道場','Entrar al dojo'],retry:['Try again','再試一次','Reintentar'],
  demoNext:['Go to your turn','進入你的回合','Ir a tu turno'],
+ breakTask:['👉 Tap road cells to drop up to 3 roadblocks. Make A* walk 6 extra steps.','👉 點地圖上的空格放路障，最多 3 個，讓 AI 多走 6 步。','👉 Toca las calles para poner hasta 3 muros. Haz que A* camine 6 pasos más.'],
+ predictTask:['👉 Tap the cell A* will expand next. 7 of 10 to pass.','👉 點 AI 下一步會展開的格子，10 題答對 7 題就過。','👉 Toca la casilla que A* expandirá. 7 de 10 para aprobar.'],
+ raceTask:['👉 Walk to Mrs. Garcia, then home, in no more steps than A*.','👉 走到 Garcia 阿嬤家再到終點，步數不能比 A* 多。','👉 Llega a la Sra. Garcia y luego a la meta sin superar los pasos de A*.'],
+ tuneTask:['👉 Drag the w slider. Explore 30% fewer cells and keep the shortest path.','👉 拖動 w 滑桿，探索格數少三成、路仍最短。','👉 Mueve el control w. Explora 30% menos celdas y mantén la ruta más corta.'],
+ demoWall:['Watch: one tap here adds a wall and A* re-plans. Now you try.','看好：點這一格就是放路障，AI 立刻重算。換你試。','Mira: un toque aquí pone un muro y A* replanifica. Ahora tú.'],
+ backMenu:['← Dojo menu','← 道場選單','← Menú del dojo'],
  breakHelp:['Tap a road to add a wall, or your wall to remove it. Use at most 3 walls to add at least 6 steps.','點道路放路障，點自己的路障移除。最多用 3 個，讓 AI 多走至少 6 步。','Toca una calle para añadir un muro o tu muro para quitarlo. Usa hasta 3 para añadir al menos 6 pasos.'],
  base:['Original N₀: {n}','原始 N₀：{n}','Original N₀: {n}'],now:['Now N: {n}','現在 N：{n}','Ahora N: {n}'],extra:['Extra steps: {n}','多走 {n} 步','Pasos extra: {n}'],walls:['Walls: {n}/3','路障：{n}/3','Muros: {n}/3'],
  wallLimit:['You can place up to 3 roadblocks.','最多可放 3 個路障。','Puedes colocar hasta 3 obstáculos.'],
@@ -83,13 +89,17 @@ function menu(){
     stopView();stopCinematic();searchViz.active=false;gameState.mode='dojo';stopMeditation();
     setView('menu');
     $('dojo-shell').innerHTML=`<section class="dojo-panel"><div class="dojo-top"><p class="dojo-eyebrow">L1 · A*</p><div class="dojo-coins">${tag('coins',{n:state.coins})}</div></div><h1 class="dojo-title">${tag('title')}</h1><p class="dojo-help">${tag('economy')}</p><div class="dojo-cards">${C.MODES.map((m,i)=>`<button class="dojo-card" data-dojo-mode="${m}" data-locked="${!C.unlocked(state,m)}" data-passed="${state.passed[m]}"><small>0${i+1} · ${tag('cost',{n:i})}</small><strong>${tag(m)}</strong><small>${tag(m+'Desc')}</small><small>${tag(state.passed[m]?'passed':C.unlocked(state,m)?'unlocked':'locked')}</small></button>`).join('')}</div>${state.master?`<div class="dojo-success" id="dojo-master">🏅 ${tag('master')}</div>`:''}<div class="dojo-actions">${button('clear','clear')}${button('demo','demo')}</div><p class="dojo-status" id="dojo-notice" aria-live="polite">${notice}</p><p class="dojo-note">${esc(map.seed)}</p></section>`;
+    if($('dojo-sticky'))$('dojo-sticky').hidden=true;
     $('dojo-shell').scrollIntoView({block:'start'});
 }
 function shell(m){
     restoreStats();
     setView(m);gameState.mode='dojo';
-    $('dojo-shell').innerHTML=`<section class="dojo-panel"><div class="dojo-top">${button('menu','menu')}<div class="dojo-coins">${tag('coins',{n:state.coins})}</div></div><h1 class="dojo-mode-title">${tag(m)}</h1><p class="dojo-help">${tag(m+'Help')}</p><p class="dojo-status" id="dojo-notice" aria-live="polite">${notice}</p><div id="dojo-metrics" class="dojo-metrics"></div><div class="dojo-panelstats" id="dojo-panelstats"></div><div id="dojo-extra"></div><div id="dojoboard"></div><p id="dojo-status" class="dojo-status" aria-live="polite"></p><div id="dojo-result"></div><div id="dojo-bottom"></div></section>`;
+    $('dojo-shell').innerHTML=`<section class="dojo-panel"><div class="dojo-top">${button('menu','menu')}<div class="dojo-coins">${tag('coins',{n:state.coins})}</div></div><h1 class="dojo-mode-title">${tag(m)}</h1><p class="dojo-help">${tag(m+'Help')}</p><p class="dojo-status" id="dojo-notice" aria-live="polite">${notice}</p><p class="dojo-task" id="dojo-task">${tag(m+'Task')}</p><div id="dojo-metrics" class="dojo-metrics"></div><div class="dojo-panelstats" id="dojo-panelstats"></div><div id="dojo-extra"></div><div id="dojoboard"></div><p id="dojo-status" class="dojo-status" aria-live="polite"></p><div id="dojo-result"></div><div id="dojo-bottom"></div></section>`;
     $('dojo-panelstats').appendChild(statsGroup);
+    let bar=$('dojo-sticky');if(!bar){bar=document.createElement('div');bar.id='dojo-sticky';document.body.appendChild(bar);}
+    bar.innerHTML=`<button class="dojo-btn" data-dojo-action="menu">${tag('backMenu')}</button><span class="dojo-sticky-coins">${tag('coins',{n:state.coins})}</span>`;bar.hidden=false;
+    $('dojo-task').scrollIntoView({block:'start'});
 }
 function showStatus(id,vars={}){if($('dojo-status'))$('dojo-status').innerHTML=tag(id,vars);}
 function panel(snapshot){if(!snapshot)return;for(const k of ['g','h','f'])$(k+'-value').textContent=snapshot[k];}
@@ -136,6 +146,25 @@ function breakClick(x,y){
 }
 function breakMode(){
     shell('break');$('dojo-bottom').innerHTML=`<details class="dojo-hint"><summary>${tag('hint')}</summary><p>${tag('frontier')}</p></details>`;runBreak();
+    if(!state.breakDemoSeen&&state.walls.length===0){
+        const version=runId;
+        setTimeout(()=>{
+            if(version!==runId||mode!=='break')return;
+            const base=C.search(map.walls);
+            const pick=(base.path||[]).filter(q=>!C.protectedCell(q)).map(q=>({q,n:C.search(map.walls.concat([q])).length})).filter(o=>o.n&&o.n>base.length).sort((a,b)=>b.n-a.n)[0];
+            const cell=pick?pick.q:(base.path||[]).find(q=>!C.protectedCell(q));
+            if(!cell)return;
+            const el=$('dojoboard').querySelector(`[data-x="${cell.x}"][data-y="${cell.y}"]`);if(el)el.classList.add('dojo-flash');
+            setTimeout(()=>{
+                if(version!==runId||mode!=='break')return;
+                state.walls=[{x:cell.x,y:cell.y}];runBreak(true);showStatus('demoWall');
+                setTimeout(()=>{
+                    if(version!==runId||mode!=='break')return;
+                    state.walls=[];state.breakDemoSeen=true;persist();runBreak(true);showStatus('demoWall');
+                },2600);
+            },900);
+        },2200);
+    }
 }
 function predictMetrics(){const p=prediction;$('dojo-metrics').innerHTML=tag('predictCount',{correct:p.correct,total:p.total,step:Math.min(p.index+1,p.total)});}
 function predictMode(){
