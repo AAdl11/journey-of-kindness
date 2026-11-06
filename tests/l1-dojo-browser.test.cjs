@@ -48,17 +48,25 @@ const server=http.createServer((req,res)=>{
  check('fresh state starts the preserved demo',await page.evaluate(()=>gameState.mode==='ai'&&cinematic.active));
  await layout('390 demo');
  await page.locator('[data-dojo-action="demoNext"]').click();
+ // Let the hand-off finish before walking; clicks during it are timing-sensitive.
+ await page.waitForFunction(()=>gameState.mode==='player'&&!cinematic.active);await page.waitForTimeout(300);
  const storyPath=await page.evaluate(()=>L1DojoCore.race(MAP_NORMAL.obstacles).path);
- for(const p of storyPath.slice(1))await cell(p.x,p.y,'#astar-grid').click({force:true});
+ for(const p of storyPath.slice(1)){await cell(p.x,p.y,'#astar-grid').click({force:true});await page.waitForTimeout(120);}
+ await page.waitForSelector('img[src="../assets/images/clean_Mrs__Garcia.png"]',{timeout:10000}).catch(()=>{});
  check('third act retains Grandma reveal and tea image',await page.locator('img[src="../assets/images/clean_Mrs__Garcia.png"]').count()===1);
  await page.locator('[onclick="L1Dojo.finishDemo()"]').click();
  check('demo does not award coins', (await state()).coins===0);
  check('only Break is unlocked',await page.locator('.dojo-card[data-locked="false"]').count()===1);
- await page.locator('[data-dojo-mode="tune"]').click();check('locked cards explain the prerequisite',await page.locator('#dojo-notice').innerText()!=='');
+ await page.locator('.dojo-card[data-dojo-mode="tune"]').click();check('locked cards explain the prerequisite',await page.locator('#dojo-notice').innerText()!=='');
  await layout('390 menu');
  
  await page.screenshot({path:path.join(qaDir,'menu-390.png'),fullPage:true});
- await page.locator('[data-dojo-mode="break"]').click();
+ await page.locator('.dojo-card[data-dojo-mode="break"]').click();
+ check('Break shows one goal line naming N',await page.evaluate(()=>document.getElementById('dojo-task').textContent.includes(String(L1DojoCore.breakTarget(L1DojoCore.generate(L1DojoCore.dateSeed()).walls).target))));
+ // First visit: the AI demo plays once and player taps wait until it hands over.
+ await cell(7,0).click();check('taps wait while the Break demo plays',(await state()).walls.length===0);
+ await page.waitForFunction(()=>JSON.parse(localStorage.getItem('jok_progress')).levels['1'].breakDemoSeen===true,{},{timeout:15000});
+ check('Break demo hands over with an empty board and no coin',(await state()).walls.length===0&&(await state()).coins===0);
  const map=await page.evaluate(()=>L1DojoCore.generate(L1DojoCore.dateSeed()));
  // No-path feedback and removal, using two cells next to start on this seed.
  for(const p of [{x:1,y:0},{x:0,y:1}])await cell(p.x,p.y).click();
@@ -67,17 +75,20 @@ const server=http.createServer((req,res)=>{
  for(const p of [{x:1,y:0},{x:0,y:1}])await cell(p.x,p.y).click();
  for(const p of map.proof.breakWalls)await cell(p.x,p.y).click();
  check('Break earns exactly one coin',(await state()).coins===1);
+ check('both coin counters update at once',await page.evaluate(()=>[...document.querySelectorAll('.dojo-coins,.dojo-sticky-coins')].every(e=>e.textContent.includes('1'))));
+ check('Break result offers Next, Play again and Dojo menu',await page.locator('#dojo-pass [data-dojo-mode="predict"]').count()===1&&await page.locator('#dojo-pass [data-dojo-action="retry"]').count()===1&&await page.locator('#dojo-pass [data-dojo-action="menu"]').count()===1);
  await layout('390 Break');
  await page.screenshot({path:path.join(qaDir,'break-390.png'),fullPage:true});
  const beforePredict=(await state()).walls;
- await page.locator('[data-dojo-action="menu"]:visible').first().click();await page.locator('[data-dojo-mode="predict"]').click();
+ await page.locator('[data-dojo-action="menu"]:visible').first().click();await page.locator('.dojo-card[data-dojo-mode="predict"]').click();
  check('Predict keeps reachable Break walls',JSON.stringify((await state()).walls)===JSON.stringify(beforePredict));
  check('shared g/h/f panel is visible',await page.locator('#g-value').isVisible());
- const expanded=await page.evaluate(()=>L1DojoCore.search(L1DojoCore.generate(L1DojoCore.dateSeed()).walls.concat(JSON.parse(localStorage.getItem('jok_progress')).levels['1'].walls)).steps.slice(0,10));
+ await page.waitForFunction(()=>JSON.parse(localStorage.getItem('jok_progress')).levels['1'].predictDemoSeen===true,{},{timeout:15000});
+ const expanded=await page.evaluate(()=>L1DojoCore.search(L1DojoCore.generate(L1DojoCore.dateSeed()).walls.concat(JSON.parse(localStorage.getItem('jok_progress')).levels['1'].walls)).steps.slice(0,11));
  // One deliberate wrong answer. Remaining guesses follow the engine; choose a
  // different equal-f candidate when one is available.
  await cell(7,5).click();await page.waitForTimeout(1050);let tied=false;
- for(let i=1;i<expanded.length;i++){
+ for(let i=2;i<expanded.length;i++){
   const options=expanded[i-1].open.filter(p=>p.f===expanded[i].f),alternate=options.find(p=>p.x!==expanded[i].current.x||p.y!==expanded[i].current.y);
   const p=alternate||expanded[i].current;if(alternate)tied=true;
   await cell(p.x,p.y).click();await page.waitForTimeout(480);
@@ -86,9 +97,12 @@ const server=http.createServer((req,res)=>{
  check('equal-f alternative accepted in this run',tied);
  await layout('390 Predict');
  await page.screenshot({path:path.join(qaDir,'predict-390.png'),fullPage:true});
- await page.locator('[data-dojo-action="menu"]:visible').first().click();await page.locator('[data-dojo-mode="race"]').click();
+ await page.locator('[data-dojo-action="menu"]:visible').first().click();await page.locator('.dojo-card[data-dojo-mode="race"]').click();
  check('Race optimal panel follows daily benchmark',await page.evaluate(()=>Number(document.querySelector('#g-value').parentNode.parentNode.lastElementChild.querySelector('.stat-value').textContent)===gameState.raceOptimal));
  check('Race keeps reachable Break walls',JSON.stringify((await state()).walls)===JSON.stringify(beforePredict));
+ check('Race shows the Dojo menu bar',await page.locator('#dojo-sticky').isVisible());
+ check('Race plays the AI route demo once on first visit',(await state()).raceDemoSeen===true);
+ await page.waitForFunction(()=>!hintPlayback.active,{},{timeout:15000});
  const racePath=await page.evaluate(()=>L1DojoCore.race(gameState.obstacles).path);
  const stepsBefore=await page.evaluate(()=>gameState.steps);
  await page.locator('#astar-think-btn').click();await page.waitForFunction(()=>!hintPlayback.active,{},{timeout:15000});
@@ -110,7 +124,9 @@ const server=http.createServer((req,res)=>{
  await layout('390 Portico');
  await page.locator('[onclick="replayDojo()"]').click();
  check('replay returns to menu and stops meditation',await page.evaluate(()=>document.body.dataset.dojoView==='menu'&&document.getElementById('meditation-music').paused&&!document.getElementById('ataraxy-screen').classList.contains('active')));
- await page.locator('[data-dojo-mode="tune"]').click();
+ await page.locator('.dojo-card[data-dojo-mode="tune"]').click();
+ check('Tune slider waits while its demo plays',await page.locator('#dojo-weight').isDisabled());
+ await page.waitForFunction(()=>JSON.parse(localStorage.getItem('jok_progress')).levels['1'].tuneDemoSeen===true,{},{timeout:15000});
  const w=await page.evaluate(()=>L1DojoCore.tune(L1DojoCore.generate(L1DojoCore.dateSeed()).walls.concat(JSON.parse(localStorage.getItem('jok_progress')).levels['1'].walls)).solutions[0].w);
  check('Tune entry repairs to a solvable map',Number.isFinite(w));
  await page.locator('#dojo-weight').fill(String(w));
@@ -127,7 +143,7 @@ const server=http.createServer((req,res)=>{
  await page.evaluate(()=>{const p=JSON.parse(localStorage.getItem('jok_progress'));p.unrelated={keep:42};p.levels['8']={keep:true};localStorage.setItem('jok_progress',JSON.stringify(p));});
  await page.reload();await page.waitForFunction(()=>document.body.dataset.dojoView==='menu');
  check('reload skips demo and preserves completed modes',(await state()).coins===4);
- await page.locator('[data-dojo-mode="break"]').click();
+ await page.locator('.dojo-card[data-dojo-mode="break"]').click();
  const s=await state();for(const p of s.walls)await cell(p.x,p.y).click();
  for(const p of map.proof.breakWalls)await cell(p.x,p.y).click();
  check('repeating Break does not mint coins',(await state()).coins===4);

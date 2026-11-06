@@ -50,6 +50,15 @@
         }
         return visit([],base);
     }
+    // Break goal picked from the grid: the daily route length N0 plus BREAK_EXTRA.
+    // Routes on this grid change length in steps of 2, so +2 is the smallest real
+    // detour. Every daily map is validated to allow +6 with three roadblocks, so
+    // this goal is always reachable. Raise BREAK_EXTRA to make the trial harder.
+    const BREAK_EXTRA=2;
+    function breakTarget(walls){
+        const base=search(walls);if(!base.path)return null;
+        return {base:base.length,extra:BREAK_EXTRA,target:base.length+BREAK_EXTRA};
+    }
     function validate(walls){
         const viaGarcia=race(walls), tuning=tune(walls);
         const breaking=viaGarcia&&tuning.solutions.length?breakSolution(walls):null;
@@ -91,7 +100,7 @@
         const passed=Object.fromEntries(MODES.map(m=>[m,raw.passed?.[m]===true]));
         // Completion flags are authoritative, so corrupt coin counts cannot unlock modes.
         return {...raw,coins:MODES.filter(m=>passed[m]).length,passed,master:passed.tune&&raw.master===true,
-            seenDemo:raw.seenDemo===true,breakDemoSeen:raw.breakDemoSeen===true,walls:(Array.isArray(raw.walls)?raw.walls:[]).filter(valid).slice(0,3).map(copy),
+            seenDemo:raw.seenDemo===true,breakDemoSeen:raw.breakDemoSeen===true,predictDemoSeen:raw.predictDemoSeen===true,raceDemoSeen:raw.raceDemoSeen===true,tuneDemoSeen:raw.tuneDemoSeen===true,walls:(Array.isArray(raw.walls)?raw.walls:[]).filter(valid).slice(0,3).map(copy),
             wallsSeed:typeof raw.wallsSeed==='string'?raw.wallsSeed:'',
             bestRace:raw.bestRace&&Number.isInteger(raw.bestRace.player)&&raw.bestRace.player>=0&&Number.isInteger(raw.bestRace.astar)&&raw.bestRace.astar>=0?{player:raw.bestRace.player,astar:raw.bestRace.astar}:null};
     }
@@ -128,5 +137,5 @@
         }
         return {walls:accepted,moved,removed};
     }
-    return {START,GOAL,GARCIA,MODES,WEIGHTS,FALLBACK,key,same,protectedCell,grid,search,race,tune,breakSolution,validate,candidate,generate,dateSeed,normalize,load,save,award,unlocked,repair};
+    return {START,GOAL,GARCIA,MODES,WEIGHTS,FALLBACK,key,same,protectedCell,grid,search,race,tune,breakSolution,breakTarget,BREAK_EXTRA,validate,candidate,generate,dateSeed,normalize,load,save,award,unlocked,repair};
 });

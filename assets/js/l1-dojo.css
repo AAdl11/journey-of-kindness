@@ -68,3 +68,11 @@ body[data-dojo-view="race"] .elo-badge{display:none}
 #dojo-sticky[hidden]{display:none}
 .dojo-sticky-coins{color:#f5d16e;font-weight:750}
 body:has(#dojo-sticky:not([hidden])) .dojo-shell{padding-bottom:84px}
+/* 1106: the demo / your-turn line sits right above the board so a phone sees it while tapping. */
+.dojo-turn{font-size:15px;font-weight:650;margin:8px 0 4px}
+#dojo-pass p{margin:0 0 10px}
+.dojo-hint .dojo-btn{margin-top:8px}
+body[data-dojo-view="race"]:has(#dojo-sticky:not([hidden])) #game-screen{padding-bottom:84px}
+#dojo-notice:empty{min-height:0;margin:0}
+/* Keep a scrolled-to board cell clear of the fixed bottom bar. */
+body:has(#dojo-sticky:not([hidden])) .jok-astar-cell{scroll-margin-bottom:90px}

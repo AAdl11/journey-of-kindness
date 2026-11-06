@@ -33,6 +33,18 @@
       "status": "PASS"
     },
     {
+      "name": "Break shows one goal line naming N",
+      "status": "PASS"
+    },
+    {
+      "name": "taps wait while the Break demo plays",
+      "status": "PASS"
+    },
+    {
+      "name": "Break demo hands over with an empty board and no coin",
+      "status": "PASS"
+    },
+    {
       "name": "blocked path does not award a coin",
       "status": "PASS"
     },
@@ -42,6 +54,14 @@
     },
     {
       "name": "Break earns exactly one coin",
+      "status": "PASS"
+    },
+    {
+      "name": "both coin counters update at once",
+      "status": "PASS"
+    },
+    {
+      "name": "Break result offers Next, Play again and Dojo menu",
       "status": "PASS"
     },
     {
@@ -74,6 +94,14 @@
     },
     {
       "name": "Race keeps reachable Break walls",
+      "status": "PASS"
+    },
+    {
+      "name": "Race shows the Dojo menu bar",
+      "status": "PASS"
+    },
+    {
+      "name": "Race plays the AI route demo once on first visit",
       "status": "PASS"
     },
     {
@@ -126,6 +154,10 @@
     },
     {
       "name": "replay returns to menu and stops meditation",
+      "status": "PASS"
+    },
+    {
+      "name": "Tune slider waits while its demo plays",
       "status": "PASS"
     },
     {
@@ -494,7 +526,7 @@
   "errors": [],
   "testAssets": {
     "tailwind": true,
-    "fonts": true
+    "fonts": false
   },
   "events": [
     {
@@ -521,8 +553,8 @@
         "level": 1,
         "attempt": 1,
         "ui_language": "zh",
-        "extra_steps": 6,
-        "walls_used": 3
+        "extra_steps": 2,
+        "walls_used": 2
       }
     },
     {
@@ -585,8 +617,8 @@
         "level": 1,
         "attempt": 1,
         "ui_language": "zh",
-        "player_steps": 20,
-        "astar_steps": 20
+        "player_steps": 22,
+        "astar_steps": 22
       }
     },
     {
@@ -605,8 +637,8 @@
         "attempt": 1,
         "ui_language": "zh",
         "stage": "ataraxy",
-        "elapsed_seconds": 23,
-        "steps": 20
+        "elapsed_seconds": 47,
+        "steps": 22
       }
     },
     {
@@ -641,9 +673,9 @@
         "level": 1,
         "attempt": 2,
         "ui_language": "es",
-        "w": 1.5,
-        "explored": 18,
-        "baseline_explored": 26
+        "w": 3,
+        "explored": 20,
+        "baseline_explored": 29
       }
     },
     {
@@ -679,13 +711,13 @@
         "level": 1,
         "attempt": 1,
         "ui_language": "es",
-        "extra_steps": 6,
-        "walls_used": 3
+        "extra_steps": 2,
+        "walls_used": 1
       }
     }
   ],
   "summary": {
-    "passed": 74,
-    "total": 74
+    "passed": 82,
+    "total": 82
   }
 }
