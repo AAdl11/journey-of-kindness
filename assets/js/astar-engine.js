@@ -10,7 +10,7 @@
     const copy = p => ({ x: p.x, y: p.y });
     const manhattan = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 
-    function createGrid({ cols, rows, walls = [], start, goal, tieBreak = 'deeper', w = 1 }) {
+    function createGrid({ cols, rows, walls = [], start, goal, tieBreak = 'deeper', w = 1, costs = [] }) {
         if (!Number.isInteger(cols) || !Number.isInteger(rows) || cols < 1 || rows < 1) {
             throw new RangeError('cols and rows must be positive integers');
         }
@@ -21,8 +21,14 @@
         }
         if (!['deeper', 'fifo'].includes(tieBreak)) throw new TypeError('Unknown tieBreak');
         if (!Number.isFinite(w) || w < 0) throw new RangeError('w must be finite and nonnegative');
+        // Optional weighted roads: entering a listed cell costs `cost` (>= 1) instead of 1.
+        // Manhattan h stays admissible because every step still costs at least 1.
+        if (!Array.isArray(costs) || !costs.every(c => valid(c) && Number.isFinite(c.cost) && c.cost >= 1)) {
+            throw new RangeError('costs must be cells with cost >= 1');
+        }
         return { cols, rows, walls: Array.from(new Map(walls.map(p => [key(p), copy(p)])).values()),
-            start: copy(start), goal: copy(goal), tieBreak, w };
+            start: copy(start), goal: copy(goal), tieBreak, w,
+            costs: Array.from(new Map(costs.map(c => [key(c), { ...copy(c), cost: c.cost }])).values()) };
     }
 
     // Success: array of independent snapshots; last snapshot has path.
@@ -30,6 +36,7 @@
     function astarSteps(input) {
         const grid = createGrid(input), { start, goal } = grid;
         const walls = new Set(grid.walls.map(key));
+        const stepCost = new Map(grid.costs.map(c => [key(c), c.cost]));
         const steps = [], closed = [], closedKeys = new Set();
         if (walls.has(key(start)) || walls.has(key(goal))) return { steps, path: null };
         const openSet = [start], cameFrom = {}, gScore = {}, fScore = {};
@@ -49,7 +56,7 @@
                     .filter(n => n.x >= 0 && n.y >= 0 && n.x < grid.cols && n.y < grid.rows
                         && !walls.has(key(n)) && !closedKeys.has(key(n)))
                     .forEach(n => {
-                        const nk = key(n), g = gScore[ck] + 1;
+                        const nk = key(n), g = gScore[ck] + (stepCost.get(nk) || 1);
                         if (gScore[nk] === undefined || g < gScore[nk]) {
                             cameFrom[nk] = copy(current);
                             gScore[nk] = g;

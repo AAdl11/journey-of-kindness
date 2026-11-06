@@ -8,7 +8,7 @@ const TEXT={
  breakDesc:['Add roadblocks to make the route longer.','放路障，讓路線變長。','Añade obstáculos para alargar la ruta.'],
  predictDesc:['Guess which cell AI expands next.','猜 AI 下一步展開哪一格。','Adivina qué casilla expande la IA.'],
  raceDesc:['Visit Grandma, then match A*.','經過阿嬤，再追平 A*。','Visita a la abuela e iguala A*.'],
- tuneDesc:['Adjust w. Explore less, keep the shortest route.','調整 w，少探索，仍走最短路。','Ajusta w. Explora menos y conserva la ruta más corta.'],
+ tuneDesc:['⛰ Hills cost 3 steps. One run per map: explore less, keep the cheapest route.','⛰ 上坡一格算 3 步。每張圖只能跑一次：少探索，又要最省。','⛰ Las colinas cuestan 3 pasos. Una prueba por mapa: explora menos y conserva la ruta más barata.'],
  cost:['Requires {n} coins','需要 {n} 枚金幣','Requiere {n} monedas'],
  unlocked:['Unlocked','已解鎖','Desbloqueado'],locked:['Locked','尚未解鎖','Bloqueado'],passed:['Passed','已通過','Superado'],
  lockHint:['Pass the previous trial to unlock this mode.','通過上一層的考驗就能解鎖。','Supera la prueba anterior para desbloquear este modo.'],
@@ -19,7 +19,7 @@ const TEXT={
  demoNext:['Go to your turn','進入你的回合','Ir a tu turno'],
  breakTask:['👉 Tap road cells to add roadblocks (up to 3). Make A*’s route {n} steps or longer to earn a coin.','👉 點道路放路障（最多 3 個），讓 A* 的路線變成 {n} 步以上，就拿到 1 枚金幣。','👉 Toca calles para poner obstáculos (hasta 3). Haz que la ruta de A* tenga {n} pasos o más para ganar una moneda.'],
  predictTask:['👉 Tap the cell A* will expand next. Get {n} of {total} right to earn a coin.','👉 點 A* 下一步會展開的格子。{total} 題答對 {n} 題，就拿到 1 枚金幣。','👉 Toca la casilla que A* expandirá. Acierta {n} de {total} para ganar una moneda.'],
- tuneTask:['👉 Drag the w slider. Explore 30% fewer cells than w = 1, with the same route length, to earn a coin.','👉 拖動 w 滑桿。探索格數比 w = 1 少三成、路線一樣短，就拿到 1 枚金幣。','👉 Mueve el control w. Explora un 30% menos de casillas que con w = 1, con la misma longitud de ruta, para ganar una moneda.'],
+ tuneTask:['👉 ⛰ hills cost 3 steps. Read the map, set w, press Run. Clear 2 maps in a row to earn a coin: the same lowest cost as w = 1, with at least 30% fewer cells explored.','👉 ⛰ 上坡一格算 3 步。看懂地圖，設好 w，按「跑 A*」。連續過 2 張圖拿 1 枚金幣：總成本和 w = 1 一樣低，探索格數少三成以上。','👉 ⛰ las colinas cuestan 3 pasos. Lee el mapa, elige w y pulsa Ejecutar. Supera 2 mapas seguidos para ganar una moneda: el mismo costo mínimo que con w = 1 y al menos un 30% menos de casillas exploradas.'],
  demoPlaying:['🎬 The AI shows you first. Your turn starts in a moment.','🎬 AI 先示範一次，馬上換你。','🎬 La IA te muestra primero. Enseguida es tu turno.'],
  breakDemoPick:['🎬 The AI taps a road cell on the route. That drops a roadblock.','🎬 AI 點路線上的一格道路，放下一個路障。','🎬 La IA toca una calle de la ruta y pone un obstáculo.'],
  breakDemoResult:['🎬 A* went around it: {a} steps before, {b} steps now. Find spots that force a longer way around.','🎬 A* 繞過去了：原本 {a} 步，現在 {b} 步。找出逼它繞更遠的位置。','🎬 A* lo rodeó: antes {a} pasos, ahora {b}. Busca lugares que la obliguen a dar más vuelta.'],
@@ -27,7 +27,7 @@ const TEXT={
  predictDemo:['🎬 Watch: A* always expands the open cell with the lowest f (the small number in the corner).','🎬 看好：A* 每次都展開候選格裡 f 最小的那一格（格子角落的小數字）。','🎬 Mira: A* siempre expande la casilla abierta con la f más baja (el número pequeño de la esquina).'],
  yourTurnPredict:['✋ Your turn. Tap the cell with the lowest f.','✋ 換你了。點 f 最小的那一格。','✋ Tu turno. Toca la casilla con la f más baja.'],
  tuneDemo:['🎬 Watch: w = 0 explores {e0} cells. w = 1 explores {e1}.','🎬 看好：w = 0 探索 {e0} 格，w = 1 探索 {e1} 格。','🎬 Mira: w = 0 explora {e0} casillas. w = 1 explora {e1}.'],
- yourTurnTune:['✋ Your turn. Drag the slider and watch E and L.','✋ 換你了。拖動滑桿，看 E 和 L 怎麼變。','✋ Tu turno. Mueve el control y observa E y L.'],
+ yourTurnTune:['✋ Your turn. Map {r} of 2. One run per map, so think before you press Run.','✋ 換你了。第 {r} 張圖，共 2 張。每張只能跑一次，先想清楚再按。','✋ Tu turno. Mapa {r} de 2. Una sola prueba por mapa: piensa antes de pulsar Ejecutar.'],
  raceDemo:['🎬 Watch the AI’s route to Grandma first. Then it’s your turn.','🎬 先看 AI 怎麼走到阿嬤家，然後換你。','🎬 Primero mira la ruta de la IA hasta la abuela. Luego es tu turno.'],
  showMe:['▶ Show me how','▶ 示範給我看','▶ Muéstrame cómo'],
  backToBoard:['Back to the board','回到地圖','Volver al tablero'],
@@ -47,9 +47,10 @@ const TEXT={
  frontier:['h estimates distance to the goal, so lower f often pulls the frontier toward it.','h 估計到終點的距離，所以較小的 f 常讓候選範圍往終點延伸。','h estima la distancia a la meta, por eso una f menor suele orientar la frontera hacia ella.'],
  weight:['Weight w','權重 w','Peso w'],dijkstra:['0 = Dijkstra (full exploration)','0 = Dijkstra（全圖探索）','0 = Dijkstra (exploración completa)'],
  astar:['1 = A*','1 = A*','1 = A*'],greedy:['3 = Greedy','3 = Greedy（貪婪）','3 = Greedy (voraz)'],
- tuneNote:['w = 0 ignores the goal and spreads evenly (Dijkstra). w = 1 is A*: h never overestimates, so the path is always shortest. w > 1 trusts h more than it should: fewer cells explored, but the path can come out longer. Find the sweet spot for this map.','w = 0 不看終點，往四面平均擴散（Dijkstra）。w = 1 是 A*：h 從不高估，所以路一定最短。w > 1 太相信 h：探的格子變少，但路可能變長。找出這張圖的甜蜜點。','w = 0 ignora la meta y se expande parejo (Dijkstra). w = 1 es A*: h nunca sobreestima, así que la ruta siempre es la más corta. w > 1 confía de más en h: explora menos celdas, pero la ruta puede alargarse. Encuentra el punto justo para este mapa.'],
+ tuneNote:['w = 0 ignores the goal and spreads evenly (Dijkstra). w = 1 is A*: h never overestimates, so the route is always the cheapest. w > 1 trusts h more than it should: fewer cells explored, but it may drive straight over hills. How much can you trust h on this map?','w = 0 不看終點，往四面平均擴散（Dijkstra）。w = 1 是 A*：h 從不高估，所以路線一定最省。w > 1 太相信 h：探的格子變少，但可能直接衝上坡。這張圖上，h 能信多少？','w = 0 ignora la meta y se expande parejo (Dijkstra). w = 1 es A*: h nunca sobreestima, así que la ruta siempre es la más barata. w > 1 confía de más en h: explora menos, pero puede subir directo por las colinas. ¿Cuánto puedes confiar en h en este mapa?'],
  explored:['Explored E: {n}','探索格數 E：{n}','Exploradas E: {n}'],length:['Path L: {n}','路徑長度 L：{n}','Longitud L: {n}'],
- baseline:['w = 1 baseline: E₁ = {e}, L₁ = {l}','w = 1 基準：E₁ = {e}，L₁ = {l}','Referencia w = 1: E₁ = {e}, L₁ = {l}'],
+ baseline:['w = 1 baseline: E₁ = {e}, C₁ = {l}','w = 1 基準：E₁ = {e}，C₁ = {l}','Referencia w = 1: E₁ = {e}, C₁ = {l}'],
+ runTune:['▶ Run A*','▶ 跑 A*','▶ Ejecutar A*'],nextMap:['New map','換新圖','Mapa nuevo'],routeCost:['Cost C: {n}','總成本 C：{n}','Costo C: {n}'],slowLegend:['⛰ = hill, 3 steps','⛰ = 上坡，算 3 步','⛰ = colina, 3 pasos'],tuneWrongCost:['Cost {c} is more than {b}. w trusted h too much and drove over hills. Try a new map.','總成本 {c}，比 {b} 高。w 太相信 h，直接衝上坡。換張新圖再試。','Costo {c}, más que {b}. w confió de más en h y subió las colinas. Prueba un mapa nuevo.'],tuneWrongExplore:['Cheapest route kept, but {e} cells explored. It needed {max} or fewer. Try a new map.','路線一樣省，但探索了 {e} 格，要 {max} 格以內。換張新圖再試。','Ruta más barata, pero exploró {e} casillas. Hacían falta {max} o menos. Prueba un mapa nuevo.'],tuneRoundPass:['✅ Map 1 cleared. One more: the hills move.','✅ 第 1 張圖過了。再一張，上坡會換位置。','✅ Mapa 1 superado. Uno más: las colinas cambian de lugar.'],tierBasic:['Beginner','入門','Principiante'],tierMid:['Advanced','進階','Avanzado'],tierMaster:['Master','大師','Maestro'],
  tunePass:['A* Master · +1 coin','A* 大師 · +1 金幣','Maestro A* · +1 moneda'],master:['A* Master','A* 大師','Maestro A*'],
  weightHint:['When w > 1, w·h can overestimate the remaining cost, so the shortest route is no longer guaranteed.','w > 1 時，w·h 可能高估剩餘成本，失去 admissible 的保證，因此可能找到次佳路線。','Cuando w > 1, w·h puede sobreestimar el costo restante y ya no se garantiza la ruta más corta.'],
  moved:['A roadblock was moved to the nearest free cell.','一個路障已移到最近的空格。','Se movió un obstáculo a la casilla libre más cercana.'],
@@ -104,11 +105,12 @@ function sticky(show){
     let bar=$('dojo-sticky');if(!bar){bar=document.createElement('div');bar.id='dojo-sticky';document.body.appendChild(bar);}
     bar.innerHTML=`<button class="dojo-btn" data-dojo-action="menu">${tag('backMenu')}</button><span class="dojo-sticky-coins">${tag('coins',{n:state.coins})}</span>`;bar.hidden=!show;
 }
+const TIER={break:'tierBasic',predict:'tierMid',race:'tierMid',tune:'tierMaster'};
 function menu(){
     restoreStats();
     stopView();stopCinematic();searchViz.active=false;gameState.mode='dojo';stopMeditation();
     setView('menu');
-    $('dojo-shell').innerHTML=`<section class="dojo-panel"><div class="dojo-top"><p class="dojo-eyebrow">L1 · A*</p><div class="dojo-coins">${tag('coins',{n:state.coins})}</div></div><h1 class="dojo-title">${tag('title')}</h1><p class="dojo-help">${tag('economy')}</p><p class="dojo-status" id="dojo-notice" aria-live="polite">${notice}</p><div class="dojo-cards">${C.MODES.map((m,i)=>`<button class="dojo-card" data-dojo-mode="${m}" data-locked="${!C.unlocked(state,m)}" data-passed="${state.passed[m]}"><small>0${i+1} · ${tag('cost',{n:i})}</small><strong>${tag(m)}</strong><small>${tag(m+'Desc')}</small><small>${tag(state.passed[m]?'passed':C.unlocked(state,m)?'unlocked':'locked')}</small></button>`).join('')}</div>${state.master?`<div class="dojo-success" id="dojo-master">🏅 ${tag('master')}</div>`:''}<div class="dojo-actions">${button('clear','clear')}${button('demo','demo')}</div><p class="dojo-note">${esc(map.seed)}</p></section>`;
+    $('dojo-shell').innerHTML=`<section class="dojo-panel"><div class="dojo-top"><p class="dojo-eyebrow">L1 · A*</p><div class="dojo-coins">${tag('coins',{n:state.coins})}</div></div><h1 class="dojo-title">${tag('title')}</h1><p class="dojo-help">${tag('economy')}</p><p class="dojo-status" id="dojo-notice" aria-live="polite">${notice}</p><div class="dojo-cards">${C.MODES.map((m,i)=>`<button class="dojo-card" data-dojo-mode="${m}" data-locked="${!C.unlocked(state,m)}" data-passed="${state.passed[m]}"><small>0${i+1} · ${tag(TIER[m])} · ${tag('cost',{n:i})}</small><strong>${tag(m)}</strong><small>${tag(m+'Desc')}</small><small>${tag(state.passed[m]?'passed':C.unlocked(state,m)?'unlocked':'locked')}</small></button>`).join('')}</div>${state.master?`<div class="dojo-success" id="dojo-master">🏅 ${tag('master')}</div>`:''}<div class="dojo-actions">${button('clear','clear')}${button('demo','demo')}</div><p class="dojo-note">${esc(map.seed)}</p></section>`;
     sticky(false);
     $('dojo-shell').scrollIntoView({block:'start'});
 }
@@ -125,14 +127,17 @@ function showStatus(id,vars={}){if($('dojo-status'))$('dojo-status').innerHTML=t
 function panel(snapshot){if(!snapshot)return;for(const k of ['g','h','f'])$(k+'-value').textContent=snapshot[k];}
 function renderCell(cell,p,frame){
     const k=C.key(p),walls=new Set(frame.grid.walls.map(C.key));
-    cell.textContent=C.same(p,C.START)?'🚚':C.same(p,C.GOAL)?'🏠':C.same(p,C.GARCIA)?'👵':walls.has(k)?'■':'';
+    const slow=(frame.grid.costs||[]).some(q=>C.same(q,p));
+    cell.textContent=C.same(p,C.START)?'🚚':C.same(p,C.GOAL)?'🏠':C.same(p,C.GARCIA)?'👵':walls.has(k)?'■':slow?'⛰':'';
+    if(slow)cell.classList.add('dojo-slow');
     if(state.walls.some(q=>C.same(q,p)))cell.classList.add('dojo-player-wall');
     const candidate=frame.snapshot?.open.find(q=>C.same(p,q));
     if(candidate){const n=document.createElement('small');n.className='dojo-f';n.textContent=candidate.f;cell.appendChild(n);}
 }
-function mount(w=1,onCellClick,play=false,speed=120){
+function mount(w=1,onCellClick,play=false,speed=120,board=null){
     if(view)view.destroy();
-    view=mountAStar($('dojoboard'),C.grid(combined(),w),{renderCell,onCellClick,sound:()=>soundEnabled,onStep:panel});
+    const g=board?C.grid(board.walls,w,C.START,C.GOAL,board.costs):C.grid(combined(),w);
+    view=mountAStar($('dojoboard'),g,{renderCell,onCellClick,sound:()=>soundEnabled,onStep:panel});
     if(play)view.setSpeed(speed).play();
     return view;
 }
@@ -256,32 +261,63 @@ function predictClick(x,y){
         view.redraw(next,[]);panel(next);p.index++;p.locked=false;predictFrame();
     },correct?450:1000);
 }
-function tuneRun(w){
-    const base=C.search(combined()),r=C.search(combined(),w);lastTune={w,explored:r.explored,length:r.length,baseline_explored:base.explored,baseline_length:base.length};
+// Master tier. Each map gets seeded hills; the player sets w without seeing E or C,
+// then runs once. Two maps in a row earn the coin, and the second map is one where
+// the largest w loses the cheapest route, so "always slide to max" cannot pass.
+// A wrong run, a reload or a replay never re-rolls a map in the player's favour.
+let tuneBoard=null,tuneLocked=false;
+function tuneBoardFor(){
+    const round=state.tuneStreak,base=map.seed+':tune:'+state.tuneAttempt;
+    for(const strict of round===1?[true,false]:[false])for(let k=0;k<12;k++){
+        const costs=C.slowRoads(map.walls,base+':'+k,strict);if(costs)return {walls:map.walls,costs};
+    }
+    return {walls:map.walls,costs:[]};
+}
+function tuneSearch(w){return C.search(tuneBoard.walls,w,C.START,C.GOAL,tuneBoard.costs);}
+function tuneShow(w){
+    const base=tuneSearch(1),r=tuneSearch(w);
     $('dojo-weight-value').textContent=w;
-    $('dojo-metrics').innerHTML=tag('explored',{n:r.explored})+tag('length',{n:r.length??'—'});
-    $('dojo-baseline').innerHTML=tag('baseline',{e:base.explored,l:base.length});
-    mount(w,null,true,80);
-    if(demoActive||trialPassed)return;
-    if(r.path&&r.explored<=.7*base.explored&&r.length===base.length){const first=award('tune',{w,explored:r.explored,baseline_explored:base.explored});result('tunePass',first,'tune');}
-    else $('dojo-result').innerHTML='';
+    $('dojo-metrics').innerHTML=tag('explored',{n:r.explored})+tag('routeCost',{n:r.cost??'—'});
+    $('dojo-baseline').innerHTML=tag('baseline',{e:base.explored,l:base.cost});
+    mount(w,null,true,80,tuneBoard);
+    return {base,r};
+}
+function tuneCommit(){
+    if(demoActive||tuneLocked||trialPassed)return;
+    tuneLocked=true;$('dojo-run').disabled=true;$('dojo-weight').disabled=true;
+    const w=Number($('dojo-weight').value),{base,r}=tuneShow(w),max=Math.floor(.7*base.explored);
+    lastTune={w,explored:r.explored,cost:r.cost,baseline_explored:base.explored,baseline_cost:base.cost,round:state.tuneStreak+1};
+    const ok=r.path&&r.cost===base.cost&&r.explored<=max;
+    state.tuneAttempt++;
+    const again=`<div class="dojo-actions">${button('nextMap','tunenext',true)}${button('menu','menu')}</div>`;
+    if(ok&&state.tuneStreak===1){state.tuneStreak=0;persist();const first=award('tune',{w,explored:r.explored,baseline_explored:base.explored});result('tunePass',first,'tune');return;}
+    if(ok){state.tuneStreak=1;persist();$('dojo-result').innerHTML=`<div class="dojo-success"><p>${tag('tuneRoundPass')}</p>${again}</div>`;}
+    else{state.tuneStreak=0;persist();$('dojo-result').innerHTML=`<div class="dojo-hint-box"><p>${r.cost!==base.cost?tag('tuneWrongCost',{c:r.cost??'—',b:base.cost}):tag('tuneWrongExplore',{e:r.explored,max})}</p>${again}</div>`;}
+    $('dojo-result').scrollIntoView({block:'center',behavior:'smooth'});
 }
 function tuneDemo(){
     if(demoActive)return;
-    const version=runId,slider=$('dojo-weight'),e0=C.search(combined(),0).explored,e1=C.search(combined(),1).explored;
-    demoActive=true;slider.disabled=true;demoCleanup=()=>{if($('dojo-weight'))$('dojo-weight').disabled=false;};
+    const version=runId,slider=$('dojo-weight'),e0=tuneSearch(0).explored,e1=tuneSearch(1).explored;
+    demoActive=true;slider.disabled=true;$('dojo-run').disabled=true;
+    demoCleanup=()=>{if($('dojo-weight')&&!tuneLocked){$('dojo-weight').disabled=false;$('dojo-run').disabled=false;}};
     showStatus('demoPlaying');
     const alive=()=>version===runId&&mode==='tune'&&demoActive;
-    setTimeout(()=>{if(!alive())return;slider.value='0';tuneRun(0);showStatus('tuneDemo',{e0,e1});},1200);
-    setTimeout(()=>{if(!alive())return;slider.value='1';tuneRun(1);},4200);
-    setTimeout(()=>{if(!alive())return;demoCleanup=null;demoActive=false;slider.disabled=false;state.tuneDemoSeen=true;persist();showStatus('yourTurnTune');},7000);
+    setTimeout(()=>{if(!alive())return;slider.value='0';tuneShow(0);showStatus('tuneDemo',{e0,e1});},1200);
+    setTimeout(()=>{if(!alive())return;slider.value='1';tuneShow(1);},4200);
+    setTimeout(()=>{if(!alive())return;demoCleanup=null;demoActive=false;
+        // Clear the demo's numbers so the player chooses w from the map, not from E.
+        slider.value='1';$('dojo-weight-value').textContent='1';$('dojo-metrics').innerHTML='';mount(1,null,false,80,tuneBoard);
+        if(!tuneLocked){slider.disabled=false;$('dojo-run').disabled=false;}
+        state.tuneDemoSeen=true;persist();showStatus('yourTurnTune',{r:state.tuneStreak+1});},7000);
 }
 function tuneMode(){
-    shell('tune');
-    $('dojo-extra').innerHTML=`<p class="dojo-help mono">f = g + w·h</p><label for="dojo-weight">${tag('weight')}: <strong id="dojo-weight-value">1</strong></label><input id="dojo-weight" class="dojo-range" type="range" min="0" max="3" step="0.5" value="1"><div class="dojo-weight-labels">${tag('dijkstra')}${tag('astar')}${tag('greedy')}</div><p id="dojo-baseline" class="dojo-help"></p><p class="dojo-note">${tag('tuneNote')}</p>`;
+    shell('tune');tuneBoard=tuneBoardFor();tuneLocked=false;trialPassed=false;
+    $('dojo-extra').innerHTML=`<p class="dojo-help mono">f = g + w·h · ${tag('slowLegend')}</p><label for="dojo-weight">${tag('weight')}: <strong id="dojo-weight-value">1</strong></label><input id="dojo-weight" class="dojo-range" type="range" min="0" max="3" step="0.5" value="1"><div class="dojo-weight-labels">${tag('dijkstra')}${tag('astar')}${tag('greedy')}</div><div class="dojo-actions"><button class="dojo-btn primary" id="dojo-run" data-dojo-action="tunerun">${tag('runTune')}</button></div><p id="dojo-baseline" class="dojo-help"></p><p class="dojo-note">${tag('tuneNote')}</p>`;
     $('dojo-bottom').innerHTML=hintBlock('weightHint')+`<div class="dojo-actions">${button('showMe','showme')}</div>`;
-    $('dojo-weight').addEventListener('input',e=>{if(!demoActive)tuneRun(Number(e.target.value));});tuneRun(1);
-    if(!state.tuneDemoSeen)tuneDemo();else showStatus('yourTurnTune');
+    $('dojo-weight').addEventListener('input',e=>{$('dojo-weight-value').textContent=e.target.value;});
+    $('dojo-baseline').innerHTML=tag('baseline',{e:tuneSearch(1).explored,l:tuneSearch(1).cost});
+    mount(1,null,false,80,tuneBoard);
+    if(!state.tuneDemoSeen)tuneDemo();else showStatus('yourTurnTune',{r:state.tuneStreak+1});
 }
 function raceCompare(){
     if(mode==='race')$('dojo-race-compare').innerHTML=tag('astarSteps',{n:gameState.raceOptimal})+'<br>'+tag('playerSteps',{n:gameState.steps});
@@ -317,7 +353,7 @@ function enter(m){
     if(!C.MODES.includes(m))return;
     if(!C.unlocked(state,m)){const n=$('dojo-notice');if(n){n.innerHTML=tag('lockHint');n.scrollIntoView({block:'center',behavior:'smooth'});}return;}
     stopView();stopCinematic();searchViz.active=false;notice='';
-    if(m!=='break')repair(m==='tune');
+    if(m==='predict'||m==='race')repair();
     gameState.raceOptimal=undefined;trialPassed=false;
     jokAnalytics.start('dojo');analytics('l1_mode_enter',{mode:m});
     ({break:breakMode,predict:predictMode,race:raceMode,tune:tuneMode})[m]();
@@ -333,7 +369,7 @@ function finishDemo(){state.seenDemo=true;persist();menu();}
 function resetActive(){if(mode==='race'){enter('race');return true;}if(mode==='menu'){menu();return true;}return false;}
 window.replayDojo=function(){stopMeditation();menu();};
 window.leavePorticoHome=function(){stopMeditation();window.location.href='../index.html';};
-window.L1Dojo={menu,enter,prepareDemo,finishDemo,resetActive,isRaceStarting:()=>startingRace,
+window.L1Dojo={menu,enter,tuneBoard:()=>tuneBoard,prepareDemo,finishDemo,resetActive,isRaceStarting:()=>startingRace,
     canEnterPortico:()=>mode==='race'&&gameState.savedGarcia&&gameState.reachedGoal&&gameState.steps<=gameState.raceOptimal,
     breathEpoch:()=>epoch,
     beforePortico(){stopView();mode='portico';document.body.dataset.dojoView='portico';$('dojo-race-compare').hidden=true;}
@@ -375,6 +411,8 @@ document.addEventListener('click',e=>{
         if(mode==='break'){state.walls=[];state.wallsSeed=map.seed;persist();}
         enter(mode);
     }
+    if(action==='tunerun'){tuneCommit();return;}
+    if(action==='tunenext'){stopView();tuneMode();return;}
     if(action==='showme'){({break:breakDemo,predict:predictDemo,tune:tuneDemo})[mode]?.();}
     if(action==='board'){b.closest('details')?.removeAttribute('open');$('dojoboard')?.scrollIntoView({block:'center',behavior:'smooth'});}
     if(action==='race')enter('race');

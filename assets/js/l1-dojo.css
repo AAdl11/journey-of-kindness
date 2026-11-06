@@ -76,3 +76,7 @@ body[data-dojo-view="race"]:has(#dojo-sticky:not([hidden])) #game-screen{padding
 #dojo-notice:empty{min-height:0;margin:0}
 /* Keep a scrolled-to board cell clear of the fixed bottom bar. */
 body:has(#dojo-sticky:not([hidden])) .jok-astar-cell{scroll-margin-bottom:90px}
+
+.jok-astar-cell.dojo-slow{background:#f3e3c3;color:#7a4e12}
+.dojo-hint-box{border:1px solid #e5c07b;background:#fff8e6;border-radius:12px;padding:12px;margin:10px 0}
+.dojo-hint-box p{margin:0 0 10px}

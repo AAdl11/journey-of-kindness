@@ -161,7 +161,23 @@
       "status": "PASS"
     },
     {
-      "name": "Tune entry repairs to a solvable map",
+      "name": "Master map has hills and a working w",
+      "status": "PASS"
+    },
+    {
+      "name": "Moving the slider shows no E or C before Run",
+      "status": "PASS"
+    },
+    {
+      "name": "a wrong w costs the streak and locks this map",
+      "status": "PASS"
+    },
+    {
+      "name": "map 1 cleared keeps the coin for map 2",
+      "status": "PASS"
+    },
+    {
+      "name": "map 2 is one where w = 3 loses the cheapest route",
       "status": "PASS"
     },
     {
@@ -553,8 +569,8 @@
         "level": 1,
         "attempt": 1,
         "ui_language": "zh",
-        "extra_steps": 2,
-        "walls_used": 2
+        "extra_steps": 6,
+        "walls_used": 3
       }
     },
     {
@@ -637,7 +653,7 @@
         "attempt": 1,
         "ui_language": "zh",
         "stage": "ataraxy",
-        "elapsed_seconds": 47,
+        "elapsed_seconds": 46,
         "steps": 22
       }
     },
@@ -673,9 +689,9 @@
         "level": 1,
         "attempt": 2,
         "ui_language": "es",
-        "w": 3,
-        "explored": 20,
-        "baseline_explored": 29
+        "w": 1.5,
+        "explored": 18,
+        "baseline_explored": 27
       }
     },
     {
@@ -711,13 +727,13 @@
         "level": 1,
         "attempt": 1,
         "ui_language": "es",
-        "extra_steps": 2,
-        "walls_used": 1
+        "extra_steps": 6,
+        "walls_used": 3
       }
     }
   ],
   "summary": {
-    "passed": 82,
-    "total": 82
+    "passed": 86,
+    "total": 86
   }
 }
