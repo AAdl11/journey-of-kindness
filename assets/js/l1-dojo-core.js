@@ -12,12 +12,12 @@
     const CELLS=Array.from({length:48},(_,i)=>({x:i%8,y:Math.floor(i/8)}));
     // Validated fixed reserve; replaced only together with its reproducible evidence.
     const FALLBACK=[{x:3,y:3},{x:4,y:0},{x:7,y:1},{x:5,y:5},{x:3,y:1},{x:4,y:5},{x:3,y:2},{x:5,y:4},{x:6,y:1},{x:1,y:2}];
-    function grid(walls,w=1,start=START,goal=GOAL){return engine.createGrid({cols:8,rows:6,walls,start,goal,w});}
-    function search(walls,w=1,start=START,goal=GOAL){
-        const result=engine.astarSteps(grid(walls,w,start,goal));
+    function grid(walls,w=1,start=START,goal=GOAL,costs=[]){return engine.createGrid({cols:8,rows:6,walls,start,goal,w,costs});}
+    function search(walls,w=1,start=START,goal=GOAL,costs=[]){
+        const result=engine.astarSteps(grid(walls,w,start,goal,costs));
         const steps=Array.isArray(result)?result:result.steps;
         const path=Array.isArray(result)?steps[steps.length-1].path:null;
-        return {steps,path,length:path?path.length-1:null,explored:steps.length};
+        return {steps,path,length:path?path.length-1:null,cost:path?steps[steps.length-1].g:null,explored:steps.length};
     }
     function race(walls){
         const a=search(walls,1,START,GARCIA), b=search(walls,1,GARCIA,GOAL);
@@ -49,6 +49,42 @@
             return null;
         }
         return visit([],base);
+    }
+    // Break goal picked from the grid: the daily route length N0 plus BREAK_EXTRA.
+    // Sandbox counts (Nov 2026 daily maps, every 3-roadblock placement): about 1 in 8
+    // add 2 steps, about 1.5% add 4, +6 needs one exact set. +4 cannot be reached by
+    // tapping at random; the player has to block the route where it cannot slip
+    // around. Every daily map is validated to allow +6, so +4 is always reachable.
+    const BREAK_EXTRA=4;
+    function breakTarget(walls){
+        const base=search(walls);if(!base.path)return null;
+        return {base:base.length,extra:BREAK_EXTRA,target:base.length+BREAK_EXTRA};
+    }
+    // Master tier: slow roads (cost 3) make w matter. A high w trusts h and drives
+    // through slow roads; w = 1 is safe but explores more. A w "works" when it keeps
+    // the cheapest total cost and explores at most 70% of what w = 1 explores.
+    const SLOW=3;
+    function tuneWith(walls,costs){
+        const baseline=search(walls,1,START,GOAL,costs);
+        if(!baseline.path)return {baseline,results:[],solutions:[]};
+        const results=WEIGHTS.map(w=>({w,...search(walls,w,START,GOAL,costs)}));
+        const solutions=results.filter(r=>r.w!==1&&r.path&&r.cost===baseline.cost&&r.explored<=.7*baseline.explored);
+        return {baseline,results,solutions};
+    }
+    // Slow roads for a map, seeded. Accepted only when some w works and at least half
+    // of the other w values fail, so a guess is unlikely to pass. greedyFails asks for
+    // a map where the largest w (3) loses the cheapest route, so "always max w" fails.
+    function slowRoads(walls,seed,greedyFails=false){
+        const blocked=new Set(walls.map(key));
+        const free=CELLS.filter(p=>!protectedCell(p)&&!blocked.has(key(p)));
+        for(let attempt=0;attempt<40;attempt++){
+            const random=randomFor(seed+':slow:'+attempt),cells=free.map(copy);
+            for(let i=cells.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[cells[i],cells[j]]=[cells[j],cells[i]];}
+            const costs=cells.slice(0,5+Math.floor(random()*3)).map(p=>({...p,cost:SLOW}));
+            const t=tuneWith(walls,costs),fails=t.results.filter(r=>r.w!==1&&!t.solutions.some(s=>s.w===r.w)).length;
+            if(t.solutions.length&&fails>=3&&!(greedyFails&&t.solutions.some(r=>r.w===3)))return costs;
+        }
+        return null;
     }
     function validate(walls){
         const viaGarcia=race(walls), tuning=tune(walls);
@@ -91,7 +127,7 @@
         const passed=Object.fromEntries(MODES.map(m=>[m,raw.passed?.[m]===true]));
         // Completion flags are authoritative, so corrupt coin counts cannot unlock modes.
         return {...raw,coins:MODES.filter(m=>passed[m]).length,passed,master:passed.tune&&raw.master===true,
-            seenDemo:raw.seenDemo===true,breakDemoSeen:raw.breakDemoSeen===true,walls:(Array.isArray(raw.walls)?raw.walls:[]).filter(valid).slice(0,3).map(copy),
+            seenDemo:raw.seenDemo===true,tuneStreak:raw.tuneStreak===1?1:0,tuneAttempt:Number.isInteger(raw.tuneAttempt)&&raw.tuneAttempt>=0?raw.tuneAttempt:0,breakDemoSeen:raw.breakDemoSeen===true,predictDemoSeen:raw.predictDemoSeen===true,raceDemoSeen:raw.raceDemoSeen===true,tuneDemoSeen:raw.tuneDemoSeen===true,walls:(Array.isArray(raw.walls)?raw.walls:[]).filter(valid).slice(0,3).map(copy),
             wallsSeed:typeof raw.wallsSeed==='string'?raw.wallsSeed:'',
             bestRace:raw.bestRace&&Number.isInteger(raw.bestRace.player)&&raw.bestRace.player>=0&&Number.isInteger(raw.bestRace.astar)&&raw.bestRace.astar>=0?{player:raw.bestRace.player,astar:raw.bestRace.astar}:null};
     }
@@ -128,5 +164,5 @@
         }
         return {walls:accepted,moved,removed};
     }
-    return {START,GOAL,GARCIA,MODES,WEIGHTS,FALLBACK,key,same,protectedCell,grid,search,race,tune,breakSolution,validate,candidate,generate,dateSeed,normalize,load,save,award,unlocked,repair};
+    return {START,GOAL,GARCIA,MODES,WEIGHTS,FALLBACK,key,same,protectedCell,grid,search,race,tune,tuneWith,slowRoads,SLOW,breakSolution,breakTarget,BREAK_EXTRA,validate,candidate,generate,dateSeed,normalize,load,save,award,unlocked,repair};
 });

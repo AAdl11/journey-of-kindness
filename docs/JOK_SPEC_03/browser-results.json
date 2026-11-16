@@ -33,6 +33,18 @@
       "status": "PASS"
     },
     {
+      "name": "Break shows one goal line naming N",
+      "status": "PASS"
+    },
+    {
+      "name": "taps wait while the Break demo plays",
+      "status": "PASS"
+    },
+    {
+      "name": "Break demo hands over with an empty board and no coin",
+      "status": "PASS"
+    },
+    {
       "name": "blocked path does not award a coin",
       "status": "PASS"
     },
@@ -42,6 +54,14 @@
     },
     {
       "name": "Break earns exactly one coin",
+      "status": "PASS"
+    },
+    {
+      "name": "both coin counters update at once",
+      "status": "PASS"
+    },
+    {
+      "name": "Break result offers Next, Play again and Dojo menu",
       "status": "PASS"
     },
     {
@@ -74,6 +94,14 @@
     },
     {
       "name": "Race keeps reachable Break walls",
+      "status": "PASS"
+    },
+    {
+      "name": "Race shows the Dojo menu bar",
+      "status": "PASS"
+    },
+    {
+      "name": "Race plays the AI route demo once on first visit",
       "status": "PASS"
     },
     {
@@ -129,7 +157,27 @@
       "status": "PASS"
     },
     {
-      "name": "Tune entry repairs to a solvable map",
+      "name": "Tune slider waits while its demo plays",
+      "status": "PASS"
+    },
+    {
+      "name": "Master map has hills and a working w",
+      "status": "PASS"
+    },
+    {
+      "name": "Moving the slider shows no E or C before Run",
+      "status": "PASS"
+    },
+    {
+      "name": "a wrong w costs the streak and locks this map",
+      "status": "PASS"
+    },
+    {
+      "name": "map 1 cleared keeps the coin for map 2",
+      "status": "PASS"
+    },
+    {
+      "name": "map 2 is one where w = 3 loses the cheapest route",
       "status": "PASS"
     },
     {
@@ -494,7 +542,7 @@
   "errors": [],
   "testAssets": {
     "tailwind": true,
-    "fonts": true
+    "fonts": false
   },
   "events": [
     {
@@ -585,8 +633,8 @@
         "level": 1,
         "attempt": 1,
         "ui_language": "zh",
-        "player_steps": 20,
-        "astar_steps": 20
+        "player_steps": 22,
+        "astar_steps": 22
       }
     },
     {
@@ -605,8 +653,8 @@
         "attempt": 1,
         "ui_language": "zh",
         "stage": "ataraxy",
-        "elapsed_seconds": 23,
-        "steps": 20
+        "elapsed_seconds": 46,
+        "steps": 22
       }
     },
     {
@@ -643,7 +691,7 @@
         "ui_language": "es",
         "w": 1.5,
         "explored": 18,
-        "baseline_explored": 26
+        "baseline_explored": 27
       }
     },
     {
@@ -685,7 +733,7 @@
     }
   ],
   "summary": {
-    "passed": 74,
-    "total": 74
+    "passed": 86,
+    "total": 86
   }
 }
