@@ -106,7 +106,12 @@ button { min-height: 44px; min-width: 44px; }
 .overlay-panel { position: fixed; inset: 0; z-index: 1500; background: rgba(0,0,0,.78); display: none; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
 .overlay-panel.open { display: flex; }
 
-.bottom-nav { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 1100; display: flex; gap: 8px; background: rgba(15,23,42,.9); border: 1px solid rgba(148,163,184,.3); padding: 4px 12px; border-radius: 30px; }
+.bottom-nav { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 1100; display: flex; gap: 8px; background: rgba(15,23,42,.9); border: 1px solid rgba(148,163,184,.3); padding: 4px 12px; border-radius: 30px; max-width: calc(100vw - 16px); flex-wrap: wrap; justify-content: center; }
+.bottom-nav button:disabled { opacity: .45; cursor: default; }
+
+/* ═══ Goal line + first-visit AI demo (same pattern as the L1 Dojo) ═══ */
+.goal-line { max-width: 620px; width: calc(100% - 24px); margin: 0 auto 4px; padding: 8px 12px; border-radius: 12px; background: rgba(251,191,36,.16); border: 1px solid rgba(251,191,36,.55); color: #fde68a; font-weight: 700; font-size: .9rem; line-height: 1.45; text-align: center; overflow-wrap: anywhere; }
+.tile.held { outline: 3px solid #38bdf8; outline-offset: -3px; }
 .bottom-nav button { background: transparent; border: none; color: #e2e8f0; font-weight: 700; cursor: pointer; font-size: .85rem; padding: 8px 10px; }
 
 /* ═══ Mobile portrait (390×844 baseline) — Android avoids large blur ═══ */
@@ -166,6 +171,7 @@ button { min-height: 44px; min-width: 44px; }
 
 <!-- ═══ ACT BOARD (Acts 1 & 3) ═══ -->
 <div id="screen-act" class="screen bg-grove" style="padding: 58px 0 80px;">
+  <p class="goal-line" id="goal-line" role="note"></p>
   <div class="hud">
     <span class="hud-chip" id="hud-act"></span>
     <span class="hud-chip" id="hud-time"></span>
@@ -183,6 +189,7 @@ button { min-height: 44px; min-width: 44px; }
 
 <!-- ═══ TREE VIEW (Act 1 reveal + Act 2 pruning) ═══ -->
 <div id="screen-tree" class="screen bg-intro" style="padding: 58px 0 80px;">
+  <p class="goal-line" id="tree-goal-line" role="note"></p>
   <div class="hud"><span class="hud-chip" id="tree-hud-act"></span><span class="hud-chip mono" id="tree-counter"></span></div>
   <p class="narrator" id="tree-narrator" role="status" aria-live="polite"></p>
   <div class="branch-heads" id="branch-heads"></div>
@@ -254,6 +261,7 @@ button { min-height: 44px; min-width: 44px; }
 </div>
 
 <div class="bottom-nav" id="bottom-nav" style="display:none;">
+  <button id="btn-replay-demo" onclick="replayDemo()" data-str="replayDemo" style="display:none;"></button>
   <button onclick="restartAct()" data-str="restartAct"></button>
 </div>
 
@@ -288,6 +296,12 @@ let revealTimer = null;
 let prunePick = null;
 let treeScale = 1;
 let pawnFrame = 0;
+let demoActive = false;                   /* first-visit Act 1 demo is playing */
+let demoToken = 0;                        /* bumps to cancel a running demo */
+let demoSaved = null;                     /* player state held while the demo plays */
+let heldTap = null;                       /* a tap made during the demo, replayed at hand-over */
+let demoSeenMem = false;                  /* fallback when localStorage is unavailable */
+let awaitingPlayer = false;               /* true only while a MAX turn waits for input */
 
 /* ── i18n ──────────────────────────────────────────────────────────────── */
 function t(key) { return (STR[lang] && STR[lang][key]) || STR.en[key] || key; }
@@ -314,6 +328,23 @@ function saveProgress(patch) {
   } catch (e) {}
 }
 
+/* demo-seen flag lives in jok_progress.levels["8"]; other fields are kept */
+function readL8Level() {
+  try {
+    const p = JSON.parse(localStorage.getItem('jok_progress') || '{}');
+    return (p && p.levels && p.levels['8']) || {};
+  } catch (e) { return {}; }
+}
+function saveL8Level(patch) {
+  try {
+    const p = JSON.parse(localStorage.getItem('jok_progress') || '{}') || {};
+    if (!p.levels || typeof p.levels !== 'object') p.levels = {};
+    p.levels['8'] = Object.assign({}, p.levels['8'] || {}, patch);
+    localStorage.setItem('jok_progress', JSON.stringify(p));
+  } catch (e) {}
+}
+function demoSeen() { return demoSeenMem || readL8Level().demoSeen === true; }
+
 /* ── asset loader: real art (Step 9 contract filenames) replaces the
       semantic placeholders automatically once the files exist ───────────── */
 function tryAsset(el) {
@@ -334,6 +365,23 @@ function narrate(msg) { document.getElementById('narrator').textContent = msg; }
 function goHome() { window.location.href = '../index.html'; }
 function togglePause() { document.getElementById('pause-overlay').classList.toggle('open'); }
 function toggleEngineer() { document.getElementById('engineer-body').classList.toggle('open'); }
+function setGoal(id, key) {
+  const el = document.getElementById(id);
+  if (!key) { el.style.display = 'none'; delete el.dataset.str; el.textContent = ''; return; }
+  el.style.display = '';
+  el.dataset.str = key;
+  el.textContent = t(key);
+}
+function goMenu() {
+  cancelDemo();
+  closeResult();
+  pendingPredict = null; awaitingPlayer = false;
+  clearGhosts();
+  phase = 'intro';
+  document.getElementById('bottom-nav').style.display = 'none';
+  updateDemoButton();
+  showScreen('screen-intro');
+}
 
 /* ── mission flow ──────────────────────────────────────────────────────── */
 function startMission() {
@@ -351,8 +399,10 @@ function restartAct() {
 }
 
 function startAct1() {
+  cancelDemo();
   phase = 'act1'; ply = 0; lastMcts = null;
-  pawnFrame = 0;
+  pawnFrame = 0; pendingPredict = null; awaitingPlayer = false;
+  document.getElementById('predict-chips').innerHTML = '';
   G = ENGINE.initState('A1F');
   const scr = document.getElementById('screen-act');
   scr.classList.remove('bg-park'); scr.classList.add('bg-grove');
@@ -360,13 +410,109 @@ function startAct1() {
   tryAsset(scr);
   showScreen('screen-act');
   document.getElementById('bottom-nav').style.display = 'flex';
+  setGoal('goal-line', 'goalAct1');
+  updateDemoButton();
   renderBoard(); renderHud();
+  if (!demoSeen()) { playDemo(); return; }
   narrate(t('act1Brief'));
   beginMaxTurn();
 }
 
+/* ── Act 1 first-visit demo (pattern from L1 Dojo, commit 49adc48):
+      the AI volunteer plays one round on a copy of the board, marks the
+      Engine's worst reply, then hands over. The demo plays the trap route,
+      so it shows the question to ask without giving away the passing route.
+      Taps made during the demo are held and replayed at hand-over. ───────── */
+function updateDemoButton() {
+  const b = document.getElementById('btn-replay-demo');
+  b.style.display = phase === 'act1' ? '' : 'none';
+  b.disabled = demoActive;
+}
+function playDemo() {
+  const token = ++demoToken;
+  demoActive = true; heldTap = null; awaitingPlayer = false;
+  demoSaved = { G: G, ply: ply, pawnFrame: pawnFrame };
+  G = ENGINE.initState('A1F'); pawnFrame = 0;
+  document.getElementById('action-bar').innerHTML = '';
+  document.getElementById('predict-chips').innerHTML = '';
+  updateDemoButton();
+  renderBoard(); renderHud();
+  narrate(t('demoIntro'));
+  let worst = null;
+  const steps = [
+    function () { G = ENGINE.apply(G, { type: 'MOVE', dir: 'N' }); pawnFrame = 1; renderDemoBoard(); narrate(t('demoMove')); },
+    function () {
+      worst = SEARCH.minimax(G).action;
+      document.getElementById('totem').classList.add('acting');
+      if (worst.type === 'ROAD_CLOSE') {
+        const m = document.createElement('div');
+        m.className = 'edge-bar predictable'; m.id = 'demo-worst';
+        positionEdgeBar(m, worst.edge, tileSize());
+        document.getElementById('board').appendChild(m);
+      }
+      narrate(t('demoWorst'));
+    },
+    function () {
+      G = ENGINE.apply(G, worst); pawnFrame = 0;
+      document.getElementById('totem').classList.remove('acting');
+      renderDemoBoard();
+      narrate(fmt('demoCutFmt', fmt('engineDidFmt', engineMoveName(worst))));
+    },
+    function () {
+      if (!ENGINE.isTerminal(G) && G.toMove === 'MAX') { G = ENGINE.apply(G, SEARCH.minimax(G).action); pawnFrame = 2; renderDemoBoard(); }
+      narrate(t('demoBack'));
+    },
+    function () { endDemo(); },
+  ];
+  const delays = [1400, 2200, 2800, 2600, 2600];
+  let i = 0;
+  (function next() {
+    if (i >= steps.length) return;
+    setTimeout(function () {
+      if (token !== demoToken || !demoActive) return;
+      steps[i++]();
+      next();
+    }, REDUCED ? 5 : delays[i]);
+  })();
+}
+function renderDemoBoard() { renderBoard(); renderHud(); markHeldTap(); }
+function markHeldTap() {
+  if (!heldTap) return;
+  const el = document.getElementById('tile-' + heldTap.r + '-' + heldTap.c);
+  if (el) el.classList.add('held');
+}
+function restoreFromDemo() {
+  const s = demoSaved; demoSaved = null;
+  if (s) { G = s.G; ply = s.ply; pawnFrame = s.pawnFrame; }
+  document.getElementById('totem').classList.remove('acting');
+}
+function endDemo() {
+  demoActive = false; demoToken++;
+  demoSeenMem = true;
+  saveL8Level({ demoSeen: true });
+  restoreFromDemo();
+  updateDemoButton();
+  const tap = heldTap; heldTap = null;
+  beginMaxTurn();
+  narrate(t('demoHandover'));
+  if (tap) {
+    const el = document.getElementById('tile-' + tap.r + '-' + tap.c);
+    if (el && el.classList.contains('tap-target')) onTileTap(tap.r, tap.c);
+  }
+}
+function cancelDemo() {
+  if (!demoActive) return;
+  demoActive = false; demoToken++; heldTap = null;
+  restoreFromDemo();
+}
+function replayDemo() {
+  if (phase !== 'act1' || demoActive || !awaitingPlayer || pendingPredict) return;
+  playDemo();
+}
+
 function startAct3() {
-  phase = 'act3'; ply = 0; lastMcts = null;
+  cancelDemo();
+  phase = 'act3'; ply = 0; lastMcts = null; awaitingPlayer = false;
   pawnFrame = 0;
   G = ENGINE.initState('A3');
   const scr = document.getElementById('screen-act');
@@ -374,6 +520,8 @@ function startAct3() {
   scr.dataset.asset = 'assets/images/l8_bg_park.png';
   tryAsset(scr);
   showScreen('screen-act');
+  setGoal('goal-line', 'goalAct3');
+  updateDemoButton();
   renderBoard(); renderHud();
   narrate(t('act3Brief'));
   beginMaxTurn();
@@ -464,6 +612,7 @@ function renderHud() {
 
 /* ── MAX turn ──────────────────────────────────────────────────────────── */
 function beginMaxTurn() {
+  if (demoActive) return;
   if (ENGINE.isTerminal(G)) return onTerminal();
   renderBoard(); renderHud();
   const legal = ENGINE.legalMoves(G);
@@ -490,9 +639,11 @@ function beginMaxTurn() {
   w.onclick = () => playerAction({ type: 'WAIT' });
   bar.appendChild(w);
   narrate(moves.length === 0 && canServe ? t('urgentRule') : (G.fog > 0 ? t('fogActive') : t('yourTurn')));
+  awaitingPlayer = true;
   if (phase === 'act3') rehearse();          /* the act's core teaching loop */
 }
 function onTileTap(r, c) {
+  if (demoActive) { heldTap = { r: r, c: c }; document.querySelectorAll('.tile.held').forEach(x => x.classList.remove('held')); markHeldTap(); return; }
   if (pendingPredict) return;
   const el = document.getElementById('tile-' + r + '-' + c);
   if (!el) return;
@@ -500,7 +651,8 @@ function onTileTap(r, c) {
   playerAction({ type: 'MOVE', dir: el.dataset.dir });
 }
 function playerAction(action) {
-  if (pendingPredict) return;
+  if (pendingPredict || demoActive) return;
+  awaitingPlayer = false;
   pawnFrame = action.type === 'MOVE' ? 1 + (ply % 4) : (action.type === 'SERVE' ? 5 : 0);
   if (phase === 'act3' && lastMcts) {
     const best = lastMcts.rootActions.reduce((a, b) => (b.visits > a.visits ? b : a));
@@ -565,6 +717,7 @@ function resolvePrediction(predicted) {
 function engineReply(predicted) {
   narrate(t('engineTurn'));
   setTimeout(() => {
+    if (demoActive) return;
     const action = phase === 'act1'
       ? SEARCH.minimax(G).action
       : SEARCH.mcts(G, mctsIters, MCTS_SEED_BASE + ply).action;
@@ -596,16 +749,18 @@ function onTerminal() {
     const win = u > 0;
     openResult(win ? t('act1WinTitle') : t('act1LoseTitle'),
       (win ? t('act1WinBody') : t('act1LoseBody')) + ' · ' + fmt('utilityFmt', u),
-      [[t('seeTree'), function () { closeResult(); showAct1Tree(); }, 'btn-primary'],
-       [t('tryAgain'), function () { closeResult(); startAct1(); }, 'btn-secondary']]);
+      [[t('nextSeeTree'), function () { closeResult(); showAct1Tree(); }, 'btn-primary'],
+       [t('playAgain'), function () { closeResult(); startAct1(); }, 'btn-secondary'],
+       [t('levelMenu'), goMenu, 'btn-secondary']]);
   } else {
     finished = true;
     track('level_complete', { utility: u, iters: mctsIters });
     saveProgress({ completed: true, utility: u, completedAt: Date.now() });
     openResult(u > 0 ? t('act3WinTitle') : t('act3EndTitle'),
       fmt('act3WinBodyFmt', u),
-      [[t('finishTitle'), function () { closeResult(); showScreen('screen-finish'); tryAsset(document.getElementById('screen-finish')); }, 'btn-primary'],
-       [t('tryAgain'), function () { closeResult(); startAct3(); }, 'btn-secondary']]);
+      [[t('nextFinish'), function () { closeResult(); showScreen('screen-finish'); tryAsset(document.getElementById('screen-finish')); }, 'btn-primary'],
+       [t('playAgain'), function () { closeResult(); startAct3(); }, 'btn-secondary'],
+       [t('levelMenu'), goMenu, 'btn-secondary']]);
   }
 }
 function openResult(title, body, actions) {
@@ -695,8 +850,10 @@ function renderTreeSvg(marks) {
 }
 function showAct1Tree() {
   phase = 'act1-tree';
+  updateDemoButton();
   const td = buildTree();
   showScreen('screen-tree');
+  setGoal('tree-goal-line', null);
   document.getElementById('tree-hud-act').textContent = t('act1Name');
   document.getElementById('branch-heads').innerHTML = '';
   document.getElementById('tree-counter').textContent = td.count + ' 🌳';
@@ -742,8 +899,10 @@ function computeAbViz() {
 }
 function startAct2() {
   phase = 'act2';
+  updateDemoButton();
   const td = buildTree();
   showScreen('screen-tree');
+  setGoal('tree-goal-line', 'goalAct2');
   document.getElementById('tree-hud-act').textContent = t('act2Name');
   document.getElementById('tree-narrator').textContent = t('act2Brief') + ' ' + t('prunePrompt');
   document.getElementById('tree-counter').textContent = fmt('exploredFmt', 0);
